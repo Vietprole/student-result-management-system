@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
