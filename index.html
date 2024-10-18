@@ -1,641 +1,382 @@
 <html>
- <head>
-  <meta charset="UTF-8">
-  <title> DUT SRMS </title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+  <head>
+    <meta charset="UTF-8" />
+    <title>DUT SRMS</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            display: flex;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #fff;
-            border-right: 1px solid #ddd;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .sidebar img {
-            width: 50px;
-            height: 50px;
-        }
-        .sidebar h2 {
-            font-size: 20px;
-            margin: 10px 0;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            padding: 10px 0;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .sidebar ul li i {
-            margin-right: 10px;
-        }
-        .sidebar ul li.active {
-            background-color: #d9f1ff;
-            border-radius: 5px;
-        }
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-        }
-        .header .search-bar {
-            display: flex;
-            align-items: center;
-        }
-        .header .search-bar input {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .header .user-info {
-            display: flex;
-            align-items: center;
-        }
-        .header .user-info i {
-            margin-right: 10px;
-        }
-        .header .user-info img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .header .user-info span {
-            font-weight: 500;
-        }
-        .table-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .table-container h3 {
-            margin: 0 0 20px 0;
-        }
-        .table-container .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .table-container .controls select,
-        .table-container .controls input {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .table-container .controls .icons i {
-            margin-left: 10px;
-            cursor: pointer;
-            color: black;
-            background-color: yellow;
-            padding: 5px;
-            border-radius: 50%;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        table th {
-            background-color: #e6f7ff;
-        }
-        table td.highlight {
-            background-color: #d9f1ff;
-        }
-  </style>
- </head>
- <body>
-  <div class="container">
-   <div class="sidebar">
-    <img alt="University Logo" height="50" src="https://drive.google.com/file/d/1tsliDSlgUZCBvAFI0-A_zTtw4uiRA9nK/view?usp=drive_link" width="50"/>
-    <h2> DUT SRMS </h2> 
-    <!-- //https://storage.googleapis.com/a1aa/image/LLXVWqfuZVT4VCHd0O6oQ2aDSP2Jf9ZQYJdKOAUlR4xWpvnTA.jpg -->
-    <ul>
-     <li>
-      <i class="fas fa-university">
-      </i>
-      Khoa
-     </li>
-     <li>
-      <i class="fas fa-chalkboard-teacher">
-      </i>
-      Giảng viên
-     </li>
-     <li>
-      <i class="fas fa-user-graduate">
-      </i>
-      Sinh viên
-     </li>
-     <li class="active">
-      <i class="fas fa-book">
-      </i>
-      Chương trình đào tạo
-     </li>
-     <li>
-      <i class="fas fa-book-open">
-      </i>
-      Học phần
-     </li>
-     <li>
-      <i class="fas fa-users">
-      </i>
-      Lớp học phần
-     </li>
-     <li>
-      <i class="fas fa-chart-bar">
-      </i>
-      Kết quả học tập
-     </li>
-     <li>
-      <i class="fas fa-chart-pie">
-      </i>
-      Thống kê
-     </li>
-     <li>
-      <i class="fas fa-id-card">
-      </i>
-      Hồ sơ cá nhân
-     </li>
-     <li>
-      <i class="fas fa-cog">
-      </i>
-      Cài đặt
-     </li>
-     <li>
-      <i class="fas fa-sign-out-alt">
-      </i>
-      Đăng xuất
-     </li>
-    </ul>
-   </div>
-   <div class="content">
-    <div class="header">
-     <div class="search-bar">
-      <input placeholder="Search" type="text"/>
-     </div>
-     <div class="user-info">
-      <i class="fas fa-envelope">
-      </i>
-      <i class="fas fa-bell">
-      </i>
-      <img alt="User Avatar" height="30" src="https://storage.googleapis.com/a1aa/image/pDmQ9aOkfr3QSy2Ur0oZONwuYZpKUC2cX9Jlrg7fpvWXpvnTA.jpg" width="30"/>
-      <span>
-       Đ. Thiên Bình
-      </span>
-      <span>
-       Admin
-      </span>
-     </div>
-    </div>
-    <div class="table-container">
-     <h3>
-      Exam - CLO Specification
-     </h3>
-     <div class="controls">
-      <div>
-       <select>
-        <option>
-         Exam
-        </option>
-       </select>
-       <input placeholder="Câu..." type="text"/>
+      body {
+        font-family: "Open Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      .container {
+        display: flex;
+      }
+      .sidebar {
+        width: 250px;
+        background-color: #fff;
+        border-right: 1px solid #ddd;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .sidebar img {
+        width: 50px;
+        height: 50px;
+      }
+      .sidebar h2 {
+        font-size: 20px;
+        margin: 10px 0;
+      }
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+      .sidebar ul li {
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      .sidebar ul li i {
+        margin-right: 10px;
+      }
+      .sidebar ul li.active {
+        background-color: #d9f1ff;
+        border-radius: 5px;
+      }
+      .content {
+        flex-grow: 1;
+        padding: 20px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+      }
+      .header .search-bar {
+        display: flex;
+        align-items: center;
+      }
+      .header .search-bar input {
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .header .user-info {
+        display: flex;
+        align-items: center;
+      }
+      .header .user-info i {
+        margin-right: 10px;
+      }
+      .header .user-info img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .header .user-info span {
+        font-weight: 500;
+      }
+      .table-container {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .table-container h3 {
+        margin: 0 0 20px 0;
+      }
+      .table-container .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .table-container .controls select,
+      .table-container .controls input {
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .table-container .controls .icons i {
+        margin-left: 10px;
+        cursor: pointer;
+        color: black;
+        background-color: yellow;
+        padding: 5px;
+        border-radius: 50%;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+      }
+      table th {
+        background-color: #e6f7ff;
+      }
+      table td.highlight {
+        background-color: #d9f1ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <img
+          alt="University Logo"
+          height="50"
+          src="https://drive.google.com/file/d/1tsliDSlgUZCBvAFI0-A_zTtw4uiRA9nK/view?usp=drive_link"
+          width="50"
+        />
+        <h2>DUT SRMS</h2>
+        <!-- //https://storage.googleapis.com/a1aa/image/LLXVWqfuZVT4VCHd0O6oQ2aDSP2Jf9ZQYJdKOAUlR4xWpvnTA.jpg -->
+        <ul>
+          <li>
+            <i class="fas fa-university"> </i>
+            Khoa
+          </li>
+          <li>
+            <i class="fas fa-chalkboard-teacher"> </i>
+            Giảng viên
+          </li>
+          <li>
+            <i class="fas fa-user-graduate"> </i>
+            Sinh viên
+          </li>
+          <li class="active">
+            <i class="fas fa-book"> </i>
+            Chương trình đào tạo
+          </li>
+          <li>
+            <i class="fas fa-book-open"> </i>
+            Học phần
+          </li>
+          <li>
+            <i class="fas fa-users"> </i>
+            Lớp học phần
+          </li>
+          <li>
+            <i class="fas fa-chart-bar"> </i>
+            Kết quả học tập
+          </li>
+          <li>
+            <i class="fas fa-chart-pie"> </i>
+            Thống kê
+          </li>
+          <li>
+            <i class="fas fa-id-card"> </i>
+            Hồ sơ cá nhân
+          </li>
+          <li>
+            <i class="fas fa-cog"> </i>
+            Cài đặt
+          </li>
+          <li>
+            <i class="fas fa-sign-out-alt"> </i>
+            Đăng xuất
+          </li>
+        </ul>
       </div>
-      <div class="icons">
-       <i class="fas fa-pencil-alt">
-       </i>
-       <i class="fas fa-filter">
-       </i>
-       <i class="fas fa-plus">
-       </i>
+      <div class="content">
+        <div class="header">
+          <div class="search-bar">
+            <input placeholder="Search" type="text" />
+          </div>
+          <div class="user-info">
+            <i class="fas fa-envelope"> </i>
+            <i class="fas fa-bell"> </i>
+            <img
+              alt="User Avatar"
+              height="30"
+              src="https://storage.googleapis.com/a1aa/image/pDmQ9aOkfr3QSy2Ur0oZONwuYZpKUC2cX9Jlrg7fpvWXpvnTA.jpg"
+              width="30"
+            />
+            <span> Đ. Thiên Bình </span>
+            <span> Admin </span>
+          </div>
+        </div>
+        <div class="table-container">
+          <h3>Exam - CLO Specification</h3>
+          <div class="controls">
+            <div>
+              <select>
+                <option>Exam</option>
+              </select>
+              <input placeholder="Câu..." type="text" />
+            </div>
+            <div class="icons">
+              <i class="fas fa-pencil-alt"> </i>
+              <i class="fas fa-filter"> </i>
+              <i class="fas fa-plus"> </i>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th colspan="2">Exam's questions</th>
+                <th colspan="14">Belong to CLOs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="2">GK</td>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td rowspan="2">CK</td>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td class="highlight">13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td rowspan="2">QT</td>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td rowspan="2">TN</td>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td>Câu 1</td>
+                <td>1x</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-     </div>
-     <table>
-      <thead>
-       <tr>
-        <th colspan="2">
-         Exam's questions
-        </th>
-        <th colspan="14">
-         Belong to CLOs
-        </th>
-       </tr>
-      </thead>
-      <tbody>
-       <tr>
-        <td rowspan="2">
-         GK
-        </td>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td rowspan="2">
-         CK
-        </td>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td class="highlight">
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td rowspan="2">
-         QT
-        </td>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td rowspan="2">
-         TN
-        </td>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Câu 1
-        </td>
-        <td>
-         1x
-        </td>
-        <td>
-         2
-        </td>
-        <td>
-         3
-        </td>
-        <td>
-         4
-        </td>
-        <td>
-         5
-        </td>
-        <td>
-         6
-        </td>
-        <td>
-         7
-        </td>
-        <td>
-         8
-        </td>
-        <td>
-         9
-        </td>
-        <td>
-         10
-        </td>
-        <td>
-         11
-        </td>
-        <td>
-         12
-        </td>
-        <td>
-         13
-        </td>
-        <td>
-         14
-        </td>
-       </tr>
-      </tbody>
-     </table>
     </div>
-   </div>
-  </div>
- </body>
+  </body>
 </html>
