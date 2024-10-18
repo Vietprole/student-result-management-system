@@ -4,8 +4,11 @@
 ```json
 {
   "ConnectionStrings": {
-	"DefaultConnection": "Server=ServerName;Database=DatabaseName;Trusted_Connection=True;MultipleActiveResultSets=true"
+	"DefaultConnection": "Server=VT-PGH;Database=Student-Results-Db;Trusted_Connection=True;MultipleActiveResultSets=true"
   }
 }
 ```
-2. 
+2. Entity Framework command in Package Manager Console:
+```cmd
+get-help entityframework
+```

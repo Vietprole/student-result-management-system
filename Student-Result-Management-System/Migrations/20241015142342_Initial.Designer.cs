@@ -10,7 +10,7 @@ using Student_Result_Management_System.Data;
 
 namespace Student_Result_Management_System.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(ApplicationDBContext))]
     [Migration("20241015142342_Initial")]
     partial class Initial
     {

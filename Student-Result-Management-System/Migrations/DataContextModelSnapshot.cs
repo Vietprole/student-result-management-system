@@ -9,7 +9,7 @@ using Student_Result_Management_System.Data;
 
 namespace Student_Result_Management_System.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(ApplicationDBContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -3,9 +3,9 @@ using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Data
 {
-    public class DataContext : DbContext
+    public class ApplicationDBContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
 
         }
