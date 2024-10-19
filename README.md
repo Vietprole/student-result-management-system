@@ -12,3 +12,13 @@
 ```cmd
 get-help entityframework
 ```
+
+3. Run the app:
+```cmd
+dotnet watch run
+```
+
+4. Update database:
+```cmd
+dotnet ef database update
+```

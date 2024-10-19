@@ -9,6 +9,6 @@ namespace Student_Result_Management_System.Data
         {
 
         }
-        public DbSet<Student> Students { get; set; }
+        public DbSet<SinhVien> Students { get; set; }
     }
 }

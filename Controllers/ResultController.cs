@@ -19,7 +19,7 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<ActionResult<List<Student>>> GetAllStudents() // async go with Task<> to make function asynchronous
+        public async Task<ActionResult<List<SinhVien>>> GetAllStudents() // async go with Task<> to make function asynchronous
         {
             var students = await _context.Students.ToListAsync();
             return Ok(students);
@@ -27,7 +27,7 @@ namespace Student_Result_Management_System.Controllers
 
         [HttpGet("{id}")]
         // Get single entry
-        public async Task<ActionResult<Student>> GetStudent(int id) // async go with Task<> to make function asynchronous
+        public async Task<ActionResult<SinhVien>> GetStudent(int id) // async go with Task<> to make function asynchronous
         {
             var student = await _context.Students.FindAsync(id);
             if (student == null)
@@ -36,7 +36,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Student>> AddStudent(Student student)
+        public async Task<ActionResult<SinhVien>> AddStudent(SinhVien student)
         {
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
@@ -44,7 +44,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Student>> UpdateStudent(int id, Student student)
+        public async Task<ActionResult<SinhVien>> UpdateStudent(int id, SinhVien student)
         {
             var studentToUpdate = await _context.Students.FindAsync(id);
             if (studentToUpdate == null)
@@ -55,7 +55,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Student>>> DeleteStudent(int id)
+        public async Task<ActionResult<List<SinhVien>>> DeleteStudent(int id)
         {
             var studentToDelete = await _context.Students.FindAsync(id);
             if (studentToDelete == null)
