@@ -49,7 +49,7 @@ namespace Student_Result_Management_System.Controllers
             var studentToUpdate = await _context.Students.FindAsync(id);
             if (studentToUpdate == null)
                 return NotFound("Student not found");
-            studentToUpdate.Name = student.Name;
+            studentToUpdate.Ten = student.Ten;
             await _context.SaveChangesAsync();
             return Ok(studentToUpdate);
         }
