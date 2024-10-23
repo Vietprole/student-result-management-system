@@ -8,4 +8,5 @@ public class Khoa
     public string Ten { get; set; } = string.Empty;
     public List<CTDT> CTDTs { get; set; } = [];
     public List<HocPhan> HocPhans { get; set; } = [];
+    public List<GiangVien> GiangViens { get; set; } = [];
 }
