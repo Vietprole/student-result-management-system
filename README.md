@@ -22,3 +22,7 @@ dotnet watch run
 ```cmd
 dotnet ef database update
 ```
+
+5. Modal classes foreign key naming convention:
+- E.g.: SinhvienId  
+[conventions](https://learn.microsoft.com/en-us/ef/core/modeling/relationships/conventions)

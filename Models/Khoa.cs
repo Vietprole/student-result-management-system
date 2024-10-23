@@ -6,5 +6,6 @@ public class Khoa
 {
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
-    public ICollection<CTDT> CTDTs { get; set; } = new List<CTDT>();
+    public List<CTDT> CTDTs { get; set; } = [];
+    public List<HocPhan> HocPhans { get; set; } = [];
 }

@@ -7,9 +7,9 @@ public class CTDT
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
     public int SoTinChi { get; set; }
-    public int? IdKhoa { get; set; }
-    public int? IdNganh { get; set; }
+    public int? KhoaId { get; set; }
+    public int? NganhId { get; set; }
     public Khoa? Khoa { get; set; }
     public Nganh? Nganh { get; set; }
-    public ICollection<HocPhan> HocPhans { get; set; } = [];
+    public List<HocPhan> HocPhans { get; set; } = [];
 }

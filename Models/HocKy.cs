@@ -2,9 +2,8 @@ using System;
 
 namespace Student_Result_Management_System.Models;
 
-public class CTDTHocPhan
+public class HocKy
 {
     public int Id { get; set; }
-    public int IdCTDT { get; set; }
-    public int IdHocPhan { get; set; }
+    public string MoTa { get; set; } = string.Empty;
 }
