@@ -6,12 +6,12 @@ using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/sinhvien")]
     [ApiController]
-    public class ResultController : ControllerBase
+    public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public ResultController(ApplicationDBContext context)
+        public SinhVienController(ApplicationDBContext context)
         {
             _context = context;
         }
