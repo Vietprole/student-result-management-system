@@ -34,35 +34,61 @@ namespace Student_Result_Management_System.Controllers
             await _context.SaveChangesAsync();
             return Ok(await _context.KetQuas.ToListAsync());
         }
-        [HttpGet]
-        public async Task<ActionResult<List<KetQua>>> CalculateCLO(int id)
+
+        [HttpPut("{studentId}/{LopHocPhanId}")]
+        public async Task<ActionResult<KetQua>> UpdateKetQuaForSinhVienInLopHocPhan(int studentId, int LopHocPhanId, [FromBody] List<KetQua> ketQuas)
         {
-            var ketQuas = await _context.KetQuas.Where(kq => kq.SinhVienId == id).ToListAsync();
+            var resultToUpdate = await _context.KetQuas
+                .FirstOrDefaultAsync(kq => kq.SinhVienId == studentId && kq.LopHocPhanId == LopHocPhanId);
+            if (resultToUpdate == null)
+            {
+                return NotFound("KetQua not found.");
+            }
+
+            resultToUpdate.Diem = result.Diem;
+            await _context.SaveChangesAsync();
+            return Ok(resultToUpdate);
+        }
+
+        [HttpGet("calculate-diem-clo")]
+        public async Task<ActionResult<double>> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int CLOId)
+        {
+            // Get the CLO with the specified CLOId
+            var clo = await _context.CLOs
+                .Include(c => c.CauHois)
+                .ThenInclude(ch => ch.BaiKiemTra)
+                .FirstOrDefaultAsync(c => c.Id == CLOId);
+
+            if (clo == null)
+            {
+                return NotFound("CLO not found.");
+            }
+
+            // Get the KetQua records for the specified SinhVienId and CauHoiIds from the CLO
+            var cauHoiIds = clo.CauHois.Select(ch => ch.Id).ToList();
+            var ketQuas = await _context.KetQuas
+                .Where(kq => kq.SinhVienId == SinhVienId && cauHoiIds.Contains(kq.CauHoiId))
+                .ToListAsync();
+
             if (ketQuas == null || ketQuas.Count == 0)
             {
-                return NotFound("No result found for this student.");
+                return NotFound("No KetQua records found for the specified SinhVienId and CLOId.");
             }
 
-            var cloResults = new List<KetQua>();
-            foreach (var clo in await _context.CLOs.ToListAsync())
+            // Calculate the results
+            var results = new List<double>();
+            foreach (var ketQua in ketQuas)
             {
-                var cloResult = new KetQua
+                var cauHoi = clo.CauHois.FirstOrDefault(ch => ch.Id == ketQua.CauHoiId);
+                if (cauHoi != null)
                 {
-                    SinhVienId = id,
-                    CLOId = clo.Id,
-                    Diem = 0
-                };
-                foreach (var ketQua in ketQuas)
-                {
-                    if (ketQua.CLOId == clo.Id)
-                    {
-                        cloResult.Diem += ketQua.Diem;
-                    }
+                    var trongSo = cauHoi.BaiKiemTra.TrongSo;
+                    var result = ketQua.Diem * trongSo;
+                    results.Add(result);
                 }
-                cloResults.Add(cloResult);
             }
-
-            return Ok(cloResults);
+            var total = results.Sum();
+            return Ok(total);
         }
     }
 }
