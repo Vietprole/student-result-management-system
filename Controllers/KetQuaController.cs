@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.KetQua;
+using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
@@ -17,10 +19,11 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<KetQua>>> GetAllKetQuas()
+        public async Task<ActionResult<List<KetQuaDTO>>> GetAllKetQuas()
         {
             var ketQuas = await _context.KetQuas.ToListAsync();
-            return Ok(ketQuas);
+            var ketQuaDTOs = ketQuas.Select(kq => kq.ToKetQuaDTO()).ToList();
+            return Ok(ketQuaDTOs);
         }
         [HttpPost]
         public async Task<ActionResult<List<KetQua>>> AddKetQua([FromBody] List<KetQua> results)
@@ -35,17 +38,17 @@ namespace Student_Result_Management_System.Controllers
             return Ok(await _context.KetQuas.ToListAsync());
         }
 
-        [HttpPut("{studentId}/{LopHocPhanId}")]
-        public async Task<ActionResult<KetQua>> UpdateKetQuaForSinhVienInLopHocPhan(int studentId, int LopHocPhanId, [FromBody] List<KetQua> ketQuas)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<KetQua>> UpdateKetQua(int id, [FromBody] UpdateKetQuaDTO ketQuaDTO)
         {
-            var resultToUpdate = await _context.KetQuas
-                .FirstOrDefaultAsync(kq => kq.SinhVienId == studentId && kq.LopHocPhanId == LopHocPhanId);
+            var resultToUpdate = await _context.KetQuas.FirstOrDefaultAsync(kq => kq.Id == id);
             if (resultToUpdate == null)
             {
                 return NotFound("KetQua not found.");
             }
 
-            resultToUpdate.Diem = result.Diem;
+            resultToUpdate = ketQuaDTO.ToKetQuaFromUpdate();
+
             await _context.SaveChangesAsync();
             return Ok(resultToUpdate);
         }

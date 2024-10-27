@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.SinhVien;
+using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
@@ -19,20 +21,22 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<ActionResult<List<SinhVien>>> GetAllStudents() // async go with Task<> to make function asynchronous
+        public async Task<ActionResult<List<SinhVienDTO>>> GetAll() // async go with Task<> to make function asynchronous
         {
-            var students = await _context.SinhViens.ToListAsync();
-            return Ok(students);
+            var sinhViens = await _context.SinhViens.ToListAsync();
+            var sinhVienDTOs = sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList();
+            return Ok(sinhVienDTOs);
         }
 
         [HttpGet("{id}")]
         // Get single entry
-        public async Task<ActionResult<SinhVien>> GetStudent(int id) // async go with Task<> to make function asynchronous
+        public async Task<ActionResult<SinhVienDTO>> GetStudent(int id) // async go with Task<> to make function asynchronous
         {
             var student = await _context.SinhViens.FindAsync(id);
             if (student == null)
                 return NotFound("Student not found");
-            return Ok(student);
+            var studentDTO = student.ToSinhVienDTO();
+            return Ok(studentDTO);
         }
 
         [HttpPost]
