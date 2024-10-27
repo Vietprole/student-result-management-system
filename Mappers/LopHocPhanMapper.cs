@@ -13,7 +13,7 @@ public static class LopHocPhanMapper
             Id = lopHocPhanModel.Id,
             Ten = lopHocPhanModel.Ten,
             HocKy = lopHocPhanModel.HocKy?.MoTa ?? string.Empty,
-            HocPhan = lopHocPhanModel.HocPhan.Ten,
+            HocPhan = lopHocPhanModel.HocPhan?.Ten ?? string.Empty,
         };
     }
 }

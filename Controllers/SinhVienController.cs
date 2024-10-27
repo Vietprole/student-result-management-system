@@ -23,7 +23,9 @@ namespace Student_Result_Management_System.Controllers
         // ActionResult return specific value type, the type will displayed in Schemas section
         public async Task<ActionResult<List<SinhVienDTO>>> GetAll() // async go with Task<> to make function asynchronous
         {
-            var sinhViens = await _context.SinhViens.ToListAsync();
+            var sinhViens = await _context.SinhViens
+                .Include(sv => sv.LopHocPhans)
+                .ToListAsync();
             var sinhVienDTOs = sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList();
             return Ok(sinhVienDTOs);
         }
