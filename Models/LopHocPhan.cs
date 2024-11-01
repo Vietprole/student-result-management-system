@@ -7,7 +7,6 @@ public class LopHocPhan
 {
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
-    public int HocKyId { get; set; }
     public int HocPhanId { get; set; }
     public HocPhan HocPhan { get; set; } = null!;
     public List<SinhVien> SinhViens { get; set; } = [];

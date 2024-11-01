@@ -8,7 +8,7 @@ public class HocPhan
     public string Ten { get; set; } = string.Empty;
     public int SoTinChi { get; set; }
     public bool LaCotLoi { get; set; }
-    public int KhoaId { get; set; }
+    public int? KhoaId { get; set; }
     public Khoa? Khoa { get; set; }
     public List<CTDT> CTDTs { get; set; } = [];
     public List<LopHocPhan> LopHocPhans { get; set; } = [];

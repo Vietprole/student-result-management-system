@@ -15,7 +15,6 @@ namespace Student_Result_Management_System.Data
         public DbSet<CLO> CLOs { get; set; }
         public DbSet<CTDT> CTDTs {get; set;}
         public DbSet<GiangVien> GiangViens { get; set; }
-        public DbSet<HocKy> HocKies { get; set; }
         public DbSet<HocPhan> HocPhans { get; set; }
         public DbSet<KetQua> KetQuas { get; set; }
         public DbSet<Khoa> Khoas { get; set; }

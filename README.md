@@ -18,21 +18,31 @@ get-help entityframework
 dotnet watch run
 ```
 
-4. Migrate database:
+4. Restore packages:
+```cmd
+dotnet restore
+```
+
+5. Restore tools:
+```cmd
+dotnet tool restore
+```
+
+6. Migrate database:
 ```cmd
 dotnet ef migrations add AddSomething
 ```
 
-5. Update database:
+7. Update database:
 ```cmd
 dotnet ef database update
 ```
 
-6. Remove recent migration (before update database):
+8. Remove recent migration (before update database):
 ```cmd
 dotnet ef migrations remove
 ```
 
-7. Modal classes foreign key naming convention:
+9. Modal classes foreign key naming convention:
 - E.g.: SinhvienId  
 [conventions](https://learn.microsoft.com/en-us/ef/core/modeling/relationships/conventions)
