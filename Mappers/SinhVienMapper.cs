@@ -13,7 +13,6 @@ public static class SinhVienMapper
         {
             Id = sinhVienModel.Id,
             Ten = sinhVienModel.Ten,
-            LopHocPhans = sinhVienModel.LopHocPhans.Select(lhp => lhp.ToLopHocPhanDTO()).ToList()
         };
     }
 }
