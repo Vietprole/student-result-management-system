@@ -21,54 +21,55 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<ActionResult<List<SinhVienDTO>>> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
         {
-            var sinhViens = await _context.SinhViens
-                .Include(sv => sv.LopHocPhans)
-                .ToListAsync();
+            var sinhViens = await _context.SinhViens.ToListAsync();
             var sinhVienDTOs = sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList();
             return Ok(sinhVienDTOs);
         }
 
         [HttpGet("{id}")]
         // Get single entry
-        public async Task<ActionResult<SinhVienDTO>> GetStudent(int id) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
             var student = await _context.SinhViens.FindAsync(id);
             if (student == null)
-                return NotFound("Student not found");
+                return NotFound();
             var studentDTO = student.ToSinhVienDTO();
             return Ok(studentDTO);
         }
 
         [HttpPost]
-        public async Task<ActionResult<SinhVien>> AddStudent(SinhVien student)
+        public async Task<ActionResult<SinhVien>> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
         {
-            await _context.SinhViens.AddAsync(student);
+            var sinhVien = createSinhVienDTO.ToSinhVienFromCreateDTO();
+            await _context.SinhViens.AddAsync(sinhVien);
             await _context.SaveChangesAsync();
-            return Ok(await _context.SinhViens.ToListAsync());
+            var sinhVienDTO = sinhVien.ToSinhVienDTO();
+            return CreatedAtAction(nameof(GetById), new { id = sinhVien.Id }, sinhVienDTO);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<SinhVien>> UpdateStudent(int id, SinhVien student)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSinhVienDTO updateSinhVienDTO)
         {
             var studentToUpdate = await _context.SinhViens.FindAsync(id);
             if (studentToUpdate == null)
-                return NotFound("Student not found");
-            studentToUpdate.Ten = student.Ten;
+                return NotFound();
+            studentToUpdate.Ten = updateSinhVienDTO.Ten;
             await _context.SaveChangesAsync();
-            return Ok(studentToUpdate);
+            var studentDTO = studentToUpdate.ToSinhVienDTO();
+            return Ok(studentDTO);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<SinhVien>>> DeleteStudent(int id)
+        public async Task<ActionResult<List<SinhVien>>> DeleteStudent([FromRoute] int id)
         {
             var studentToDelete = await _context.SinhViens.FindAsync(id);
             if (studentToDelete == null)
-                return NotFound("Student not found");
+                return NotFound();
             _context.SinhViens.Remove(studentToDelete);
             await _context.SaveChangesAsync();
-            return Ok(await _context.SinhViens.ToListAsync());
+            return NoContent();
         }
     }
 }

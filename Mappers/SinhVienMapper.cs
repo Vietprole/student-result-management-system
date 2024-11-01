@@ -15,4 +15,12 @@ public static class SinhVienMapper
             Ten = sinhVienModel.Ten,
         };
     }
+
+    public static SinhVien ToSinhVienFromCreateDTO(this CreateSinhVienDTO createSinhVienDTO)
+    {
+        return new SinhVien
+        {
+            Ten = createSinhVienDTO.Ten,
+        };
+    }
 }
