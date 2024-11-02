@@ -1,0 +1,464 @@
+<html>
+ <head>
+  <title>
+   DUT SRMS
+  </title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            color: black;
+        }
+        .sidebar img {
+            display: block;
+            margin: 0 auto;
+            width: 80px;
+            height: 80px;
+        }
+        .sidebar h1 {
+            text-align: center;
+            color: #5a8fd8;
+            font-size: 24px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 15px 20px;
+            color: black;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar ul li i {
+            margin-right: 10px;
+        }
+        .sidebar ul li.active {
+            background-color: #cce4f7;
+            border-left: 5px solid #5a8fd8;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .header input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .header .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .header .user-info i {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        .header .user-info span {
+            margin-right: 10px;
+        }
+        .header .user-info img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        .main-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .main-content h2 {
+            margin-top: 0;
+        }
+        .main-content .filters {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .main-content .filters select,
+        .main-content .filters input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .main-content .filters i {
+            font-size: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            background-color: yellow;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .main-content table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .main-content table th,
+        .main-content table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .main-content table th {
+            background-color: #d9edf7;
+        }
+        .main-content table td:last-child {
+            text-align: center;
+        }
+        .main-content table td:last-child i {
+            cursor: pointer;
+        }
+  </style>
+ </head>
+ <body>
+  <div class="sidebar">
+   <img alt="University Logo" height="80" src="https://storage.googleapis.com/a1aa/image/1rX8T6jZtAIiO5eH98qyE0PaWVjklq5XSsf9AqD7uLNoIrsTA.jpg" width="80"/>
+   <h1>
+    DUT SRMS
+   </h1>
+   <ul>
+    <li>
+     <i class="fas fa-building">
+     </i>
+     Khoa
+    </li>
+    <li>
+     <i class="fas fa-chalkboard-teacher">
+     </i>
+     Giảng viên
+    </li>
+    <li>
+     <i class="fas fa-user-graduate">
+     </i>
+     Sinh viên
+    </li>
+    <li>
+     <i class="fas fa-book">
+     </i>
+     Chương trình đào tạo
+    </li>
+    <li>
+     <i class="fas fa-book-open">
+     </i>
+     Học phần
+    </li>
+    <li class="active">
+     <i class="fas fa-users">
+     </i>
+     Lớp học phần
+    </li>
+    <li>
+     <i class="fas fa-chart-line">
+     </i>
+     Kết quả học tập
+    </li>
+    <li>
+     <i class="fas fa-chart-pie">
+     </i>
+     Thống kê
+    </li>
+    <li>
+     <i class="fas fa-id-card">
+     </i>
+     Hồ sơ cá nhân
+    </li>
+    <li>
+     <i class="fas fa-cog">
+     </i>
+     Cài đặt
+    </li>
+    <li>
+     <i class="fas fa-sign-out-alt">
+     </i>
+     Đăng xuất
+    </li>
+   </ul>
+  </div>
+  <div class="content">
+   <div class="header">
+    <input placeholder="Search" type="text"/>
+    <div class="user-info">
+     <i class="fas fa-envelope">
+     </i>
+     <i class="fas fa-bell">
+     </i>
+     <span>
+      Đ. Thiên Bình
+     </span>
+     <img alt="User Avatar" height="30" src="./assets/logos/logo-dut.png" width="30"/>
+    </div>
+   </div>
+   <div class="main-content">
+    <h2>
+     Nhập câu hỏi
+    </h2>
+    <div class="filters">
+     <select>
+      <option>
+       Exam
+      </option>
+     </select>
+     <input placeholder="Câu ..." type="text"/>
+     <i class="fas fa-filter">
+     </i>
+     <i class="fas fa-plus">
+     </i>
+     <i class="fas fa-edit">
+     </i>
+    </div>
+    <table>
+     <thead>
+      <tr>
+       <th>
+        Câu hỏi
+       </th>
+       <th colspan = 3>
+        Điểm cao nhất mỗi câu hỏi
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <td rowspan = "4">
+        GK
+       </td>
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       <td rowspan = "4">
+        CK
+       </td>
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       <td rowspan = "4">
+        QT
+       </td>
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       <td rowspan = "4">
+        TN
+       </td>
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+      <tr>
+       
+       <td>
+        Câu 1
+       </td>
+       <td>
+        2.5
+       </td>
+       <td>
+        <i class="fas fa-ellipsis-h">
+        </i>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </div>
+ </body>
+</html>
