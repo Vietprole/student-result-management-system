@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.SinhVien;
 using Student_Result_Management_System.Mappers;
-using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -40,7 +39,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<SinhVien>> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
+        public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
         {
             var sinhVien = createSinhVienDTO.ToSinhVienFromCreateDTO();
             await _context.SinhViens.AddAsync(sinhVien);
@@ -62,12 +61,12 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<SinhVien>>> DeleteStudent([FromRoute] int id)
+        public async Task<IActionResult> DeleteStudent([FromRoute] int id)
         {
-            var studentToDelete = await _context.SinhViens.FindAsync(id);
-            if (studentToDelete == null)
+            var sinhVienToDelete = await _context.SinhViens.FindAsync(id);
+            if (sinhVienToDelete == null)
                 return NotFound();
-            _context.SinhViens.Remove(studentToDelete);
+            _context.SinhViens.Remove(sinhVienToDelete);
             await _context.SaveChangesAsync();
             return NoContent();
         }

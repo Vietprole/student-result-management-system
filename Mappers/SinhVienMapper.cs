@@ -1,5 +1,4 @@
 using System;
-using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.DTOs.SinhVien;
 using Student_Result_Management_System.Models;
 
