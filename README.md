@@ -1,6 +1,29 @@
 # Student-Result-Management-System
-## Note
-1. Add Default connection string to appsettings.json:
+## How to run
+1. Ensure SQL Server 2022
+
+2. Restore packages:
+```cmd
+dotnet restore
+```
+
+3. Restore tools:
+```cmd
+dotnet tool restore
+```
+
+4. Update database:
+```cmd
+dotnet ef database update
+```
+
+5. Run the app:
+```cmd
+dotnet watch run
+```
+
+## Note (Not required)
+1. Change Default connection string to appsettings.json:
 ```json
 {
   "ConnectionStrings": {
@@ -8,41 +31,38 @@
   }
 }
 ```
+
 2. Entity Framework command in Package Manager Console:
 ```cmd
 get-help entityframework
 ```
 
-3. Run the app:
-```cmd
-dotnet watch run
-```
-
-4. Restore packages:
-```cmd
-dotnet restore
-```
-
-5. Restore tools:
-```cmd
-dotnet tool restore
-```
-
-6. Migrate database:
+3. Migrate database:
 ```cmd
 dotnet ef migrations add AddSomething
 ```
 
-7. Update database:
-```cmd
-dotnet ef database update
-```
-
-8. Remove recent migration (before update database):
+4. Remove recent migration (before update database):
 ```cmd
 dotnet ef migrations remove
 ```
 
-9. Modal classes foreign key naming convention:
+5. Modal classes foreign key naming convention:
 - E.g.: SinhvienId  
 [conventions](https://learn.microsoft.com/en-us/ef/core/modeling/relationships/conventions)
+
+## Delete action consequences
+- Delete Khoa, Nganh **WILL NOT** delete CTDT, HocPhan. Instead setting null.
+- Delete HocPhan **WILL** delete LopHocPhan, so be cautious.
+- Delete CLO is set to ClientCascade to CauHoi, so make sure to **include CauHoi** whenever you delete CLO or it will cause error.
+```C#
+var clo = await _context.CLOs
+    .Include(c => c.CauHois)
+    .FirstOrDefaultAsync(c => c.Id == cloId);
+
+if (clo != null)
+{
+    _context.CLOs.Remove(clo);
+    await _context.SaveChangesAsync();
+}
+```

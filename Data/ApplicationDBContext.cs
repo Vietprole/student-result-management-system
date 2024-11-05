@@ -22,5 +22,15 @@ namespace Student_Result_Management_System.Data
         public DbSet<Nganh> Nganhs { get; set; }
         public DbSet<PLO> PLOs { get; set; }
         public DbSet<SinhVien> SinhViens { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CLO>()
+                .HasMany(e => e.CauHois)
+                .WithMany(e => e.CLOs)
+                .UsingEntity(
+                    l => l.HasOne(typeof(CauHoi)).WithMany().OnDelete(DeleteBehavior.Cascade),
+                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.ClientCascade));
+        }
     }
 }

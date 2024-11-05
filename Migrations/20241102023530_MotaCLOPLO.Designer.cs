@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -11,9 +12,11 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241102023530_MotaCLOPLO")]
+    partial class MotaCLOPLO
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,7 +148,7 @@ namespace Student_Result_Management_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("LopHocPhanId")
+                    b.Property<int?>("LopHocPhanId")
                         .HasColumnType("int");
 
                     b.Property<string>("Mota")
@@ -396,7 +399,7 @@ namespace Student_Result_Management_System.Migrations
                     b.HasOne("Student_Result_Management_System.Models.CLO", null)
                         .WithMany()
                         .HasForeignKey("CLOsId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Student_Result_Management_System.Models.CauHoi", null)
@@ -496,9 +499,7 @@ namespace Student_Result_Management_System.Migrations
                 {
                     b.HasOne("Student_Result_Management_System.Models.LopHocPhan", null)
                         .WithMany("CLOs")
-                        .HasForeignKey("LopHocPhanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LopHocPhanId");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.CTDT", b =>
