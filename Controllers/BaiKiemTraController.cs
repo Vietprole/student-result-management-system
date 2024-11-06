@@ -65,7 +65,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var baiKiemTraToDelete = await _context.BaiKiemTras.FindAsync(id);
             if (baiKiemTraToDelete == null)

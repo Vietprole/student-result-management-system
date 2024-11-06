@@ -56,8 +56,8 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound();
 
             cLOToUpdate.Ten = updateCLODTO.Ten;
-            cLOToUpdate.TrongSo = updateCLODTO.TrongSo;
-            cLOToUpdate.CLOId = updateCLODTO.CLOId;
+            cLOToUpdate.MoTa = updateCLODTO.MoTa;
+            cLOToUpdate.LopHocPhanId = updateCLODTO.LopHocPhanId;
             
             await _context.SaveChangesAsync();
             var studentDTO = cLOToUpdate.ToCLODTO();
@@ -65,7 +65,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var cLOToDelete = await _context.CLOs.FindAsync(id);
             if (cLOToDelete == null)

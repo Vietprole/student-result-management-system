@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.PLO;
 using Student_Result_Management_System.Mappers;
-using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -40,7 +39,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PLO>> Create([FromBody] CreatePLODTO createPLODTO)
+        public async Task<IActionResult> Create([FromBody] CreatePLODTO createPLODTO)
         {
             var pLO = createPLODTO.ToPLOFromCreateDTO();
             await _context.PLOs.AddAsync(pLO);
@@ -52,25 +51,28 @@ namespace Student_Result_Management_System.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePLODTO updatePLODTO)
         {
-            var studentToUpdate = await _context.PLOs.FindAsync(id);
-            if (studentToUpdate == null)
+            var pLOToUpdate = await _context.PLOs.FindAsync(id);
+            if (pLOToUpdate == null)
                 return NotFound();
-            studentToUpdate.Ten = updatePLODTO.Ten;
-            studentToUpdate.Mota = updatePLODTO.Mota;
+
+            pLOToUpdate.Ten = updatePLODTO.Ten;
+            pLOToUpdate.MoTa = updatePLODTO.MoTa;
+            
             await _context.SaveChangesAsync();
-            var studentDTO = studentToUpdate.ToPLODTO();
+            var studentDTO = pLOToUpdate.ToPLODTO();
             return Ok(studentDTO);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<PLO>>> DeleteStudent([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var studentToDelete = await _context.PLOs.FindAsync(id);
-            if (studentToDelete == null)
+            var pLOToDelete = await _context.PLOs.FindAsync(id);
+            if (pLOToDelete == null)
                 return NotFound();
-            _context.PLOs.Remove(studentToDelete);
+            _context.PLOs.Remove(pLOToDelete);
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
     }
 }

@@ -12,7 +12,25 @@ public static class LopHocPhanMapper
         {
             Id = lopHocPhanModel.Id,
             Ten = lopHocPhanModel.Ten,
-            HocPhan = lopHocPhanModel.HocPhan?.Ten ?? string.Empty,
+            HocPhanId = lopHocPhanModel.HocPhanId,
+        };
+    }
+
+    public static LopHocPhan ToLopHocPhanFromCreateDTO(this CreateLopHocPhanDTO createLopHocPhanDTO)
+    {
+        return new LopHocPhan
+        {
+            Ten = createLopHocPhanDTO.Ten,
+            HocPhanId = createLopHocPhanDTO.HocPhanId,
+        };
+    }
+
+    public static LopHocPhan ToLopHocPhanFromUpdateDTO(this UpdateLopHocPhanDTO updateLopHocPhanDTO)
+    {
+        return new LopHocPhan
+        {
+            Ten = updateLopHocPhanDTO.Ten,
+            HocPhanId = updateLopHocPhanDTO.HocPhanId,
         };
     }
 }

@@ -1,23 +1,27 @@
 # Student-Result-Management-System
 ## How to run
-1. Ensure SQL Server 2022
+1. Download & Install .NET SDK ver 8.0
+https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
-2. Restore packages:
+2. Download & Install SQL Server 2022
+https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+
+3. Restore packages:
 ```cmd
 dotnet restore
 ```
 
-3. Restore tools:
+4. Restore tools:
 ```cmd
 dotnet tool restore
 ```
 
-4. Update database:
+5. Update database:
 ```cmd
 dotnet ef database update
 ```
 
-5. Run the app:
+6. Run the app:
 ```cmd
 dotnet watch run
 ```
