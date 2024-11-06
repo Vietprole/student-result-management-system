@@ -17,40 +17,63 @@ namespace Student_Result_Management_System.Controllers
         {
             _context = context;
         }
-
         [HttpGet]
-        public async Task<ActionResult<List<KetQuaDTO>>> GetAllKetQuas()
+        // IActionResult return any value type
+        // public async Task<IActionResult> Get()
+        // ActionResult return specific value type, the type will displayed in Schemas section
+        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
         {
             var ketQuas = await _context.KetQuas.ToListAsync();
-            var ketQuaDTOs = ketQuas.Select(kq => kq.ToKetQuaDTO()).ToList();
+            var ketQuaDTOs = ketQuas.Select(sv => sv.ToKetQuaDTO()).ToList();
             return Ok(ketQuaDTOs);
         }
-        [HttpPost]
-        public async Task<ActionResult<List<KetQua>>> AddKetQua([FromBody] List<KetQua> results)
-        {
-            if (results == null || results.Count == 0)
-            {
-                return BadRequest("The results list is empty or null.");
-            }
 
-            await _context.KetQuas.AddRangeAsync(results);
+        [HttpGet("{id}")]
+        // Get single entry
+        public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
+        {
+            var student = await _context.KetQuas.FindAsync(id);
+            if (student == null)
+                return NotFound();
+            var studentDTO = student.ToKetQuaDTO();
+            return Ok(studentDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateKetQuaDTO createKetQuaDTO)
+        {
+            var ketQua = createKetQuaDTO.ToKetQuaFromCreateDTO();
+            await _context.KetQuas.AddAsync(ketQua);
             await _context.SaveChangesAsync();
-            return Ok(await _context.KetQuas.ToListAsync());
+            var ketQuaDTO = ketQua.ToKetQuaDTO();
+            return CreatedAtAction(nameof(GetById), new { id = ketQua.Id }, ketQuaDTO);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<KetQua>> UpdateKetQua(int id, [FromBody] UpdateKetQuaDTO ketQuaDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKetQuaDTO updateKetQuaDTO)
         {
-            var resultToUpdate = await _context.KetQuas.FirstOrDefaultAsync(kq => kq.Id == id);
-            if (resultToUpdate == null)
-            {
-                return NotFound("KetQua not found.");
-            }
+            var ketQuaToUpdate = await _context.KetQuas.FindAsync(id);
+            if (ketQuaToUpdate == null)
+                return NotFound();
 
-            resultToUpdate = ketQuaDTO.ToKetQuaFromUpdate();
-
+            ketQuaToUpdate.Diem = updateKetQuaDTO.Diem;
+            ketQuaToUpdate.SinhVienId = updateKetQuaDTO.SinhVienId;
+            ketQuaToUpdate.CauHoiId = updateKetQuaDTO.CauHoiId;
+            
             await _context.SaveChangesAsync();
-            return Ok(resultToUpdate);
+            var studentDTO = ketQuaToUpdate.ToKetQuaDTO();
+            return Ok(studentDTO);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var ketQuaToDelete = await _context.KetQuas.FindAsync(id);
+            if (ketQuaToDelete == null)
+                return NotFound();
+            _context.KetQuas.Remove(ketQuaToDelete);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpGet("calculate-diem-clo")]

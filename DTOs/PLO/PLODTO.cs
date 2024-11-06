@@ -6,5 +6,5 @@ public class PLODTO
 {
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
-    public string Mota { get; set; } = string.Empty;
+    public string MoTa { get; set; } = string.Empty;
 }

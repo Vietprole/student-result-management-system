@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Student_Result_Management_System.DTOs.GiangVien;
+namespace Student_Result_Management_System.DTOs.Nganh;
 
-public class UpdateGiangVienDTO
+public class UpdateNganhDTO
 {
     [Required]
     public string Ten { get; set; } = string.Empty;

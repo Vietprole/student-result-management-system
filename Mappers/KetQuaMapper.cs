@@ -17,6 +17,16 @@ public static class KetQuaMapper
         };
     }
 
+    public static KetQua ToKetQuaFromCreateDTO(this CreateKetQuaDTO createKetQuaDTO)
+    {
+        return new KetQua
+        {
+            Diem = createKetQuaDTO.Diem,
+            SinhVienId = createKetQuaDTO.SinhVienId,
+            CauHoiId = createKetQuaDTO.CauHoiId
+        };
+    }
+
     public static KetQua ToKetQuaFromUpdate(this UpdateKetQuaDTO updateKetQuaDTO)
     {
         return new KetQua

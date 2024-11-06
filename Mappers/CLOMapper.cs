@@ -12,7 +12,7 @@ public static class CLOMapper
         {
             Id = clo.Id,
             Ten = clo.Ten,
-            Mota = clo.Mota,
+            MoTa = clo.MoTa,
             LopHocPhanId = clo.LopHocPhanId,
         };
     }
@@ -22,7 +22,7 @@ public static class CLOMapper
         return new CLO
         {
             Ten = createCLODTO.Ten,
-            Mota = createCLODTO.Mota,
+            MoTa = createCLODTO.MoTa,
             LopHocPhanId = createCLODTO.LopHocPhanId,
         };
     }
@@ -32,7 +32,7 @@ public static class CLOMapper
         return new CLO
         {
             Ten = updateCLODTO.Ten,
-            Mota = updateCLODTO.Mota,
+            MoTa = updateCLODTO.MoTa,
             LopHocPhanId = updateCLODTO.LopHocPhanId,
         };
     }

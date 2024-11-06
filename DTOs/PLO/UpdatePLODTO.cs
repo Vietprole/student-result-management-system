@@ -7,5 +7,5 @@ public class UpdatePLODTO
 {
     [Required]
     public string Ten { get; set; } = string.Empty;
-    public string Mota { get; set; } = string.Empty;
+    public string MoTa { get; set; } = string.Empty;
 }

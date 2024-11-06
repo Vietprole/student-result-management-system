@@ -6,7 +6,6 @@ public class CTDT
 {
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
-    public int SoTinChi { get; set; }
     public int? KhoaId { get; set; }
     public int? NganhId { get; set; }
     public Khoa? Khoa { get; set; }

@@ -8,5 +8,5 @@ public class LopHocPhanDTO
 {
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
-    public string HocPhan { get; set; } = string.Empty;
+    public int HocPhanId { get; set; }
 }
