@@ -6,8 +6,6 @@ namespace Student_Result_Management_System.DTOs.CTDT;
 public class CreateCTDTDTO
 {
     [Required]
-    public int Id { get; set; }
-    [Required]
     public string Ten { get; set; } = string.Empty;
     [Required]
     public int KhoaId { get; set; }
