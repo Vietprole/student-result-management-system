@@ -11,6 +11,5 @@ public class UpdateHocPhanDTO
     public int SoTinChi { get; set; }
     [Required]
     public bool LaCotLoi { get; set; }
-    [Required]
     public int KhoaId { get; set; }
 }
