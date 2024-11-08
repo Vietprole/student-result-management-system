@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test API</h1>
+    <button id="btn">Click to see list Sinh Vien</button>
+    <h2>List sinh vien:</h2>
+    <p id="list-sinh-vien"></p>
+    <script>
+        document.getElementById('btn').addEventListener('click', function() {
+            fetch('http://localhost:5095/api/sinhvien')
+                .then(response => response.json())
+                .then(data => {
+                    let listSinhVien = '';
+                    data.forEach(sinhvien => {
+                        listSinhVien += `<p>${sinhvien.id} - ${sinhvien.ten}</p>`;
+                    });
+                    document.getElementById('list-sinh-vien').innerHTML = listSinhVien;
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+</body>
+</html>
