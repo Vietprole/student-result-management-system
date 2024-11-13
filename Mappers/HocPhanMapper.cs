@@ -14,7 +14,7 @@ public static class HocPhanMapper
             Ten = hocPhan.Ten,
             SoTinChi = hocPhan.SoTinChi,
             LaCotLoi = hocPhan.LaCotLoi,
-            KhoaId = hocPhan.KhoaId,
+            NganhId = hocPhan.NganhId,
         };
     }
 
@@ -25,7 +25,7 @@ public static class HocPhanMapper
             Ten = createHocPhanDTO.Ten,
             SoTinChi = createHocPhanDTO.SoTinChi,
             LaCotLoi = createHocPhanDTO.LaCotLoi,
-            KhoaId = createHocPhanDTO.KhoaId,
+            NganhId = createHocPhanDTO.NganhId,
         };
     }
 
@@ -36,7 +36,7 @@ public static class HocPhanMapper
             Ten = updateHocPhanDTO.Ten,
             SoTinChi = updateHocPhanDTO.SoTinChi,
             LaCotLoi = updateHocPhanDTO.LaCotLoi,
-            KhoaId = updateHocPhanDTO.KhoaId,
+            NganhId = updateHocPhanDTO.NganhId,
         };
     }
 }

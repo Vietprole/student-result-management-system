@@ -58,7 +58,7 @@ namespace Student_Result_Management_System.Controllers
             hocPhanToUpdate.Ten = updateHocPhanDTO.Ten;
             hocPhanToUpdate.SoTinChi = updateHocPhanDTO.SoTinChi;
             hocPhanToUpdate.LaCotLoi = updateHocPhanDTO.LaCotLoi;
-            hocPhanToUpdate.KhoaId = updateHocPhanDTO.KhoaId;
+            hocPhanToUpdate.NganhId = updateHocPhanDTO.NganhId;
             
             await _context.SaveChangesAsync();
             var studentDTO = hocPhanToUpdate.ToHocPhanDTO();

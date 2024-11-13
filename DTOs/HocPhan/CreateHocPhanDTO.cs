@@ -11,5 +11,5 @@ public class CreateHocPhanDTO
     public int SoTinChi { get; set; }
     [Required]
     public bool LaCotLoi { get; set; }
-    public int? KhoaId { get; set; }
+    public int? NganhId { get; set; }
 }

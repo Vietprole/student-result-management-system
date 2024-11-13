@@ -57,6 +57,7 @@ namespace Student_Result_Management_System.Controllers
 
             pLOToUpdate.Ten = updatePLODTO.Ten;
             pLOToUpdate.MoTa = updatePLODTO.MoTa;
+            pLOToUpdate.CTDTId = updatePLODTO.CTDTId;
             
             await _context.SaveChangesAsync();
             var studentDTO = pLOToUpdate.ToPLODTO();

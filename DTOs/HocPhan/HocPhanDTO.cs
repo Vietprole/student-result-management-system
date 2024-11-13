@@ -8,5 +8,5 @@ public class HocPhanDTO
     public string Ten { get; set; } = string.Empty;
     public int SoTinChi { get; set; }
     public bool LaCotLoi { get; set; }
-    public int? KhoaId { get; set; }
+    public int? NganhId { get; set; }
 }

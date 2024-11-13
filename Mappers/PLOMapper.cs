@@ -12,6 +12,8 @@ public static class PLOMapper
         {
             Id = pLOModel.Id,
             Ten = pLOModel.Ten,
+            MoTa = pLOModel.MoTa,
+            CTDTId = pLOModel.CTDTId,
         };
     }
 
@@ -20,6 +22,8 @@ public static class PLOMapper
         return new PLO
         {
             Ten = createPLODTO.Ten,
+            MoTa = createPLODTO.MoTa,
+            CTDTId = createPLODTO.CTDTId,
         };
     }
 }
