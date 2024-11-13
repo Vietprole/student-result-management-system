@@ -137,5 +137,69 @@ namespace Student_Result_Management_System.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetSinhViens), new { id = lopHocPhan.Id }, lopHocPhan.SinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
         }
+
+        [HttpGet("{id}/view-giangviens")]
+        public async Task<IActionResult> GetGiangViens([FromRoute] int id)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.GiangViens)
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (lopHocPhan == null)
+                return NotFound();
+
+            var giangVienDTOs = lopHocPhan.GiangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
+            return Ok(giangVienDTOs);
+        }
+
+
+        [HttpPost("{id}/add-giangviens")]
+        public async Task<IActionResult> AddGiangVien([FromRoute] int id, [FromBody] int[] giangVienIds)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.GiangViens) // Include GiangViens to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (lopHocPhan == null)
+                return NotFound("LopHocPhan not found");
+
+            foreach (var giangVienId in giangVienIds)
+            {
+                var giangVien = await _context.GiangViens.FindAsync(giangVienId);
+                if (giangVien == null)
+                    return NotFound($"GiangVien with ID {giangVienId} not found");
+
+                // Check if the GiangVien is already in the LopHocPhan to avoid duplicates
+                if (!lopHocPhan.GiangViens.Contains(giangVien))
+                {
+                    lopHocPhan.GiangViens.Add(giangVien);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetGiangViens), new { id = lopHocPhan.Id }, lopHocPhan.GiangViens.Select(sv => sv.ToGiangVienDTO()).ToList());
+        }
+
+        [HttpDelete("{id}/remove-giangvien/{giangVienId}")]
+        public async Task<IActionResult> RemoveGiangVien([FromRoute] int id, [FromRoute] int giangVienId)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.GiangViens) // Include GiangViens to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (lopHocPhan == null)
+                return NotFound("LopHocPhan not found");
+
+            var giangVien = await _context.GiangViens.FindAsync(giangVienId);
+            if (giangVien == null)
+                return NotFound($"GiangVien with ID {giangVienId} not found");
+
+            // Check if the HocPhan is in the CTDT to avoid removing non-existing HocPhan
+            if (!lopHocPhan.GiangViens.Contains(giangVien))
+            {
+                return NotFound($"GiangVien with ID {giangVienId} is not found in LopHocPhan with ID {id}");
+            }
+            lopHocPhan.GiangViens.Remove(giangVien);
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetGiangViens), new { id = lopHocPhan.Id }, lopHocPhan.GiangViens.Select(sv => sv.ToGiangVienDTO()).ToList());
+        }
     }
 }

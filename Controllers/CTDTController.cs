@@ -89,7 +89,7 @@ namespace Student_Result_Management_System.Controllers
 
 
         [HttpPost("{id}/add-hocphans")]
-        public async Task<IActionResult> AddHocPhan([FromRoute] int id, [FromBody] int[] hocPhanIds)
+        public async Task<IActionResult> AddHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             var cTDT = await _context.CTDTs
                 .Include(lhp => lhp.HocPhans) // Include HocPhans to ensure the collection is loaded
