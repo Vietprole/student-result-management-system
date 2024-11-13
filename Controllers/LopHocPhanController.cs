@@ -74,5 +74,67 @@ namespace Student_Result_Management_System.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}/view-sinhviens")]
+        public async Task<IActionResult> GetSinhViens([FromRoute] int id)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.SinhViens)
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (lopHocPhan == null)
+                return NotFound();
+
+            var sinhVienDTOs = lopHocPhan.SinhViens.Select(sv => sv.ToSinhVienDTO()).ToList();
+            return Ok(sinhVienDTOs);
+        }
+
+
+        [HttpPost("{id}/add-sinhviens")]
+        public async Task<IActionResult> AddSinhVien([FromRoute] int id, [FromBody] int[] sinhVienIds)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.SinhViens) // Include SinhViens to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (lopHocPhan == null)
+                return NotFound("LopHocPhan not found");
+
+            foreach (var sinhVienId in sinhVienIds)
+            {
+                var sinhVien = await _context.SinhViens.FindAsync(sinhVienId);
+                if (sinhVien == null)
+                    return NotFound($"SinhVien with ID {sinhVienId} not found");
+
+                // Check if the SinhVien is already in the LopHocPhan to avoid duplicates
+                if (!lopHocPhan.SinhViens.Contains(sinhVien))
+                {
+                    lopHocPhan.SinhViens.Add(sinhVien);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetSinhViens), new { id = lopHocPhan.Id }, lopHocPhan.SinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
+        }
+
+        [HttpDelete("{id}/remove-sinhvien/{sinhVienId}")]
+        public async Task<IActionResult> RemoveSinhVien([FromRoute] int id, [FromRoute] int sinhVienId)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.SinhViens) // Include SinhViens to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (lopHocPhan == null)
+                return NotFound("LopHocPhan not found");
+
+            var sinhVien = await _context.SinhViens.FindAsync(sinhVienId);
+            if (sinhVien == null)
+                return NotFound($"SinhVien with ID {sinhVienId} not found");
+
+            // Check if the SinhVien is in the LopHocPhan to avoid removing non-existing SinhVien
+            if (lopHocPhan.SinhViens.Contains(sinhVien))
+            {
+                lopHocPhan.SinhViens.Remove(sinhVien);
+            }
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetSinhViens), new { id = lopHocPhan.Id }, lopHocPhan.SinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
+        }
     }
 }
