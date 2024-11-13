@@ -56,7 +56,6 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound();
 
             cTDTToUpdate.Ten = updateCTDTDTO.Ten;
-            cTDTToUpdate.KhoaId = updateCTDTDTO.KhoaId;
             cTDTToUpdate.NganhId = updateCTDTDTO.NganhId;
             
             await _context.SaveChangesAsync();
@@ -75,5 +74,69 @@ namespace Student_Result_Management_System.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}/view-hocphans")]
+        public async Task<IActionResult> GetHocPhans([FromRoute] int id)
+        {
+            var cTDT = await _context.CTDTs
+                .Include(lhp => lhp.HocPhans)
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (cTDT == null)
+                return NotFound();
+
+            var hocPhanDTOs = cTDT.HocPhans.Select(sv => sv.ToHocPhanDTO()).ToList();
+            return Ok(hocPhanDTOs);
+        }
+
+
+        [HttpPost("{id}/add-hocphans")]
+        public async Task<IActionResult> AddHocPhan([FromRoute] int id, [FromBody] int[] hocPhanIds)
+        {
+            var cTDT = await _context.CTDTs
+                .Include(lhp => lhp.HocPhans) // Include HocPhans to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (cTDT == null)
+                return NotFound("CTDT not found");
+
+            foreach (var hocPhanId in hocPhanIds)
+            {
+                var hocPhan = await _context.HocPhans.FindAsync(hocPhanId);
+                if (hocPhan == null)
+                    return NotFound($"HocPhan with ID {hocPhanId} not found");
+
+                // Check if the HocPhan is already in the CTDT to avoid duplicates
+                if (!cTDT.HocPhans.Contains(hocPhan))
+                {
+                    cTDT.HocPhans.Add(hocPhan);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetHocPhans), new { id = cTDT.Id }, cTDT.HocPhans.Select(sv => sv.ToHocPhanDTO()).ToList());
+        }
+
+        [HttpDelete("{id}/remove-hocphan/{hocPhanId}")]
+        public async Task<IActionResult> RemoveHocPhan([FromRoute] int id, [FromRoute] int hocPhanId)
+        {
+            var cTDT = await _context.CTDTs
+                .Include(lhp => lhp.HocPhans) // Include HocPhans to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (cTDT == null)
+                return NotFound("CTDT not found");
+
+            var hocPhan = await _context.HocPhans.FindAsync(hocPhanId);
+            if (hocPhan == null)
+                return NotFound($"HocPhan with ID {hocPhanId} not found");
+
+            // Check if the HocPhan is in the CTDT to avoid removing non-existing HocPhan
+            if (!cTDT.HocPhans.Contains(hocPhan))
+            {
+                return NotFound($"HocPhan with ID {hocPhanId} is not found in CTDT with ID {id}");
+            }
+
+            cTDT.HocPhans.Remove(hocPhan);
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetHocPhans), new { id = cTDT.Id }, cTDT.HocPhans.Select(sv => sv.ToHocPhanDTO()).ToList());
+        }
     }
 }

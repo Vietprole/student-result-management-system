@@ -75,6 +75,5 @@ namespace Student_Result_Management_System.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
     }
 }

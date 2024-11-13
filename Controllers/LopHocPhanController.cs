@@ -127,11 +127,12 @@ namespace Student_Result_Management_System.Controllers
             if (sinhVien == null)
                 return NotFound($"SinhVien with ID {sinhVienId} not found");
 
-            // Check if the SinhVien is in the LopHocPhan to avoid removing non-existing SinhVien
-            if (lopHocPhan.SinhViens.Contains(sinhVien))
+            // Check if the HocPhan is in the CTDT to avoid removing non-existing HocPhan
+            if (!lopHocPhan.SinhViens.Contains(sinhVien))
             {
-                lopHocPhan.SinhViens.Remove(sinhVien);
+                return NotFound($"SinhVien with ID {sinhVienId} is not found in LopHocPhan with ID {id}");
             }
+            lopHocPhan.SinhViens.Remove(sinhVien);
 
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetSinhViens), new { id = lopHocPhan.Id }, lopHocPhan.SinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());

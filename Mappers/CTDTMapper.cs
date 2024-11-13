@@ -11,7 +11,6 @@ public static class CTDTMapper
         {
             Id = ctdt.Id,
             Ten = ctdt.Ten,
-            KhoaId = ctdt.KhoaId,
             NganhId = ctdt.NganhId,
         };
     }
@@ -21,7 +20,6 @@ public static class CTDTMapper
         return new CTDT
         {
             Ten = createCTDTDTO.Ten,
-            KhoaId = createCTDTDTO.KhoaId,
             NganhId = createCTDTDTO.NganhId,
         };
     }
@@ -31,7 +29,6 @@ public static class CTDTMapper
         return new CTDT
         {
             Ten = updateCTDTDTO.Ten,
-            KhoaId = updateCTDTDTO.KhoaId,
             NganhId = updateCTDTDTO.NganhId,
         };
     }
