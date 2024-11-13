@@ -75,5 +75,68 @@ namespace Student_Result_Management_System.Controllers
             return NoContent();
         }
 
+                [HttpGet("{id}/view-clos")]
+        public async Task<IActionResult> GetCLOs([FromRoute] int id)
+        {
+            var cauHoi = await _context.CauHois
+                .Include(lhp => lhp.CLOs)
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (cauHoi == null)
+                return NotFound();
+
+            var cLODTOs = cauHoi.CLOs.Select(sv => sv.ToCLODTO()).ToList();
+            return Ok(cLODTOs);
+        }
+
+
+        [HttpPost("{id}/add-clos")]
+        public async Task<IActionResult> AddCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
+        {
+            var cauHoi = await _context.CauHois
+                .Include(lhp => lhp.CLOs) // Include CLOs to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (cauHoi == null)
+                return NotFound("CauHoi not found");
+
+            foreach (var cLOId in cLOIds)
+            {
+                var cLO = await _context.CLOs.FindAsync(cLOId);
+                if (cLO == null)
+                    return NotFound($"CLO with ID {cLOId} not found");
+
+                // Check if the CLO is already in the CauHoi to avoid duplicates
+                if (!cauHoi.CLOs.Contains(cLO))
+                {
+                    cauHoi.CLOs.Add(cLO);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetCLOs), new { id = cauHoi.Id }, cauHoi.CLOs.Select(sv => sv.ToCLODTO()).ToList());
+        }
+
+        [HttpDelete("{id}/remove-clo/{cLOId}")]
+        public async Task<IActionResult> RemoveCLO([FromRoute] int id, [FromRoute] int cLOId)
+        {
+            var cauHoi = await _context.CauHois
+                .Include(lhp => lhp.CLOs) // Include CLOs to ensure the collection is loaded
+                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            if (cauHoi == null)
+                return NotFound("CauHoi not found");
+
+            var cLO = await _context.CLOs.FindAsync(cLOId);
+            if (cLO == null)
+                return NotFound($"CLO with ID {cLOId} not found");
+
+            // Check if the HocPhan is in the CTDT to avoid removing non-existing HocPhan
+            if (!cauHoi.CLOs.Contains(cLO))
+            {
+                return NotFound($"CLO with ID {cLOId} is not found in CauHoi with ID {id}");
+            }
+            cauHoi.CLOs.Remove(cLO);
+
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetCLOs), new { id = cauHoi.Id }, cauHoi.CLOs.Select(sv => sv.ToCLODTO()).ToList());
+        }
     }
 }
