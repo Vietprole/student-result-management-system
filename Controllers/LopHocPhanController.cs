@@ -89,7 +89,7 @@ namespace Student_Result_Management_System.Controllers
 
 
         [HttpPost("{id}/add-sinhviens")]
-        public async Task<IActionResult> AddSinhVien([FromRoute] int id, [FromBody] int[] sinhVienIds)
+        public async Task<IActionResult> AddSinhViens([FromRoute] int id, [FromBody] int[] sinhVienIds)
         {
             var lopHocPhan = await _context.LopHocPhans
                 .Include(lhp => lhp.SinhViens) // Include SinhViens to ensure the collection is loaded
@@ -153,7 +153,7 @@ namespace Student_Result_Management_System.Controllers
 
 
         [HttpPost("{id}/add-giangviens")]
-        public async Task<IActionResult> AddGiangVien([FromRoute] int id, [FromBody] int[] giangVienIds)
+        public async Task<IActionResult> AddGiangViens([FromRoute] int id, [FromBody] int[] giangVienIds)
         {
             var lopHocPhan = await _context.LopHocPhans
                 .Include(lhp => lhp.GiangViens) // Include GiangViens to ensure the collection is loaded
