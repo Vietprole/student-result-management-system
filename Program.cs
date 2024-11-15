@@ -8,10 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add CORS services
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "AllowLocalHost",
-                      policy  =>
+    options.AddPolicy(name: "Allow5500",
+                      policy =>
                       {
                           policy.WithOrigins("http://localhost:5500");
+                      });
+    options.AddPolicy(name: "Allow5173",
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173");
                       });
 });
 
@@ -36,7 +41,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowLocalHost");
+app.UseCors("Allow5500");
+app.UseCors("Allow5173");
 
 app.UseAuthorization();
 
