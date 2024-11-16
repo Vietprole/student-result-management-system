@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.SinhVien;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 
 namespace Student_Result_Management_System.Controllers
@@ -12,9 +13,11 @@ namespace Student_Result_Management_System.Controllers
     public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public SinhVienController(ApplicationDBContext context)
+        private readonly ISinhVienRepository _sinhVienRepository;
+        public SinhVienController(ApplicationDBContext context, ISinhVienRepository sinhVienRepository)
         {
             _context = context;
+            _sinhVienRepository = sinhVienRepository;
         }
         [HttpGet]
         // IActionResult return any value type
@@ -36,6 +39,15 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound();
             var studentDTO = student.ToSinhVienDTO();
             return Ok(studentDTO);
+        }
+        [HttpGet("taikhoan/{taikhoanId}")]
+        public async Task<IActionResult> GetByTaiKhoanId([FromRoute] int taikhoanId)
+        {
+            var sinhVien= await _sinhVienRepository.getSinhVienByTaiKhoanId(taikhoanId);
+            if (sinhVien == null)
+                return NotFound();
+
+            return Ok(sinhVien.ToSinhVienDTO());
         }
 
         [HttpPost]

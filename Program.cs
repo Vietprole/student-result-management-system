@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.Interfaces;
+using Student_Result_Management_System.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
+builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+builder.Services.AddScoped<IChucVuRepository, ChucVuRepository>();
+builder.Services.AddScoped<ISinhVienRepository, SinhVienRepository>();
+builder.Services.AddScoped<IPhanQuyenRepository, PhanQuyenRepository>();
+
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {

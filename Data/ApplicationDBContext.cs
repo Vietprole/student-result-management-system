@@ -22,6 +22,10 @@ namespace Student_Result_Management_System.Data
         public DbSet<Nganh> Nganhs { get; set; }
         public DbSet<PLO> PLOs { get; set; }
         public DbSet<SinhVien> SinhViens { get; set; }
+        public DbSet<TaiKhoan> TaiKhoans { get; set; }
+        public DbSet<PhanQuyen> PhanQuyens { get; set; }
+        
+        public DbSet<ChucVu> ChucVus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
