@@ -1,9 +1,9 @@
 import Layout from "./Layout";
 
-export default function MainPage() {
+export default function CaiDatPage() {
   return (
     <Layout>
-      <h1>This is MainPage</h1>
+      <h1>This is CaiDatPage</h1>
     </Layout>
   );
 }

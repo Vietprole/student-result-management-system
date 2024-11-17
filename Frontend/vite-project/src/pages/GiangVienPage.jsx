@@ -1,21 +1,21 @@
 import { DataTable } from "@/components/DataTable";
 import Layout from "./Layout";
 import columns from "@/app/columns";
-import { getAllSinhViens } from "@/api/api-sinhvien";
+import { getAllGiangViens } from "@/api/api-giangvien";
 import { useEffect, useState } from "react";
 
-export default function SinhVienPage() {
+export default function GiangVienPage() {
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllSinhViens();
+      const data = await getAllGiangViens();
       setData(data);
     };
     fetchData();
   }, []);
   return (
     <Layout>
-      <h1>This is SinhVienPage</h1>
+      <h1>This is GiangVienPage</h1>
       <DataTable 
         columns={columns} 
         data={data}
