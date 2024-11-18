@@ -55,6 +55,8 @@ dotnet ef migrations remove
 - E.g.: SinhvienId  
 [conventions](https://learn.microsoft.com/en-us/ef/core/modeling/relationships/conventions)
 
+## Github Action is triggers when push to master!
+
 ## Delete action consequences
 - Delete Khoa, Nganh **WILL NOT** delete CTDT, HocPhan. Instead setting null.
 - Delete HocPhan **WILL** delete LopHocPhan, so be cautious.
