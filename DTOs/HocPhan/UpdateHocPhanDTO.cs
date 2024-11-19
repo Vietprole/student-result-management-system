@@ -8,8 +8,8 @@ public class UpdateHocPhanDTO
     [Required]
     public string Ten { get; set; } = string.Empty;
     [Required]
-    public int SoTinChi { get; set; }
+    public float SoTinChi { get; set; }
     [Required]
     public bool LaCotLoi { get; set; }
-    public int NganhId { get; set; }
+    public int? KhoaId { get; set; }
 }

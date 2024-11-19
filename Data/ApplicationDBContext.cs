@@ -31,6 +31,12 @@ namespace Student_Result_Management_System.Data
                 .UsingEntity(
                     l => l.HasOne(typeof(CauHoi)).WithMany().OnDelete(DeleteBehavior.Cascade),
                     r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.ClientCascade));
+
+            modelBuilder.Entity<Khoa>()
+                .HasMany(e => e.GiangViens)
+                .WithOne(e => e.Khoa)
+                .HasForeignKey(e => e.KhoaId)
+                .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related GiangViens
         }
     }
 }

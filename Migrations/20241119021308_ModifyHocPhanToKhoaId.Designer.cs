@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -11,9 +12,11 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241119021308_ModifyHocPhanToKhoaId")]
+    partial class ModifyHocPhanToKhoaId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -531,8 +534,7 @@ namespace Student_Result_Management_System.Migrations
                 {
                     b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
                         .WithMany("GiangViens")
-                        .HasForeignKey("KhoaId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("KhoaId");
 
                     b.Navigation("Khoa");
                 });
