@@ -57,6 +57,7 @@ dotnet ef migrations remove
 
 ## Delete action consequences
 - Delete Khoa, Nganh **WILL NOT** delete CTDT, HocPhan. Instead setting null.
+- Delete CTDT **WILL** delete its PLOs, so be cautious.
 - Delete HocPhan **WILL** delete LopHocPhan, so be cautious.
 - Delete CLO is set to ClientCascade to CauHoi, so make sure to **include CauHoi** whenever you delete CLO or it will cause error.
 ```C#
