@@ -73,3 +73,9 @@ if (clo != null)
     await _context.SaveChangesAsync();
 }
 ```
+
+## SQLServer Docker Query
+```bash
+docker exec -it sqlserver "bash"
+/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Viet@123456 -C
+```
