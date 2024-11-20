@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/table"
+} from "@/components/ui/table"
  
 import PropTypes from 'prop-types';
 
