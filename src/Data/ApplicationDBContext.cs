@@ -11,12 +11,8 @@ namespace Student_Result_Management_System.Data
         {
             try
             {
-                var databaseCreator = Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-                if (databaseCreator != null)
-                {
-                    if (!databaseCreator.CanConnect()) databaseCreator.Create();
-                    if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
-                }
+                // Apply any pending migrations
+                Database.Migrate();
             }
             catch (Exception ex)
             {
