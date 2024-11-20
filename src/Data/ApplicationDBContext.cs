@@ -45,6 +45,30 @@ namespace Student_Result_Management_System.Data
                 .UsingEntity(
                     l => l.HasOne(typeof(CauHoi)).WithMany().OnDelete(DeleteBehavior.Cascade),
                     r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.ClientCascade));
+
+            modelBuilder.Entity<Khoa>()
+                .HasMany(e => e.GiangViens)
+                .WithOne(e => e.Khoa)
+                .HasForeignKey(e => e.KhoaId)
+                .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related GiangViens
+
+            modelBuilder.Entity<Khoa>()
+                .HasMany(e => e.Nganhs)
+                .WithOne(e => e.Khoa)
+                .HasForeignKey(e => e.KhoaId)
+                .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related Nganhs
+
+            modelBuilder.Entity<Khoa>()
+                .HasMany(e => e.HocPhans)
+                .WithOne(e => e.Khoa)
+                .HasForeignKey(e => e.KhoaId)
+                .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related HocPhans
+
+            modelBuilder.Entity<Nganh>()
+                .HasMany(e => e.CTDTs)
+                .WithOne(e => e.Nganh)
+                .HasForeignKey(e => e.NganhId)
+                .OnDelete(DeleteBehavior.SetNull); // Set NganhId to null in related CTDTs
         }
     }
 }
