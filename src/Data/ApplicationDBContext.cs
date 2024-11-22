@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<TaiKhoan>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
@@ -39,6 +41,32 @@ namespace Student_Result_Management_System.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
+            modelBuilder.Entity<IdentityUserRole<string>>().HasNoKey();
+            modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
+            base.OnModelCreating(modelBuilder);
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole {Name = "Admin", NormalizedName = "ADMIN"},
+                new IdentityRole {Name = "GiangVien", NormalizedName = "GIANGVIEN"},
+                new IdentityRole {Name = "SinhVien", NormalizedName = "SINHVIEN"},
+                new IdentityRole {Name = "PhongDaoTao", NormalizedName = "PHONGDAOTAO"},
+                new IdentityRole {Name = "TruongKhoa", NormalizedName = "TRUONGKHOA"},
+                new IdentityRole {Name = "TruongBoMon", NormalizedName = "TRUONGBOMON"}
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+
+            modelBuilder.Entity<SinhVien>()
+                .HasOne(e => e.TaiKhoan)
+                 .WithMany()          // Không có mối quan hệ ngược
+                .HasForeignKey(s => s.TaiKhoanId) // FK
+                .OnDelete(DeleteBehavior.Cascade); // khi xóa sinh viên thì xóa luôn user
+
+            modelBuilder.Entity<GiangVien>()
+                .HasOne(e => e.TaiKhoan)
+                .WithMany()          // Không có mối quan hệ ngược
+                .HasForeignKey(s => s.TaiKhoanId) // FK
+                .OnDelete(DeleteBehavior.Cascade); // khi xóa giảng viên thì xóa luôn user
             modelBuilder.Entity<CLO>()
                 .HasMany(e => e.CauHois)
                 .WithMany(e => e.CLOs)
