@@ -166,9 +166,9 @@ const CongThucDiem = () => {
     const fetchData = async () => {
       const baiKiemTrasData = await getBaiKiemTraByLopHocPhanId(lopHocPhanId);
       setBaiKiemTras(baiKiemTrasData);
-      const cauHoisData = await getCauHoiByBaiKiemTraId(baiKiemTrasData[0].id);
-      console.log("cauHoisData: ", cauHoisData);
-      setCauHois(cauHoisData);
+      // const cauHoisData = await getCauHoiByBaiKiemTraId(baiKiemTrasData[0].id);
+      // console.log("cauHoisData: ", cauHoisData);
+      // setCauHois(cauHoisData);
     };
     fetchData();
   }, [lopHocPhanId]);
@@ -179,7 +179,7 @@ const CongThucDiem = () => {
       <div className="flex">
         <div className="w-1/2 p-2">
           <DataTable
-            rowToBeFiltered={"loai"}
+            columnToBeFiltered={"loai"}
             hasSelectedRowsCount={false}
             isPaginated={false}
             data={baiKiemTras}
@@ -217,7 +217,7 @@ const CongThucDiem = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           <DataTable
-            rowToBeFiltered={"loai"}
+            columnToBeFiltered={"loai"}
             hasSelectedRowsCount={false}
             isPaginated={false}
             data={cauHois}

@@ -30,11 +30,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Modal from "@/components/Modal";
 
 export default function DataTable({
-  rowToBeFiltered,
+  columnToBeFiltered,
   hasSelectedRowsCount,
   isPaginated,
+  addButtonTitle,
   data,
   columns,
 }) {
@@ -66,10 +68,10 @@ export default function DataTable({
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder={`Filter ${rowToBeFiltered}...`}
-          value={table.getColumn(rowToBeFiltered)?.getFilterValue() ?? ""}
+          placeholder={`Filter ${columnToBeFiltered}...`}
+          value={table.getColumn(columnToBeFiltered)?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn(rowToBeFiltered)?.setFilterValue(event.target.value)
+            table.getColumn(columnToBeFiltered)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -99,6 +101,9 @@ export default function DataTable({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        <Modal>
+          {addButtonTitle && <Button>{addButtonTitle}</Button>}
+        </Modal>
       </div>
       <div className="rounded-md border">
         <Table>

@@ -80,7 +80,7 @@ export default function DefaultComponent() {
     <div>
       <h2>Default Component</h2>
       <DataTable
-            rowToBeFiltered={"ten"}
+            columnToBeFiltered={"ten"}
             hasSelectedRowsCount={false}
             isPaginated={false}
             data={data}
