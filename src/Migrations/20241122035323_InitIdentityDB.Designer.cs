@@ -12,7 +12,7 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241122031130_InitIdentityDB")]
+    [Migration("20241122035323_InitIdentityDB")]
     partial class InitIdentityDB
     {
         /// <inheritdoc />
@@ -144,37 +144,37 @@ namespace Student_Result_Management_System.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3c86b3c3-7f5b-4af3-ae09-d21272035d12",
+                            Id = "d954a44e-704c-48a9-9d85-a68c3ce01c3e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "83f1e487-78c8-4eac-8c00-d678ebbb21a0",
+                            Id = "532abf13-061f-4b26-9084-bdd411d7036a",
                             Name = "GiangVien",
                             NormalizedName = "GIANGVIEN"
                         },
                         new
                         {
-                            Id = "cc6db554-856a-4528-b6eb-5b2810e8be25",
+                            Id = "b31d1f30-df95-4d72-b349-e380671290f9",
                             Name = "SinhVien",
                             NormalizedName = "SINHVIEN"
                         },
                         new
                         {
-                            Id = "b645696d-476a-4a5d-9c2f-a4ece98d717b",
+                            Id = "86060161-8994-4909-a802-113079d9b3d2",
                             Name = "PhongDaoTao",
                             NormalizedName = "PHONGDAOTAO"
                         },
                         new
                         {
-                            Id = "2cf6da15-bdf3-4b7d-b7a8-01c90fc7a1e0",
+                            Id = "2d00d136-95d0-45f6-8f53-78de2c4c327d",
                             Name = "TruongKhoa",
                             NormalizedName = "TRUONGKHOA"
                         },
                         new
                         {
-                            Id = "4d7916e7-e82b-44c3-acc7-6952f4d10199",
+                            Id = "f66f8a66-7d0e-4d79-817b-09fc9098f78e",
                             Name = "TruongBoMon",
                             NormalizedName = "TRUONGBOMON"
                         });
@@ -431,11 +431,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<bool>("LaCotLoi")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("NganhId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SoTinChi")
-                        .HasColumnType("int");
+                    b.Property<float>("SoTinChi")
+                        .HasColumnType("real");
 
                     b.Property<string>("Ten")
                         .IsRequired()
@@ -444,8 +441,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("KhoaId");
-
-                    b.HasIndex("NganhId");
 
                     b.ToTable("HocPhans");
                 });
@@ -532,6 +527,8 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("KhoaId");
+
                     b.ToTable("Nganhs");
                 });
 
@@ -555,6 +552,8 @@ namespace Student_Result_Management_System.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CTDTId");
 
                     b.ToTable("PLOs");
                 });
@@ -810,15 +809,14 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.CTDT", b =>
                 {
-                    b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
+                    b.HasOne("Student_Result_Management_System.Models.Khoa", null)
                         .WithMany("CTDTs")
                         .HasForeignKey("KhoaId");
 
                     b.HasOne("Student_Result_Management_System.Models.Nganh", "Nganh")
-                        .WithMany()
-                        .HasForeignKey("NganhId");
-
-                    b.Navigation("Khoa");
+                        .WithMany("CTDTs")
+                        .HasForeignKey("NganhId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Nganh");
                 });
@@ -838,7 +836,8 @@ namespace Student_Result_Management_System.Migrations
                 {
                     b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
                         .WithMany("GiangViens")
-                        .HasForeignKey("KhoaId");
+                        .HasForeignKey("KhoaId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
                         .WithMany()
@@ -853,15 +852,12 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
                 {
-                    b.HasOne("Student_Result_Management_System.Models.Khoa", null)
+                    b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
                         .WithMany("HocPhans")
-                        .HasForeignKey("KhoaId");
+                        .HasForeignKey("KhoaId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Student_Result_Management_System.Models.Nganh", "Nganh")
-                        .WithMany()
-                        .HasForeignKey("NganhId");
-
-                    b.Navigation("Nganh");
+                    b.Navigation("Khoa");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.KetQua", b =>
@@ -894,6 +890,27 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("HocPhan");
                 });
 
+            modelBuilder.Entity("Student_Result_Management_System.Models.Nganh", b =>
+                {
+                    b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
+                        .WithMany("Nganhs")
+                        .HasForeignKey("KhoaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Khoa");
+                });
+
+            modelBuilder.Entity("Student_Result_Management_System.Models.PLO", b =>
+                {
+                    b.HasOne("Student_Result_Management_System.Models.CTDT", "CTDT")
+                        .WithMany("PLOs")
+                        .HasForeignKey("CTDTId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CTDT");
+                });
+
             modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>
                 {
                     b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
@@ -903,6 +920,11 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired();
 
                     b.Navigation("TaiKhoan");
+                });
+
+            modelBuilder.Entity("Student_Result_Management_System.Models.CTDT", b =>
+                {
+                    b.Navigation("PLOs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
@@ -917,11 +939,18 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("GiangViens");
 
                     b.Navigation("HocPhans");
+
+                    b.Navigation("Nganhs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.LopHocPhan", b =>
                 {
                     b.Navigation("CLOs");
+                });
+
+            modelBuilder.Entity("Student_Result_Management_System.Models.Nganh", b =>
+                {
+                    b.Navigation("CTDTs");
                 });
 #pragma warning restore 612, 618
         }

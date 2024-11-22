@@ -177,12 +177,12 @@ namespace Student_Result_Management_System.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2cf6da15-bdf3-4b7d-b7a8-01c90fc7a1e0", null, "TruongKhoa", "TRUONGKHOA" },
-                    { "3c86b3c3-7f5b-4af3-ae09-d21272035d12", null, "Admin", "ADMIN" },
-                    { "4d7916e7-e82b-44c3-acc7-6952f4d10199", null, "TruongBoMon", "TRUONGBOMON" },
-                    { "83f1e487-78c8-4eac-8c00-d678ebbb21a0", null, "GiangVien", "GIANGVIEN" },
-                    { "b645696d-476a-4a5d-9c2f-a4ece98d717b", null, "PhongDaoTao", "PHONGDAOTAO" },
-                    { "cc6db554-856a-4528-b6eb-5b2810e8be25", null, "SinhVien", "SINHVIEN" }
+                    { "2d00d136-95d0-45f6-8f53-78de2c4c327d", null, "TruongKhoa", "TRUONGKHOA" },
+                    { "532abf13-061f-4b26-9084-bdd411d7036a", null, "GiangVien", "GIANGVIEN" },
+                    { "86060161-8994-4909-a802-113079d9b3d2", null, "PhongDaoTao", "PHONGDAOTAO" },
+                    { "b31d1f30-df95-4d72-b349-e380671290f9", null, "SinhVien", "SINHVIEN" },
+                    { "d954a44e-704c-48a9-9d85-a68c3ce01c3e", null, "Admin", "ADMIN" },
+                    { "f66f8a66-7d0e-4d79-817b-09fc9098f78e", null, "TruongBoMon", "TRUONGBOMON" }
                 });
 
             migrationBuilder.CreateIndex(

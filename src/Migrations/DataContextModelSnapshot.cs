@@ -141,37 +141,37 @@ namespace Student_Result_Management_System.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3c86b3c3-7f5b-4af3-ae09-d21272035d12",
+                            Id = "d954a44e-704c-48a9-9d85-a68c3ce01c3e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "83f1e487-78c8-4eac-8c00-d678ebbb21a0",
+                            Id = "532abf13-061f-4b26-9084-bdd411d7036a",
                             Name = "GiangVien",
                             NormalizedName = "GIANGVIEN"
                         },
                         new
                         {
-                            Id = "cc6db554-856a-4528-b6eb-5b2810e8be25",
+                            Id = "b31d1f30-df95-4d72-b349-e380671290f9",
                             Name = "SinhVien",
                             NormalizedName = "SINHVIEN"
                         },
                         new
                         {
-                            Id = "b645696d-476a-4a5d-9c2f-a4ece98d717b",
+                            Id = "86060161-8994-4909-a802-113079d9b3d2",
                             Name = "PhongDaoTao",
                             NormalizedName = "PHONGDAOTAO"
                         },
                         new
                         {
-                            Id = "2cf6da15-bdf3-4b7d-b7a8-01c90fc7a1e0",
+                            Id = "2d00d136-95d0-45f6-8f53-78de2c4c327d",
                             Name = "TruongKhoa",
                             NormalizedName = "TRUONGKHOA"
                         },
                         new
                         {
-                            Id = "4d7916e7-e82b-44c3-acc7-6952f4d10199",
+                            Id = "f66f8a66-7d0e-4d79-817b-09fc9098f78e",
                             Name = "TruongBoMon",
                             NormalizedName = "TRUONGBOMON"
                         });
@@ -908,9 +908,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("CTDT");
                 });
 
-            modelBuilder.Entity("Student_Result_Management_System.Models.CTDT", b =>
-                {
-                    b.Navigation("PLOs");
             modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>
                 {
                     b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
@@ -920,6 +917,11 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired();
 
                     b.Navigation("TaiKhoan");
+                });
+
+            modelBuilder.Entity("Student_Result_Management_System.Models.CTDT", b =>
+                {
+                    b.Navigation("PLOs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
