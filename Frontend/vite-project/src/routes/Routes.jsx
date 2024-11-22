@@ -11,7 +11,16 @@ import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
 import HoSoCaNhanPage from "@/pages/HoSoCaNhanPage";
 import CaiDatPage from "@/pages/CaiDatPage";
 
-const routes = [
+import CongThucDiem from "@/pages/lophocphan/CongThucDiem";
+import BangDiem from "@/pages/lophocphan/BangDiem";
+import TaoCLO from "@/pages/lophocphan/TaoCLO";
+import NoiPLOCLO from "@/pages/lophocphan/NoiPLOCLO";
+import NoiCauHoiCLO from "@/pages/lophocphan/NoiCauHoiCLO";
+import DiemCLO from "@/pages/lophocphan/DiemCLO";
+import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
+import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
+
+const lophocphans = [
   {
     path: "/",
     element: <MainPage />,
@@ -39,6 +48,16 @@ const routes = [
   {
     path: "/lophocphan",
     element: <LopHocPhanPage />,
+    children: [
+      { path: ":lopHocPhanId/cong-thuc-diem", element: <CongThucDiem /> },
+      { path: ":lopHocPhanId/bang-diem", element: <BangDiem /> },
+      { path: ":lopHocPhanId/tao-clo", element: <TaoCLO /> },
+      { path: ":lopHocPhanId/noi-plo-clo", element: <NoiPLOCLO /> },
+      { path: ":lopHocPhanId/noi-cau-hoi-clo", element: <NoiCauHoiCLO /> },
+      { path: ":lopHocPhanId/diem-clo", element: <DiemCLO /> },
+      { path: ":lopHocPhanId/tong-ket-clo", element: <TongKetCLO /> },
+      { path: ":lopHocPhanId/bao-cao-clo", element: <BaoCaoCLO /> },
+    ],
   },
   {
     path: "/ketqua",
@@ -58,7 +77,7 @@ const routes = [
   }
 ]
 
-const router = createBrowserRouter(routes, {future: {
+const router = createBrowserRouter(lophocphans, {future: {
   v7_fetcherPersist: true,
   v7_normalizeFormMethod: true,
   v7_partialHydration: true,

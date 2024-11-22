@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/DataTable";
+import DataTable from "@/components/DataTable";
 import Layout from "./Layout";
 import columns from "@/app/columns";
 import { getAllGiangViens } from "@/api/api-giangvien";

@@ -7,7 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/sidebar"
+} from "@/components/ui/sidebar"
 
 // Import PNG icons
 import KhoaIcon from "@/assets/icons/khoa-icon.png";
