@@ -1,28 +1,6 @@
-// import { DataTable } from "@/components/DataTable";
 import Layout from "./Layout";
 import { getAllSinhViens } from "@/api/api-sinhvien";
 import { useEffect, useState } from "react";
-
-// export default function SinhVienPage() {
-//   const [data, setData] = useState([]);
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const data = await getAllSinhViens();
-//       setData(data);
-//     };
-//     fetchData();
-//   }, []);
-//   return (
-//     <Layout>
-//       <h1>This is SinhVienPage</h1>
-//       <DataTable 
-//         columns={columns} 
-//         data={data}
-//       />
-//     </Layout>
-//   );
-// }
-
 import * as React from "react"
 import {
   flexRender,
@@ -33,9 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
-// import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -54,39 +30,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-// const data = [
-//   {
-//     id: "m5gr84i9",
-//     amount: 316,
-//     status: "success",
-//     ten: "ken99@yahoo.com",
-//   },
-//   {
-//     id: "3u1reuv4",
-//     amount: 242,
-//     status: "success",
-//     ten: "Abe45@gmail.com",
-//   },
-//   {
-//     id: "derv1ws0",
-//     amount: 837,
-//     status: "processing",
-//     ten: "Monserrat44@gmail.com",
-//   },
-//   {
-//     id: "5kma53ae",
-//     amount: 874,
-//     status: "success",
-//     ten: "Silas22@gmail.com",
-//   },
-//   {
-//     id: "bhqecj4p",
-//     amount: 721,
-//     status: "failed",
-//     ten: "carmella@hotmail.com",
-//   },
-// ]
 
 const columns = [
   {
