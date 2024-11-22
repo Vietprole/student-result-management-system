@@ -1,40 +1,58 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useOutlet, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import { getAllLopHocPhans } from "../api/api-lophocphan";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { useParams } from 'react-router-dom';
+import DefaultComponent from "../pages/lophocphan/DefaultComponent";
 
 export default function LopHocPhanPage() {
   const [lopHocPhans, setLopHocPhans] = useState([]);
   const [selectedLopHocPhan, setSelectedLopHocPhan] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
-  const { lopHocPhanId, itemId } = useParams();
+  const outlet = useOutlet();
 
   useEffect(() => {
     const fetchLopHocPhans = async () => {
       const data = await getAllLopHocPhans();
       setLopHocPhans(data);
-
-      // Set the selected values from URL parameters
-      if (lopHocPhanId) {
-        const selectedLopHocPhan = data.find(lhp => lhp.id === lopHocPhanId);
-        setSelectedLopHocPhan(selectedLopHocPhan);
-      }
-      if (itemId) {
-        setSelectedItem(itemId);
-      }
     };
 
     fetchLopHocPhans();
-  }, [lopHocPhanId, itemId]);
+  }, []);
 
   const handleRoute = () => {
+    let selectedRoute = null;
+    switch (selectedItem) {
+      case "Công Thức Điểm":
+        selectedRoute = "cong-thuc-diem";
+      break;
+      case "Bảng Điểm":
+        selectedRoute = "bang-diem";
+      break;
+      case "Tạo CLO":
+        selectedRoute = "tao-clo";
+      break;
+      case "Nối PLO - CLO":
+        selectedRoute = "noi-plo-clo";
+      break;
+      case "Nối Câu Hỏi - CLO":
+        selectedRoute = "noi-cau-hoi-clo";
+      break;
+      case "Điểm CLO":
+        selectedRoute = "diem-clo";
+      break;
+      case "Tổng Kết CLO":
+        selectedRoute = "tong-ket-clo";
+      break;
+      case "Báo Cáo CLO":
+        selectedRoute = "bao-cao-clo";
+      break;
+    }
     if (selectedLopHocPhan && selectedItem) {
-      navigate(`/lophocphan/${selectedLopHocPhan.id}/${selectedItem}`);
+      navigate(`/lophocphan/${selectedLopHocPhan.id}/${selectedRoute}`);
     }
   };
 
@@ -73,14 +91,14 @@ export default function LopHocPhanPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onSelect={() => setSelectedItem("cong-thuc-diem")}>Công Thức Điểm</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("bang-diem")}>Bảng Điểm</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("tao-clo")}>Tạo CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("noi-plo-clo")}>Nối PLO - CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("noi-cau-hoi-clo")}>Nối Câu Hỏi - CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("diem-clo")}>Điểm CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("tong-ket-clo")}>Tổng Kết CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("bao-cao-clo")}>Báo Cáo CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Công Thức Điểm")}>Công Thức Điểm</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Bảng Điểm")}>Bảng Điểm</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Tạo CLO")}>Tạo CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Nối PLO - CLO")}>Nối PLO - CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Nối Câu Hỏi - CLO")}>Nối Câu Hỏi - CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Điểm CLO")}>Điểm CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Tổng Kết CLO")}>Tổng Kết CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Báo Cáo CLO")}>Báo Cáo CLO</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -90,7 +108,8 @@ export default function LopHocPhanPage() {
           </Button>
         </div>
       </div>
-      <Outlet/>
+      {outlet || <DefaultComponent />}
     </Layout>
   );
 }
+
