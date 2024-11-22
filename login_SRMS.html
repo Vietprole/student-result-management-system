@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SRMS - Đăng nhập</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-      } 
-      
+      }
+
       body {
-        font-family: 'Roboto', sans-serif;
-        background: url('https://i.imghippo.com/files/lQZ8w1729321525.png');
+        font-family: "Roboto", sans-serif;
+        background: url("https://i.imghippo.com/files/lQZ8w1729321525.png");
         background-size: cover;
         height: 100vh;
         display: flex;
@@ -40,7 +43,8 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       }
 
-      h1, h2 {
+      h1,
+      h2 {
         text-align: center;
         color: #004a7c;
       }
@@ -106,28 +110,38 @@
         background-color: #00335c;
       }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="login-box">
-          <div align="left">
-            <h2>Welcome to SRMS</h2>
-            <h1>Đăng nhập</h1>
-          </div>   
-          <form>
-              <label for="username">Nhập tên đăng nhập</label>
-              <input type="text" id="username" placeholder="Tên đăng nhập" required>
-              
-              <label for="password">Nhập mật khẩu</label>
-              <input type="password" id="password" placeholder="Mật khẩu" required>
-              
-              <div class="forgot-password">
-                  <a href="#">Quên mật khẩu?</a>
-              </div>
-              
-              <button type="submit">Đăng nhập</button>
-          </form>
+      <div class="login-box">
+        <div align="left">
+          <h2>Welcome to SRMS</h2>
+          <h1>Đăng nhập</h1>
         </div>
+        <form>
+          <label for="username">Nhập tên đăng nhập</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="Tên đăng nhập"
+            required
+          />
+
+          <label for="password">Nhập mật khẩu</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Mật khẩu"
+            required
+          />
+
+          <div class="forgot-password">
+            <a href="#">Quên mật khẩu?</a>
+          </div>
+
+          <button type="submit">Đăng nhập</button>
+        </form>
+      </div>
     </div>
-</body>
+  </body>
 </html>
