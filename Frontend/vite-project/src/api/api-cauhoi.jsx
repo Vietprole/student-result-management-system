@@ -13,51 +13,36 @@ export const getCauHoiByBaiKiemTraId = async (baiKiemTraId) => {
   }
 };
 
-export const getAllCauHois = async () => {
+export const getCauHoiById = async (id) => {
   try {
-    const response = await axios.get(API_CAUHOI);
+    const response = await axios.get(`${API_CAUHOI}/${id}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to get a single student by ID
-export const getCauHoiById = async (studentId) => {
+export const addCauHoi = async (newData) => {
   try {
-    const response = await axios.get(`${API_CAUHOI}/${studentId}`);
+    const response = await axios.post(API_CAUHOI, newData);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to add a new student
-export const addCauHoi = async (studentData) => {
+export const updateCauHoi = async (id, updatedData) => {
   try {
-    const response = await axios.post(API_CAUHOI, studentData);
-    console.log("add data:" , response.data);
+    const response = await axios.put(`${API_CAUHOI}/${id}`, updatedData);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to update an existing student
-export const updateCauHoi = async (studentId, updatedData) => {
+export const deleteCauHoi = async (id) => {
   try {
-    const response = await axios.put(`${API_CAUHOI}/${studentId}`, updatedData);
-    console.log("update data:" , response.data);
-    return response.data;
-  } catch (error) {
-    console.log("error message: ", error.message);
-  }
-};
-
-// Function to delete a student
-export const deleteCauHoi = async (studentId) => {
-  try {
-    const response = await axios.delete(`${API_CAUHOI}/${studentId}`);
+    const response = await axios.delete(`${API_CAUHOI}/${id}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
