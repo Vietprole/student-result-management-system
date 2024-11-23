@@ -27,6 +27,7 @@ export const getSinhVienById = async (studentId) => {
 export const addSinhVien = async (studentData) => {
   try {
     const response = await axios.post(API_SINHVIEN, studentData);
+    console.log("add data:" , response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -37,6 +38,7 @@ export const addSinhVien = async (studentData) => {
 export const updateSinhVien = async (studentId, updatedData) => {
   try {
     const response = await axios.put(`${API_SINHVIEN}/${studentId}`, updatedData);
+    console.log("update data:" , response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

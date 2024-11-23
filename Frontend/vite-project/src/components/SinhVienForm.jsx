@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addSinhVien, updateSinhVien } from "@/api/api-sinhvien";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
@@ -22,8 +22,7 @@ const formSchema = z.object({
   }),
 });
 
-export function SinhVienForm({ sinhVienId }) {
-  const navigate = useNavigate();
+export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpen }) {
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -38,13 +37,15 @@ export function SinhVienForm({ sinhVienId }) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (sinhVienId) {
-      await updateSinhVien(sinhVienId, values);
+      const data = await updateSinhVien(sinhVienId, values);
+      handleEdit(data);
       console.log("Updating sinh vien", values);
     } else {
-      await addSinhVien(values);
+      const data = await addSinhVien(values);
+      handleAdd(data);
       console.log("Add sinh vien", values);
+      setIsDialogOpen(false);
     }
-    navigate(0);
   }
 
   return (

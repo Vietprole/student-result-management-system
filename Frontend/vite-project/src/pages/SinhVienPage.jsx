@@ -1,9 +1,9 @@
 import Layout from "./Layout";
-import { getAllSinhViens } from "@/api/api-sinhvien";
 import { useEffect, useState } from "react";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
+  getAllSinhViens,
   // updateSinhVien,
   deleteSinhVien,
   // addSinhVien,
@@ -14,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -45,12 +44,7 @@ import {
 } from "@/components/ui/dialog";
 import { SinhVienForm } from "@/components/SinhVienForm";
 
-async function handleDelete(sinhVienId) {
-  await deleteSinhVien(sinhVienId);
-  window.location.reload();
-}
-
-const columns = [
+const createColumns = (handleEdit, handleDelete) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -108,7 +102,7 @@ const columns = [
                     Edit the current student.
                   </DialogDescription>
                 </DialogHeader>
-              <SinhVienForm sinhVienId={student.id}/>
+              <SinhVienForm sinhVienId={student.id} handleEdit={handleEdit}/>
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -137,10 +131,7 @@ const columns = [
 
 export default function SinhVienPage() {
   const [data, setData] = useState([]);
-  // const [showAddForm, setShowAddForm] = useState(false);
-  // const [newStudent, setNewStudent] = useState({ ten: "" });
-  // const [editingStudent, setEditingStudent] = useState(null);
-  // const [showEditForm, setShowEditForm] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -154,6 +145,27 @@ export default function SinhVienPage() {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const handleAdd = (newSinhVien) => {
+    console.log("from handleAdd", newSinhVien);
+    setData([...data, newSinhVien]);
+  };
+
+  const handleEdit = (editedSinhVien) => {
+    console.log("from handleEdit", editedSinhVien);
+    setData(
+      data.map((sinhVien) =>
+        sinhVien.id === editedSinhVien.id ? editedSinhVien : sinhVien
+      )
+    );
+  };
+
+  async function handleDelete(sinhVienId) {
+    await deleteSinhVien(sinhVienId);
+    setData(data.filter((sinhVien) => sinhVien.id !== sinhVienId));
+  }
+
+  const columns = createColumns(handleEdit, handleDelete);
 
   const table = useReactTable({
     data,
@@ -213,12 +225,11 @@ export default function SinhVienPage() {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
                 className="ml-2"
-                // onClick={() => setShowAddForm(true)}
               >
                 Thêm Sinh Viên
               </Button>
@@ -230,7 +241,7 @@ export default function SinhVienPage() {
                   Add a new student to the list.
                 </DialogDescription>
               </DialogHeader>
-            <SinhVienForm/>
+            <SinhVienForm handleAdd={handleAdd} setIsDialogOpen={setIsDialogOpen}/>
             </DialogContent>
           </Dialog>
         </div>
