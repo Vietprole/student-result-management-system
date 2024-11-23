@@ -14,8 +14,10 @@ import { getBaiKiemTraByLopHocPhanId } from "@/api/api-baikiemtra";
 import { useEffect, useState } from "react";
 import { getCauHoiByBaiKiemTraId } from "@/api/api-cauhoi";
 import { ChevronDown } from "lucide-react";
+import { BaiKiemTraForm } from "@/components/BaiKiemTraForm";
+import { CauHoiForm } from "@/components/CauHoiForm";
 
-const baiKiemTraColumns = [
+const createBaiKiemTraColumns = (handleEdit, handleDelete) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -86,7 +88,7 @@ const baiKiemTraColumns = [
   },
 ];
 
-const cauHoiColumns = [
+const createCauHoiColumns = (handleEdit, handleDelete) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -179,11 +181,11 @@ const CongThucDiem = () => {
       <div className="flex">
         <div className="w-1/2 p-2">
           <DataTable
+            entity = "Bai Kiem Tra"
+            createColumns={createBaiKiemTraColumns}
+            getAllItems={() => getBaiKiemTraByLopHocPhanId(lopHocPhanId)}
             columnToBeFiltered={"loai"}
-            hasSelectedRowsCount={false}
-            isPaginated={false}
-            data={baiKiemTras}
-            columns={baiKiemTraColumns}
+            ItemForm={BaiKiemTraForm}
           />
         </div>
         <div className="w-1/2 p-2">
@@ -217,11 +219,11 @@ const CongThucDiem = () => {
             </DropdownMenuContent>
           </DropdownMenu>
           <DataTable
+            entity = "Cau Hoi"
+            createColumns={createCauHoiColumns}
+            getAllItems={() => getCauHoiByBaiKiemTraId(selectedBaiKiemTra.id)}
             columnToBeFiltered={"loai"}
-            hasSelectedRowsCount={false}
-            isPaginated={false}
-            data={cauHois}
-            columns={cauHoiColumns}
+            ItemForm={CauHoiForm}
           />
         </div>
       </div>
