@@ -11,3 +11,40 @@ export const getAllGiangViens = async () => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getGiangVienById = async (id) => {
+  try {
+    const response = await axios.get(`${API_GIANGVIEN}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+export const addGiangVien = async (newData) => {
+  try {
+    const response = await axios.post(API_GIANGVIEN, newData);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+
+export const updateGiangVien = async (id, updatedData) => {
+  try {
+    const response = await axios.put(`${API_GIANGVIEN}/${id}`, updatedData);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+export const deleteGiangVien = async (id) => {
+  try {
+    const response = await axios.delete(`${API_GIANGVIEN}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};

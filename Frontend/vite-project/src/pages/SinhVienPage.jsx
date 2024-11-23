@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import * as React from "react"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useReactTable, getCoreRowModel, getPaginationRowModel, getSortedRowModel, getFilteredRowModel, flexRender } from '@tanstack/react-table';
 import { updateSinhVien, deleteSinhVien, addSinhVien } from "@/api/api-sinhvien";
 import {
   DropdownMenu,
