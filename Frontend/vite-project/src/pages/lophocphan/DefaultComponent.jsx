@@ -79,13 +79,13 @@ export default function DefaultComponent() {
   return (
     <div>
       <h2>Default Component</h2>
-      <DataTable
+      {/* <DataTable
             columnToBeFiltered={"ten"}
             hasSelectedRowsCount={false}
             isPaginated={false}
             data={data}
             columns={columns}
-          />
+          /> */}
     </div>
   );
 }

@@ -20,6 +20,20 @@ const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
+  trongSo: z.string()
+  .refine((val) => !isNaN(parseFloat(val)), {
+    message: "Trong so must be a number",
+  })
+  .refine((val) => parseFloat(val) > 0.1 && parseFloat(val) < 10, {
+    message: "Trong so must be between 0.1 and 10",
+  }),
+  baiKiemTraId: z.coerce.number(
+    {
+      message: "Bai Kiem Tra Id must be a number",
+    }
+  ).min(1, {
+    message: "Bai Kiem Tra Id must be at least 1 characters.",
+  }),
 });
 
 export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen }) {
@@ -29,6 +43,8 @@ export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen })
     defaultValues: {
       id: cauHoiId,
       ten: "",
+      trongSo: "",
+      baiKiemTraId: "",
     },
   });
 
@@ -37,13 +53,13 @@ export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen })
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (cauHoiId) {
+      console.log("Updating Bai Kiem Tra", values);
       const data = await updateCauHoi(cauHoiId, values);
       handleEdit(data);
-      console.log("Updating sinh vien", values);
     } else {
+      console.log("Add Bai Kiem Tra", values);
       const data = await addCauHoi(values);
       handleAdd(data);
-      console.log("Add sinh vien", values);
       setIsDialogOpen(false);
     }
   }
@@ -76,7 +92,39 @@ export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen })
             <FormItem>
               <FormLabel>Tên</FormLabel>
               <FormControl>
-                <Input placeholder="Nguyễn Văn A" {...field} />
+                <Input placeholder="Câu 1a" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="trongSo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Trọng Số</FormLabel>
+              <FormControl>
+                <Input placeholder="1.5" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="baiKiemTraId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ID Bài Kiểm Tra</FormLabel>
+              <FormControl>
+                <Input placeholder="1" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.

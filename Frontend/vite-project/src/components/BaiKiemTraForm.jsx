@@ -17,8 +17,22 @@ import { addBaiKiemTra, updateBaiKiemTra } from "@/api/api-baikiemtra";
 // import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
-  ten: z.string().min(2, {
-    message: "Ten must be at least 2 characters.",
+  loai: z.string().min(2, {
+    message: "Loai must be at least 2 characters.",
+  }),
+  trongSo: z.string()
+  .refine((val) => !isNaN(parseFloat(val)), {
+    message: "Trong so must be a number",
+  })
+  .refine((val) => parseFloat(val) > 0 && parseFloat(val) < 1, {
+    message: "Trong so must be between 0 and 1",
+  }),
+  lopHocPhanId: z.coerce.number(
+    {
+      message: "Lop Hoc Phan Id must be a number",
+    }
+  ).min(1, {
+    message: "Lop Hoc Phan Id must be at least 1 characters.",
   }),
 });
 
@@ -28,7 +42,9 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: baiKiemTraId,
-      ten: "",
+      loai: "",
+      trongSo: "",
+      lopHocPhanId: "",
     },
   });
 
@@ -37,13 +53,13 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (baiKiemTraId) {
+      console.log("Updating Bai Kiem Tra", values);
       const data = await updateBaiKiemTra(baiKiemTraId, values);
       handleEdit(data);
-      console.log("Updating sinh vien", values);
     } else {
+      console.log("Add Bai Kiem Tra", values);
       const data = await addBaiKiemTra(values);
       handleAdd(data);
-      console.log("Add sinh vien", values);
       setIsDialogOpen(false);
     }
   }
@@ -71,12 +87,44 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
         )}
         <FormField
           control={form.control}
-          name="ten"
+          name="loai"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tên</FormLabel>
+              <FormLabel>Loại</FormLabel>
               <FormControl>
-                <Input placeholder="Nguyễn Văn A" {...field} />
+                <Input placeholder="Giữa Kỳ" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="trongSo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Trọng Số</FormLabel>
+              <FormControl>
+                <Input placeholder="0.3" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lopHocPhanId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ID Lớp Học Phần</FormLabel>
+              <FormControl>
+                <Input placeholder="1" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
