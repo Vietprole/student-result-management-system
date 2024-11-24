@@ -34,8 +34,31 @@ namespace Student_Result_Management_System.Repository
         {
             return await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == username.ToLower());
         }
-        
-        
+
+        public async Task<TaiKhoan?> CreateTaiKhoanSinhVien(CreateTaiKhoanDTO taikhoanSinhVien)
+        {
+            var user = taikhoanSinhVien.ToTaiKhoanFromCreateTaiKhoanDTO();
+                if (string.IsNullOrEmpty(taikhoanSinhVien.TenChucVu))
+                {
+                    return null;
+                }
+                var role_result = await _chucVuRepository.GetIdChucVu(taikhoanSinhVien.TenChucVu);
+                if (role_result != null)
+                {
+                    if (string.IsNullOrEmpty(taikhoanSinhVien.Password))
+                    {
+                        return null;
+                    }
+                    var result = await _userManager.CreateAsync(user, taikhoanSinhVien.Password);
+                    if (result.Succeeded)
+                    {
+                        await _userManager.AddToRoleAsync(user, taikhoanSinhVien.TenChucVu);
+                        return result.Succeeded ? user : null;
+                    }
+                    return null;
+                }
+                return null;
+        }
 
         public async Task<TaiKhoan?> CreateUser(CreateTaiKhoanDTO createTaiKhoanDTO,ChucVuDTO chucVuDTO)
         {

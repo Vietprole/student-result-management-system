@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/nganh")]
     [ApiController]
+    [Authorize]
     public class NganhController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

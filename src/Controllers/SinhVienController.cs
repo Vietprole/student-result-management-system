@@ -1,20 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.SinhVien;
+using Student_Result_Management_System.DTOs.TaiKhoan;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
     [Route("api/sinhvien")]
     [ApiController]
+    [Authorize]
     public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public SinhVienController(ApplicationDBContext context)
+        private readonly ISinhVienRepository    _sinhVienRepository;
+        private readonly ITaiKhoanRepository _taiKhoanRepository;
+        public SinhVienController(ApplicationDBContext context, ISinhVienRepository sinhVienRepository, ITaiKhoanRepository taiKhoanRepository)
         {
             _context = context;
+            _sinhVienRepository = sinhVienRepository;
+            _taiKhoanRepository = taiKhoanRepository;
         }
         [HttpGet]
         // IActionResult return any value type
@@ -41,13 +50,22 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
         {
-            var sinhVien = createSinhVienDTO.ToSinhVienFromCreateDTO();
-            await _context.SinhViens.AddAsync(sinhVien);
-            await _context.SaveChangesAsync();
-            var sinhVienDTO = sinhVien.ToSinhVienDTO();
-            return CreatedAtAction(nameof(GetById), new { id = sinhVien.Id }, sinhVienDTO);
+            SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
+            if (newSV == null)
+            {
+                return StatusCode(500, "Create sinh vien failed");
+            }
+            SinhVien? newSinhVien = await _sinhVienRepository.CreateSinhVien(newSV);
+            if (newSinhVien == null)
+            {
+                return StatusCode(500, "Create sinh vien failed");
+            }
+            return CreatedAtAction(
+                nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
+                new { id = newSinhVien.Id }, // Truyền id của SinhVien vừa tạo
+                newSinhVien.ToSinhVienDTO() // Trả về DTO của SinhVien vừa tạo
+            );
         }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSinhVienDTO updateSinhVienDTO)
         {

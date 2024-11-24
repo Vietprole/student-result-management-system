@@ -65,6 +65,8 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 builder.Services.AddScoped<ITokenSerivce, TokenService>();
 builder.Services.AddScoped<IChucVuRepository,ChucVuRepository>();
+builder.Services.AddScoped<IKhoaRepository,KhoaRepository>();
+builder.Services.AddScoped<ISinhVienRepository,SinhVienRepository>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {

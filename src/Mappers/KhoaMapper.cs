@@ -12,6 +12,8 @@ public static class KhoaMapper
         {
             Id = khoa.Id,
             Ten = khoa.Ten,
+            MaKhoa = khoa.MaKhoa,
+            VietTat = khoa.VietTat
         };
     }
 
@@ -20,6 +22,8 @@ public static class KhoaMapper
         return new Khoa
         {
             Ten = createKhoaDTO.Ten,
+            MaKhoa = createKhoaDTO.MaKhoa,
+            VietTat = createKhoaDTO.VietTat
         };
     }
 

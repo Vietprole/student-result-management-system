@@ -29,7 +29,9 @@ namespace Student_Result_Management_System.Service
             
              var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.GivenName,user.UserName) // GivenName is the username
+                new Claim(JwtRegisteredClaimNames.GivenName,user.UserName) ,// GivenName is the username
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.NameId,user.Id)
         
             };
             var roles = await _userManager.GetRolesAsync(user);
