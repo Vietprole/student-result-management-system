@@ -25,8 +25,8 @@ namespace Student_Result_Management_System.Repository
         }
         public async Task<SinhVien?> CheckSinhVien(CreateSinhVienDTO sinhVienDTO)
         {
-            int khoaId = await _khoaRepository.CheckKhoa(sinhVienDTO.TenKhoa);
-            if (khoaId == 0)
+            Khoa? khoa = await _khoaRepository.GetKhoaId(sinhVienDTO.KhoaId);
+            if (khoa == null)
             {
                 return null;
             }
@@ -37,7 +37,8 @@ namespace Student_Result_Management_System.Repository
             SinhVien sinhVien = new SinhVien
             {
                 Ten = sinhVienDTO.Ten,
-                KhoaId = khoaId,
+                KhoaId = khoa.Id,
+                Khoa = khoa,
                 NamBatDau = sinhVienDTO.NamBatDau
             };
             return sinhVien;
@@ -71,30 +72,6 @@ namespace Student_Result_Management_System.Repository
             await _context.SaveChangesAsync();
             return sinhVien;
 
-        }
-
-        public async Task< string?> CreateTaiKhoanSinhVien(SinhVien sinhVien)
-        {
-            string? MaKhoa = await  _khoaRepository.GetMaKhoa(sinhVien.KhoaId??0);
-            if (MaKhoa == null)
-            {
-                return null;
-            }
-            string NamBatDau = sinhVien.NamBatDau.ToString().Substring(sinhVien.NamBatDau.ToString().Length - 2);
-            int soluong = await GetSinhVienByKhoa(sinhVien.KhoaId??0)+1;
-            string MaSinhVien = MaKhoa + NamBatDau + (soluong + 1).ToString("D4");
-            CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
-            {
-                Username = MaSinhVien,
-                Password = "Sv@"+MaSinhVien,
-                TenChucVu = "SinhVien"
-            };
-            TaiKhoan? taiKhoan = await _taiKhoanRepository.CreateUser(createTaiKhoanDTO,createTaiKhoanDTO.TenChucVu.ToChucVuDTOFromString());
-            if (taiKhoan == null)
-            {
-                return null;
-            }
-            return taiKhoan.Id;
         }
 
         public async Task<int> GetSinhVienByKhoa(int khoaId)

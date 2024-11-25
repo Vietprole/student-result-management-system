@@ -34,6 +34,11 @@ namespace Student_Result_Management_System.Repository
             return khoa;
         }
 
+        public async Task<Khoa?> GetKhoaId(int id)
+        {
+            return await _context.Khoas.FindAsync(id);
+        }
+
         public async Task<List<Khoa>> GetListKhoa()
         {
             List<Khoa> list_khoa = await _context.Khoas.ToListAsync();

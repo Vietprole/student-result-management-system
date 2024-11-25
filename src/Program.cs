@@ -67,6 +67,7 @@ builder.Services.AddScoped<ITokenSerivce, TokenService>();
 builder.Services.AddScoped<IChucVuRepository,ChucVuRepository>();
 builder.Services.AddScoped<IKhoaRepository,KhoaRepository>();
 builder.Services.AddScoped<ISinhVienRepository,SinhVienRepository>();
+builder.Services.AddScoped<IGiangVienRepository,GiangVienRepository>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {

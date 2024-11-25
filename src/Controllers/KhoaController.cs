@@ -11,6 +11,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/khoa")]
     [ApiController]
+    [Authorize]
     public class KhoaController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

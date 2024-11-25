@@ -12,6 +12,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<Khoa?> CreateKhoa(Khoa khoa);
         public Task<int> CheckKhoa(string tenKhoa);
         public Task<string?> GetMaKhoa(int id);
+        public Task<Khoa?> GetKhoaId(int id);
         
     }
 }

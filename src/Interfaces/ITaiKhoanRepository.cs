@@ -12,6 +12,7 @@ namespace Student_Result_Management_System.Interfaces
     {
         public Task<TaiKhoan?> CreateUser(CreateTaiKhoanDTO createTaiKhoanDTO,ChucVuDTO chucVuDTO);
         public Task<TaiKhoan?> CreateTaiKhoanSinhVien(CreateTaiKhoanDTO taikhoanSinhVien);
+        public Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateTaiKhoanDTO taikhoanGiangVien);
         public Task<TaiKhoan?> CheckUser(string username);
         public Task<bool> CheckPassword(TaiKhoan taikhoan, string password);
         public Task<TaiKhoan?> DeleteUser(TaiKhoan taikhoan);

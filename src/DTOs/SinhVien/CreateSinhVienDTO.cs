@@ -8,7 +8,7 @@ public class CreateSinhVienDTO
     [Required]
     public string Ten { get; set; } = string.Empty;
     [Required]
-    public string TenKhoa { get; set; } = string.Empty;
+    public int KhoaId { get; set; }
     [Required]
     public int NamBatDau { get; set; }
 }

@@ -12,7 +12,6 @@ namespace Student_Result_Management_System.Interfaces
     {
         public Task<SinhVien?> CreateSinhVien(SinhVien sinhVien);
         public Task<SinhVien?> CheckSinhVien(CreateSinhVienDTO sinhVienDTO);
-        public Task<string?> CreateTaiKhoanSinhVien(SinhVien sinhVien);
         public Task<int> GetSinhVienByKhoa(int khoaId);
     }
 }
