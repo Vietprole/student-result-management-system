@@ -16,10 +16,10 @@ export default function GiangVienPage() {
   return (
     <Layout>
       <h1>This is GiangVienPage</h1>
-      <DataTable 
+      {/* <DataTable 
         columns={columns} 
         data={data}
-      />
+      /> */}
     </Layout>
   );
 }
