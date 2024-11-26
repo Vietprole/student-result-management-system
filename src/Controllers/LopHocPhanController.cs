@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -20,9 +21,15 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? hocPhanId) // async go with Task<> to make function asynchronous
         {
-            var lopHocPhans = await _context.LopHocPhans.ToListAsync();
+            IQueryable<LopHocPhan> query = _context.LopHocPhans;
+            if (hocPhanId.HasValue)
+            {
+                query = query.Where(n => n.HocPhanId == hocPhanId.Value);
+            }
+
+            var lopHocPhans = await query.ToListAsync();
             var lopHocPhanDTOs = lopHocPhans.Select(sv => sv.ToLopHocPhanDTO()).ToList();
             return Ok(lopHocPhanDTOs);
         }
@@ -114,6 +121,44 @@ namespace Student_Result_Management_System.Controllers
             return CreatedAtAction(nameof(GetSinhViens), new { id = lopHocPhan.Id }, lopHocPhan.SinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
         }
 
+        [HttpPut("{id}/update-sinhviens")]
+        public async Task<IActionResult> UpdateSinhViens([FromRoute] int id, [FromBody] int[] sinhVienIds)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(p => p.SinhViens)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (lopHocPhan == null)
+                return NotFound("Lop hoc phan not found");
+
+            // Get existing SinhVien IDs
+            var existingSinhVienIds = lopHocPhan.SinhViens.Select(c => c.Id).ToList();
+            
+            // Find IDs to add and remove
+            var idsToAdd = sinhVienIds.Except(existingSinhVienIds);
+            var idsToRemove = existingSinhVienIds.Except(sinhVienIds);
+
+            // Remove SinhViens
+            foreach (var removeId in idsToRemove)
+            {
+                var sinhVienToRemove = lopHocPhan.SinhViens.First(c => c.Id == removeId);
+                lopHocPhan.SinhViens.Remove(sinhVienToRemove);
+            }
+
+            // Add new SinhViens
+            foreach (var addId in idsToAdd)
+            {
+                var sinhVien = await _context.SinhViens.FindAsync(addId);
+                if (sinhVien == null)
+                    return NotFound($"SinhVien with ID {addId} not found");
+                    
+                lopHocPhan.SinhViens.Add(sinhVien);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(lopHocPhan.SinhViens.Select(c => c.ToSinhVienDTO()).ToList());
+        }
+
         [HttpDelete("{id}/remove-sinhvien/{sinhVienId}")]
         public async Task<IActionResult> RemoveSinhVien([FromRoute] int id, [FromRoute] int sinhVienId)
         {
@@ -176,6 +221,44 @@ namespace Student_Result_Management_System.Controllers
 
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetGiangViens), new { id = lopHocPhan.Id }, lopHocPhan.GiangViens.Select(sv => sv.ToGiangVienDTO()).ToList());
+        }
+
+        [HttpPut("{id}/update-giangviens")]
+        public async Task<IActionResult> UpdateGiangViens([FromRoute] int id, [FromBody] int[] giangVienIds)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(p => p.GiangViens)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (lopHocPhan == null)
+                return NotFound("Lop hoc phan not found");
+
+            // Get existing GiangVien IDs
+            var existingGiangVienIds = lopHocPhan.GiangViens.Select(c => c.Id).ToList();
+            
+            // Find IDs to add and remove
+            var idsToAdd = giangVienIds.Except(existingGiangVienIds);
+            var idsToRemove = existingGiangVienIds.Except(giangVienIds);
+
+            // Remove GiangViens
+            foreach (var removeId in idsToRemove)
+            {
+                var giangVienToRemove = lopHocPhan.GiangViens.First(c => c.Id == removeId);
+                lopHocPhan.GiangViens.Remove(giangVienToRemove);
+            }
+
+            // Add new GiangViens
+            foreach (var addId in idsToAdd)
+            {
+                var giangVien = await _context.GiangViens.FindAsync(addId);
+                if (giangVien == null)
+                    return NotFound($"GiangVien with ID {addId} not found");
+                    
+                lopHocPhan.GiangViens.Add(giangVien);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(lopHocPhan.GiangViens.Select(c => c.ToGiangVienDTO()).ToList());
         }
 
         [HttpDelete("{id}/remove-giangvien/{giangVienId}")]

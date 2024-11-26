@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CauHoi;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -20,9 +21,15 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId) // async go with Task<> to make function asynchronous
         {
-            var cauHois = await _context.CauHois.ToListAsync();
+            IQueryable<CauHoi> query = _context.CauHois;
+            if (baiKiemTraId.HasValue)
+            {
+                query = query.Where(n => n.BaiKiemTraId == baiKiemTraId.Value);
+            }
+
+            var cauHois = await query.ToListAsync();
             var cauHoiDTOs = cauHois.Select(sv => sv.ToCauHoiDTO()).ToList();
             return Ok(cauHoiDTOs);
         }
@@ -75,7 +82,7 @@ namespace Student_Result_Management_System.Controllers
             return NoContent();
         }
 
-                [HttpGet("{id}/view-clos")]
+        [HttpGet("{id}/view-clos")]
         public async Task<IActionResult> GetCLOs([FromRoute] int id)
         {
             var cauHoi = await _context.CauHois
@@ -113,6 +120,44 @@ namespace Student_Result_Management_System.Controllers
 
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCLOs), new { id = cauHoi.Id }, cauHoi.CLOs.Select(sv => sv.ToCLODTO()).ToList());
+        }
+
+        [HttpPut("{id}/update-clos")]
+        public async Task<IActionResult> UpdateCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
+        {
+            var cauHoi = await _context.CauHois
+                .Include(p => p.CLOs)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (cauHoi == null)
+                return NotFound("Cau Hoi not found");
+
+            // Get existing CLO IDs
+            var existingCLOIds = cauHoi.CLOs.Select(c => c.Id).ToList();
+            
+            // Find IDs to add and remove
+            var idsToAdd = cLOIds.Except(existingCLOIds);
+            var idsToRemove = existingCLOIds.Except(cLOIds);
+
+            // Remove CLOs
+            foreach (var removeId in idsToRemove)
+            {
+                var cLOToRemove = cauHoi.CLOs.First(c => c.Id == removeId);
+                cauHoi.CLOs.Remove(cLOToRemove);
+            }
+
+            // Add new CLOs
+            foreach (var addId in idsToAdd)
+            {
+                var cLO = await _context.CLOs.FindAsync(addId);
+                if (cLO == null)
+                    return NotFound($"CLO with ID {addId} not found");
+                    
+                cauHoi.CLOs.Add(cLO);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList());
         }
 
         [HttpDelete("{id}/remove-clo/{cLOId}")]

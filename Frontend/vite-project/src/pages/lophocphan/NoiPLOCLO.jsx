@@ -1,146 +1,157 @@
-import React from "react"
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import { getPLOsByLopHocPhanId, getCLOsByPLOId, addCLOsToPLO } from '@/api/api-plo';
+import { getCLOsByLopHocPhanId } from '@/api/api-clo';
 
-// Sample data
-const plos = [
-  { id: 1, ten: "PLO 1", moTa: "PLO 1", ctdtId: 1 },
-  { id: 2, ten: "PLO 2", moTa: "PLO 2", ctdtId: 1 },
-  { id: 3, ten: "PLO 3", moTa: "PLO 3", ctdtId: 1 },
-]
+const ToggleCell = ({ cloId, ploId, isEditable, table }) => {
+  const [toggled, setToggled] = useState(false);
 
-const clos = [
-  { id: 1, ten: "CLO 1", moTa: "Kỹ Năng Thuyết Trình", lopHocPhanId: 1 },
-  { id: 2, ten: "CLO 2", moTa: "Kỹ Năng Làm Việc Nhóm", lopHocPhanId: 1 },
-  { id: 3, ten: "CLO 3", moTa: "Kỹ Năng Tìm Kiếm", lopHocPhanId: 1 },
-  { id: 4, ten: "CLO 4", moTa: "Kỹ Năng Ngoại Ngữ", lopHocPhanId: 1 },
-]
-
-// Mock API function
-const fetchPLOData = async (ploId) => {
-  // This is a mock implementation. Replace with actual API call in production.
-  await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-  if (ploId === 1) {
-    return [
-      { id: 1, ten: "CLO 1", moTa: "Kỹ Năng Thuyết Trình", lopHocPhanId: 1 },
-      { id: 3, ten: "CLO 3", moTa: "Kỹ Năng Tìm Kiếm", lopHocPhanId: 1 },
-    ]
-  }
-  return []
-}
-
-// Custom cell component
-const ToggleableCell = ({ row, column, table }) => {
-  const ploId = column.id
-  const cloId = row.original.id
-  const [toggled, setToggled] = React.useState(false)
-  const cellsToggleable = table.options.meta?.cellsToggleable
-
-  React.useEffect(() => {
+  useEffect(() => {
     const checkToggleStatus = async () => {
-      const ploData = await fetchPLOData(parseInt(ploId))
-      setToggled(ploData.some(clo => clo.id === cloId))
-    }
-    checkToggleStatus()
-  }, [ploId, cloId])
+      try {
+        const ploData = await getCLOsByPLOId(ploId);
+        setToggled(ploData.some(clo => clo.id === cloId));
+      } catch (error) {
+        console.error("Error fetching CLOs by PLO ID:", error);
+      }
+    };
+    checkToggleStatus();
+  }, [cloId, ploId]);
 
   const onToggle = () => {
-    if (cellsToggleable) {
-      setToggled(!toggled)
-      table.options.meta?.updateData(cloId, ploId, !toggled)
+    if (isEditable) {
+      setToggled(!toggled);
+      table.options.meta?.updateData(cloId, ploId, !toggled);
     }
-  }
+  };
 
   return (
     <div
-      className={`cursor-pointer p-2 ${
-        toggled ? "bg-blue-500 text-white" : "bg-white text-black"
-      } ${cellsToggleable ? "" : "cursor-not-allowed opacity-50"}`}
+      className={`p-2 ${toggled ? "bg-blue-500 text-white" : "bg-white text-black"} ${isEditable ? "cursor-pointer" : "cursor-not-allowed opacity-50"}`}
       onClick={onToggle}
     >
       {toggled ? "✓" : ""}
     </div>
-  )
-}
+  );
+};
 
 export default function PLOCLOTable() {
-  const [cellsToggleable, setCellsToggleable] = React.useState(true)
+  const [cLOs, setCLOs] = useState([]);
+  const [pLOs, setPLOs] = useState([]);
+  const [isEditable, setIsEditable] = useState(false);
+  const [toggledData, setToggledData] = useState({});
+  const { lopHocPhanId } = useParams();
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [cLOsData, pLOsData] = await Promise.all([
+        getCLOsByLopHocPhanId(lopHocPhanId),
+        getPLOsByLopHocPhanId(lopHocPhanId),
+      ]);
+      setCLOs(cLOsData);
+      setPLOs(pLOsData);
+
+      const toggledData = {};
+      for (const plo of pLOsData) {
+        const cloData = await getCLOsByPLOId(plo.id);
+        toggledData[plo.id] = cloData.map(clo => clo.id);
+      }
+      setToggledData(toggledData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, [lopHocPhanId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  console.log("Update the toggledData:", toggledData);
+
+  const handleSaveChanges = async () => {
+    try {
+      for (const [ploId, cloIdsList] of Object.entries(toggledData)) {
+        await addCLOsToPLO(ploId, cloIdsList);
+      }
+      setIsEditable(false);
+      console.log("Changes saved successfully");
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    }
+  };
+
+  const updateData = (cloId, ploId, toggled) => {
+    setToggledData(prev => {
+      const updated = { ...prev };
+      if (toggled) {
+        if (!updated[ploId]) {
+          updated[ploId] = [];
+        }
+        if (!updated[ploId].includes(cloId)) {
+          updated[ploId].push(cloId);
+        }
+      } else {
+        updated[ploId] = updated[ploId].filter(id => id !== cloId);
+      }
+      return updated;
+    });
+  };
 
   const columns = [
     {
       accessorKey: "ten",
       header: "CLO",
     },
-    ...plos.map(plo => ({
+    ...pLOs.map(plo => ({
       accessorKey: plo.id.toString(),
       header: plo.ten,
-      cell: ToggleableCell,
+      cell: ({ row }) => (
+        <ToggleCell
+          cloId={row.original.id}
+          ploId={plo.id}
+          isEditable={isEditable}
+          table={{ options: { meta: { updateData } } }}
+        />
+      ),
     })),
-  ]
-
-  const table = useReactTable({
-    data: clos,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    meta: {
-      updateData: (cloId, ploId, toggled) => {
-        console.log(`CLO ${cloId} for PLO ${ploId} toggled: ${toggled}`)
-        // Here you would typically update your backend or state management
-      },
-      cellsToggleable,
-    },
-  })
+  ];
 
   return (
-    <div className="space-y-4">
-      <Button
-        onClick={() => setCellsToggleable(!cellsToggleable)}
-        variant="outline"
+    <div>
+      <button
+        onClick={() => {
+          if (isEditable) {
+            handleSaveChanges();
+          } else {
+            setIsEditable(true);
+          }
+        }}
+        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
       >
-        {cellsToggleable ? "Disable" : "Enable"} Toggleable Cells
-      </Button>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="">
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
+        {isEditable ? "Save Changes" : "Enable Edit"}
+      </button>
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            {columns.map((column) => (
+              <th key={column.accessorKey} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {column.header}
+              </th>
             ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {cLOs.map((clo) => (
+            <tr key={clo.id}>
+              {columns.map((column) => (
+                <td key={column.accessorKey} className="px-6 py-4 whitespace-nowrap">
+                  {column.cell ? column.cell({ row: { original: clo } }) : clo[column.accessorKey]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  )
+  );
 }
-

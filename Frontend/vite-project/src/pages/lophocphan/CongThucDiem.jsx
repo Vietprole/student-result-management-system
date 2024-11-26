@@ -9,9 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { getBaiKiemTraByLopHocPhanId, deleteBaiKiemTra } from "@/api/api-baikiemtra";
+import { getBaiKiemTrasByLopHocPhanId, deleteBaiKiemTra } from "@/api/api-baikiemtra";
 import { useEffect, useState } from "react";
-import { getCauHoiByBaiKiemTraId, deleteCauHoi } from "@/api/api-cauhoi";
+import { getCauHoisByBaiKiemTraId, deleteCauHoi } from "@/api/api-cauhoi";
 import { BaiKiemTraForm } from "@/components/BaiKiemTraForm";
 import { CauHoiForm } from "@/components/CauHoiForm";
 import {
@@ -226,7 +226,7 @@ const CongThucDiem = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const baiKiemTrasData = await getBaiKiemTraByLopHocPhanId(lopHocPhanId);
+      const baiKiemTrasData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
       setBaiKiemTras(baiKiemTrasData);
     };
     fetchData();
@@ -240,7 +240,7 @@ const CongThucDiem = () => {
           <DataTable
             entity="Bai Kiem Tra"
             createColumns={createBaiKiemTraColumns}
-            getAllItems={() => getBaiKiemTraByLopHocPhanId(lopHocPhanId)}
+            getAllItems={() => getBaiKiemTrasByLopHocPhanId(lopHocPhanId)}
             deleteItem={deleteBaiKiemTra}
             columnToBeFiltered={"loai"}
             ItemForm={BaiKiemTraForm}
@@ -263,7 +263,7 @@ const CongThucDiem = () => {
                   onSelect={() => {
                     setSelectedBaiKiemTra(baiKiemTra);
                     const fetchData = async () => {
-                      const cauHoisData = await getCauHoiByBaiKiemTraId(
+                      const cauHoisData = await getCauHoisByBaiKiemTraId(
                         baiKiemTra.id
                       );
                       setCauHois(cauHoisData);
@@ -279,7 +279,7 @@ const CongThucDiem = () => {
           <DataTable
             entity="Cau Hoi"
             createColumns={createCauHoiColumns}
-            getAllItems={() => getCauHoiByBaiKiemTraId(selectedBaiKiemTra.id)}
+            getAllItems={() => getCauHoisByBaiKiemTraId(selectedBaiKiemTra.id)}
             deleteItem={deleteCauHoi}
             columnToBeFiltered={"ten"}
             ItemForm={CauHoiForm}

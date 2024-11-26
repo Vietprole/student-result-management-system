@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.Nganh;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -20,9 +21,16 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId) // [FromQuery] binds to query parameter
         {
-            var nganhs = await _context.Nganhs.ToListAsync();
+            IQueryable<Nganh> query = _context.Nganhs;
+
+            if (khoaId.HasValue)
+            {
+                query = query.Where(n => n.KhoaId == khoaId.Value);
+            }
+
+            var nganhs = await query.ToListAsync(); // Use query instead of _context.Nganhs
             var nganhDTOs = nganhs.Select(sv => sv.ToNganhDTO()).ToList();
             return Ok(nganhDTOs);
         }

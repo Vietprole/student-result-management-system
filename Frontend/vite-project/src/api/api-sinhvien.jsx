@@ -12,7 +12,6 @@ export const getAllSinhViens = async () => {
   }
 };
 
-
 // Function to get a single student by ID
 export const getSinhVienById = async (studentId) => {
   try {

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.BaiKiemTra;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -20,9 +21,15 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
-            var baiKiemTras = await _context.BaiKiemTras.ToListAsync();
+            IQueryable<BaiKiemTra> query = _context.BaiKiemTras;
+            if (lopHocPhanId.HasValue)
+            {
+                query = query.Where(n => n.LopHocPhanId == lopHocPhanId.Value);
+            }
+
+            var baiKiemTras = await query.ToListAsync();
             var baiKiemTraDTOs = baiKiemTras.Select(sv => sv.ToBaiKiemTraDTO()).ToList();
             return Ok(baiKiemTraDTOs);
         }

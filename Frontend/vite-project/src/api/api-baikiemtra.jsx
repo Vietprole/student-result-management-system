@@ -3,16 +3,12 @@ import axios from 'axios';
 
 const API_BAIKIEMTRA = `${API_BASE_URL}/api/baikiemtra`;
 
-export const getBaiKiemTraByLopHocPhanId = async (lopHocPhanId) => {
+export const getBaiKiemTrasByLopHocPhanId = async (lopHocPhanId) => {
   console.log("lopHocPhanId: ", lopHocPhanId);
   try {
-    const response = await axios.get(API_BAIKIEMTRA);
-    console.log("response.data: ", response.data);
-    const filteredData = response.data.filter(item => item.lopHocPhanId == lopHocPhanId);
-    console.log("filteredData: ", filteredData);
-    return filteredData;
-  }
-  catch (error) {
+    const response = await axios.get(`${API_BAIKIEMTRA}?lopHocPhanId=${lopHocPhanId}`);
+    return response.data;
+  } catch (error) {
     console.log("error message: ", error.message);
   }
 };
@@ -27,20 +23,20 @@ export const getAllBaiKiemTras = async () => {
 };
 
 
-// Function to get a single student by ID
-export const getBaiKiemTraById = async (studentId) => {
+// Function to get a single baikiemtra by ID
+export const getBaiKiemTraById = async (baikiemtraId) => {
   try {
-    const response = await axios.get(`${API_BAIKIEMTRA}/${studentId}`);
+    const response = await axios.get(`${API_BAIKIEMTRA}/${baikiemtraId}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to add a new student
-export const addBaiKiemTra = async (studentData) => {
+// Function to add a new baikiemtra
+export const addBaiKiemTra = async (baikiemtraData) => {
   try {
-    const response = await axios.post(API_BAIKIEMTRA, studentData);
+    const response = await axios.post(API_BAIKIEMTRA, baikiemtraData);
     console.log("add data:" , response.data);
     return response.data;
   } catch (error) {
@@ -48,10 +44,10 @@ export const addBaiKiemTra = async (studentData) => {
   }
 };
 
-// Function to update an existing student
-export const updateBaiKiemTra = async (studentId, updatedData) => {
+// Function to update an existing baikiemtra
+export const updateBaiKiemTra = async (baikiemtraId, updatedData) => {
   try {
-    const response = await axios.put(`${API_BAIKIEMTRA}/${studentId}`, updatedData);
+    const response = await axios.put(`${API_BAIKIEMTRA}/${baikiemtraId}`, updatedData);
     console.log("update data:" , response.data);
     return response.data;
   } catch (error) {
@@ -59,10 +55,10 @@ export const updateBaiKiemTra = async (studentId, updatedData) => {
   }
 };
 
-// Function to delete a student
-export const deleteBaiKiemTra = async (studentId) => {
+// Function to delete a baikiemtra
+export const deleteBaiKiemTra = async (baikiemtraId) => {
   try {
-    const response = await axios.delete(`${API_BAIKIEMTRA}/${studentId}`);
+    const response = await axios.delete(`${API_BAIKIEMTRA}/${baikiemtraId}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

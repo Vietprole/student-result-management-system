@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CTDT;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -20,9 +21,16 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? nganhId) // async go with Task<> to make function asynchronous
         {
-            var cTDTs = await _context.CTDTs.ToListAsync();
+
+            IQueryable<CTDT> query = _context.CTDTs;
+            if (nganhId.HasValue)
+            {
+                query = query.Where(n => n.NganhId == nganhId.Value);
+            }
+
+            var cTDTs = await query.ToListAsync();
             var cTDTDTOs = cTDTs.Select(sv => sv.ToCTDTDTO()).ToList();
             return Ok(cTDTDTOs);
         }
@@ -112,6 +120,44 @@ namespace Student_Result_Management_System.Controllers
 
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetHocPhans), new { id = cTDT.Id }, cTDT.HocPhans.Select(sv => sv.ToHocPhanDTO()).ToList());
+        }
+
+        [HttpPut("{id}/update-hocphans")]
+        public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
+        {
+            var cTDT = await _context.CTDTs
+                .Include(p => p.HocPhans)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (cTDT == null)
+                return NotFound("Hoc phan not found");
+
+            // Get existing HocPhan IDs
+            var existingHocPhanIds = cTDT.HocPhans.Select(c => c.Id).ToList();
+            
+            // Find IDs to add and remove
+            var idsToAdd = hocPhanIds.Except(existingHocPhanIds);
+            var idsToRemove = existingHocPhanIds.Except(hocPhanIds);
+
+            // Remove HocPhans
+            foreach (var removeId in idsToRemove)
+            {
+                var hocPhanToRemove = cTDT.HocPhans.First(c => c.Id == removeId);
+                cTDT.HocPhans.Remove(hocPhanToRemove);
+            }
+
+            // Add new HocPhans
+            foreach (var addId in idsToAdd)
+            {
+                var hocPhan = await _context.HocPhans.FindAsync(addId);
+                if (hocPhan == null)
+                    return NotFound($"HocPhan with ID {addId} not found");
+                    
+                cTDT.HocPhans.Add(hocPhan);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(cTDT.HocPhans.Select(c => c.ToHocPhanDTO()).ToList());
         }
 
         [HttpDelete("{id}/remove-hocphan/{hocPhanId}")]
