@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPLOsByLopHocPhanId, getCLOsByPLOId, addCLOsToPLO } from '@/api/api-plo';
+import { getPLOsByLopHocPhanId, getCLOsByPLOId, updateCLOsToPLO } from '@/api/api-plo';
 import { getCLOsByLopHocPhanId } from '@/api/api-clo';
 
 const ToggleCell = ({ cloId, ploId, isEditable, table }) => {
@@ -66,12 +66,14 @@ export default function PLOCLOTable() {
     fetchData();
   }, [fetchData]);
 
+  console.log("CLOs:", cLOs);
+  console.log("PLOs:", pLOs);
   console.log("Update the toggledData:", toggledData);
 
   const handleSaveChanges = async () => {
     try {
       for (const [ploId, cloIdsList] of Object.entries(toggledData)) {
-        await addCLOsToPLO(ploId, cloIdsList);
+        await updateCLOsToPLO(ploId, cloIdsList);
       }
       setIsEditable(false);
       console.log("Changes saved successfully");
@@ -100,7 +102,7 @@ export default function PLOCLOTable() {
   const columns = [
     {
       accessorKey: "ten",
-      header: "CLO",
+      header: "CLO - PLO",
     },
     ...pLOs.map(plo => ({
       accessorKey: plo.id.toString(),
@@ -134,7 +136,7 @@ export default function PLOCLOTable() {
         <thead className="bg-gray-50">
           <tr>
             {columns.map((column) => (
-              <th key={column.accessorKey} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th key={column.accessorKey} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5 border">
                 {column.header}
               </th>
             ))}
@@ -144,7 +146,7 @@ export default function PLOCLOTable() {
           {cLOs.map((clo) => (
             <tr key={clo.id}>
               {columns.map((column) => (
-                <td key={column.accessorKey} className="px-6 py-4 whitespace-nowrap">
+                <td key={column.accessorKey} className="px-6 py-4 whitespace-nowrap w-1/5 border">
                   {column.cell ? column.cell({ row: { original: clo } }) : clo[column.accessorKey]}
                 </td>
               ))}

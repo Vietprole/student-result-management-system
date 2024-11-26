@@ -77,6 +77,15 @@ export const addCLOsToPLO = async (ploId, cloIdsList) => {
   }
 }
 
+export const updateCLOsToPLO = async (ploId, cloIdsList) => {
+  try {
+    const response = await axios.put(`${API_PLO}/${ploId}/update-clos`, cloIdsList);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 export const removeCLOsFromPLO = async (ploId, cloId) => {
   try {
     const response = await axios.delete(`${API_PLO}/${ploId}/remove-clo/${cloId}`);
