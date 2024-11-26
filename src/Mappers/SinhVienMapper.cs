@@ -12,6 +12,8 @@ public static class SinhVienMapper
         {
             Id = sinhVienModel.Id,
             Ten = sinhVienModel.Ten,
+            KhoaId = sinhVienModel.KhoaId??0, //Để đây hồi tin sửa
+            NamBatDau = sinhVienModel.NamBatDau
         };
     }
 

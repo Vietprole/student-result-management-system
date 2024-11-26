@@ -1,20 +1,26 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.GiangVien;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
     [Route("api/giangvien")]
     [ApiController]
+    [Authorize]
     public class GiangVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public GiangVienController(ApplicationDBContext context)
+        private readonly IGiangVienRepository _giangVienRepository;
+        public GiangVienController(ApplicationDBContext context, IGiangVienRepository giangVienRepository)
         {
             _context = context;
+            _giangVienRepository = giangVienRepository;
         }
         [HttpGet]
         // IActionResult return any value type
@@ -41,11 +47,18 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateGiangVienDTO createGiangVienDTO)
         {
-            var giangVien = createGiangVienDTO.ToGiangVienFromCreateDTO();
-            await _context.GiangViens.AddAsync(giangVien);
-            await _context.SaveChangesAsync();
-            var giangVienDTO = giangVien.ToGiangVienDTO();
-            return CreatedAtAction(nameof(GetById), new { id = giangVien.Id }, giangVienDTO);
+            GiangVien? gv = await _giangVienRepository.CheckGiangVien(createGiangVienDTO);
+            if (gv == null)
+            {
+                return StatusCode(500, "Create giang vien failed1");
+            }
+            GiangVien? newGiangVien = await _giangVienRepository.CreateGiangVien(gv);
+            if (newGiangVien == null)
+            {
+                return StatusCode(500, "Create giang vien failed2");
+            }
+            var giangVienDTO = newGiangVien.ToGiangVienDTO();
+            return CreatedAtAction(nameof(GetById), new { id = newGiangVien.Id }, giangVienDTO);
         }
 
         [HttpPut("{id}")]

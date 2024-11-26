@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -11,9 +12,11 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241123061156_InitDB")]
+    partial class InitDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,37 +144,37 @@ namespace Student_Result_Management_System.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f963a90d-f990-45fa-8cae-0d962e1e1f06",
+                            Id = "b2c5bdfa-2406-4d17-945e-f19654d88a73",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a84918cb-3c7b-4fe9-90dd-68f1731f9b97",
+                            Id = "05a64a12-4389-45d8-b821-b6e478d3c939",
                             Name = "GiangVien",
                             NormalizedName = "GIANGVIEN"
                         },
                         new
                         {
-                            Id = "83678753-7192-4ec0-87b4-6a3ff128091d",
+                            Id = "94ec69c3-3f7f-42d9-8c98-9c7086001ebe",
                             Name = "SinhVien",
                             NormalizedName = "SINHVIEN"
                         },
                         new
                         {
-                            Id = "1721eb95-3e84-4b15-aac8-7101084977d7",
+                            Id = "4e4024f2-7402-4c3f-aa45-341a5202e4e1",
                             Name = "PhongDaoTao",
                             NormalizedName = "PHONGDAOTAO"
                         },
                         new
                         {
-                            Id = "09a5b334-2568-456a-916d-4e5eb3295a28",
+                            Id = "3cea1710-2785-4f4b-bc8e-ba5dd6d9ab89",
                             Name = "TruongKhoa",
                             NormalizedName = "TRUONGKHOA"
                         },
                         new
                         {
-                            Id = "782dfb73-d700-4f13-844c-39568485653e",
+                            Id = "46f92d83-7fb8-4b3f-8bef-7744315be62a",
                             Name = "TruongBoMon",
                             NormalizedName = "TRUONGBOMON"
                         });
@@ -571,9 +574,6 @@ namespace Student_Result_Management_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("KhoaId")
-                        .HasColumnType("int");
-
                     b.Property<int>("NamBatDau")
                         .HasColumnType("int");
 
@@ -586,8 +586,6 @@ namespace Student_Result_Management_System.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("KhoaId");
 
                     b.HasIndex("TaiKhoanId");
 
@@ -926,17 +924,11 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>
                 {
-                    b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
-                        .WithMany("SinhViens")
-                        .HasForeignKey("KhoaId");
-
                     b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
                         .WithMany()
                         .HasForeignKey("TaiKhoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Khoa");
 
                     b.Navigation("TaiKhoan");
                 });
@@ -960,8 +952,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("HocPhans");
 
                     b.Navigation("Nganhs");
-
-                    b.Navigation("SinhViens");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.LopHocPhan", b =>
