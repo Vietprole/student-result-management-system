@@ -47,3 +47,13 @@ export const deleteLopHocPhan = async (id) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getSinhViensByLopHocPhanId = async (lopHocPhanId) => {
+  console.log("lopHocPhanId: ", lopHocPhanId);
+  try {
+    const response = await axios.get(`${API_LOPHOCPHAN}/${lopHocPhanId}/view-sinhviens`);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
