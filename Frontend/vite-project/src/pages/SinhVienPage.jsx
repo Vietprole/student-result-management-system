@@ -17,6 +17,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { SinhVienForm } from "@/components/SinhVienForm";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -34,16 +44,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { SinhVienForm } from "@/components/SinhVienForm";
 
 const createSinhVienColumns = (handleEdit, handleDelete) => [
   {
