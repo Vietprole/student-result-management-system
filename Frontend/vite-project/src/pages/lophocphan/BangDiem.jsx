@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 // import { getStudents, getGradeComponents, getQuestions, getGrades } from "@/lib/api"
 import { GradeTable } from "@/components/GradeTable";
 // import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"

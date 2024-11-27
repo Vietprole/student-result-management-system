@@ -150,9 +150,9 @@ export function GradeTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead rowSpan={2} className="text-center">Id</TableHead>
+              <TableHead rowSpan={2} className="text-center px-1 border">Id</TableHead>
               {/* <TableHead rowSpan={2} className="text-center">MSSV</TableHead> */}
-              <TableHead rowSpan={2} className="text-center">Họ và tên</TableHead>
+              <TableHead rowSpan={2} className="text-center px-1 border">Họ và tên</TableHead>
               {components.map((component) => (
                 <TableHead
                   key={component.id}
@@ -166,12 +166,12 @@ export function GradeTable({
             <TableRow>
               {components.flatMap((component) => [
                 ...(questions[component.id.toString()] || []).map((question) => (
-                  <TableHead key={`${component.loai}_${question.id}`} className="text-center">
+                  <TableHead key={`${component.loai}_${question.id}`} className="text-center px-1 border">
                     <div>{question.ten}</div>
                     <div>{question.trongSo * 10}</div>
                   </TableHead>
                 )),
-                <TableHead key={`${component.loai}_total`} className="text-center">Tổng</TableHead>
+                <TableHead key={`${component.loai}_total`} className="text-center px-1 border">Tổng</TableHead>
               ])}
             </TableRow>
           </TableHeader>
@@ -179,7 +179,7 @@ export function GradeTable({
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-center">
+                  <TableCell key={cell.id} className="text-center px-1 border">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -219,7 +219,7 @@ function EditableCell({ value, onChange, isEditing }) {
         const numValue = parseFloat(newValue) || 0
         onChange(numValue)
       }}
-      className="h-8 w-16 text-center"
+      className="h-6 w-12 text-center"
       min={0}
       max={10}
       step={0.1}

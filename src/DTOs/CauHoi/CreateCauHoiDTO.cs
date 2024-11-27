@@ -8,7 +8,7 @@ public class CreateCauHoiDTO
     [Required]
     public string Ten { get; set; } = string.Empty;
     [Required]
-    public float TrongSo { get; set; }
+    public decimal TrongSo { get; set; }
     [Required]
     public int BaiKiemTraId { get; set; }
 }

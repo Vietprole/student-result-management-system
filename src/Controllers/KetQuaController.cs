@@ -101,12 +101,11 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-clo")]
-        public async Task<ActionResult<double>> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int CLOId)
+        public async Task<IActionResult> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int CLOId)
         {
-            // Get the CLO with the specified CLOId
             var clo = await _context.CLOs
                 .Include(c => c.CauHois)
-                .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(ch => ch.BaiKiemTra)
                 .FirstOrDefaultAsync(c => c.Id == CLOId);
 
             if (clo == null)
@@ -114,31 +113,22 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound("CLO not found.");
             }
 
-            // Get the KetQua records for the specified SinhVienId and CauHoiIds from the CLO
+            // Get all relevant CauHoi IDs for this CLO
             var cauHoiIds = clo.CauHois.Select(ch => ch.Id).ToList();
+
+            // Get KetQua records and calculate weighted sum
             var ketQuas = await _context.KetQuas
                 .Where(kq => kq.SinhVienId == SinhVienId && cauHoiIds.Contains(kq.CauHoiId))
                 .ToListAsync();
 
-            if (ketQuas == null || ketQuas.Count == 0)
-            {
-                return NotFound("No KetQua records found for the specified SinhVienId and CLOId.");
-            }
-
-            // Calculate the results
-            var results = new List<double>();
+            decimal totalScore = 0;
             foreach (var ketQua in ketQuas)
             {
-                var cauHoi = clo.CauHois.FirstOrDefault(ch => ch.Id == ketQua.CauHoiId);
-                if (cauHoi != null)
-                {
-                    var trongSo = cauHoi.BaiKiemTra.TrongSo;
-                    var result = ketQua.Diem * trongSo;
-                    results.Add(result);
-                }
+                var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
+                totalScore += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
             }
-            var total = results.Sum();
-            return Ok(total);
+
+            return Ok(decimal.Round(totalScore, 2, MidpointRounding.AwayFromZero));
         }
     }
 }
