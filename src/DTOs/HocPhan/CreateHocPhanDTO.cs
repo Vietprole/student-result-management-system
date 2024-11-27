@@ -8,7 +8,7 @@ public class CreateHocPhanDTO
     [Required]
     public string Ten { get; set; } = string.Empty;
     [Required]
-    public float SoTinChi { get; set; }
+    public decimal SoTinChi { get; set; }
     [Required]
     public bool LaCotLoi { get; set; }
     public int? KhoaId { get; set; }

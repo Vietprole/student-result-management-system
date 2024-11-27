@@ -49,20 +49,44 @@ namespace Student_Result_Management_System.Controllers
             return CreatedAtAction(nameof(GetById), new { id = ketQua.Id }, ketQuaDTO);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKetQuaDTO updateKetQuaDTO)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateKetQuaDTO updateKetQuaDTO)
         {
-            var ketQuaToUpdate = await _context.KetQuas.FindAsync(id);
-            if (ketQuaToUpdate == null)
-                return NotFound();
+            // Validate SinhVien exists
+            var sinhVien = await _context.SinhViens.FindAsync(updateKetQuaDTO.SinhVienId);
+            if (sinhVien == null)
+                return NotFound($"SinhVien not found with ID: {updateKetQuaDTO.SinhVienId}");
 
-            ketQuaToUpdate.Diem = updateKetQuaDTO.Diem;
-            ketQuaToUpdate.SinhVienId = updateKetQuaDTO.SinhVienId;
-            ketQuaToUpdate.CauHoiId = updateKetQuaDTO.CauHoiId;
-            
+            // Validate CauHoi exists
+            var cauHoi = await _context.CauHois.FindAsync(updateKetQuaDTO.CauHoiId);
+            if (cauHoi == null)
+                return NotFound($"CauHoi not found with ID: {updateKetQuaDTO.CauHoiId}");
+
+            // Find existing KetQua
+            var ketQuaToUpdate = await _context.KetQuas
+                .FirstOrDefaultAsync(k => 
+                    k.SinhVienId == updateKetQuaDTO.SinhVienId && 
+                    k.CauHoiId == updateKetQuaDTO.CauHoiId);
+
+            if (ketQuaToUpdate == null)
+            {
+                // Create new KetQua
+                ketQuaToUpdate = new KetQua
+                {
+                    SinhVienId = updateKetQuaDTO.SinhVienId,
+                    CauHoiId = updateKetQuaDTO.CauHoiId,
+                    Diem = updateKetQuaDTO.Diem
+                };
+                await _context.KetQuas.AddAsync(ketQuaToUpdate);
+            }
+            else
+            {
+                // Update existing
+                ketQuaToUpdate.Diem = updateKetQuaDTO.Diem;
+            }
+
             await _context.SaveChangesAsync();
-            var studentDTO = ketQuaToUpdate.ToKetQuaDTO();
-            return Ok(studentDTO);
+            return Ok(ketQuaToUpdate.ToKetQuaDTO());
         }
 
         [HttpDelete("{id}")]
@@ -77,12 +101,11 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-clo")]
-        public async Task<ActionResult<double>> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int CLOId)
+        public async Task<IActionResult> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int CLOId)
         {
-            // Get the CLO with the specified CLOId
             var clo = await _context.CLOs
                 .Include(c => c.CauHois)
-                .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(ch => ch.BaiKiemTra)
                 .FirstOrDefaultAsync(c => c.Id == CLOId);
 
             if (clo == null)
@@ -90,31 +113,22 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound("CLO not found.");
             }
 
-            // Get the KetQua records for the specified SinhVienId and CauHoiIds from the CLO
+            // Get all relevant CauHoi IDs for this CLO
             var cauHoiIds = clo.CauHois.Select(ch => ch.Id).ToList();
+
+            // Get KetQua records and calculate weighted sum
             var ketQuas = await _context.KetQuas
                 .Where(kq => kq.SinhVienId == SinhVienId && cauHoiIds.Contains(kq.CauHoiId))
                 .ToListAsync();
 
-            if (ketQuas == null || ketQuas.Count == 0)
-            {
-                return NotFound("No KetQua records found for the specified SinhVienId and CLOId.");
-            }
-
-            // Calculate the results
-            var results = new List<double>();
+            decimal totalScore = 0;
             foreach (var ketQua in ketQuas)
             {
-                var cauHoi = clo.CauHois.FirstOrDefault(ch => ch.Id == ketQua.CauHoiId);
-                if (cauHoi != null)
-                {
-                    var trongSo = cauHoi.BaiKiemTra.TrongSo;
-                    var result = ketQua.Diem * trongSo;
-                    results.Add(result);
-                }
+                var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
+                totalScore += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
             }
-            var total = results.Sum();
-            return Ok(total);
+
+            return Ok(decimal.Round(totalScore, 2, MidpointRounding.AwayFromZero));
         }
     }
 }
