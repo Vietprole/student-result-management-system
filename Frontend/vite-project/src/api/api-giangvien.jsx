@@ -1,20 +1,20 @@
 import API_BASE_URL from "./base-url";
 import axios from 'axios';
 
-const API_GIANGVIEN = `${API_BASE_URL}/api/giangvien`;
+const API_GiangVien = `${API_BASE_URL}/api/GiangVien`;
 
 export const getAllGiangViens = async () => {
   try {
-    const response = await axios.get(API_GIANGVIEN);
+    const response = await axios.get(API_GiangVien);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
-};
+}
 
 export const getGiangVienById = async (id) => {
   try {
-    const response = await axios.get(`${API_GIANGVIEN}/${id}`);
+    const response = await axios.get(`${API_GiangVien}/${id}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -23,7 +23,7 @@ export const getGiangVienById = async (id) => {
 
 export const addGiangVien = async (newData) => {
   try {
-    const response = await axios.post(API_GIANGVIEN, newData);
+    const response = await axios.post(API_GiangVien, newData);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -33,7 +33,7 @@ export const addGiangVien = async (newData) => {
 
 export const updateGiangVien = async (id, updatedData) => {
   try {
-    const response = await axios.put(`${API_GIANGVIEN}/${id}`, updatedData);
+    const response = await axios.put(`${API_GiangVien}/${id}`, updatedData);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -42,7 +42,7 @@ export const updateGiangVien = async (id, updatedData) => {
 
 export const deleteGiangVien = async (id) => {
   try {
-    const response = await axios.delete(`${API_GIANGVIEN}/${id}`);
+    const response = await axios.delete(`${API_GiangVien}/${id}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
