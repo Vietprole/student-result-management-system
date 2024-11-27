@@ -49,20 +49,44 @@ namespace Student_Result_Management_System.Controllers
             return CreatedAtAction(nameof(GetById), new { id = ketQua.Id }, ketQuaDTO);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKetQuaDTO updateKetQuaDTO)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateKetQuaDTO updateKetQuaDTO)
         {
-            var ketQuaToUpdate = await _context.KetQuas.FindAsync(id);
-            if (ketQuaToUpdate == null)
-                return NotFound();
+            // Validate SinhVien exists
+            var sinhVien = await _context.SinhViens.FindAsync(updateKetQuaDTO.SinhVienId);
+            if (sinhVien == null)
+                return NotFound($"SinhVien not found with ID: {updateKetQuaDTO.SinhVienId}");
 
-            ketQuaToUpdate.Diem = updateKetQuaDTO.Diem;
-            ketQuaToUpdate.SinhVienId = updateKetQuaDTO.SinhVienId;
-            ketQuaToUpdate.CauHoiId = updateKetQuaDTO.CauHoiId;
-            
+            // Validate CauHoi exists
+            var cauHoi = await _context.CauHois.FindAsync(updateKetQuaDTO.CauHoiId);
+            if (cauHoi == null)
+                return NotFound($"CauHoi not found with ID: {updateKetQuaDTO.CauHoiId}");
+
+            // Find existing KetQua
+            var ketQuaToUpdate = await _context.KetQuas
+                .FirstOrDefaultAsync(k => 
+                    k.SinhVienId == updateKetQuaDTO.SinhVienId && 
+                    k.CauHoiId == updateKetQuaDTO.CauHoiId);
+
+            if (ketQuaToUpdate == null)
+            {
+                // Create new KetQua
+                ketQuaToUpdate = new KetQua
+                {
+                    SinhVienId = updateKetQuaDTO.SinhVienId,
+                    CauHoiId = updateKetQuaDTO.CauHoiId,
+                    Diem = updateKetQuaDTO.Diem
+                };
+                await _context.KetQuas.AddAsync(ketQuaToUpdate);
+            }
+            else
+            {
+                // Update existing
+                ketQuaToUpdate.Diem = updateKetQuaDTO.Diem;
+            }
+
             await _context.SaveChangesAsync();
-            var studentDTO = ketQuaToUpdate.ToKetQuaDTO();
-            return Ok(studentDTO);
+            return Ok(ketQuaToUpdate.ToKetQuaDTO());
         }
 
         [HttpDelete("{id}")]

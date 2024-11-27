@@ -37,7 +37,8 @@ export default function GradesPage() {
       const questionsData = await Promise.all(questionsPromises);
       const questions = Object.fromEntries(
         questionsData.map(({ componentId, questions }) => [
-          componentId.toString(),
+          // componentId.toString(),
+          componentId,
           questions,
         ])
       );
@@ -56,7 +57,8 @@ export default function GradesPage() {
                   (g) =>
                     g.sinhVienId === student.id && g.cauHoiId === question.id
                 );
-                return [question.id.toString(), grade?.diem || 0];
+                // return [question.id.toString(), grade?.diem || 0];
+                return [question.id, grade?.diem || 0];
               })
             ),
           ])

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { updateKetQua } from "@/api/api-ketqua"
 // import { cn } from "@/lib/utils"
 // import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"
 
@@ -31,6 +32,7 @@ export function GradeTable({
 }) {
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
+  const [modifiedRecords, setModifiedRecords] = React.useState([])
   console.log("tableData: ", tableData);
   const columns = React.useMemo(() => {
     const cols = [
@@ -82,6 +84,16 @@ export function GradeTable({
                   }
                   
                   newData[rowIndex].grades[componentId][questionId] = value
+                  // console.log("newData: ", rowIndex, newData[rowIndex].id);
+                  const modifiedRecord = {
+                    sinhVienId: newData[rowIndex].id,
+                    cauHoiId: parseInt(questionId),
+                    diem: value,
+                  }
+                  console.log("modifiedRecord: ", modifiedRecord);
+                  updateKetQua(modifiedRecord);
+                  setModifiedRecords([...modifiedRecords, modifiedRecord]);
+
                   setTableData(newData)
                 }}
                 isEditing={isEditing}
@@ -110,21 +122,17 @@ export function GradeTable({
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const handleSaveChanges = () => {
-    const updatedGrades = []
-    tableData.forEach((student) => {
-      Object.entries(student.grades).forEach(([componentId, questionGrades]) => {
-        Object.entries(questionGrades).forEach(([questionId, grade]) => {
-          updatedGrades.push({
-            id: 0, // You may need to generate a unique ID here
-            diem: grade,
-            sinhVienId: student.id,
-            cauHoiId: parseInt(questionId),
-          })
-        })
-      })
-    })
-    console.log("Updated grades:", updatedGrades)
+  const handleSaveChanges = async () => {
+    console.log("Modified records:", modifiedRecords)
+    for (const [key, record] of Object.entries(modifiedRecords)) {
+      const { id, ...rest } = record;
+      try {
+        console.log("SinhVienId, rest: ", record, id, rest);
+        // await updateKetQua(sinhVienId, rest);
+      } catch (error) {
+        console.error(`Error updating record for sinhVienId ${sinhVienId}:`, error);
+      }
+    }
     setIsEditing(false)
     // Here you would typically send the updatedGrades to your API
   }

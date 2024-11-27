@@ -45,9 +45,9 @@ export const addKetQua = async (ketquaData) => {
 };
 
 // Function to update an existing ketqua
-export const updateKetQua = async (ketquaId, updatedData) => {
+export const updateKetQua = async (updatedData) => {
   try {
-    const response = await axios.put(`${API_KETQUA}/${ketquaId}`, updatedData);
+    const response = await axios.put(`${API_KETQUA}`, updatedData);
     console.log("update data:" , response.data);
     return response.data;
   } catch (error) {
