@@ -1,16 +1,10 @@
-// import Layout from "../pages/Layout";
-import { useEffect, useState } from "react";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import * as React from "react"
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  // DropdownMenuItem,
-  // DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+  // ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -18,216 +12,218 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useReactTable } from "@tanstack/react-table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-} from "@tanstack/react-table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  // DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { updateKetQua } from "@/api/api-ketqua"
+// import { cn } from "@/lib/utils"
+// import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"
 
-export default function CLOGradeTable({entity, createColumns, getAllItems, deleteItem, columnToBeFiltered, ItemForm}) {
-  const [data, setData] = useState([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+// interface GradeTableProps {
+//   data: StudentGrades[]
+//   components: GradeComponent[]
+//   questions: Record<string, Question[]>
+// }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllItems();
-      setData(data);
-    };
-    fetchData();
-  }, [getAllItems]);
+export function GradeTable({
+  data,
+  components,
+  questions,
+}) {
+  const [tableData, setTableData] = React.useState(data)
+  const [isEditing, setIsEditing] = React.useState(false)
+  const [modifiedRecords, setModifiedRecords] = React.useState([])
+  console.log("tableData: ", tableData);
+  const columns = React.useMemo(() => {
+    const cols = [
+      {
+        accessorKey: "id",
+        header: "Id",
+        size: 60,
+      },
+      // {
+      //   accessorKey: "mssv",
+      //   header: "MSSV",
+      //   size: 120,
+      // },
+      {
+        accessorKey: "ten",
+        header: "Họ và tên",
+        size: 200,
+      },
+    ]
 
-  const [sorting, setSorting] = useState([]);
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [columnVisibility, setColumnVisibility] = useState({});
-  const [rowSelection, setRowSelection] = useState({});
+    // Add columns for each component and its questions
+    components.forEach((component) => {
+      const componentQuestions = questions[component.id.toString()] || []
+      cols.push({
+        id: component.loai,
+        header: `${component.loai} (${component.trongSo * 100}%)`,
+        columns: [
+          ...componentQuestions.map((question) => ({
+            accessorFn: (row) =>
+              row.grades[component.loai]?.[question.id.toString()] ?? 0,
+            id: `${component.loai}_${question.id}`,
+            header: () => (
+              <div>
+                <div>{question.ten}</div>
+                <div>{question.trongSo * 100}%</div>
+              </div>
+            ),
+            size: 80,
+            cell: ({ row, column }) => (
+              <EditableCell
+                value={row.getValue(column.id)}
+                onChange={(value) => {
+                  const newData = [...tableData]
+                  const rowIndex = row.index
+                  const [componentId, questionId] = column.id.split("_")
+                  
+                  if (!newData[rowIndex].grades[componentId]) {
+                    newData[rowIndex].grades[componentId] = {}
+                  }
+                  
+                  newData[rowIndex].grades[componentId][questionId] = value
+                  // console.log("newData: ", rowIndex, newData[rowIndex].id);
+                  const modifiedRecord = {
+                    sinhVienId: newData[rowIndex].id,
+                    cauHoiId: parseInt(questionId),
+                    diem: value,
+                  }
+                  console.log("modifiedRecord: ", modifiedRecord);
+                  updateKetQua(modifiedRecord);
+                  setModifiedRecords([...modifiedRecords, modifiedRecord]);
 
-  const handleAdd = (newItem) => {
-    console.log("from handleAdd", newItem);
-    setData([...data, newItem]);
-  };
+                  setTableData(newData)
+                }}
+                isEditing={isEditing}
+              />
+            ),
+          })),
+          {
+            id: `${component.loai}_total`,
+            header: "Tổng",
+            size: 80,
+            accessorFn: (row) => {
+              const grades = row.grades[component.loai] || {}
+              return Object.values(grades).reduce((sum, score) => sum + score, 0)
+            },
+          },
+        ],
+      })
+    })
 
-  const handleEdit = (editedItem) => {
-    console.log("from handleEdit", editedItem);
-    setData(
-      data.map((item) =>
-        item.id === editedItem.id ? editedItem : item
-      )
-    );
-  };
-
-  async function handleDelete(itemId) {
-    await deleteItem(itemId);
-    setData(data.filter((item) => item.id !== itemId));
-  }
-
-  const columns = createColumns(handleEdit, handleDelete);
+    return cols
+  }, [components, questions, tableData, isEditing])
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  });
+  })
+
+  const handleSaveChanges = async () => {
+    console.log("Modified records:", modifiedRecords)
+    for (const [key, record] of Object.entries(modifiedRecords)) {
+      const { id, ...rest } = record;
+      try {
+        console.log("SinhVienId, rest: ", record, id, rest);
+        // await updateKetQua(sinhVienId, rest);
+      } catch (error) {
+        console.error(`Error updating record for sinhVienId ${sinhVienId}:`, error);
+      }
+    }
+    setIsEditing(false)
+    // Here you would typically send the updatedGrades to your API
+  }
 
   return (
-    <>
-      <h1>This is {entity} Page</h1>
-      <div className="w-full">
-        <div className="flex items-center py-4">
-          <Input
-            placeholder={`Filter ${columnToBeFiltered}s...`}
-            value={table.getColumn(`${columnToBeFiltered}`)?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn(`${columnToBeFiltered}`)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="ml-2"
-              >
-                Thêm {entity}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Add {entity}</DialogTitle>
-                <DialogDescription>
-                  Add a new {entity} to the list.
-                </DialogDescription>
-              </DialogHeader>
-            <ItemForm handleAdd={handleAdd} setIsDialogOpen={setIsDialogOpen}/>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button
+          onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
+        >
+          {isEditing ? "Save Changes" : "Enable Editing"}
+        </Button>
       </div>
-    </>
-  );
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead rowSpan={2} className="text-center px-1 border">Id</TableHead>
+              {/* <TableHead rowSpan={2} className="text-center">MSSV</TableHead> */}
+              <TableHead rowSpan={2} className="text-center px-1 border">Họ và tên</TableHead>
+              {components.map((component) => (
+                <TableHead
+                  key={component.id}
+                  colSpan={questions[component.id.toString()]?.length + 1}
+                  className="text-center"
+                >
+                  {component.loai} ({component.trongSo * 100}%)
+                </TableHead>
+              ))}
+            </TableRow>
+            <TableRow>
+              {components.flatMap((component) => [
+                ...(questions[component.id.toString()] || []).map((question) => (
+                  <TableHead key={`${component.loai}_${question.id}`} className="text-center px-1 border">
+                    <div>{question.ten}</div>
+                    <div>{question.trongSo * 10}</div>
+                  </TableHead>
+                )),
+                <TableHead key={`${component.loai}_total`} className="text-center px-1 border">Tổng</TableHead>
+              ])}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="text-center px-1 border">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
 }
+
+// interface EditableCellProps {
+//   value: number
+//   onChange: (value: number) => void
+//   isEditing: boolean
+// }
+
+function EditableCell({ value, onChange, isEditing }) {
+  const [editValue, setEditValue] = React.useState(value.toString())
+
+  React.useEffect(() => {
+    setEditValue(value.toString())
+  }, [value])
+
+  if (!isEditing) {
+    return <span>{value}</span>
+  }
+
+  return (
+    <Input
+      type="number"
+      value={editValue}
+      onChange={(e) => {
+        const newValue = e.target.value
+        setEditValue(newValue)
+        const numValue = parseFloat(newValue) || 0
+        onChange(numValue)
+      }}
+      className="h-6 w-12 text-center"
+      min={0}
+      max={10}
+      step={0.1}
+    />
+  )
+}
+
