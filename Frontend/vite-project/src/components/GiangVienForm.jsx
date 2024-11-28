@@ -20,17 +20,24 @@ const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
+  khoaId: z.coerce.number(
+    {
+      message: "Lop Hoc Phan Id must be a number",
+    }
+  ).min(1, {
+    message: "Lop Hoc Phan Id must be at least 1 characters.",
+  }),
 });
  
 
-export function GiangVienForm({ GiangVienId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogOpen }) {
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: GiangVienId,
+      id: giangVienId,
       ten: "",
-      khoaid: "",
+      khoaId: "",
     },
   });
 
@@ -38,14 +45,14 @@ export function GiangVienForm({ GiangVienId, handleAdd, handleEdit, setIsDialogO
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (GiangVienId) {
-      const data = await updateGiangVien(GiangVienId, values);
+    if (giangVienId) {
+      const data = await updateGiangVien(giangVienId, values);
       handleEdit(data);
-      console.log("Updating GiangVien", values);
+      console.log("Updating Giang Vien", values);
     } else {
+      console.log("Add Giang Vien", values);
       const data = await addGiangVien(values);
       handleAdd(data);
-      console.log("Add GiangVien", values);
       setIsDialogOpen(false);
     }
   }
@@ -53,7 +60,7 @@ export function GiangVienForm({ GiangVienId, handleAdd, handleEdit, setIsDialogO
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {GiangVienId && (
+        {giangVienId && (
           <FormField
             control={form.control}
             name="id"
@@ -87,10 +94,9 @@ export function GiangVienForm({ GiangVienId, handleAdd, handleEdit, setIsDialogO
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="khoaid"
+          name="khoaId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>KhoaId</FormLabel>
@@ -98,7 +104,7 @@ export function GiangVienForm({ GiangVienId, handleAdd, handleEdit, setIsDialogO
               <Input placeholder="1" {...field} />
               </FormControl>
               <FormDescription>
-              
+                This is Khoa Id of this Giang Vien.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -107,6 +113,5 @@ export function GiangVienForm({ GiangVienId, handleAdd, handleEdit, setIsDialogO
         <Button type="submit">Submit</Button>
       </form>
     </Form>
-    
   );
 }

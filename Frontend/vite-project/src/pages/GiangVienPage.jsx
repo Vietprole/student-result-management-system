@@ -7,8 +7,7 @@ import {
   getAllGiangViens,
   // updateGiangVien,
   deleteGiangVien,
-  // addGiangVien,
-} from "@/api/api-GiangVien";
+} from "@/api/api-giangvien";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -80,7 +79,7 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const student = row.original;
+      const item = row.original;
 
       return (
         <DropdownMenu>
@@ -95,37 +94,37 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Sửa Sinh Viên
+                  Sửa Giảng Viên
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>Edit GiangVien</DialogTitle>
                   <DialogDescription>
-                    Edit the current student.
+                    Edit the current GiangVien.
                   </DialogDescription>
                 </DialogHeader>
-                <GiangVienForm GiangVienId={student.id} handleEdit={handleEdit} />
+                <GiangVienForm giangVienId={item.id} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Xóa Sinh Viên
+                  Xóa Giảng Viên
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>Delete GiangVien</DialogTitle>
                   <DialogDescription>
-                    Delete the current student.
+                    Delete the current GiangVien.
                   </DialogDescription>
                 </DialogHeader>
                 <p>Are you sure you want to delete this GiangVien?</p>
                 <DialogFooter>
                   <Button
                     type="submit"
-                    onClick={() => handleDelete(student.id)}
+                    onClick={() => handleDelete(item.id)}
                   >
                     Delete
                   </Button>
@@ -144,7 +143,7 @@ export default function GiangVienPage() {
     <Layout>
       <div className="w-full">
         <DataTable
-          entity="GiangVien"
+          entity="Giang Vien"
           createColumns={createGiangVienColumns}
           getAllItems={() => getAllGiangViens()}
           deleteItem={deleteGiangVien}
