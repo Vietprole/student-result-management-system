@@ -12,8 +12,8 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241119021308_ModifyHocPhanToKhoaId")]
-    partial class ModifyHocPhanToKhoaId
+    [Migration("20241116082828_NewChangeDB")]
+    partial class NewChangeDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -276,8 +276,11 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<bool>("LaCotLoi")
                         .HasColumnType("bit");
 
-                    b.Property<float>("SoTinChi")
-                        .HasColumnType("real");
+                    b.Property<int?>("NganhId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SoTinChi")
+                        .HasColumnType("int");
 
                     b.Property<string>("Ten")
                         .IsRequired()
@@ -286,6 +289,8 @@ namespace Student_Result_Management_System.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("KhoaId");
+
+                    b.HasIndex("NganhId");
 
                     b.ToTable("HocPhans");
                 });
@@ -407,7 +412,7 @@ namespace Student_Result_Management_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ChucVuId")
+                    b.Property<int?>("ChucVuId")
                         .HasColumnType("int");
 
                     b.Property<string>("TenQuyen")
@@ -625,11 +630,15 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
                 {
-                    b.HasOne("Student_Result_Management_System.Models.Khoa", "Khoa")
+                    b.HasOne("Student_Result_Management_System.Models.Khoa", null)
                         .WithMany("HocPhans")
                         .HasForeignKey("KhoaId");
 
-                    b.Navigation("Khoa");
+                    b.HasOne("Student_Result_Management_System.Models.Nganh", "Nganh")
+                        .WithMany()
+                        .HasForeignKey("NganhId");
+
+                    b.Navigation("Nganh");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.KetQua", b =>
@@ -664,13 +673,9 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.PhanQuyen", b =>
                 {
-                    b.HasOne("Student_Result_Management_System.Models.ChucVu", "ChucVu")
+                    b.HasOne("Student_Result_Management_System.Models.ChucVu", null)
                         .WithMany("PhanQuyens")
-                        .HasForeignKey("ChucVuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChucVu");
+                        .HasForeignKey("ChucVuId");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>

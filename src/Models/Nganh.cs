@@ -9,4 +9,7 @@ public class Nganh
     public int? KhoaId { get; set; }
     public Khoa? Khoa { get; set; }
     public List<CTDT> CTDTs { get; set; } = [];
+    public List<LopHocPhan> LopHocPhans { get; set; } = [];
+    public int? TaiKhoanId { get; set; }
+    public TaiKhoan? TaiKhoan { get; set; }
 }
