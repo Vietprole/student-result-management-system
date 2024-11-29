@@ -12,40 +12,40 @@ export const getAllSinhViens = async () => {
   }
 };
 
-// Function to get a single student by ID
-export const getSinhVienById = async (studentId) => {
+// Function to get a single sinhvien by ID
+export const getSinhVienById = async (sinhvienId) => {
   try {
-    const response = await axios.get(`${API_SINHVIEN}/${studentId}`);
+    const response = await axios.get(`${API_SINHVIEN}/${sinhvienId}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to add a new student
-export const addSinhVien = async (studentData) => {
+// Function to add a new sinhvien
+export const addSinhVien = async (sinhvienData) => {
   try {
-    const response = await axios.post(API_SINHVIEN, studentData);
+    const response = await axios.post(API_SINHVIEN, sinhvienData);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to update an existing student
-export const updateSinhVien = async (studentId, updatedData) => {
+// Function to update an existing sinhvien
+export const updateSinhVien = async (sinhvienId, updatedData) => {
   try {
-    const response = await axios.put(`${API_SINHVIEN}/${studentId}`, updatedData);
+    const response = await axios.put(`${API_SINHVIEN}/${sinhvienId}`, updatedData);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
   }
 };
 
-// Function to delete a student
-export const deleteSinhVien = async (studentId) => {
+// Function to delete a sinhvien
+export const deleteSinhVien = async (sinhvienId) => {
   try {
-    const response = await axios.delete(`${API_SINHVIEN}/${studentId}`);
+    const response = await axios.delete(`${API_SINHVIEN}/${sinhvienId}`);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

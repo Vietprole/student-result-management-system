@@ -1,10 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainPage from "@/pages/MainPage";
 import KhoaPage from "@/pages/KhoaPage";
+import NganhPage from "@/pages/NganhPage";
 import SinhVienPage from "@/pages/SinhVienPage";
 import GiangVienPage from "@/pages/GiangVienPage";
 import CTDTPage from "@/pages/CTDTPage";
 import HocPhanPage from "@/pages/HocPhanPage";
+import PLOPage from "@/pages/PLOPage";
 import LopHocPhanPage from "@/pages/LopHocPhanPage";
 import KetQuaPage from "@/pages/KetQuaPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
@@ -30,6 +32,10 @@ const lophocphans = [
     element: <KhoaPage />,
   },
   {
+    path: "/nganh",
+    element: <NganhPage />,
+  },
+  {
     path: "/giangvien",
     element: <GiangVienPage />,
   },
@@ -44,6 +50,10 @@ const lophocphans = [
   {
     path: "/hocphan",
     element: <HocPhanPage />,
+  },
+  {
+    path: "/plo",
+    element: <PLOPage />,
   },
   {
     path: "/lophocphan",

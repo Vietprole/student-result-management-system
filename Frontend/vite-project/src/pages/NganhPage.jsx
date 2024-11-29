@@ -3,9 +3,9 @@ import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  getAllKhoas,
-  deleteKhoa,
-} from "@/api/api-khoa";
+  getAllNganhs,
+  deleteNganh,
+} from "@/api/api-nganh";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,9 +22,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { KhoaForm } from "@/components/KhoaForm";
+import { NganhForm } from "@/components/NganhForm";
 
-const createKhoaColumns = (handleEdit, handleDelete) => [
+const createNganhColumns = (handleEdit, handleDelete) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -56,6 +56,21 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
   {
+    accessorKey: "khoaId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Khoa Id
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
@@ -74,33 +89,38 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Sửa Sinh Viên
+                  Sửa Ngành
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Edit Khoa</DialogTitle>
-                  <DialogDescription>Edit the current item.</DialogDescription>
+                  <DialogTitle>Edit Nganh</DialogTitle>
+                  <DialogDescription>
+                    Edit the current item.
+                  </DialogDescription>
                 </DialogHeader>
-                <KhoaForm khoaId={item.id} handleEdit={handleEdit} />
+                <NganhForm nganhId={item.id} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Xóa Sinh Viên
+                  Xóa Ngành
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Delete Khoa</DialogTitle>
+                  <DialogTitle>Delete Nganh</DialogTitle>
                   <DialogDescription>
                     Delete the current item.
                   </DialogDescription>
                 </DialogHeader>
-                <p>Are you sure you want to delete this Khoa?</p>
+                <p>Are you sure you want to delete this Nganh?</p>
                 <DialogFooter>
-                  <Button type="submit" onClick={() => handleDelete(item.id)}>
+                  <Button
+                    type="submit"
+                    onClick={() => handleDelete(item.id)}
+                  >
                     Delete
                   </Button>
                 </DialogFooter>
@@ -113,17 +133,17 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
   },
 ];
 
-export default function KhoaPage() {
+export default function NganhPage() {
   return (
     <Layout>
       <div className="w-full">
         <DataTable
-          entity="Khoa"
-          createColumns={createKhoaColumns}
-          getAllItems={() => getAllKhoas()}
-          deleteItem={deleteKhoa}
+          entity="Nganh"
+          createColumns={createNganhColumns}
+          getAllItems={() => getAllNganhs()}
+          deleteItem={deleteNganh}
           columnToBeFiltered={"ten"}
-          ItemForm={KhoaForm}
+          ItemForm={NganhForm}
         />
       </div>
     </Layout>

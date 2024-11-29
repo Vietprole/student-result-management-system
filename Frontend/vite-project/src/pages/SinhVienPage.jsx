@@ -1,17 +1,13 @@
 import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
-import { useEffect, useState } from "react";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   getAllSinhViens,
-  // updateSinhVien,
   deleteSinhVien,
-  // addSinhVien,
 } from "@/api/api-sinhvien";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -27,23 +23,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { SinhVienForm } from "@/components/SinhVienForm";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useReactTable } from "@tanstack/react-table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-} from "@tanstack/react-table";
 
 const createSinhVienColumns = (handleEdit, handleDelete) => [
   {

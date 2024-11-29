@@ -3,7 +3,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
+  // SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -34,7 +34,7 @@ const items = [
   {
     title: "Ngành",
     url: "/nganh",
-    icon: KhoaIcon,
+    icon: KhoaIcon, //TODO Change to Nganh icon
   },
   {
     title: "Giảng viên",
@@ -54,6 +54,11 @@ const items = [
   {
     title: "Học phần",
     url: "/hocphan",
+    icon: HocPhanIcon,
+  },
+  {
+    title: "PLO",
+    url: "/plo",
     icon: HocPhanIcon,
   },
   {
