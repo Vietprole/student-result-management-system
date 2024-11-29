@@ -10,6 +10,8 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface ITaiKhoanRepository
     {
+        public Task<TaiKhoan?> GetById(string id);
+        public Task<List<string>> GetRoles(TaiKhoan taikhoan);
         public Task<TaiKhoan?> CreateUser(CreateTaiKhoanDTO createTaiKhoanDTO,ChucVuDTO chucVuDTO);
         public Task<TaiKhoan?> CreateTaiKhoanSinhVien(CreateTaiKhoanDTO taikhoanSinhVien);
         public Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateTaiKhoanDTO taikhoanGiangVien);

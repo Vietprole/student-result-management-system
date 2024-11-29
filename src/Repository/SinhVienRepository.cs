@@ -36,7 +36,6 @@ namespace Student_Result_Management_System.Repository
             }
             SinhVien sinhVien = new SinhVien
             {
-                Ten = sinhVienDTO.Ten,
                 KhoaId = khoa.Id,
                 Khoa = khoa,
                 NamBatDau = sinhVienDTO.NamBatDau
@@ -45,39 +44,77 @@ namespace Student_Result_Management_System.Repository
 
         }
 
-        public async Task<SinhVien?> CreateSinhVien(SinhVien sinhVien)
+        public async Task<SinhVien?> CreateSinhVien(SinhVien sinhvien,TaiKhoan taiKhoan)
         {
-            string? MaKhoa = await  _khoaRepository.GetMaKhoa(sinhVien.KhoaId??0);
+            sinhvien.TaiKhoanId=taiKhoan.Id;
+            sinhvien.TaiKhoan=taiKhoan;
+            await _context.SinhViens.AddAsync(sinhvien);
+            await _context.SaveChangesAsync();
+            return sinhvien;
+        }
+
+        public async Task<TaiKhoan?> CreateTaiKhoanSinhVien(CreateSinhVienDTO taikhoanSinhVien)
+        {
+             string? MaKhoa = await  _khoaRepository.GetMaKhoa(taikhoanSinhVien.KhoaId);
             if (MaKhoa == null)
             {
                 return null;
             }
-            string NamBatDau = sinhVien.NamBatDau.ToString().Substring(sinhVien.NamBatDau.ToString().Length - 2);
-            int soluong = await GetSinhVienByKhoa(sinhVien.KhoaId??0)+1;
+            string NamBatDau = taikhoanSinhVien.NamBatDau.ToString().Substring(taikhoanSinhVien.NamBatDau.ToString().Length - 2);
+            int soluong = await GetSinhVienByKhoa(taikhoanSinhVien.KhoaId)+1;
             string MaSinhVien = MaKhoa + NamBatDau + (soluong + 1).ToString("D4");
             CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
             {
                 Username = MaSinhVien,
                 Password = "Sv@"+MaSinhVien,
-                TenChucVu = "SinhVien"
+                TenChucVu = "SinhVien",
+                HovaTen = taikhoanSinhVien.Ten
             };
             TaiKhoan? taiKhoanId = await _taiKhoanRepository.CreateTaiKhoanSinhVien(createTaiKhoanDTO);
-            if (taiKhoanId == null)
+            return taiKhoanId;
+        }
+
+        public async Task<SinhVien?> DeleteSV(int id)
+        {
+            var exits = await _context.SinhViens.Include(c=>c.TaiKhoan).FirstOrDefaultAsync(x=>x.Id==id);
+            if(exits==null)
             {
                 return null;
             }
-            sinhVien.TaiKhoanId = taiKhoanId.Id;
-            sinhVien.TaiKhoan = taiKhoanId;
-            await _context.SinhViens.AddAsync(sinhVien);
-            await _context.SaveChangesAsync();
-            return sinhVien;
+            var taikhoan= await _taiKhoanRepository.DeleteUser(exits.TaiKhoan);
+            _context.SinhViens.Remove(exits);
+            // await _context.SaveChangesAsync();
+            return exits;
+        }
 
+        public async Task<List<SinhVien>> GetAllSinhVien()
+        {
+            List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).ToListAsync();
+            return sinhViens;
+        }
+
+        public async Task<SinhVien?> GetById(int id)
+        {
+            var sinhVien = await _context.SinhViens.Include(c => c.TaiKhoan).FirstOrDefaultAsync(x => x.Id == id);
+            return sinhVien;
         }
 
         public async Task<int> GetSinhVienByKhoa(int khoaId)
         {
             int count = await _context.SinhViens.CountAsync(x => x.KhoaId == khoaId);
             return count;
+        }
+
+        public async Task<SinhVien?> UpdateSV(int id, UpdateSinhVienDTO updateSinhVienDTO)
+        {
+            var exitsSV = await _context.SinhViens.Include(c=>c.TaiKhoan).FirstOrDefaultAsync(x=>x.Id==id);
+            if(exitsSV==null)
+            {
+                return null;
+            }
+            exitsSV.TaiKhoan.HovaTen=updateSinhVienDTO.Ten;
+            await _context.SaveChangesAsync();
+            return exitsSV;
         }
     }
 }

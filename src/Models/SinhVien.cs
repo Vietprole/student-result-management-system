@@ -3,7 +3,6 @@
     public class SinhVien
     {
         public int Id { get; set; }
-        public string Ten { get; set; } = string.Empty;
         public int NamBatDau { get; set; }
         public int? KhoaId { get; set; }
         public Khoa? Khoa { get; set; }

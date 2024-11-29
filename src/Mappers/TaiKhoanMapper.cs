@@ -13,8 +13,18 @@ namespace Student_Result_Management_System.Mappers
         {
             return new TaiKhoan
             {
-                UserName = createTaiKhoanDTO.Username
+                UserName = createTaiKhoanDTO.Username,
+                HovaTen = createTaiKhoanDTO.HovaTen
             };
         }
+        public static TaiKhoanProfileDTO ToTaiKhoanProfileDTO(this TaiKhoan taiKhoan, string chucVu)
+        {
+            return new TaiKhoanProfileDTO
+            {
+                HovaTen = taiKhoan.HovaTen,
+                ChucVu = chucVu 
+            };
+        }
+
     }
 }

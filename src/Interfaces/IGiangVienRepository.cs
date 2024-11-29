@@ -9,8 +9,13 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface IGiangVienRepository
     {
-        public Task<GiangVien?> CreateGiangVien(GiangVien giangVien);
+        public Task<List<GiangVien>> GetAllGiangVien();
+        public Task<GiangVien?> GetById(int id);
+        public Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO);
+        public Task<GiangVien?> CreateGiangVien(GiangVien giangVien,TaiKhoan taiKhoan);
         public Task<GiangVien?> CheckGiangVien(CreateGiangVienDTO giangVienDTO);
         public Task<int> GetCountGiangVien(int khoaId);
+        public Task<GiangVien?> UpdateGV(int id,UpdateGiangVienDTO updateGiangVienDTO);
+        public Task<GiangVien?> DeleteGV(int id);
     }
 }

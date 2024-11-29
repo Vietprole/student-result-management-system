@@ -9,10 +9,12 @@ namespace Student_Result_Management_System.DTOs.TaiKhoan
     public class CreateTaiKhoanDTO
     {
         [Required]
-        public string? Username { get; set; }
+        public string Username { get; set; } = string.Empty;
         [Required]
-        public string? Password { get; set; }
+        public string Password { get; set; } = string.Empty;
         [Required]
-        public string? TenChucVu { get; set; }
+        public string TenChucVu { get; set; } = string.Empty;
+        [Required]
+        public string HovaTen { get; set; } = string.Empty;
     }
 }

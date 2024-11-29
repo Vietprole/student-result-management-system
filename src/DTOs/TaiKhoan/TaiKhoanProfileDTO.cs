@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
-namespace Student_Result_Management_System.Models
+namespace Student_Result_Management_System.DTOs.TaiKhoan
 {
-    public class TaiKhoan : IdentityUser
+    public class TaiKhoanProfileDTO
     {
         public string HovaTen { get; set; } = string.Empty;
+        public string ChucVu { get; set; } = string.Empty;
     }
 }

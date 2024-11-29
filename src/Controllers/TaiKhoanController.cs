@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,24 @@ namespace Student_Result_Management_System.Controllers
             _tokenService = tokenService;
             _chucVuRepository = chucVuRepository;
         }
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile([FromRoute] string userId)
+        {
+            var exists = await _taiKhoanRepository.GetById(userId);
+            if (exists == null)
+            {
+                return NotFound("User not found");
+            }
+            var roles = await _taiKhoanRepository.GetRoles(exists);
+            var role = roles.FirstOrDefault();
+            if (role == null)
+            {
+                return NotFound();
+            }
+            var dto = exists.ToTaiKhoanProfileDTO(role);
+            return Ok(dto);
+        }
         [HttpPost("createuser")]
         public async Task<IActionResult> CreateUser([FromBody] CreateTaiKhoanDTO createTaiKhoanDTO)
         {
@@ -41,7 +60,10 @@ namespace Student_Result_Management_System.Controllers
                 {
                     return StatusCode(500,"Role name is required");
                 }
-
+                if(string.IsNullOrEmpty(createTaiKhoanDTO.HovaTen))
+                {
+                    return StatusCode(500,"Full name is required");
+                }
                 var rs = await _chucVuRepository.GetIdChucVu(createTaiKhoanDTO.TenChucVu);
                 if (rs == null)
                 {

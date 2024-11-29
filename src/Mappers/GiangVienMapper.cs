@@ -11,7 +11,7 @@ public static class GiangVienMapper
         return new GiangVienDTO
         {
             Id = giangVien.Id,
-            Ten = giangVien.Ten,
+            Ten=giangVien.TaiKhoan.HovaTen,
             KhoaId = giangVien.KhoaId,
         };
     }
@@ -20,7 +20,6 @@ public static class GiangVienMapper
     {
         return new GiangVien
         {
-            Ten = createGiangVienDTO.Ten,
             KhoaId = createGiangVienDTO.KhoaId,
         };
     }
@@ -29,8 +28,7 @@ public static class GiangVienMapper
     {
         return new GiangVien
         {
-            Ten = updateGiangVienDTO.Ten,
-            KhoaId = updateGiangVienDTO.KhoaId,
+            
         };
     }
 }   

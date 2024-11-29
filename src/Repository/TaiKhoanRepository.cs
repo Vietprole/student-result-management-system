@@ -125,5 +125,23 @@ namespace Student_Result_Management_System.Repository
             }
             return null;
         }
+
+        public async Task<TaiKhoan?> GetById(string id)
+        {
+        // Tìm user dựa trên username
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == id);
+        if (user == null)
+        {
+            return null; // Nếu user không tồn tại
+        }
+
+        return user;
+        }
+
+        public async Task<List<string>> GetRoles(TaiKhoan user)
+        {
+            return (await _userManager.GetRolesAsync(user)).ToList();
+        }
+
     }
 }
