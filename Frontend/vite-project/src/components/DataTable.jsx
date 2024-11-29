@@ -55,12 +55,10 @@ export default function DataTable({entity, createColumns, getAllItems, deleteIte
   const [rowSelection, setRowSelection] = useState({});
 
   const handleAdd = (newItem) => {
-    console.log("from handleAdd", newItem);
     setData([...data, newItem]);
   };
 
   const handleEdit = (editedItem) => {
-    console.log("from handleEdit", editedItem);
     setData(
       data.map((item) =>
         item.id === editedItem.id ? editedItem : item

@@ -4,7 +4,6 @@ import axios from 'axios';
 const API_BAIKIEMTRA = `${API_BASE_URL}/api/baikiemtra`;
 
 export const getBaiKiemTrasByLopHocPhanId = async (lopHocPhanId) => {
-  console.log("lopHocPhanId: ", lopHocPhanId);
   try {
     const response = await axios.get(`${API_BAIKIEMTRA}?lopHocPhanId=${lopHocPhanId}`);
     return response.data;
@@ -37,7 +36,6 @@ export const getBaiKiemTraById = async (baikiemtraId) => {
 export const addBaiKiemTra = async (baikiemtraData) => {
   try {
     const response = await axios.post(API_BAIKIEMTRA, baikiemtraData);
-    console.log("add data:" , response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -48,7 +46,6 @@ export const addBaiKiemTra = async (baikiemtraData) => {
 export const updateBaiKiemTra = async (baikiemtraId, updatedData) => {
   try {
     const response = await axios.put(`${API_BAIKIEMTRA}/${baikiemtraId}`, updatedData);
-    console.log("update data:" , response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

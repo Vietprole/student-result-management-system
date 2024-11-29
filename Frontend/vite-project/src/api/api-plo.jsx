@@ -4,7 +4,6 @@ import axios from 'axios';
 const API_PLO = `${API_BASE_URL}/api/plo`;
 
 export const getPLOsByLopHocPhanId = async (lopHocPhanId) => {
-  console.log("lopHocPhanId: ", lopHocPhanId);
   try {
     const response = await axios.get(`${API_PLO}?lopHocPhanId=${lopHocPhanId}`);
     return response.data;
@@ -59,7 +58,6 @@ export const deletePLO = async (id) => {
 };
 
 export const getCLOsByPLOId = async (ploId) => {
-  console.log("ploId: ", ploId);
   try {
     const response = await axios.get(`${API_PLO}/${ploId}/view-clos`);
     return response.data;

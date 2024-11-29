@@ -39,11 +39,9 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
     if (khoaId) {
       const data = await updateKhoa(khoaId, values);
       handleEdit(data);
-      console.log("Updating sinh vien", values);
     } else {
       const data = await addKhoa(values);
       handleAdd(data);
-      console.log("Add sinh vien", values);
       setIsDialogOpen(false);
     }
   }

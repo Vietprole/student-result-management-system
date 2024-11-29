@@ -25,7 +25,6 @@ export default function GradesPage() {
         // getGrades(),
         getAllKetQuas(),
       ]);
-      console.log("students: ", students);
       setComponents(components);
 
       // Fetch questions for each component
@@ -45,7 +44,7 @@ export default function GradesPage() {
       setQuestions(questions);
 
       // Transform data into the required format
-      const tableData = students.map((student, index) => ({
+      const tableData = students.map((student) => ({
         ...student,
         // tt: index + 1, // Add tt (ordinal number) to each student
         grades: Object.fromEntries(
@@ -64,7 +63,6 @@ export default function GradesPage() {
           ])
         ),
       }));
-      console.log("tableData 65: ", tableData);
       setTableData(tableData);
     };
     fetchData();

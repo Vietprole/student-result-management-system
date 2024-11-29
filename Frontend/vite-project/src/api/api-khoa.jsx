@@ -26,7 +26,6 @@ export const getKhoaById = async (studentId) => {
 export const addKhoa = async (studentData) => {
   try {
     const response = await axios.post(API_KHOA, studentData);
-    console.log("add data:" , response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -37,7 +36,6 @@ export const addKhoa = async (studentData) => {
 export const updateKhoa = async (studentId, updatedData) => {
   try {
     const response = await axios.put(`${API_KHOA}/${studentId}`, updatedData);
-    console.log("update data:" , response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

@@ -48,15 +48,12 @@ export function CLOForm({ cLOId, handleAdd, handleEdit, setIsDialogOpen }) {
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log("values", values);
     if (cLOId) {
       const data = await updateCLO(cLOId, values);
       handleEdit(data);
-      console.log("Updating sinh vien", values);
     } else {
       const data = await addCLO(values);
       handleAdd(data);
-      console.log("Add sinh vien", values);
       setIsDialogOpen(false);
     }
   }

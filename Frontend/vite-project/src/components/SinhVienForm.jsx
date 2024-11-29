@@ -39,11 +39,9 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
     if (sinhVienId) {
       const data = await updateSinhVien(sinhVienId, values);
       handleEdit(data);
-      console.log("Updating sinh vien", values);
     } else {
       const data = await addSinhVien(values);
       handleAdd(data);
-      console.log("Add sinh vien", values);
       setIsDialogOpen(false);
     }
   }

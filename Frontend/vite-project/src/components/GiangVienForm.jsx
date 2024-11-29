@@ -48,9 +48,7 @@ export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogO
     if (giangVienId) {
       const data = await updateGiangVien(giangVienId, values);
       handleEdit(data);
-      console.log("Updating Giang Vien", values);
     } else {
-      console.log("Add Giang Vien", values);
       const data = await addGiangVien(values);
       handleAdd(data);
       setIsDialogOpen(false);

@@ -1,6 +1,5 @@
 import * as React from "react"
 import {
-  // ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -16,14 +15,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { updateKetQua } from "@/api/api-ketqua"
-// import { cn } from "@/lib/utils"
-// import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"
-
-// interface GradeTableProps {
-//   data: StudentGrades[]
-//   components: GradeComponent[]
-//   questions: Record<string, Question[]>
-// }
 
 export function GradeTable({
   data,
@@ -33,7 +24,6 @@ export function GradeTable({
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
   const [modifiedRecords, setModifiedRecords] = React.useState([])
-  console.log("tableData: ", tableData);
   const columns = React.useMemo(() => {
     const cols = [
       {
@@ -84,13 +74,11 @@ export function GradeTable({
                   }
                   
                   newData[rowIndex].grades[componentId][questionId] = value
-                  // console.log("newData: ", rowIndex, newData[rowIndex].id);
                   const modifiedRecord = {
                     sinhVienId: newData[rowIndex].id,
                     cauHoiId: parseInt(questionId),
                     diem: value,
                   }
-                  console.log("modifiedRecord: ", modifiedRecord);
                   updateKetQua(modifiedRecord);
                   setModifiedRecords([...modifiedRecords, modifiedRecord]);
 
@@ -123,11 +111,9 @@ export function GradeTable({
   })
 
   const handleSaveChanges = async () => {
-    console.log("Modified records:", modifiedRecords)
     for (const [key, record] of Object.entries(modifiedRecords)) {
       const { id, ...rest } = record;
       try {
-        console.log("SinhVienId, rest: ", record, id, rest);
         // await updateKetQua(sinhVienId, rest);
       } catch (error) {
         console.error(`Error updating record for sinhVienId ${sinhVienId}:`, error);

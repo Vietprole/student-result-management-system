@@ -53,11 +53,9 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (baiKiemTraId) {
-      console.log("Updating Bai Kiem Tra", values);
       const data = await updateBaiKiemTra(baiKiemTraId, values);
       handleEdit(data);
     } else {
-      console.log("Add Bai Kiem Tra", values);
       const data = await addBaiKiemTra(values);
       handleAdd(data);
       setIsDialogOpen(false);

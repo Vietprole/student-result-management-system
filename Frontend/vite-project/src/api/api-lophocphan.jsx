@@ -49,7 +49,6 @@ export const deleteLopHocPhan = async (id) => {
 };
 
 export const getSinhViensByLopHocPhanId = async (lopHocPhanId) => {
-  console.log("lopHocPhanId: ", lopHocPhanId);
   try {
     const response = await axios.get(`${API_LOPHOCPHAN}/${lopHocPhanId}/view-sinhviens`);
     return response.data;

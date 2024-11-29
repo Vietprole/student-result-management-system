@@ -93,7 +93,6 @@ export default function BangDiem() {
       );
       setQuestions(questions);
 
-      console.log({ students, components, grades, questions });
       const tableData = students.map((student) => ({
         ...student,
         grades: Object.fromEntries(
@@ -101,14 +100,12 @@ export default function BangDiem() {
             component.id,
             Object.fromEntries(
               (questions[component.id] || []).map((question) => {
-                console.log("from line 106: ", student, component, question, grades);
                 const grade = grades.find(
                   (g) =>
                     g.sinhVienId === student.id &&
                     // g.componentId === component.id &&
                     g.cauHoiId === question.id
                 );
-                console.log("from line 111: ", grade);
                 return [question.id, grade?.diem || 0];
               })
             ),
@@ -121,7 +118,6 @@ export default function BangDiem() {
 
     fetchData();
   }, [lopHocPhanId]);
-  console.log("From BangDiem", tableData);
 
   const handleSaveChanges = async () => {
     try {

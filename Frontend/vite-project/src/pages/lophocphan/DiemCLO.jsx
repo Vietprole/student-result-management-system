@@ -159,7 +159,6 @@ export default function DiemCLO() {
       setData(newData)
       setCLOs(CLOs)
       setListDiemCLOMax(listDiemCLOMax)
-      console.log("listDiemCLOMax: ", listDiemCLOMax)
     }
     fetchData()
   }, [lopHocPhanId])
@@ -209,7 +208,7 @@ export default function DiemCLO() {
       </div>
       <div className="flex items-center space-x-2">
         <Switch id="diem-mode"
-          onCheckedChange={(check) => {setIsBase10(check); console.log(isBase10)}}
+          onCheckedChange={(check) => {setIsBase10(check)}}
         />
         <Label htmlFor="diem-mode">Chuyển sang hệ 10</Label>
       </div>

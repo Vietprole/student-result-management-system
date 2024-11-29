@@ -4,7 +4,6 @@ import axios from "axios";
 const API_KETQUA = `${API_BASE_URL}/api/ketqua`;
 
 // export const getKetQuasByLopHocPhanId = async (lopHocPhanId) => {
-//   console.log("lopHocPhanId: ", lopHocPhanId);
 //   try {
 //     const response = await axios.get(`${API_KETQUA}?lopHocPhanId=${lopHocPhanId}`);
 //     return response.data;
@@ -36,7 +35,6 @@ export const getKetQuaById = async (ketquaId) => {
 export const addKetQua = async (ketquaData) => {
   try {
     const response = await axios.post(API_KETQUA, ketquaData);
-    console.log("add data:", response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -47,7 +45,6 @@ export const addKetQua = async (ketquaData) => {
 export const updateKetQua = async (updatedData) => {
   try {
     const response = await axios.put(`${API_KETQUA}`, updatedData);
-    console.log("update data:", response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
@@ -76,7 +73,6 @@ export const calculateDiemCLO = async (sinhVienId, CLOId) => {
 export const calculateDiemCLOMax = async (CLOId) => {
   try {
     const response = await axios.get(`${API_KETQUA}/calculate-diem-clo-max?CLOId=${CLOId}`);
-    console.log("response.data: ", response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

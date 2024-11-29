@@ -4,7 +4,6 @@ import axios from 'axios';
 const API_CLO = `${API_BASE_URL}/api/clo`;
 
 export const getCLOsByLopHocPhanId = async (lopHocPhanId) => {
-  console.log("lopHocPhanId: ", lopHocPhanId);
   try {
     const response = await axios.get(`${API_CLO}?lopHocPhanId=${lopHocPhanId}`);
     return response.data;

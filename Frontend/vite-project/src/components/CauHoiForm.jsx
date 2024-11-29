@@ -53,11 +53,9 @@ export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen })
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (cauHoiId) {
-      console.log("Updating Bai Kiem Tra", values);
       const data = await updateCauHoi(cauHoiId, values);
       handleEdit(data);
     } else {
-      console.log("Add Bai Kiem Tra", values);
       const data = await addCauHoi(values);
       handleAdd(data);
       setIsDialogOpen(false);
