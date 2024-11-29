@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { addChuongTrinhDaoTao, updateChuongTrinhDaoTao } from "@/api/api-chuongtrinhdaotao";
+import { addCTDT, updateCTDT } from "@/api/api-ctdt";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
@@ -26,22 +26,23 @@ const formSchema = z.object({
   }),
 });
 
-export function CTDTForm({ chuongTrinhId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function CTDTForm({ cTDTId, handleAdd, handleEdit, setIsDialogOpen }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: chuongTrinhId,
+      id: cTDTId,
       ten: "",
       nganhId: "",
     },
   });
 
   async function onSubmit(values) {
-    if (chuongTrinhId) {
-      const data = await updateChuongTrinhDaoTao(chuongTrinhId, values);
+    if (cTDTId) {
+      const data = await updateCTDT(cTDTId, values);
+      console.log("values", values);
       handleEdit(data);
     } else {
-      const data = await addChuongTrinhDaoTao(values);
+      const data = await addCTDT(values);
       handleAdd(data);
       setIsDialogOpen(false);
     }
@@ -50,7 +51,7 @@ export function CTDTForm({ chuongTrinhId, handleAdd, handleEdit, setIsDialogOpen
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {chuongTrinhId && (
+        {cTDTId && (
           <FormField
             control={form.control}
             name="id"

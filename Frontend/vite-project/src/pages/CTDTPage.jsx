@@ -1,12 +1,12 @@
 import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  getAllChuongTrinhDaoTao,
-  deleteChuongTrinhDaoTao,
-} from "@/api/api-chuongtrinhdaotao";
+  getAllCTDT,
+  deleteCTDT,
+} from "@/api/api-ctdt";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,6 +53,19 @@ const createCTDTColumns = (handleEdit, handleDelete) => [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
   {
+    accessorKey: "nganhId",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Ngành Id
+        <ArrowUpDown />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("nganhId")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
@@ -81,7 +94,7 @@ const createCTDTColumns = (handleEdit, handleDelete) => [
                     Edit the current Chương Trình.
                   </DialogDescription>
                 </DialogHeader>
-                <CTDTForm chuongTrinhId={item.id} handleEdit={handleEdit} />
+                <CTDTForm cTDTId={item.id} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -122,8 +135,8 @@ export default function CTDTPage() {
         <DataTable
           entity="Chương Trình"
           createColumns={createCTDTColumns}
-          getAllItems={() => getAllChuongTrinhDaoTao()}
-          deleteItem={deleteChuongTrinhDaoTao}
+          getAllItems={() => getAllCTDT()}
+          deleteItem={deleteCTDT}
           columnToBeFiltered={"ten"}
           ItemForm={CTDTForm}
         />
