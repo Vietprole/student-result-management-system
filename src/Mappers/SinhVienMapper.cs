@@ -22,13 +22,4 @@ public static class SinhVienMapper
             Ten = createSinhVienDTO.Ten,
         };
     }
-    public static SinhVienLoginDTO ToSinhVienLoginDTO(this SinhVien sinhVienModel)
-    {
-        return new SinhVienLoginDTO
-        {
-            Id = sinhVienModel.Id,
-            Ten = sinhVienModel.Ten,
-            TaiKhoanId = sinhVienModel.TaiKhoanId
-        };
-    }
 }

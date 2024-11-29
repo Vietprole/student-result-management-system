@@ -218,23 +218,6 @@ namespace Student_Result_Management_System.Migrations
                     b.ToTable("CauHois");
                 });
 
-            modelBuilder.Entity("Student_Result_Management_System.Models.ChucVu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("TenChucVu")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ChucVus");
-                });
-
             modelBuilder.Entity("Student_Result_Management_System.Models.GiangVien", b =>
                 {
                     b.Property<int>("Id")
@@ -246,9 +229,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<int?>("KhoaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TaiKhoanId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Ten")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -256,8 +236,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("KhoaId");
-
-                    b.HasIndex("TaiKhoanId");
 
                     b.ToTable("GiangViens");
                 });
@@ -399,28 +377,6 @@ namespace Student_Result_Management_System.Migrations
                     b.ToTable("PLOs");
                 });
 
-            modelBuilder.Entity("Student_Result_Management_System.Models.PhanQuyen", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChucVuId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TenQuyen")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChucVuId");
-
-                    b.ToTable("PhanQuyens");
-                });
-
             modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>
                 {
                     b.Property<int>("Id")
@@ -429,47 +385,13 @@ namespace Student_Result_Management_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("TaiKhoanId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Ten")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TaiKhoanId");
-
                     b.ToTable("SinhViens");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.TaiKhoan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ChucVuId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MatKhau")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenDangNhap")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TrangThai")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChucVuId");
-
-                    b.ToTable("TaiKhoans");
                 });
 
             modelBuilder.Entity("CLOCauHoi", b =>
@@ -614,13 +536,7 @@ namespace Student_Result_Management_System.Migrations
                         .WithMany("GiangViens")
                         .HasForeignKey("KhoaId");
 
-                    b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
-                        .WithMany()
-                        .HasForeignKey("TaiKhoanId");
-
                     b.Navigation("Khoa");
-
-                    b.Navigation("TaiKhoan");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
@@ -660,42 +576,6 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired();
 
                     b.Navigation("HocPhan");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.PhanQuyen", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.ChucVu", "ChucVu")
-                        .WithMany("PhanQuyens")
-                        .HasForeignKey("ChucVuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChucVu");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
-                        .WithMany()
-                        .HasForeignKey("TaiKhoanId");
-
-                    b.Navigation("TaiKhoan");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.TaiKhoan", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.ChucVu", "ChucVu")
-                        .WithMany()
-                        .HasForeignKey("ChucVuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChucVu");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.ChucVu", b =>
-                {
-                    b.Navigation("PhanQuyens");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
