@@ -17,50 +17,56 @@ import {
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import { ArrowUpDown } from 'lucide-react'
-import { calculateDiemCLO } from "@/api/api-ketqua"
+import { Label } from "@/components/ui/label"
+import { calculateDiemCLO, calculateDiemCLOMax } from "@/api/api-ketqua"
+import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
+import { useParams } from "react-router-dom"
+import { getCLOsByLopHocPhanId } from "@/api/api-clo"
+import { set } from "react-hook-form"
 
-const CLOs = [
-  {
-    "id": 1,
-    "ten": "CLO 1",
-    "moTa": "Kỹ Năng Làm Việc Nhóm",
-    "lopHocPhanId": 1
-  },
-  {
-    "id": 9,
-    "ten": "CLO 2",
-    "moTa": "Kỹ Năng Ngoại Ngữ",
-    "lopHocPhanId": 1
-  },
-  {
-    "id": 10,
-    "ten": "CLO 3",
-    "moTa": "Kỹ Năng Giao Tiếp",
-    "lopHocPhanId": 1
-  }
-]
+// const CLOs = [
+//   {
+//     "id": 1,
+//     "ten": "CLO 1",
+//     "moTa": "Kỹ Năng Làm Việc Nhóm",
+//     "lopHocPhanId": 1
+//   },
+//   {
+//     "id": 9,
+//     "ten": "CLO 2",
+//     "moTa": "Kỹ Năng Ngoại Ngữ",
+//     "lopHocPhanId": 1
+//   },
+//   {
+//     "id": 10,
+//     "ten": "CLO 3",
+//     "moTa": "Kỹ Năng Giao Tiếp",
+//     "lopHocPhanId": 1
+//   }
+// ]
 
-const sinhViens = [
-  {
-    "id": 8,
-    "ten": "Lê Phan Phú Việt"
-  },
-  {
-    "id": 9,
-    "ten": "Huỳnh Duy Tin"
-  },
-  {
-    "id": 10,
-    "ten": "Hà Ngọc Hưng"
-  },
-  {
-    "id": 11,
-    "ten": "Phạm Minh Quân"
-  }
-]
+// const sinhViens = [
+//   {
+//     "id": 8,
+//     "ten": "Lê Phan Phú Việt"
+//   },
+//   {
+//     "id": 9,
+//     "ten": "Huỳnh Duy Tin"
+//   },
+//   {
+//     "id": 10,
+//     "ten": "Hà Ngọc Hưng"
+//   },
+//   {
+//     "id": 11,
+//     "ten": "Phạm Minh Quân"
+//   }
+// ]
 
-const columns = [
+const createColumns = (CLOs, listDiemCLOMax, isBase10, diemDat) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -89,22 +95,32 @@ const columns = [
       )
     },
   },
-  ...CLOs.map(clo => ({
+  ...CLOs.map((clo, index) => ({
     accessorKey: `clo_${clo.id}`,
     header: ({ column }) => {
+      const diemCLOMax = listDiemCLOMax[index];
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          {clo.ten}
+          <div>
+            <div>{clo.ten}</div>
+            {isBase10 ? <div>10</div> : <div>{diemCLOMax}</div>}
+          </div>
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const score = row.original[`clo_${clo.id}`]
-      return score.toFixed(2)
+      const base10Score = (row.original[`clo_${clo.id}`] === 0 ? 0 : row.original[`clo_${clo.id}`] / listDiemCLOMax[index] * 10);
+      const score = isBase10 ? base10Score : row.original[`clo_${clo.id}`];
+      const cellClass = base10Score >= diemDat ? "bg-green-500 text-white" : "bg-red-500 text-white";
+      return (
+        <div className={cellClass}>
+          {score.toFixed(2)}
+        </div>
+      )
     }
   }))
 ]
@@ -113,9 +129,20 @@ export default function DiemCLO() {
   const [data, setData] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState([])
   const [sorting, setSorting] = React.useState([])
+  const { lopHocPhanId } = useParams()
+  const [CLOs, setCLOs] = React.useState([])
+  const [listDiemCLOMax, setListDiemCLOMax] = React.useState([])
+  const [isBase10, setIsBase10] = React.useState(false)
+  const [diemDat, setDiemDat] = React.useState(5.0)
+  const [inputValue, setInputValue] = React.useState(diemDat);
 
   React.useEffect(() => {
     const fetchData = async () => {
+      const [sinhViens, CLOs] = await Promise.all([
+        getSinhViensByLopHocPhanId(lopHocPhanId),
+        getCLOsByLopHocPhanId(lopHocPhanId),
+      ]);
+      
       const newData = await Promise.all(sinhViens.map(async (sv) => {
         const cloScores = await Promise.all(CLOs.map(async (clo) => {
           const score = await calculateDiemCLO(sv.id, clo.id)
@@ -123,10 +150,21 @@ export default function DiemCLO() {
         }))
         return { ...sv, ...Object.assign({}, ...cloScores) }
       }))
+
+      const listDiemCLOMax = await Promise.all(CLOs.map(async (clo) => {
+        const maxScore = await calculateDiemCLOMax(clo.id);
+        return maxScore;
+      }));
+      
       setData(newData)
+      setCLOs(CLOs)
+      setListDiemCLOMax(listDiemCLOMax)
+      console.log("listDiemCLOMax: ", listDiemCLOMax)
     }
     fetchData()
-  }, [])
+  }, [lopHocPhanId])
+
+  const columns = createColumns(CLOs, listDiemCLOMax, isBase10, diemDat);
 
   const table = useReactTable({
     data,
@@ -154,6 +192,27 @@ export default function DiemCLO() {
           className="max-w-sm"
         />
       </div>
+      <div className="flex items-center py-4">
+        <Label htmlFor="DiemDat">Nhập điểm đạt hệ 10: </Label>
+        <Input
+          id="DiemDat"
+          placeholder="5.0..."
+          className="max-w-sm"
+          type="number"
+          value={inputValue}
+          min={0}
+          max={10}
+          step={1}
+          onChange={(e) => setInputValue(parseFloat(e.target.value))}
+        />
+        <Button type="button" onClick={() => setDiemDat(inputValue)}>Go</Button>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Switch id="diem-mode"
+          onCheckedChange={(check) => {setIsBase10(check); console.log(isBase10)}}
+        />
+        <Label htmlFor="diem-mode">Chuyển sang hệ 10</Label>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -180,7 +239,7 @@ export default function DiemCLO() {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="pl-8 pr-3">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

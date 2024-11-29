@@ -4,6 +4,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -21,12 +22,18 @@ import XetChuanDauRaIcon from "@/assets/icons/xet-chuan-dau-ra-icon.png";
 import HoSoCaNhanIcon from "@/assets/icons/ho-so-ca-nhan-icon.png";
 import CaiDatIcon from "@/assets/icons/cai-dat-icon.png";
 import DangXuatIcon from "@/assets/icons/dang-xuat-icon.png";
- 
+import LogoDUT from "@/assets/logos/logo-dut.png";
+
 // Menu items.
 const items = [
   {
     title: "Khoa",
     url: "/khoa",
+    icon: KhoaIcon,
+  },
+  {
+    title: "Ngành",
+    url: "/nganh",
     icon: KhoaIcon,
   },
   {
@@ -84,9 +91,14 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
+      <SidebarHeader>
+        <div className="flex items-center">
+          <img src={LogoDUT} alt="Logo DUT" className="w-20 h-20 mr-2" />
+          <span className="font-extrabold text-3xl text-blue-500">SRMS</span>
+        </div>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

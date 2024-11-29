@@ -219,10 +219,10 @@ function EditableCell({ value, onChange, isEditing }) {
         const numValue = parseFloat(newValue) || 0
         onChange(numValue)
       }}
-      className="h-6 w-12 text-center"
+      className="h-8 w-16 text-center"
       min={0}
       max={10}
-      step={0.1}
+      step={0.25}
     />
   )
 }

@@ -72,3 +72,13 @@ export const calculateDiemCLO = async (sinhVienId, CLOId) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const calculateDiemCLOMax = async (CLOId) => {
+  try {
+    const response = await axios.get(`${API_KETQUA}/calculate-diem-clo-max?CLOId=${CLOId}`);
+    console.log("response.data: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}

@@ -130,5 +130,27 @@ namespace Student_Result_Management_System.Controllers
 
             return Ok(decimal.Round(totalScore, 2, MidpointRounding.AwayFromZero));
         }
+
+        [HttpGet("calculate-diem-clo-max")]
+        public async Task<IActionResult> CalculateDiemCLOMax([FromQuery] int CLOId)
+        {
+            var clo = await _context.CLOs
+                .Include(c => c.CauHois)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                .FirstOrDefaultAsync(c => c.Id == CLOId);
+
+            if (clo == null)
+            {
+                return NotFound("CLO not found.");
+            }
+
+            decimal maxScore = 0;
+            foreach (var cauHoi in clo.CauHois)
+            {
+                maxScore += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo;
+            }
+
+            return Ok(decimal.Round(maxScore, 2, MidpointRounding.AwayFromZero));
+        }
     }
 }
