@@ -1,7 +1,6 @@
 import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
-import { useEffect, useState } from "react";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   getAllGiangViens,
@@ -10,29 +9,12 @@ import {
 } from "@/api/api-giangvien";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useReactTable } from "@tanstack/react-table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-} from "@tanstack/react-table";
+
 import {
   Dialog,
   DialogContent,
@@ -74,6 +56,21 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
       );
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
+  },
+  {
+    accessorKey: "khoaId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Khoa Id
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
   },
   {
     id: "actions",

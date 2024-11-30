@@ -1,9 +1,10 @@
 export const getAccessToken = () => {
-  const token = sessionStorage.getItem('accesstoken')
+  const token = sessionStorage.getItem('accessToken')
   return token ? `Bearer ${token}` : ''
 }
 export const saveAccessToken = (token) => {
-  sessionStorage.setItem('accesstoken', token)
+  console.log(">>Save token:", token);
+  sessionStorage.setItem('accessToken', token)
 }
 export const tokenBear = (token) => {
   return 'Bearer ' + token

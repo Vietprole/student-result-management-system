@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { loginApi } from '../../api/api-taikhoan';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
-import '@/until/index'
-import { saveAccessToken } from '@/until/index';
+import '@/utils/storage'
+import { saveAccessToken } from '@/utils/storage';
 
 // import { jwtDecode } from 'jwt-decode';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [isShowPassword, setIsShowPassword] = useState(false);
+    // const [isShowPassword, setIsShowPassword] = useState(false);
     const navigate = useNavigate(); // Use the hook here
     const handleLogin = async () => {
         if (!username || !password) {
@@ -20,7 +20,9 @@ const LoginPage = () => {
         try {
           const response = await loginApi(username, password);
               console.log(">>Check login:", response);
+              console.log(">>Respone.token:", response.token);
               if (response.token) {
+                console.log(">>Respone.token:", response.token);
                 saveAccessToken(response.token);
                 // const decodedToken = jwtDecode(response.token);
                 // const userRole = decodedToken.role;

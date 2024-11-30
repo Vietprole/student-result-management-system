@@ -13,7 +13,6 @@ const styles = `
       flex-direction: column;
       flex-direction: row;
 
-
   }
   .main  .topLeft {
     width: 300px;
@@ -103,7 +102,7 @@ const styles = `
     margin: 0;
   }
 `;
-// const token= sessionStorage.getItem('accesstoken');
+// const token= sessionStorage.getItem('accessToken');
 // if (!token) {
 
 //   throw new Error('Token not found');
@@ -131,8 +130,8 @@ export default function Header() {
             <img src={BellIcon} alt="Notification" />
           </div>
           <div className="infor">
-            <h4 className="name">{fullname}</h4>
-            <h5 className="role">{role}</h5>
+            {/* <h4 className="name">{fullname}</h4> */}
+            {/* <h5 className="role">{role}</h5> */}
           </div>
           <div className="avatar">
             <img src={AvatarIcon} alt="Avatar" />
