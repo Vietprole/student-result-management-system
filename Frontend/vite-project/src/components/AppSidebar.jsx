@@ -21,9 +21,95 @@ import XetChuanDauRaIcon from "@/assets/icons/xet-chuan-dau-ra-icon.png";
 import HoSoCaNhanIcon from "@/assets/icons/ho-so-ca-nhan-icon.png";
 import CaiDatIcon from "@/assets/icons/cai-dat-icon.png";
 import DangXuatIcon from "@/assets/icons/dang-xuat-icon.png";
- 
+const truongkhoaitem = [
+  {
+    title: "Khoa",
+    url: "/khoa",
+    icon: KhoaIcon,
+  },
+  {
+    title: "Sinh viên",
+    url: "/sinhvien",
+    icon: SinhVienIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  }
+]
+const giangvienitem = [
+  {
+    title: "Lớp học phần",
+    url: "/lophocphan",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Kết quả học tập",
+    url: "/ketqua",
+    icon: KetQuaIcon,
+  },
+  {
+    title: "Xét chuẩn đầu ra",
+    url: "/xetchuandaura",
+    icon: XetChuanDauRaIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  },
+]
+
+const sinhvienitem = [
+  {
+    title: "Khung chương trình đào tạo",
+    url: "/kctdtsv",
+    icon: CTDTIcon,
+  },
+  {
+    title: "Kết quả học tập",
+    url: "/ketquahoctap",
+    icon: KetQuaIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  }
+]
 // Menu items.
-const items = [
+const adminitem = [
   {
     title: "Khoa",
     url: "/khoa",
@@ -82,6 +168,7 @@ const items = [
 ]
  
 export function AppSidebar() {
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -89,6 +176,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              { items = adminitem}
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
