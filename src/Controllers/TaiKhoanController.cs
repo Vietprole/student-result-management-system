@@ -28,8 +28,7 @@ namespace Student_Result_Management_System.Controllers
             _tokenService = tokenService;
             _chucVuRepository = chucVuRepository;
         }
-        [HttpGet("{id}")]
-        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> GetProfile([FromRoute] string userId)
         {
             var exists = await _taiKhoanRepository.GetById(userId);

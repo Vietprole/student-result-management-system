@@ -31,8 +31,9 @@ namespace Student_Result_Management_System.Service
             {
                 new Claim(JwtRegisteredClaimNames.GivenName,user.UserName) ,// GivenName is the username
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.NameId,user.Id)
-        
+                new Claim(JwtRegisteredClaimNames.NameId,user.Id),
+                new Claim("fullname",user.HovaTen),
+
             };
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role,role)));

@@ -5,6 +5,8 @@ import { toast } from 'react-toastify'
 import '@/until/index'
 import { saveAccessToken } from '@/until/index';
 
+// import { jwtDecode } from 'jwt-decode';
+
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -20,6 +22,10 @@ const LoginPage = () => {
               console.log(">>Check login:", response);
               if (response.token) {
                 saveAccessToken(response.token);
+                // const decodedToken = jwtDecode(response.token);
+                // const userRole = decodedToken.role;
+                
+                // console.log('User Role:', userRole);
                 navigate('/main'); // Use navigate here
               } else {
                 toast('Tên đăng nhập hoặc mật khẩu sai');
