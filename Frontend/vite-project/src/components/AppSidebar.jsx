@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import React from "react";
-import "@/until/index"
+import "@/utils/storage"
 
 // Import PNG icons
 import KhoaIcon from "@/assets/icons/khoa-icon.png";
@@ -24,7 +24,8 @@ import XetChuanDauRaIcon from "@/assets/icons/xet-chuan-dau-ra-icon.png";
 import HoSoCaNhanIcon from "@/assets/icons/ho-so-ca-nhan-icon.png";
 import CaiDatIcon from "@/assets/icons/cai-dat-icon.png";
 import DangXuatIcon from "@/assets/icons/dang-xuat-icon.png";
-import { getRole } from "@/until/index";
+import LogoDUT from "@/assets/logos/logo-dut.png";
+import { getRole } from "@/utils/storage";
 const truongKhoaItem = [
   {
     title: "Khoa",

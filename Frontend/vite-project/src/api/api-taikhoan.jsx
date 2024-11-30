@@ -1,6 +1,6 @@
 import API_BASE_URL from "./base-url";
 import axios from 'axios';
-import "@/until/index"
+import "@/utils/storage"
 const API_GIANGVIEN = `${API_BASE_URL}/api/taikhoan`;
 export const loginApi = async (tenDangNhap, matKhau) => {
   try {

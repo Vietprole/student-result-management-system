@@ -13,13 +13,13 @@ export const tokenBear = (token) => {
 }
 
 export const getFullname = () => {
-  const result = sessionStorage.getItem('accesstoken').toString();
+  const result = sessionStorage.getItem('accessToken').toString();
   const decodedToken = jwtDecode(result);
   const fullname = decodedToken.fullname;
   return fullname;
 }
 export const getRole = () => {
-  const result = sessionStorage.getItem('accesstoken')
+  const result = sessionStorage.getItem('accessToken')
   const decodedToken = jwtDecode(result);
   const role = decodedToken.role;
   return role;

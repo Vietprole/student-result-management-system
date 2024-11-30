@@ -3,8 +3,8 @@ import EmailIcon from "@/assets/icons/email-icon.png";  // Đảm bảo đúng �
 import AvatarIcon from "@/assets/icons/avatar-icon.png";  // Đảm bảo đúng đường dẫn
 import SearchIcon from "@/assets/icons/search-icon.png";  // Đảm bảo đúng đường dẫn
 import BellIcon from "@/assets/icons/bell-icon.png";  // Đảm bảo đúng đường dẫn
-// import "@/until/index"
-// import { getFullname } from "@/until/index";
+// import "@/utils/storage"
+// import { getFullname } from "@/utils/storage";
 import { jwtDecode } from "jwt-decode";
 const styles = `
   .main {
@@ -107,7 +107,7 @@ const styles = `
 export default function Header() {
   let fullname = "";
   let role = "";
-  const token= sessionStorage.getItem('accesstoken');
+  const token= sessionStorage.getItem('accessToken');
   if (token) {
     // throw new Error('Token not found');
     const decodedToken = jwtDecode(token);  
@@ -133,8 +133,8 @@ export default function Header() {
             <img src={BellIcon} alt="Notification" />
           </div>
           <div className="infor">
-            {/* <h4 className="name">{fullname}</h4> */}
-            {/* <h5 className="role">{role}</h5> */}
+            <h4 className="name">{fullname}</h4>
+            <h5 className="role">{role}</h5>
           </div>
           <div className="avatar">
             <img src={AvatarIcon} alt="Avatar" />
