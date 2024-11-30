@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/cauhoi")]
     [ApiController]
+    [Authorize]
     public class CauHoiController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

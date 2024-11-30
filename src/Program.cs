@@ -5,7 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Repository;
+using Student_Result_Management_System.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +57,13 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
+builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+builder.Services.AddScoped<ITokenSerivce, TokenService>();
+builder.Services.AddScoped<IChucVuRepository,ChucVuRepository>();
+builder.Services.AddScoped<IKhoaRepository,KhoaRepository>();
+builder.Services.AddScoped<ISinhVienRepository,SinhVienRepository>();
+builder.Services.AddScoped<IGiangVienRepository,GiangVienRepository>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/baikiemtra")]
     [ApiController]
+    [Authorize]
     public class BaiKiemTraController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

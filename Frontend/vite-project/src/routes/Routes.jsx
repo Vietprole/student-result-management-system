@@ -12,7 +12,6 @@ import KetQuaPage from "@/pages/KetQuaPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
 import HoSoCaNhanPage from "@/pages/HoSoCaNhanPage";
 import CaiDatPage from "@/pages/CaiDatPage";
-
 import CongThucDiem from "@/pages/lophocphan/CongThucDiem";
 import BangDiem from "@/pages/lophocphan/BangDiem";
 import TaoCLO from "@/pages/lophocphan/TaoCLO";
@@ -21,10 +20,14 @@ import NoiCauHoiCLO from "@/pages/lophocphan/NoiCauHoiCLO";
 import DiemCLO from "@/pages/lophocphan/DiemCLO";
 import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
 import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
-
+import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
 const lophocphans = [
   {
     path: "/",
+    element: <DangNhap />,
+  },
+  {
+    path: "/main",
     element: <MainPage />,
   },
   {
@@ -86,13 +89,13 @@ const lophocphans = [
     element: <CaiDatPage />,
   }
 ]
-
-const router = createBrowserRouter(lophocphans, {future: {
-  v7_fetcherPersist: true,
-  v7_normalizeFormMethod: true,
-  v7_partialHydration: true,
-  v7_relativeSplatPath: true,
-  v7_skipActionErrorRevalidation: true,
-}});
-
+const router = createBrowserRouter(lophocphans, {
+  future: {
+    v7_fetcherPersist: true,
+    v7_normalizeFormMethod: true,
+    v7_partialHydration: true,
+    v7_relativeSplatPath: true,
+    v7_skipActionErrorRevalidation: true,
+  }
+});
 export default router;

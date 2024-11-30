@@ -54,15 +54,15 @@ namespace Student_Result_Management_System.Data
 
             modelBuilder.Entity<SinhVien>()
                 .HasOne(e => e.TaiKhoan)
-                 .WithMany()          // Không có mối quan hệ ngược
-                .HasForeignKey(s => s.TaiKhoanId) // FK
-                .OnDelete(DeleteBehavior.Cascade); // khi xóa sinh viên thì xóa luôn user
+                 .WithOne()         
+                .HasForeignKey<SinhVien>(s => s.TaiKhoanId) // FK
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<GiangVien>()
                 .HasOne(e => e.TaiKhoan)
-                .WithMany()          // Không có mối quan hệ ngược
-                .HasForeignKey(s => s.TaiKhoanId) // FK
-                .OnDelete(DeleteBehavior.Cascade); // khi xóa giảng viên thì xóa luôn user
+                .WithOne()          
+                .HasForeignKey<GiangVien>(s => s.TaiKhoanId) // FK
+                .OnDelete(DeleteBehavior.Cascade); 
             modelBuilder.Entity<CLO>()
                 .HasMany(e => e.CauHois)
                 .WithMany(e => e.CLOs)
