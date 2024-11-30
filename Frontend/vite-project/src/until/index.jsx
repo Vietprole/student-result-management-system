@@ -19,7 +19,7 @@ export const getFullname = () => {
 }
 export const getRole = () => {
   const result = sessionStorage.getItem('accesstoken')
-  const decodedToken = jwtDecode(response.token);
+  const decodedToken = jwtDecode(result);
   const role = decodedToken.role;
   return role;
 }
