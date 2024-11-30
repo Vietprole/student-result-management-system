@@ -9,6 +9,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import React from "react";
+import "@/until/index"
 
 // Import PNG icons
 import KhoaIcon from "@/assets/icons/khoa-icon.png";
@@ -22,10 +24,96 @@ import XetChuanDauRaIcon from "@/assets/icons/xet-chuan-dau-ra-icon.png";
 import HoSoCaNhanIcon from "@/assets/icons/ho-so-ca-nhan-icon.png";
 import CaiDatIcon from "@/assets/icons/cai-dat-icon.png";
 import DangXuatIcon from "@/assets/icons/dang-xuat-icon.png";
-import LogoDUT from "@/assets/logos/logo-dut.png";
+import { getRole } from "@/until/index";
+const truongKhoaItem = [
+  {
+    title: "Khoa",
+    url: "/khoa",
+    icon: KhoaIcon,
+  },
+  {
+    title: "Sinh viên",
+    url: "/sinhvien",
+    icon: SinhVienIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  }
+]
+const giangvienitem = [
+  {
+    title: "Lớp học phần",
+    url: "/lophocphan",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Kết quả học tập",
+    url: "/ketqua",
+    icon: KetQuaIcon,
+  },
+  {
+    title: "Xét chuẩn đầu ra",
+    url: "/xetchuandaura",
+    icon: XetChuanDauRaIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  },
+]
 
+const sinhVienItem = [
+  {
+    title: "Khung chương trình đào tạo",
+    url: "/kctdtsv",
+    icon: CTDTIcon,
+  },
+  {
+    title: "Kết quả học tập",
+    url: "/ketquahoctap",
+    icon: KetQuaIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  }
+]
 // Menu items.
-const items = [
+const adminItem = [
   {
     title: "Khoa",
     url: "/khoa",
@@ -92,8 +180,64 @@ const items = [
     icon: DangXuatIcon,
   },
 ]
- 
+const phongDaoTaoItem = [
+  {
+    title: "Lớp học phần",
+    url: "/lophocphan",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Kết quả học tập",
+    url: "/ketqua",
+    icon: KetQuaIcon,
+  },
+  {
+    title: "PLO-CLO",
+    url: "/xetchuandaura",
+    icon: XetChuanDauRaIcon,
+  },
+  {
+    title: "Hồ sơ cá nhân",
+    url: "/hosocanhan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
+    title: "Cài đặt",
+    url: "/caidat",
+    icon: CaiDatIcon,
+  },
+  {
+    title: "Đăng xuất",
+    url: "/dangxuat",
+    icon: DangXuatIcon,
+  },
+
+]
 export function AppSidebar() {
+  const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
+  let items = [];
+
+  switch (role) {
+    case 'TruongKhoa':
+      items = truongKhoaItem;
+      break;
+    case 'GiangVien':
+      items = giangvienitem;
+      break;
+    case 'SinhVien':
+      items = sinhVienItem;
+      break;
+    case 'Admin':
+      items = adminItem;
+      break;
+    case 'PhongDaoTao':
+      items = phongDaoTaoItem;
+      break;
+    default:
+      console.warn('Vai trò không hợp lệ hoặc chưa được xác định.');
+      break;
+  }
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -106,20 +250,28 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <img src={item.icon} alt={`${item.title} icon`} className="w-6 h-6 mr-2" />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {Array.isArray(items) && items.length > 0 ? (
+                items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={item.url}>
+                        <img
+                          src={item.icon}
+                          alt={`${item.title} icon`}
+                          className="w-6 h-6 mr-2"
+                        />
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))
+              ) : (
+                <p>Không có mục menu cho vai trò này.</p>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

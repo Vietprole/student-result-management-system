@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode"
+
 export const getAccessToken = () => {
   const token = sessionStorage.getItem('accessToken')
   return token ? `Bearer ${token}` : ''
@@ -10,15 +12,15 @@ export const tokenBear = (token) => {
   return 'Bearer ' + token
 }
 
-export const getProfile = () => {
-  const result = sessionStorage.getItem('profile')
-  return result ? JSON.parse(result) : null
+export const getFullname = () => {
+  const result = sessionStorage.getItem('accesstoken').toString();
+  const decodedToken = jwtDecode(result);
+  const fullname = decodedToken.fullname;
+  return fullname;
 }
-
-export const saveProfile = (profile) => {
-  sessionStorage.setItem('profile', JSON.stringify(profile))
-}
-
-export const clearProfile = () => {
-  sessionStorage.removeItem('profile')
+export const getRole = () => {
+  const result = sessionStorage.getItem('accesstoken')
+  const decodedToken = jwtDecode(result);
+  const role = decodedToken.role;
+  return role;
 }

@@ -3,7 +3,9 @@ import EmailIcon from "@/assets/icons/email-icon.png";  // Đảm bảo đúng �
 import AvatarIcon from "@/assets/icons/avatar-icon.png";  // Đảm bảo đúng đường dẫn
 import SearchIcon from "@/assets/icons/search-icon.png";  // Đảm bảo đúng đường dẫn
 import BellIcon from "@/assets/icons/bell-icon.png";  // Đảm bảo đúng đường dẫn
-import { jwtDecode } from 'jwt-decode';
+// import "@/until/index"
+// import { getFullname } from "@/until/index";
+import { jwtDecode } from "jwt-decode";
 const styles = `
   .main {
       width: 100%;
@@ -102,16 +104,17 @@ const styles = `
     margin: 0;
   }
 `;
-// const token= sessionStorage.getItem('accessToken');
-// if (!token) {
-
-//   throw new Error('Token not found');
-
-// }
-// const decodedToken = jwtDecode(token);
-// const fullname = decodedToken.fullname;
-// const role = decodedToken.role;
 export default function Header() {
+  let fullname = "";
+  let role = "";
+  const token= sessionStorage.getItem('accesstoken');
+  if (token) {
+    // throw new Error('Token not found');
+    const decodedToken = jwtDecode(token);  
+    fullname = decodedToken.fullname;
+    role = decodedToken.role;
+  }
+
   return (
     <div className="main">
       <div className="topLeft">
