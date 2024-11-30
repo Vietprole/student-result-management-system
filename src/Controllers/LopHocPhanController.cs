@@ -88,6 +88,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var lopHocPhan = await _context.LopHocPhans
                 .Include(lhp => lhp.SinhViens)
+                .ThenInclude(sv => sv.TaiKhoan)
                 .FirstOrDefaultAsync(lhp => lhp.Id == id);
             if (lopHocPhan == null)
                 return NotFound();
@@ -190,6 +191,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var lopHocPhan = await _context.LopHocPhans
                 .Include(lhp => lhp.GiangViens)
+                .ThenInclude(gv => gv.TaiKhoan)
                 .FirstOrDefaultAsync(lhp => lhp.Id == id);
             if (lopHocPhan == null)
                 return NotFound();

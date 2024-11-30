@@ -20,6 +20,23 @@ const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
+  khoaId: z.coerce.number(
+    {
+      message: "Khoa Id must be a number",
+    }
+  ).min(1, {
+    message: "Khoa Id must be at least 1 characters.",
+  }),
+  namBatDau: z.coerce.number(
+    {
+      message: "Nam Bat Dau must be a number",
+    }
+  ).min(4, {
+    message: "Nam bat dau must be at least 4 characters.",
+  })
+  .refine((val) => val > 2010 && val < 2024, {
+    message: "Trong so must be between 2010 and 2024",
+  }),
 });
 
 export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpen }) {
@@ -29,6 +46,8 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
     defaultValues: {
       id: sinhVienId,
       ten: "",
+      khoaId: "",
+      namBatDau: "",
     },
   });
 
@@ -75,6 +94,38 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
               <FormLabel>Tên</FormLabel>
               <FormControl>
                 <Input placeholder="Nguyễn Văn A" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="khoaId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Khoa Id</FormLabel>
+              <FormControl>
+                <Input placeholder="1" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="namBatDau"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Năm Bắt Đầu</FormLabel>
+              <FormControl>
+                <Input placeholder="2024" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
