@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -12,11 +11,9 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241129062658_UpGVSV")]
-    partial class UpGVSV
+    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,37 +141,37 @@ namespace Student_Result_Management_System.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f1e36b8b-b646-447d-bf82-460672b7ae98",
+                            Id = "297a4ced-a670-466e-89a1-868e171d2c90",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "26bf66c8-0edc-417c-a5ef-6c553019fc14",
+                            Id = "8168c32a-e115-43b3-9a75-e58b56121d44",
                             Name = "GiangVien",
                             NormalizedName = "GIANGVIEN"
                         },
                         new
                         {
-                            Id = "dcd22d3d-471b-4c95-a0e7-fc9bedf5a3f8",
+                            Id = "834cdf2b-9528-4eac-b607-71aff7ed673c",
                             Name = "SinhVien",
                             NormalizedName = "SINHVIEN"
                         },
                         new
                         {
-                            Id = "dc608489-0e5e-4945-bca6-688d6cf06400",
+                            Id = "1b3de155-3a7e-4e19-8b27-93e7a4ab91d8",
                             Name = "PhongDaoTao",
                             NormalizedName = "PHONGDAOTAO"
                         },
                         new
                         {
-                            Id = "8e8da6b3-07df-4fd5-b4f7-82f0635a9cb0",
+                            Id = "ad2d2e3d-fe41-4960-88be-cc197a6fd249",
                             Name = "TruongKhoa",
                             NormalizedName = "TRUONGKHOA"
                         },
                         new
                         {
-                            Id = "e820b120-4f48-4c64-881b-96cc138400d9",
+                            Id = "0f9f5597-22c0-4d86-9f6a-3c8d0505324e",
                             Name = "TruongBoMon",
                             NormalizedName = "TRUONGBOMON"
                         });
@@ -301,8 +298,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<int>("LopHocPhanId")
                         .HasColumnType("int");
 
-                    b.Property<float>("TrongSo")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TrongSo")
+                        .HasColumnType("decimal(4, 2)");
 
                     b.HasKey("Id");
 
@@ -379,8 +376,8 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("TrongSo")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TrongSo")
+                        .HasColumnType("decimal(4, 2)");
 
                     b.HasKey("Id");
 
@@ -428,8 +425,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<bool>("LaCotLoi")
                         .HasColumnType("bit");
 
-                    b.Property<float>("SoTinChi")
-                        .HasColumnType("real");
+                    b.Property<decimal>("SoTinChi")
+                        .HasColumnType("decimal(4, 2)");
 
                     b.Property<string>("Ten")
                         .IsRequired()
@@ -453,8 +450,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<int>("CauHoiId")
                         .HasColumnType("int");
 
-                    b.Property<float>("Diem")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Diem")
+                        .HasColumnType("decimal(4, 2)");
 
                     b.Property<int>("SinhVienId")
                         .HasColumnType("int");
