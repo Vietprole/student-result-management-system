@@ -1,18 +1,30 @@
+import Layout from "../Layout";
 import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
+  getAllLopHocPhans,
+  deleteLopHocPhan,
+} from "@/api/api-lophocphan";
+import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuSeparator,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState, useEffect } from "react";
-import { getAllLopHocPhans } from "@/api/api-lophocphan";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { LopHocPhanForm } from "@/components/LopHocPhanForm";
 
-const columns = [
+const createLopHocPhanColumns = (handleEdit, handleDelete) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -44,10 +56,25 @@ const columns = [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
   {
+    accessorKey: "hocPhanId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Học Phần Id
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("hocPhanId")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const item = row.original;
 
       return (
         <DropdownMenu>
@@ -59,14 +86,46 @@ const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <Dialog>
+              <DialogTrigger asChild>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  Sửa Lớp Học Phần
+                </DropdownMenuItem>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Edit Lop Hoc Phan</DialogTitle>
+                  <DialogDescription>
+                    Edit the current item.
+                  </DialogDescription>
+                </DialogHeader>
+                <LopHocPhanForm lopHocPhanId={item.id} handleEdit={handleEdit} />
+              </DialogContent>
+            </Dialog>
+            <Dialog>
+              <DialogTrigger asChild>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  Xóa Lớp Học Phần
+                </DropdownMenuItem>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Delete Lop Hoc Phan</DialogTitle>
+                  <DialogDescription>
+                    Delete the current item.
+                  </DialogDescription>
+                </DialogHeader>
+                <p>Are you sure you want to delete this Lop Hoc Phan?</p>
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -74,25 +133,17 @@ const columns = [
   },
 ];
 
-export default function DefaultComponent() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllLopHocPhans();
-      setData(data);
-    };
-    fetchData();
-  }, []);
+export default function LopHocPhanPage() {
   return (
-    <div>
-      <h2>Default Component</h2>
-      {/* <DataTable
+    <div className="w-full">
+      <DataTable
+        entity="Lop Hoc Phan"
+        createColumns={createLopHocPhanColumns}
+        getAllItems={() => getAllLopHocPhans()}
+        deleteItem={deleteLopHocPhan}
         columnToBeFiltered={"ten"}
-        hasSelectedRowsCount={false}
-        isPaginated={false}
-        data={data}
-        columns={columns}
-      /> */}
+        ItemForm={LopHocPhanForm}
+      />
     </div>
   );
 }
