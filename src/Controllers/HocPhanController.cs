@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
     [Route("api/hocphan")]
     [ApiController]
+    [Authorize]
     public class HocPhanController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
@@ -20,9 +23,16 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId) // async go with Task<> to make function asynchronous
         {
-            var hocPhans = await _context.HocPhans.ToListAsync();
+            IQueryable<HocPhan> query = _context.HocPhans;
+            
+            if (khoaId.HasValue)
+            {
+                query = query.Where(n => n.KhoaId == khoaId.Value);
+            }
+
+            var hocPhans = await query.ToListAsync();
             var hocPhanDTOs = hocPhans.Select(sv => sv.ToHocPhanDTO()).ToList();
             return Ok(hocPhanDTOs);
         }
@@ -114,6 +124,44 @@ namespace Student_Result_Management_System.Controllers
 
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPLOs), new { id = hocPhan.Id }, hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList());
+        }
+
+        [HttpPut("{id}/update-plos")]
+        public async Task<IActionResult> UpdatePLOs([FromRoute] int id, [FromBody] int[] pLOIds)
+        {
+            var hocPhan = await _context.HocPhans
+                .Include(p => p.PLOs)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (hocPhan == null)
+                return NotFound("Lop hoc phan not found");
+
+            // Get existing PLO IDs
+            var existingPLOIds = hocPhan.PLOs.Select(c => c.Id).ToList();
+            
+            // Find IDs to add and remove
+            var idsToAdd = pLOIds.Except(existingPLOIds);
+            var idsToRemove = existingPLOIds.Except(pLOIds);
+
+            // Remove PLOs
+            foreach (var removeId in idsToRemove)
+            {
+                var pLOToRemove = hocPhan.PLOs.First(c => c.Id == removeId);
+                hocPhan.PLOs.Remove(pLOToRemove);
+            }
+
+            // Add new PLOs
+            foreach (var addId in idsToAdd)
+            {
+                var pLO = await _context.PLOs.FindAsync(addId);
+                if (pLO == null)
+                    return NotFound($"PLO with ID {addId} not found");
+                    
+                hocPhan.PLOs.Add(pLO);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList());
         }
 
         [HttpDelete("{id}/remove-plo/{pLOId}")]

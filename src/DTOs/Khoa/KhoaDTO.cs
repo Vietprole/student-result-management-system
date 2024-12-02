@@ -6,4 +6,7 @@ public class KhoaDTO
 {
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
+    public string MaKhoa { get; set; } = string.Empty;
+    public string VietTat { get; set; } = string.Empty;
+
 }

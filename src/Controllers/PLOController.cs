@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.PLO;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Controllers
 {
     [Route("api/plo")]
     [ApiController]
+    [Authorize]
     public class PLOController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
@@ -20,10 +23,24 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int? cTDTId,
+            [FromQuery] int? lopHocPhanId)
         {
-            var pLOs = await _context.PLOs.ToListAsync();
-            var pLODTOs = pLOs.Select(sv => sv.ToPLODTO()).ToList();
+            IQueryable<PLO> query = _context.PLOs;
+
+            if (cTDTId.HasValue)
+            {
+                query = query.Where(p => p.CTDTId == cTDTId.Value);
+            }
+
+            if (lopHocPhanId.HasValue)
+            {
+                query = query.Where(p => p.HocPhans.Any(hp => hp.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId.Value)));            
+            }
+
+            var pLOs = await query.ToListAsync();
+            var pLODTOs = pLOs.Select(p => p.ToPLODTO()).ToList();
             return Ok(pLODTOs);
         }
 
@@ -113,6 +130,44 @@ namespace Student_Result_Management_System.Controllers
 
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCLOs), new { id = pLO.Id }, pLO.CLOs.Select(sv => sv.ToCLODTO()).ToList());
+        }
+
+        [HttpPut("{id}/update-clos")]
+        public async Task<IActionResult> UpdateCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
+        {
+            var pLO = await _context.PLOs
+                .Include(p => p.CLOs)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (pLO == null)
+                return NotFound("PLO not found");
+
+            // Get existing CLO IDs
+            var existingCLOIds = pLO.CLOs.Select(c => c.Id).ToList();
+            
+            // Find IDs to add and remove
+            var idsToAdd = cLOIds.Except(existingCLOIds);
+            var idsToRemove = existingCLOIds.Except(cLOIds);
+
+            // Remove CLOs
+            foreach (var removeId in idsToRemove)
+            {
+                var cloToRemove = pLO.CLOs.First(c => c.Id == removeId);
+                pLO.CLOs.Remove(cloToRemove);
+            }
+
+            // Add new CLOs
+            foreach (var addId in idsToAdd)
+            {
+                var clo = await _context.CLOs.FindAsync(addId);
+                if (clo == null)
+                    return NotFound($"CLO with ID {addId} not found");
+                    
+                pLO.CLOs.Add(clo);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(pLO.CLOs.Select(c => c.ToCLODTO()).ToList());
         }
 
         [HttpDelete("{id}/remove-clo/{cLOId}")]

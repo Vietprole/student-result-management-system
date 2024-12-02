@@ -185,8 +185,7 @@ export default function SinhVienPage() {
 
   return (
     <Layout>
-      <h1>This is Main Page</h1>
-      <div className="w-full">
+      {/* <div className="w-full">
         <div className="flex items-center py-4">
           <Input
             placeholder="Filter emails..."
@@ -222,8 +221,8 @@ export default function SinhVienPage() {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-        <div className="rounded-md border">
+        </div> */}
+        {/* <div className="rounded-md border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -272,8 +271,8 @@ export default function SinhVienPage() {
               )}
             </TableBody>
           </Table>
-        </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
+        </div> */}
+        {/* <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -297,7 +296,7 @@ export default function SinhVienPage() {
             </Button>
           </div>
         </div>
-      </div>
+      </div> */}
     </Layout>
   )
 }

@@ -3,9 +3,13 @@
     public class SinhVien
     {
         public int Id { get; set; }
-        public string Ten { get; set; } = string.Empty;
+        public int NamBatDau { get; set; }
+        public int? KhoaId { get; set; }
+        public Khoa? Khoa { get; set; }
+
         public List<LopHocPhan> LopHocPhans { get; set; } = [];
         public string TaiKhoanId { get; set; } = string.Empty;
         public TaiKhoan TaiKhoan { get; set; } =new TaiKhoan();
+
     }
 }
