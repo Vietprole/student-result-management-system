@@ -1,6 +1,6 @@
 // import Layout from "../pages/Layout";
 import { useEffect, useState } from "react";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,18 +36,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ComboBox } from "./ComboBox";
 
-export default function DataTable({entity, createColumns, getAllItems, deleteItem, columnToBeFiltered, ItemForm}) {
+export default function DataTable({
+  entity,
+  createColumns,
+  getAllItems,
+  deleteItem,
+  columnToBeFiltered,
+  ItemForm,
+  getAllComboBoxItems,
+}) {
   const [data, setData] = useState([]);
+  const [comboBoxItems, setComboBoxItems] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      const comboBoxItems = await getAllComboBoxItems();
+      setComboBoxItems(comboBoxItems);
+
       const data = await getAllItems();
       setData(data);
     };
     fetchData();
-  }, [getAllItems]);
+  }, [getAllItems, getAllComboBoxItems]);
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -60,9 +73,7 @@ export default function DataTable({entity, createColumns, getAllItems, deleteIte
 
   const handleEdit = (editedItem) => {
     setData(
-      data.map((item) =>
-        item.id === editedItem.id ? editedItem : item
-      )
+      data.map((item) => (item.id === editedItem.id ? editedItem : item))
     );
   };
 
@@ -96,12 +107,28 @@ export default function DataTable({entity, createColumns, getAllItems, deleteIte
     <>
       <h1>This is {entity} Page</h1>
       <div className="w-full">
+        {getAllComboBoxItems && (
+          <>
+            <ComboBox
+              items={comboBoxItems}
+              // value={table.getColumn("khoaId")?.getFilterValue() ?? ""}
+              // onChange={(event) =>
+              //   table.getColumn("khoaId")?.setFilterValue(event.target.value)
+              // }
+            />
+            <Button/>
+          </>
+        )}
         <div className="flex items-center py-4">
           <Input
             placeholder={`Filter ${columnToBeFiltered}s...`}
-            value={table.getColumn(`${columnToBeFiltered}`)?.getFilterValue() ?? ""}
+            value={
+              table.getColumn(`${columnToBeFiltered}`)?.getFilterValue() ?? ""
+            }
             onChange={(event) =>
-              table.getColumn(`${columnToBeFiltered}`)?.setFilterValue(event.target.value)
+              table
+                .getColumn(`${columnToBeFiltered}`)
+                ?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -133,10 +160,7 @@ export default function DataTable({entity, createColumns, getAllItems, deleteIte
           </DropdownMenu>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="ml-2"
-              >
+              <Button variant="outline" className="ml-2">
                 Thêm {entity}
               </Button>
             </DialogTrigger>
@@ -147,7 +171,10 @@ export default function DataTable({entity, createColumns, getAllItems, deleteIte
                   Add a new {entity} to the list.
                 </DialogDescription>
               </DialogHeader>
-            <ItemForm handleAdd={handleAdd} setIsDialogOpen={setIsDialogOpen}/>
+              <ItemForm
+                handleAdd={handleAdd}
+                setIsDialogOpen={setIsDialogOpen}
+              />
             </DialogContent>
           </Dialog>
         </div>

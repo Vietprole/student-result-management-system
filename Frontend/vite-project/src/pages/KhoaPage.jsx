@@ -83,7 +83,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maKhoa")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("vietTat")}</div>,
   },
   {
     id: "actions",
@@ -104,7 +104,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Sửa Sinh Viên
+                  Sửa Khoa
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -118,7 +118,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Xóa Sinh Viên
+                  Xóa Khoa
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -131,7 +131,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
                 <p>Are you sure you want to delete this Khoa?</p>
                 <DialogFooter>
                   <Button type="submit" onClick={() => handleDelete(item.id)}>
-                    Delete
+                    Delete Khoa
                   </Button>
                 </DialogFooter>
               </DialogContent>

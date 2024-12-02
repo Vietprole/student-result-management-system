@@ -2,6 +2,7 @@ import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getAllKhoas } from "@/api/api-khoa";
 import {
   getAllNganhs,
   deleteNganh,
@@ -140,10 +141,11 @@ export default function NganhPage() {
         <DataTable
           entity="Nganh"
           createColumns={createNganhColumns}
-          getAllItems={() => getAllNganhs()}
+          getAllItems={getAllNganhs}
           deleteItem={deleteNganh}
           columnToBeFiltered={"ten"}
           ItemForm={NganhForm}
+          getAllComboBoxItems={getAllKhoas}
         />
       </div>
     </Layout>
