@@ -48,3 +48,36 @@ export const deleteCTDT = async (id) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getHocPhansByCTDTId = async (cTDTId) => {
+  try {
+    const response = await axios.get(`${API_CTDT}/${cTDTId}/view-hocphans`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const addHocPhansToCTDT = async (cTDTId, hocPhanIdsList) => {
+  try {
+    const response = await axios.post(`${API_CTDT}/${cTDTId}/add-hocphans`, hocPhanIdsList, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const removeHocPhanFromCTDT = async (cTDTId, hocPhanId) => {
+  try {
+    const response = await axios.delete(`${API_CTDT}/${cTDTId}/remove-hocphan/${hocPhanId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -7,7 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -26,8 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { addGiangViensToLopHocPhan, getGiangViensByLopHocPhanId } from "@/api/api-lophocphan"
-import { getAllGiangViens } from "@/api/api-giangvien"
+import { addHocPhansToCTDT, getHocPhansByCTDTId } from "@/api/api-ctdt"
+import { getAllHocPhans } from "@/api/api-hocphan"
 
 export const columns = [
   {
@@ -116,7 +116,7 @@ export const columns = [
 
 import PropTypes from 'prop-types';
 
-const AddGiangVienToLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
+const AddHocPhanToCTDTForm = forwardRef(({ cTDTId }, ref) => {
   const [data, setData] = React.useState([])
   const [sorting, setSorting] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState(
@@ -128,16 +128,16 @@ const AddGiangVienToLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const allGiangViens = await getAllGiangViens();
-      const giangViensInLopHocPhan = await getGiangViensByLopHocPhanId(lopHocPhanId);
+      const allHocPhans = await getAllHocPhans();
+      const hocPhansInCTDT = await getHocPhansByCTDTId(cTDTId);
 
-      const giangViensInLopHocPhanIds = new Set(giangViensInLopHocPhan.map(sv => sv.id));
-      const filteredGiangViens = allGiangViens.filter(sv => !giangViensInLopHocPhanIds.has(sv.id));
+      const hocPhansInCTDTIds = new Set(hocPhansInCTDT.map(sv => sv.id));
+      const filteredHocPhans = allHocPhans.filter(sv => !hocPhansInCTDTIds.has(sv.id));
 
-      setData(filteredGiangViens);
+      setData(filteredHocPhans);
     }
     fetchData();
-  }, [lopHocPhanId])
+  }, [cTDTId])
 
   const table = useReactTable({
     data,
@@ -159,10 +159,10 @@ const AddGiangVienToLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
   });
 
   useImperativeHandle(ref, () => ({
-    handleAddGiangVien: () => {
-      const selectedGiangViens = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
-      console.log("selectedGiangViens: ", selectedGiangViens);
-      addGiangViensToLopHocPhan(lopHocPhanId, selectedGiangViens);
+    handleAddHocPhan: () => {
+      const selectedHocPhans = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
+      console.log("selectedHocPhans: ", selectedHocPhans);
+      addHocPhansToCTDT(cTDTId, selectedHocPhans);
     }
   }));
 
@@ -281,10 +281,10 @@ const AddGiangVienToLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
     </div>
   )
 });
-AddGiangVienToLopHocPhanForm.displayName = 'AddGiangVienToLopHocPhanForm';
+AddHocPhanToCTDTForm.displayName = 'AddHocPhanToCTDTForm';
 
-AddGiangVienToLopHocPhanForm.propTypes = {
-  lopHocPhanId: PropTypes.string.isRequired,
+AddHocPhanToCTDTForm.propTypes = {
+  cTDTId: PropTypes.string.isRequired,
 };
 
-export default AddGiangVienToLopHocPhanForm;
+export default AddHocPhanToCTDTForm;

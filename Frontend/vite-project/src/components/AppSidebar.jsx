@@ -136,9 +136,9 @@ const adminItem = [
     icon: SinhVienIcon,
   },
   {
-    title: "Chương trình đào tạo",
-    url: "/ctdt",
-    icon: CTDTIcon,
+    title: "PLO",
+    url: "/plo",
+    icon: HocPhanIcon,
   },
   {
     title: "Học phần",
@@ -146,9 +146,9 @@ const adminItem = [
     icon: HocPhanIcon,
   },
   {
-    title: "PLO",
-    url: "/plo",
-    icon: HocPhanIcon,
+    title: "Chương trình đào tạo",
+    url: "/ctdt",
+    icon: CTDTIcon,
   },
   {
     title: "Lớp học phần",
