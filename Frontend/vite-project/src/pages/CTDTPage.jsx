@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
@@ -22,7 +23,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { CTDTForm } from "@/components/CTDTForm";
-import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { useRef } from "react";
 import AddHocPhanToCTDTForm from "@/components/AddHocPhanToCTDTForm";
 import ManageHocPhanInCTDTForm from "@/components/ManageHocPhanInCTDTForm";

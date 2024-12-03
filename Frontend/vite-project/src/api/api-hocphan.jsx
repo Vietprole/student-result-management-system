@@ -62,3 +62,36 @@ export const deleteHocPhan = async (hocphanId) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getPLOsByHocPhanId = async (hocPhanId) => {
+  try {
+    const response = await axios.get(`${API_HOCPHAN}/${hocPhanId}/view-plos`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const addPLOsToHocPhan = async (hocPhanId, pLOIdsList) => {
+  try {
+    const response = await axios.post(`${API_HOCPHAN}/${hocPhanId}/add-plos`, pLOIdsList, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const removePLOFromHocPhan = async (hocPhanId, pLOId) => {
+  try {
+    const response = await axios.delete(`${API_HOCPHAN}/${hocPhanId}/remove-plo/${pLOId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
