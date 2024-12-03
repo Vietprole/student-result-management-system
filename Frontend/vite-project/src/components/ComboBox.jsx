@@ -19,30 +19,30 @@ import {
 
 const items = [
   {
-    value: "next.js",
+    selectedId: "next.js",
     label: "Next.js",
   },
   {
-    value: "sveltekit",
+    selectedId: "sveltekit",
     label: "SvelteKit",
   },
   {
-    value: "nuxt.js",
+    selectedId: "nuxt.js",
     label: "Nuxt.js",
   },
   {
-    value: "remix",
+    selectedId: "remix",
     label: "Remix",
   },
   {
-    value: "astro",
+    selectedId: "astro",
     label: "Astro",
   },
 ]
 
 export function ComboBox({ items }) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [selectedId, setSelectedId] = React.useState(null)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,8 +53,8 @@ export function ComboBox({ items }) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? items.find((item) => item.value === value)?.label
+          {selectedId
+            ? items.find((item) => item.id === selectedId)?.label
             : "Select item..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -67,10 +67,10 @@ export function ComboBox({ items }) {
             <CommandGroup>
               {items.map((item) => (
                 <CommandItem
-                  key={item.value}
-                  value={item.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
+                  key={item.id}
+                  value={item.label}
+                  onSelect={() => {
+                    setSelectedId(item.id)
                     setOpen(false)
                   }}
                 >
@@ -78,7 +78,7 @@ export function ComboBox({ items }) {
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === item.value ? "opacity-100" : "opacity-0"
+                      selectedId === item.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

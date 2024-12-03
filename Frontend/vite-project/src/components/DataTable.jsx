@@ -53,8 +53,15 @@ export default function DataTable({
 
   useEffect(() => {
     const fetchData = async () => {
-      const comboBoxItems = await getAllComboBoxItems();
-      setComboBoxItems(comboBoxItems);
+      if (getAllComboBoxItems) {
+        const comboBoxItems = await getAllComboBoxItems();
+        const mappedComboBoxItems = comboBoxItems.map(({ ten, ...rest }) => ({
+          ...rest,
+          label: ten
+        }));
+        console.log("mapped", mappedComboBoxItems);
+        setComboBoxItems(mappedComboBoxItems);
+      }
 
       const data = await getAllItems();
       setData(data);
@@ -116,7 +123,9 @@ export default function DataTable({
               //   table.getColumn("khoaId")?.setFilterValue(event.target.value)
               // }
             />
-            <Button/>
+            <Button>
+              Go
+            </Button>
           </>
         )}
         <div className="flex items-center py-4">
