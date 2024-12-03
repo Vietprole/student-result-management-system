@@ -69,3 +69,58 @@ export const getSinhViensByLopHocPhanId = async (lopHocPhanId) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const addSinhViensToLopHocPhan = async (lopHocPhanId, sinhVienIdsList) => {
+  try {
+    const response = await axios.post(`${API_LOPHOCPHAN}/${lopHocPhanId}/add-sinhviens`, sinhVienIdsList, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const removeSinhVienFromLopHocPhan = async (lopHocPhanId, sinhVienId) => {
+  try {
+    const response = await axios.delete(`${API_LOPHOCPHAN}/${lopHocPhanId}/remove-sinhvien/${sinhVienId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const getGiangViensByLopHocPhanId = async (lopHocPhanId) => {
+  try {
+    const response = await axios.get(`${API_LOPHOCPHAN}/${lopHocPhanId}/view-giangviens`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const addGiangViensToLopHocPhan = async (lopHocPhanId, giangVienIdsList) => {
+  try {
+    const response = await axios.post(`${API_LOPHOCPHAN}/${lopHocPhanId}/add-giangviens`, giangVienIdsList, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const removeGiangVienFromLopHocPhan = async (lopHocPhanId, giangVienId) => {
+  try {
+    const response = await axios.delete(`${API_LOPHOCPHAN}/${lopHocPhanId}/remove-giangvien/${giangVienId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}

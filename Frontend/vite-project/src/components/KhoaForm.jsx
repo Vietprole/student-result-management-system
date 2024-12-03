@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -14,11 +14,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addKhoa, updateKhoa } from "@/api/api-khoa";
-// import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
+  }),
+  maKhoa: z.string().min(2, {
+    message: "MaKhoa must be at least 2 characters.",
+  }),
+  vietTat: z.string().min(1, {
+    message: "VietTat must be at least 1 characters.",
   }),
 });
 
@@ -29,6 +34,8 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
     defaultValues: {
       id: khoaId,
       ten: "",
+      maKhoa: "",
+      vietTat: "",
     },
   });
 
@@ -37,9 +44,11 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (khoaId) {
+      console.log("values", values);
       const data = await updateKhoa(khoaId, values);
       handleEdit(data);
     } else {
+      console.log("values", values);
       const data = await addKhoa(values);
       handleAdd(data);
       setIsDialogOpen(false);
@@ -75,6 +84,38 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
               <FormLabel>Tên</FormLabel>
               <FormControl>
                 <Input placeholder="Nguyễn Văn A" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="maKhoa"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mã Khoa</FormLabel>
+              <FormControl>
+                <Input placeholder="101" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="vietTat"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Viết Tắt</FormLabel>
+              <FormControl>
+                <Input placeholder="CNTT" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
