@@ -52,7 +52,6 @@ namespace Student_Result_Management_System.Controllers
                 return BadRequest("Không thể tạo khoa mới.");
             }
 
-
             return CreatedAtAction(
                 nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về Khoa
                 new { id = khoa.Id }, // Truyền id của khoa vừa tạo
@@ -68,6 +67,8 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound();
 
             khoaToUpdate.Ten = updateKhoaDTO.Ten;
+            khoaToUpdate.MaKhoa = updateKhoaDTO.MaKhoa;
+            khoaToUpdate.VietTat = updateKhoaDTO.VietTat;
             
             await _context.SaveChangesAsync();
             var studentDTO = khoaToUpdate.ToKhoaDTO();
