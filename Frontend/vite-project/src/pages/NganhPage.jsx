@@ -57,19 +57,19 @@ const createNganhColumns = (handleEdit, handleDelete) => [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
   {
-    accessorKey: "khoaId",
+    accessorKey: "tenKhoa",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Khoa Id
+          Tên Khoa
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
   },
   {
     id: "actions",
@@ -100,7 +100,7 @@ const createNganhColumns = (handleEdit, handleDelete) => [
                     Edit the current item.
                   </DialogDescription>
                 </DialogHeader>
-                <NganhForm nganhId={item.id} handleEdit={handleEdit} />
+                <NganhForm nganh={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>

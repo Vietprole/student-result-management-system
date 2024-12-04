@@ -25,7 +25,7 @@ namespace Student_Result_Management_System.Controllers
         // ActionResult return specific value type, the type will displayed in Schemas section
         public async Task<IActionResult> GetAll([FromQuery] int? khoaId) // [FromQuery] binds to query parameter
         {
-            IQueryable<Nganh> query = _context.Nganhs;
+            IQueryable<Nganh> query = _context.Nganhs.Include(n => n.Khoa);
 
             if (khoaId.HasValue)
             {
@@ -41,11 +41,13 @@ namespace Student_Result_Management_System.Controllers
         // Get single entry
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
-            var student = await _context.Nganhs.FindAsync(id);
-            if (student == null)
+            var nganh = await _context.Nganhs
+                .Include(n => n.Khoa)
+                .FirstOrDefaultAsync(n => n.Id == id);
+            if (nganh == null)
                 return NotFound();
-            var studentDTO = student.ToNganhDTO();
-            return Ok(studentDTO);
+            var nganhDTO = nganh.ToNganhDTO();
+            return Ok(nganhDTO);
         }
 
         [HttpPost]
@@ -54,14 +56,22 @@ namespace Student_Result_Management_System.Controllers
             var nganh = createNganhDTO.ToNganhFromCreateDTO();
             await _context.Nganhs.AddAsync(nganh);
             await _context.SaveChangesAsync();
-            var nganhDTO = nganh.ToNganhDTO();
-            return CreatedAtAction(nameof(GetById), new { id = nganh.Id }, nganhDTO);
+
+            // Reload entity with Khoa included
+            nganh = await _context.Nganhs
+                .Include(n => n.Khoa)
+                .FirstOrDefaultAsync(n => n.Id == nganh.Id);
+
+            var nganhDTO = nganh?.ToNganhDTO();
+            return CreatedAtAction(nameof(GetById), new { id = nganh?.Id }, nganhDTO);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateNganhDTO updateNganhDTO)
         {
-            var nganhToUpdate = await _context.Nganhs.FindAsync(id);
+            var nganhToUpdate = await _context.Nganhs
+                .Include(n => n.Khoa)
+                .FirstOrDefaultAsync(n => n.Id == id);
             if (nganhToUpdate == null)
                 return NotFound();
 
@@ -69,8 +79,13 @@ namespace Student_Result_Management_System.Controllers
             nganhToUpdate.KhoaId = updateNganhDTO.KhoaId;
             
             await _context.SaveChangesAsync();
-            var studentDTO = nganhToUpdate.ToNganhDTO();
-            return Ok(studentDTO);
+            // Reload to get updated Khoa information
+            nganhToUpdate = await _context.Nganhs
+                .Include(n => n.Khoa)
+                .FirstOrDefaultAsync(n => n.Id == id);
+
+            var nganhDTO = nganhToUpdate?.ToNganhDTO();
+            return Ok(nganhDTO);
         }
 
         [HttpDelete("{id}")]

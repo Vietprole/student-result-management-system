@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,32 +11,48 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { addGiangVien, updateGiangVien } from "@/api/api-giangvien";
-// import { useNavigate } from "react-router-dom";
+import { getAllKhoas } from "@/api/api-khoa";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { ChevronsUpDown } from "lucide-react";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
-  khoaId: z.coerce.number(
-    {
+  khoaId: z.coerce
+    .number({
       message: "Lop Hoc Phan Id must be a number",
-    }
-  ).min(1, {
-    message: "Lop Hoc Phan Id must be at least 1 characters.",
-  }),
+    })
+    .min(1, {
+      message: "Lop Hoc Phan Id must be at least 1 characters.",
+    }),
 });
- 
 
-export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function GiangVienForm({ giangVien, handleAdd, handleEdit, setIsDialogOpen }) {
+  const [comboBoxItems, setComboBoxItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const comboBoxItems = await getAllKhoas();
+      const mappedComboBoxItems = comboBoxItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      console.log("mapped", mappedComboBoxItems);
+      setComboBoxItems(mappedComboBoxItems);
+    };
+    fetchData();
+  }, []);
+  
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: giangVienId,
+    defaultValues: giangVien || {
       ten: "",
-      khoaId: "",
+      // khoaId: "",
     },
   });
 
@@ -45,10 +60,11 @@ export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogO
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (giangVienId) {
-      const data = await updateGiangVien(giangVienId, values);
+    if (giangVien) {
+      const data = await updateGiangVien(giangVien.id, values);
       handleEdit(data);
     } else {
+      console.log("values", values);
       const data = await addGiangVien(values);
       handleAdd(data);
       setIsDialogOpen(false);
@@ -58,7 +74,7 @@ export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogO
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {giangVienId && (
+        {giangVien && (
           <FormField
             control={form.control}
             name="id"
@@ -66,7 +82,7 @@ export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogO
               <FormItem>
                 <FormLabel>Id</FormLabel>
                 <FormControl>
-                  <Input {...field} readOnly/>
+                  <Input {...field} readOnly />
                 </FormControl>
                 <FormDescription>
                   This is your unique identifier.
@@ -83,7 +99,7 @@ export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogO
             <FormItem>
               <FormLabel>Tên</FormLabel>
               <FormControl>
-                <Input placeholder="Nguyễn Văn A" {...field} />
+                <Input placeholder="CNTT" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -96,13 +112,60 @@ export function GiangVienForm({ giangVienId, handleAdd, handleEdit, setIsDialogO
           control={form.control}
           name="khoaId"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>KhoaId</FormLabel>
-              <FormControl>
-              <Input placeholder="1" {...field} />
-              </FormControl>
+            <FormItem className="flex flex-col">
+              <FormLabel>Chọn Khoa Id</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? comboBoxItems.find(
+                            (item) => item.value === field.value
+                          )?.label
+                        : "Select Khoa..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search item..." />
+                    <CommandList>
+                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandGroup>
+                        {comboBoxItems.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("khoaId", item.value)
+                            }}
+                          >
+                            {item.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormDescription>
-                This is Khoa Id of this Giang Vien.
+                This is the item that will be used in the dashboard.
               </FormDescription>
               <FormMessage />
             </FormItem>

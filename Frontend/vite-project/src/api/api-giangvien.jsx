@@ -31,6 +31,7 @@ export const addGiangVien = async (newData) => {
     const response = await axios.post(API_GIANGVIEN, newData, {
       headers: { Authorization: getAccessToken() }
     });
+    console.log("response", response);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

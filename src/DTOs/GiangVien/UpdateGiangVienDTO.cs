@@ -7,4 +7,6 @@ public class UpdateGiangVienDTO
 {
     [Required]
     public string Ten { get; set; } = string.Empty;
+    [Required]
+    public int KhoaId { get; set; }
 }

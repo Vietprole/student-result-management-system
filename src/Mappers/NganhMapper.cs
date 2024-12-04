@@ -13,6 +13,7 @@ public static class NganhMapper
             Id = nganh.Id,
             Ten = nganh.Ten,
             KhoaId = nganh.KhoaId,
+            TenKhoa = nganh.Khoa?.Ten ?? string.Empty,
         };
     }
 

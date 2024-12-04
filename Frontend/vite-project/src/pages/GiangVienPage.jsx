@@ -73,6 +73,21 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
   },
   {
+    accessorKey: "tenKhoa",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tên Khoa
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
@@ -101,7 +116,7 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
                     Edit the current GiangVien.
                   </DialogDescription>
                 </DialogHeader>
-                <GiangVienForm giangVienId={item.id} handleEdit={handleEdit} />
+                <GiangVienForm giangVien={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>

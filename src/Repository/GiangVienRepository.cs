@@ -44,6 +44,8 @@ namespace Student_Result_Management_System.Repository
             giangVien.TaiKhoan=taiKhoan;
             await _context.GiangViens.AddAsync(giangVien);
             await _context.SaveChangesAsync();
+
+            giangVien = await _context.GiangViens.Include(gv => gv.Khoa).FirstOrDefaultAsync(x => x.Id == giangVien.Id) ?? giangVien;
             return giangVien;
         }
 
@@ -81,13 +83,13 @@ namespace Student_Result_Management_System.Repository
 
         public async Task<List<GiangVien>> GetAllGiangVien()
         {
-            List<GiangVien> giangViens = await _context.GiangViens.Include(c=>c.TaiKhoan).ToListAsync();
+            List<GiangVien> giangViens = await _context.GiangViens.Include(c=>c.TaiKhoan).Include(gv=>gv.Khoa).ToListAsync();
             return giangViens;
         }
 
         public async Task<GiangVien?> GetById(int id)
         {
-            return await _context.GiangViens.Include(x=>x.TaiKhoan).FirstOrDefaultAsync(c=>c.Id==id);
+            return await _context.GiangViens.Include(x=>x.TaiKhoan).Include(gv=>gv.Khoa).FirstOrDefaultAsync(c=>c.Id==id);
         }
 
         public async Task<int> GetCountGiangVien(int khoaId)
@@ -98,13 +100,16 @@ namespace Student_Result_Management_System.Repository
 
         public async Task<GiangVien?> UpdateGV(int id, UpdateGiangVienDTO updateGiangVienDTO)
         {
-            var exitsGV = await _context.GiangViens.Include(c=>c.TaiKhoan).FirstOrDefaultAsync(x=>x.Id==id);
+            var exitsGV = await _context.GiangViens.Include(c=>c.TaiKhoan).Include(gv=>gv.Khoa).FirstOrDefaultAsync(x=>x.Id==id);
             if(exitsGV==null)
             {
                 return null;
             }
             exitsGV.TaiKhoan.HovaTen=updateGiangVienDTO.Ten;
+            exitsGV.KhoaId=updateGiangVienDTO.KhoaId;
             await _context.SaveChangesAsync();
+
+            exitsGV = await _context.GiangViens.Include(c=>c.TaiKhoan).Include(gv=>gv.Khoa).FirstOrDefaultAsync(x=>x.Id==id);
             return exitsGV;
         }
     }

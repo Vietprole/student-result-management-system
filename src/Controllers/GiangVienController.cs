@@ -50,17 +50,17 @@ namespace Student_Result_Management_System.Controllers
             GiangVien? gv = await _giangVienRepository.CheckGiangVien(createGiangVienDTO);
             if (gv == null)
             {
-                return StatusCode(500, "Create giang vien failed");
+                return StatusCode(500, "Create giang vien failed1");
             }
             TaiKhoan? taiKhoan = await _giangVienRepository.CreateTaiKhoanGiangVien(createGiangVienDTO);
             if(taiKhoan==null)
             {
-                return StatusCode(500, "Create giang vien failed");
+                return StatusCode(500, "Create giang vien failed2");
             }
             GiangVien? newGiangVien = await _giangVienRepository.CreateGiangVien(gv,taiKhoan);
             if (newGiangVien == null)
             {
-                return StatusCode(500, "Create giang vien failed");
+                return StatusCode(500, "Create giang vien failed3");
             }
             var giangVienDTO = newGiangVien.ToGiangVienDTO();
             return CreatedAtAction(nameof(GetById), new { id = newGiangVien.Id }, giangVienDTO);

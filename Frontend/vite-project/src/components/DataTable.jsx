@@ -45,29 +45,28 @@ export default function DataTable({
   deleteItem,
   columnToBeFiltered,
   ItemForm,
-  getAllComboBoxItems,
 }) {
   const [data, setData] = useState([]);
-  const [comboBoxItems, setComboBoxItems] = useState([]);
+  // const [comboBoxItems, setComboBoxItems] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (getAllComboBoxItems) {
-        const comboBoxItems = await getAllComboBoxItems();
-        const mappedComboBoxItems = comboBoxItems.map(({ ten, ...rest }) => ({
-          ...rest,
-          label: ten
-        }));
-        console.log("mapped", mappedComboBoxItems);
-        setComboBoxItems(mappedComboBoxItems);
-      }
+      // if (getAllComboBoxItems) {
+      //   const comboBoxItems = await getAllComboBoxItems();
+      //   const mappedComboBoxItems = comboBoxItems.map(({ ten, ...rest }) => ({
+      //     ...rest,
+      //     label: ten
+      //   }));
+      //   console.log("mapped", mappedComboBoxItems);
+      //   setComboBoxItems(mappedComboBoxItems);
+      // }
 
       const data = await getAllItems();
       setData(data);
     };
     fetchData();
-  }, [getAllItems, getAllComboBoxItems]);
+  }, [getAllItems]);
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -114,20 +113,6 @@ export default function DataTable({
     <>
       <h1>This is {entity} Page</h1>
       <div className="w-full">
-        {getAllComboBoxItems && (
-          <>
-            <ComboBox
-              items={comboBoxItems}
-              // value={table.getColumn("khoaId")?.getFilterValue() ?? ""}
-              // onChange={(event) =>
-              //   table.getColumn("khoaId")?.setFilterValue(event.target.value)
-              // }
-            />
-            <Button>
-              Go
-            </Button>
-          </>
-        )}
         <div className="flex items-center py-4">
           <Input
             placeholder={`Filter ${columnToBeFiltered}s...`}

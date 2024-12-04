@@ -13,6 +13,7 @@ public static class GiangVienMapper
             Id = giangVien.Id,
             Ten=giangVien.TaiKhoan.HovaTen,
             KhoaId = giangVien.KhoaId,
+            TenKhoa = giangVien.Khoa?.Ten ?? string.Empty,
         };
     }
 
