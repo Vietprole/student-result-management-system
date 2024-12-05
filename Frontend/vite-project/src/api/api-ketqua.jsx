@@ -93,3 +93,25 @@ export const calculateDiemCLOMax = async (CLOId) => {
     console.log("error message: ", error.message);
   }
 }
+
+export const calculateDiemPk = async (lopHocPhanId, sinhVienId, ploId) => {
+  try {
+    const response = await axios.get(`${API_KETQUA}/calculate-diem-pk?lopHocPhanId=${lopHocPhanId}&sinhVienId=${sinhVienId}&ploId=${ploId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const calculateDiemPLO = async (sinhVienId, ploId) => {
+  try {
+    const response = await axios.get(`${API_KETQUA}/calculate-diem-plo?sinhVienId=${sinhVienId}&ploId=${ploId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}

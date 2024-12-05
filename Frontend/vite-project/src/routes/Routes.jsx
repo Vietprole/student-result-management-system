@@ -18,6 +18,7 @@ import TaoCLO from "@/pages/lophocphan/TaoCLO";
 import NoiCLOPLO from "@/pages/lophocphan/NoiCLOPLO";
 import NoiCauHoiCLO from "@/pages/lophocphan/NoiCauHoiCLO";
 import DiemCLO from "@/pages/lophocphan/DiemCLO";
+import DiemPk from "@/pages/lophocphan/DiemPk";
 import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
 import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
@@ -68,6 +69,7 @@ const lophocphans = [
       { path: ":lopHocPhanId/noi-plo-clo", element: <NoiCLOPLO /> },
       { path: ":lopHocPhanId/noi-cau-hoi-clo", element: <NoiCauHoiCLO /> },
       { path: ":lopHocPhanId/diem-clo", element: <DiemCLO /> },
+      { path: ":lopHocPhanId/diem-pk", element: <DiemPk /> },
       { path: ":lopHocPhanId/tong-ket-clo", element: <TongKetCLO /> },
       { path: ":lopHocPhanId/bao-cao-clo", element: <BaoCaoCLO /> },
     ],

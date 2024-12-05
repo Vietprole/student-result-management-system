@@ -154,5 +154,115 @@ namespace Student_Result_Management_System.Controllers
 
             return Ok(decimal.Round(maxScore, 2, MidpointRounding.AwayFromZero));
         }
+
+        [HttpGet("calculate-diem-pk")]
+        public async Task<IActionResult> CalculateDiemPk([FromQuery] int lopHocPhanId, [FromQuery] int sinhVienId, [FromQuery] int ploId)
+        {
+            // Get LopHocPhan and related entities
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(l => l.HocPhan)
+                    .ThenInclude(h => h.PLOs.Where(p => p.Id == ploId)) // Filter PLO by Id
+                        .ThenInclude(p => p.CLOs)
+                            .ThenInclude(c => c.CauHois)
+                                .ThenInclude(ch => ch.BaiKiemTra)
+                .FirstOrDefaultAsync(l => l.Id == lopHocPhanId);
+
+            if (lopHocPhan == null)
+                return NotFound("LopHocPhan not found");
+
+            var plo = lopHocPhan.HocPhan.PLOs.FirstOrDefault();
+            if (plo == null)
+                return NotFound("PLO not found");
+
+            decimal totalDiemCLO = 0;
+            decimal totalMaxDiemCLO = 0;
+
+            // For each CLO related to PLO
+            foreach (var clo in plo.CLOs)
+            {
+                // Calculate diem-clo
+                decimal diemClo = 0;
+                var ketQuas = await _context.KetQuas
+                    .Where(kq => kq.SinhVienId == sinhVienId && 
+                                clo.CauHois.Select(ch => ch.Id).Contains(kq.CauHoiId))
+                    .ToListAsync();
+
+                foreach (var ketQua in ketQuas)
+                {
+                    var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
+                    diemClo += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
+                }
+                totalDiemCLO += diemClo;
+
+                // Calculate diem-clo-max
+                decimal maxDiemClo = 0;
+                foreach (var cauHoi in clo.CauHois)
+                {
+                    maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo;
+                }
+                totalMaxDiemCLO += maxDiemClo;
+            }
+
+            decimal finalRatio = 10m * totalDiemCLO/totalMaxDiemCLO;
+            return Ok(decimal.Round(finalRatio, 2, MidpointRounding.AwayFromZero));
+        }
+        [HttpGet("calculate-diem-plo")]
+        public async Task<IActionResult> CalculateDiemPLO([FromQuery] int sinhVienId, [FromQuery] int ploId)
+        {
+            decimal finalRatio = 0;
+            // First verify if PLO exists
+            var plo = await _context.PLOs
+                .Include(p => p.HocPhans)
+                    .ThenInclude(h => h.LopHocPhans)
+                        .ThenInclude(l => l.SinhViens.Where(sv => sv.Id == sinhVienId))
+                .Include(p => p.CLOs)
+                    .ThenInclude(c => c.CauHois)
+                        .ThenInclude(ch => ch.BaiKiemTra)
+                .FirstOrDefaultAsync(p => p.Id == ploId);
+
+            if (plo == null)
+                return Ok(null);
+
+            decimal totalPkMulSoTinChi = 0;
+            decimal totalSoTinChi = 0;
+
+            foreach (var hocPhan in plo.HocPhans){
+                decimal totalDiemCLO = 0;
+                decimal totalMaxDiemCLO = 0;
+
+                // For each CLO related to PLO
+                foreach (var clo in plo.CLOs)
+                {
+                    // Calculate diem-clo
+                    decimal diemClo = 0;
+                    var ketQuas = await _context.KetQuas
+                        .Where(kq => kq.SinhVienId == sinhVienId && 
+                                    clo.CauHois.Select(ch => ch.Id).Contains(kq.CauHoiId))
+                        .ToListAsync();
+
+                    foreach (var ketQua in ketQuas)
+                    {
+                        var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
+                        diemClo += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
+                    }
+                    totalDiemCLO += diemClo;
+
+                    // Calculate diem-clo-max
+                    decimal maxDiemClo = 0;
+                    foreach (var cauHoi in clo.CauHois)
+                    {
+                        maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo;
+                    }
+                    totalMaxDiemCLO += maxDiemClo;
+                }
+                totalPkMulSoTinChi = 10m * totalDiemCLO/totalMaxDiemCLO * hocPhan.SoTinChi;
+                totalSoTinChi += hocPhan.SoTinChi;
+            }
+            if (totalSoTinChi == 0){
+                return Ok(null);
+            }
+            finalRatio = totalPkMulSoTinChi/totalSoTinChi;
+            return Ok(decimal.Round(finalRatio, 2, MidpointRounding.AwayFromZero));
+        }
     }
 }

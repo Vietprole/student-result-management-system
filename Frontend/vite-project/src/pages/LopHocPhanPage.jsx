@@ -44,6 +44,9 @@ export default function LopHocPhanPage() {
       case "Điểm CLO":
         selectedRoute = "diem-clo";
       break;
+      case "Điểm Pk":
+        selectedRoute = "diem-pk";
+      break;
       case "Tổng Kết CLO":
         selectedRoute = "tong-ket-clo";
       break;
@@ -97,6 +100,7 @@ export default function LopHocPhanPage() {
               <DropdownMenuItem onSelect={() => setSelectedItem("Nối PLO - CLO")}>Nối PLO - CLO</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Nối Câu Hỏi - CLO")}>Nối Câu Hỏi - CLO</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Điểm CLO")}>Điểm CLO</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Điểm Pk")}>Điểm Pk</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Tổng Kết CLO")}>Tổng Kết CLO</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Báo Cáo CLO")}>Báo Cáo CLO</DropdownMenuItem>
             </DropdownMenuContent>
