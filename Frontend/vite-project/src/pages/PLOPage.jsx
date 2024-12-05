@@ -71,20 +71,35 @@ const createPLOColumns = (handleEdit, handleDelete) => [
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("moTa")}</div>,
   },
+  // {
+  //   accessorKey: "ctdtId",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         CTDT Id
+  //         <ArrowUpDown />
+  //       </Button>
+  //     );
+  //   },
+  //   cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ctdtId")}</div>,
+  // },
   {
-    accessorKey: "ctdtId",
+    accessorKey: "tenCTDT",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          CTDT Id
+          Tên CTDT
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ctdtId")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenCTDT")}</div>,
   },
   {
     id: "actions",
@@ -115,7 +130,7 @@ const createPLOColumns = (handleEdit, handleDelete) => [
                     Edit the current PLO.
                   </DialogDescription>
                 </DialogHeader>
-                <PLOForm pLOId={item.id} handleEdit={handleEdit} />
+                <PLOForm pLO={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>

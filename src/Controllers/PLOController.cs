@@ -39,7 +39,7 @@ namespace Student_Result_Management_System.Controllers
                 query = query.Where(p => p.HocPhans.Any(hp => hp.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId.Value)));            
             }
 
-            var pLOs = await query.ToListAsync();
+            var pLOs = await query.Include(p=>p.CTDT).ToListAsync();
             var pLODTOs = pLOs.Select(p => p.ToPLODTO()).ToList();
             return Ok(pLODTOs);
         }
@@ -48,7 +48,7 @@ namespace Student_Result_Management_System.Controllers
         // Get single entry
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
-            var student = await _context.PLOs.FindAsync(id);
+            var student = await _context.PLOs.Include(p => p.CTDT).FirstOrDefaultAsync(p => p.Id == id);
             if (student == null)
                 return NotFound();
             var studentDTO = student.ToPLODTO();
@@ -61,8 +61,13 @@ namespace Student_Result_Management_System.Controllers
             var pLO = createPLODTO.ToPLOFromCreateDTO();
             await _context.PLOs.AddAsync(pLO);
             await _context.SaveChangesAsync();
-            var pLODTO = pLO.ToPLODTO();
-            return CreatedAtAction(nameof(GetById), new { id = pLO.Id }, pLODTO);
+
+            // Reload entity with CTDT included
+            pLO = await _context.PLOs
+                .Include(p => p.CTDT)
+                .FirstOrDefaultAsync(p => p.Id == pLO.Id);
+            var pLODTO = pLO?.ToPLODTO();
+            return CreatedAtAction(nameof(GetById), new { id = pLO?.Id }, pLODTO);
         }
 
         [HttpPut("{id}")]
@@ -77,7 +82,11 @@ namespace Student_Result_Management_System.Controllers
             pLOToUpdate.CTDTId = updatePLODTO.CTDTId;
             
             await _context.SaveChangesAsync();
-            var studentDTO = pLOToUpdate.ToPLODTO();
+            // Reload to get updated CTDT information
+            pLOToUpdate = await _context.PLOs
+                .Include(p => p.CTDT)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            var studentDTO = pLOToUpdate?.ToPLODTO();
             return Ok(studentDTO);
         }
 

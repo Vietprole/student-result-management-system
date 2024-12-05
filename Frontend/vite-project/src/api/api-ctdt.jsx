@@ -4,7 +4,7 @@ import { getAccessToken } from "../utils/storage";
 
 const API_CTDT = `${API_BASE_URL}/api/ctdt`;
 
-export const getAllCTDT = async () => {
+export const getAllCTDTs = async () => {
   try {
     const response = await axios.get(API_CTDT, {
       headers: { Authorization: getAccessToken() }

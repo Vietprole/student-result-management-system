@@ -25,13 +25,9 @@ const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
-  khoaId: z.coerce
-    .number({
-      message: "Lop Hoc Phan Id must be a number",
-    })
-    .min(1, {
-      message: "Lop Hoc Phan Id must be at least 1 characters.",
-    }),
+  khoaId: z.number({
+    required_error: "Please select a Khoa.",
+  }),
 });
 
 export function GiangVienForm({ giangVien, handleAdd, handleEdit, setIsDialogOpen }) {

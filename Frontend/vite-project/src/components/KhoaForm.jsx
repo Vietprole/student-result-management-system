@@ -27,12 +27,11 @@ const formSchema = z.object({
   }),
 });
 
-export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: khoaId,
+    defaultValues: khoa || {
       ten: "",
       maKhoa: "",
       vietTat: "",
@@ -43,9 +42,9 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (khoaId) {
+    if (khoa.id) {
       console.log("values", values);
-      const data = await updateKhoa(khoaId, values);
+      const data = await updateKhoa(khoa.id, values);
       handleEdit(data);
     } else {
       console.log("values", values);
@@ -58,7 +57,7 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {khoaId && (
+        {khoa && (
           <FormField
             control={form.control}
             name="id"
@@ -99,7 +98,7 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
             <FormItem>
               <FormLabel>Mã Khoa</FormLabel>
               <FormControl>
-                <Input placeholder="101" {...field} />
+                <Input placeholder="101" {...field} readOnly={!!khoa}/>
               </FormControl>
               <FormDescription>
                 This is your public display name.

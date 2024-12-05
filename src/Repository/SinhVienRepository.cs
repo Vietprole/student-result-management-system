@@ -50,6 +50,8 @@ namespace Student_Result_Management_System.Repository
             sinhvien.TaiKhoan=taiKhoan;
             await _context.SinhViens.AddAsync(sinhvien);
             await _context.SaveChangesAsync();
+
+            sinhvien = await _context.SinhViens.Include(sv => sv.Khoa).FirstOrDefaultAsync(x => x.Id == sinhvien.Id) ?? sinhvien;
             return sinhvien;
         }
 
@@ -89,13 +91,13 @@ namespace Student_Result_Management_System.Repository
 
         public async Task<List<SinhVien>> GetAllSinhVien()
         {
-            List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).ToListAsync();
+            List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv => sv.Khoa).ToListAsync();
             return sinhViens;
         }
 
         public async Task<SinhVien?> GetById(int id)
         {
-            var sinhVien = await _context.SinhViens.Include(c => c.TaiKhoan).FirstOrDefaultAsync(x => x.Id == id);
+            var sinhVien = await _context.SinhViens.Include(c => c.TaiKhoan).Include(sv=>sv.Khoa).FirstOrDefaultAsync(x => x.Id == id);
             return sinhVien;
         }
 
@@ -113,7 +115,11 @@ namespace Student_Result_Management_System.Repository
                 return null;
             }
             exitsSV.TaiKhoan.HovaTen=updateSinhVienDTO.Ten;
+            exitsSV.KhoaId=updateSinhVienDTO.KhoaId;
+            exitsSV.NamBatDau=updateSinhVienDTO.NamBatDau;
             await _context.SaveChangesAsync();
+
+            exitsSV = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv=>sv.Khoa).FirstOrDefaultAsync(x=>x.Id==id);
             return exitsSV;
         }
     }

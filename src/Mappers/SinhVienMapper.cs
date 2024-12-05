@@ -13,6 +13,7 @@ public static class SinhVienMapper
             Id = sinhVienModel.Id,
             Ten=sinhVienModel.TaiKhoan.HovaTen,
             KhoaId = sinhVienModel.KhoaId??0, //Để đây hồi tin sửa
+            TenKhoa = sinhVienModel.Khoa?.Ten ?? string.Empty,
             NamBatDau = sinhVienModel.NamBatDau
         };
     }

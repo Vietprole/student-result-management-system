@@ -55,20 +55,35 @@ const createSinhVienColumns = (handleEdit, handleDelete) => [
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
+  // {
+  //   accessorKey: "khoaId",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Khoa Id
+  //         <ArrowUpDown />
+  //       </Button>
+  //     );
+  //   },
+  //   cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+  // },
   {
-    accessorKey: "khoaId",
+    accessorKey: "tenKhoa",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Khoa Id
+          Tên Khoa
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
   },
   {
     accessorKey: "namBatDau",
@@ -114,7 +129,7 @@ const createSinhVienColumns = (handleEdit, handleDelete) => [
                     Edit the current student.
                   </DialogDescription>
                 </DialogHeader>
-                <SinhVienForm sinhVienId={student.id} handleEdit={handleEdit} />
+                <SinhVienForm sinhVien={student} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>

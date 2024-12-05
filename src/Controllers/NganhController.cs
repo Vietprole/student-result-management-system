@@ -70,7 +70,6 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateNganhDTO updateNganhDTO)
         {
             var nganhToUpdate = await _context.Nganhs
-                .Include(n => n.Khoa)
                 .FirstOrDefaultAsync(n => n.Id == id);
             if (nganhToUpdate == null)
                 return NotFound();

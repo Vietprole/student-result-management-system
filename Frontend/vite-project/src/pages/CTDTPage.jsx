@@ -3,7 +3,7 @@ import DataTable from "@/components/DataTable";
 // import { useEffect, useState } from "react";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getAllCTDT, deleteCTDT } from "@/api/api-ctdt";
+import { getAllCTDTs, deleteCTDT } from "@/api/api-ctdt";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -202,7 +202,7 @@ export default function CTDTPage() {
         <DataTable
           entity="Chương Trình"
           createColumns={createCTDTColumns}
-          getAllItems={() => getAllCTDT()}
+          getAllItems={() => getAllCTDTs()}
           deleteItem={deleteCTDT}
           columnToBeFiltered={"ten"}
           ItemForm={CTDTForm}

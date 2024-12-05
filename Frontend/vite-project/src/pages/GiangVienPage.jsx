@@ -57,21 +57,21 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
-  {
-    accessorKey: "khoaId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Khoa Id
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
-  },
+  // {
+  //   accessorKey: "khoaId",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Khoa Id
+  //         <ArrowUpDown />
+  //       </Button>
+  //     );
+  //   },
+  //   cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+  // },
   {
     accessorKey: "tenKhoa",
     header: ({ column }) => {

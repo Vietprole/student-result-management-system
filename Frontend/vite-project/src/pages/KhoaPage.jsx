@@ -112,7 +112,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
                   <DialogTitle>Edit Khoa</DialogTitle>
                   <DialogDescription>Edit the current item.</DialogDescription>
                 </DialogHeader>
-                <KhoaForm khoaId={item.id} handleEdit={handleEdit} />
+                <KhoaForm khoa={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +14,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addPLO, updatePLO } from "@/api/api-plo";
+import { getAllCTDTs } from "@/api/api-ctdt";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check, ChevronsUpDown} from "lucide-react";
+import { cn } from "@/lib/utils";
 // import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
@@ -23,24 +28,31 @@ const formSchema = z.object({
   moTa: z.string().min(2, {
     message: "MoTa must be at least 2 characters.",
   }),
-  cTDTId: z.coerce.number(
-    {
-      message: "Lop Hoc Phan Id must be a number",
-    }
-  ).min(1, {
-    message: "Lop Hoc Phan Id must be at least 1 characters.",
+  ctdtId: z.number({
+    required_error: "Please select a CTDT.",
   }),
 });
 
-export function PLOForm({ pLOId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function PLOForm({ pLO, handleAdd, handleEdit, setIsDialogOpen }) {
+  const [comboBoxItems, setComboBoxItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const comboBoxItems = await getAllCTDTs();
+      const mappedComboBoxItems = comboBoxItems.map(ctdt => ({ label: ctdt.ten, value: ctdt.id }));
+      console.log("mapped", mappedComboBoxItems);
+      setComboBoxItems(mappedComboBoxItems);
+    };
+    fetchData();
+  }, []);
+  
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: pLOId,
+    defaultValues: pLO || {
       ten: "",
       moTa:"",
-      cTDTId:"",
+      // ctdtId:"",
     },
   });
 
@@ -48,8 +60,8 @@ export function PLOForm({ pLOId, handleAdd, handleEdit, setIsDialogOpen }) {
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (pLOId) {
-      const data = await updatePLO(pLOId, values);
+    if (pLO) {
+      const data = await updatePLO(pLO.id, values);
       handleEdit(data);
     } else {
       const data = await addPLO(values);
@@ -61,7 +73,7 @@ export function PLOForm({ pLOId, handleAdd, handleEdit, setIsDialogOpen }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {pLOId && (
+        {pLO && (
           <FormField
             control={form.control}
             name="id"
@@ -111,17 +123,80 @@ export function PLOForm({ pLOId, handleAdd, handleEdit, setIsDialogOpen }) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="cTDTId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lớp Học Phần Id</FormLabel>
+              <FormLabel>CTDT Id</FormLabel>
               <FormControl>
                 <Input placeholder="1" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="ctdtId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Chọn CTDT</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? comboBoxItems.find(
+                            (item) => item.value === field.value
+                          )?.label
+                        : "Select Khoa..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search item..." />
+                    <CommandList>
+                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandGroup>
+                        {comboBoxItems.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("ctdtId", item.value)
+                            }}
+                          >
+                            {item.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the item that will be used in the dashboard.
               </FormDescription>
               <FormMessage />
             </FormItem>

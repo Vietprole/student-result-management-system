@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,19 +13,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ChevronsUpDown } from "lucide-react";
 import { addSinhVien, updateSinhVien } from "@/api/api-sinhvien";
+import { getAllKhoas } from "@/api/api-khoa";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 // import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
-  khoaId: z.coerce.number(
-    {
-      message: "Khoa Id must be a number",
-    }
-  ).min(1, {
-    message: "Khoa Id must be at least 1 characters.",
+  khoaId: z.number({
+    required_error: "Please select a Khoa.",
   }),
   namBatDau: z.coerce.number(
     {
@@ -39,14 +41,25 @@ const formSchema = z.object({
   }),
 });
 
-export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen }) {
+  const [comboBoxItems, setComboBoxItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const comboBoxItems = await getAllKhoas();
+      const mappedComboBoxItems = comboBoxItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      console.log("mapped", mappedComboBoxItems);
+      setComboBoxItems(mappedComboBoxItems);
+    };
+    fetchData();
+  }, []);
+
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: sinhVienId,
+    defaultValues: sinhVien || {
       ten: "",
-      khoaId: "",
+      // khoaId: "",
       namBatDau: "",
     },
   });
@@ -55,8 +68,8 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (sinhVienId) {
-      const data = await updateSinhVien(sinhVienId, values);
+    if (sinhVien) {
+      const data = await updateSinhVien(sinhVien.id, values);
       handleEdit(data);
     } else {
       const data = await addSinhVien(values);
@@ -68,7 +81,7 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {sinhVienId && (
+        {sinhVien && (
           <FormField
             control={form.control}
             name="id"
@@ -102,7 +115,7 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="khoaId"
           render={({ field }) => (
@@ -113,6 +126,69 @@ export function SinhVienForm({ sinhVienId, handleAdd, handleEdit, setIsDialogOpe
               </FormControl>
               <FormDescription>
                 This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="khoaId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Chọn Khoa Id</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? comboBoxItems.find(
+                            (item) => item.value === field.value
+                          )?.label
+                        : "Select Khoa..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search item..." />
+                    <CommandList>
+                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandGroup>
+                        {comboBoxItems.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("khoaId", item.value)
+                            }}
+                          >
+                            {item.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the item that will be used in the dashboard.
               </FormDescription>
               <FormMessage />
             </FormItem>
