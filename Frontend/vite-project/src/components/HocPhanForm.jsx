@@ -36,12 +36,11 @@ const formSchema = z.object({
     }),
 });
 
-export function HocPhanForm({ hocphanId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen }) {
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: hocphanId,
+    defaultValues: hocphan || {
       ten: "",
       soTinChi: "",
       laCotLoi: false,
@@ -53,8 +52,8 @@ export function HocPhanForm({ hocphanId, handleAdd, handleEdit, setIsDialogOpen 
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (hocphanId) {
-      const data = await updateHocPhan(hocphanId, values);
+    if (hocphan) {
+      const data = await updateHocPhan(hocphan.id, values);
       handleEdit(data);
     } else {
       const data = await addHocPhan(values);
@@ -66,7 +65,7 @@ export function HocPhanForm({ hocphanId, handleAdd, handleEdit, setIsDialogOpen 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {hocphanId && (
+        {hocphan && (
           <FormField
             control={form.control}
             name="id"

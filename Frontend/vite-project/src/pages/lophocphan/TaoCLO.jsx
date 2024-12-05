@@ -1,11 +1,9 @@
 // import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  getAllCLOs,
   // updateCLO,
   deleteCLO,
   getCLOsByLopHocPhanId,
@@ -13,7 +11,6 @@ import {
 } from "@/api/api-clo";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -95,7 +92,7 @@ const createCLOColumns = (handleEdit, handleDelete) => [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const student = row.original;
+      const item = row.original;
 
       return (
         <DropdownMenu>
@@ -120,7 +117,7 @@ const createCLOColumns = (handleEdit, handleDelete) => [
                     Edit the current CLO.
                   </DialogDescription>
                 </DialogHeader>
-                <CLOForm cLOId={student.id} handleEdit={handleEdit} />
+                <CLOForm cLO={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -140,7 +137,7 @@ const createCLOColumns = (handleEdit, handleDelete) => [
                 <DialogFooter>
                   <Button
                     type="submit"
-                    onClick={() => handleDelete(student.id)}
+                    onClick={() => handleDelete(item.id)}
                   >
                     Delete
                   </Button>

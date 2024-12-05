@@ -102,7 +102,7 @@ export default function CTDTPage() {
                       Edit the current Chương Trình.
                     </DialogDescription>
                   </DialogHeader>
-                  <CTDTForm cTDTId={item.id} handleEdit={handleEdit} />
+                  <CTDTForm cTDT={item} handleEdit={handleEdit} />
                 </DialogContent>
               </Dialog>
               <Dialog>

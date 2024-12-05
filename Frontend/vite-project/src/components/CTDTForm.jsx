@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addCTDT, updateCTDT } from "@/api/api-ctdt";
+import { getAllNganhs } from "@/api/api-nganh";
+import { useState, useEffect } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
@@ -26,19 +32,30 @@ const formSchema = z.object({
   }),
 });
 
-export function CTDTForm({ cTDTId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function CTDTForm({ cTDT, handleAdd, handleEdit, setIsDialogOpen }) {
+  const [comboBoxItems, setComboBoxItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const comboBoxItems = await getAllNganhs();
+      const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      console.log("mapped", mappedComboBoxItems);
+      setComboBoxItems(mappedComboBoxItems);
+    };
+    fetchData();
+  }, []);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: cTDTId,
+    defaultValues: cTDT || {
       ten: "",
-      nganhId: "",
+      // nganhId: "",
     },
   });
 
   async function onSubmit(values) {
-    if (cTDTId) {
-      const data = await updateCTDT(cTDTId, values);
+    if (cTDT) {
+      const data = await updateCTDT(cTDT.id, values);
       console.log("values", values);
       handleEdit(data);
     } else {
@@ -51,7 +68,7 @@ export function CTDTForm({ cTDTId, handleAdd, handleEdit, setIsDialogOpen }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {cTDTId && (
+        {cTDT && (
           <FormField
             control={form.control}
             name="id"
@@ -85,7 +102,7 @@ export function CTDTForm({ cTDTId, handleAdd, handleEdit, setIsDialogOpen }) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="nganhId"
           render={({ field }) => (
@@ -96,6 +113,69 @@ export function CTDTForm({ cTDTId, handleAdd, handleEdit, setIsDialogOpen }) {
               </FormControl>
               <FormDescription>
                 Đây là mã ngành của chương trình đào tạo.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        /> */}
+        <FormField
+          control={form.control}
+          name="nganhId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Chọn Nganh Id</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? comboBoxItems.find(
+                            (item) => item.value === field.value
+                          )?.label
+                        : "Select Nganh..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search item..." />
+                    <CommandList>
+                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandGroup>
+                        {comboBoxItems.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("nganhId", item.value)
+                            }}
+                          >
+                            {item.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the item that will be used in the dashboard.
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,15 +36,15 @@ const formSchema = z.object({
   }),
 });
 
-export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen }) {
+  const { lopHocPhanId } = useParams();
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: baiKiemTraId,
+    defaultValues: baiKiemTra ||{
       loai: "",
       trongSo: "",
-      lopHocPhanId: "",
+      lopHocPhanId: lopHocPhanId,
     },
   });
 
@@ -52,8 +52,8 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (baiKiemTraId) {
-      const data = await updateBaiKiemTra(baiKiemTraId, values);
+    if (baiKiemTra) {
+      const data = await updateBaiKiemTra(baiKiemTra.id, values);
       handleEdit(data);
     } else {
       const data = await addBaiKiemTra(values);
@@ -65,7 +65,7 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {baiKiemTraId && (
+        {baiKiemTra && (
           <FormField
             control={form.control}
             name="id"
@@ -115,7 +115,7 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="lopHocPhanId"
           render={({ field }) => (
@@ -130,7 +130,7 @@ export function BaiKiemTraForm({ baiKiemTraId, handleAdd, handleEdit, setIsDialo
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <Button type="submit">Submit</Button>
       </form>
     </Form>

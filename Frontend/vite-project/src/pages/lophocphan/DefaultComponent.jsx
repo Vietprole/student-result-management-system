@@ -109,7 +109,7 @@ export default function LopHocPhanPage() {
                       Edit the current item.
                     </DialogDescription>
                   </DialogHeader>
-                  <LopHocPhanForm lopHocPhanId={item.id} handleEdit={handleEdit} />
+                  <LopHocPhanForm lopHocPhan={item} handleEdit={handleEdit} />
                 </DialogContent>
               </Dialog>
               <Dialog>

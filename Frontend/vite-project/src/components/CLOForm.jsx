@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addCLO, updateCLO } from "@/api/api-clo";
+import { useParams } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
@@ -32,15 +33,15 @@ const formSchema = z.object({
   }),
 });
 
-export function CLOForm({ cLOId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function CLOForm({ cLO, handleAdd, handleEdit, setIsDialogOpen }) {
+  const { lopHocPhanId } = useParams();
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: cLOId,
+    defaultValues: cLO || {
       ten: "",
       moTa:"",
-      lopHocPhanId:"",
+      lopHocPhanId: lopHocPhanId,
     },
   });
 
@@ -48,8 +49,8 @@ export function CLOForm({ cLOId, handleAdd, handleEdit, setIsDialogOpen }) {
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (cLOId) {
-      const data = await updateCLO(cLOId, values);
+    if (cLO) {
+      const data = await updateCLO(cLO.id, values);
       handleEdit(data);
     } else {
       const data = await addCLO(values);
@@ -61,7 +62,7 @@ export function CLOForm({ cLOId, handleAdd, handleEdit, setIsDialogOpen }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {cLOId && (
+        {cLO && (
           <FormField
             control={form.control}
             name="id"
@@ -111,7 +112,7 @@ export function CLOForm({ cLOId, handleAdd, handleEdit, setIsDialogOpen }) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="lopHocPhanId"
           render={({ field }) => (
@@ -126,7 +127,7 @@ export function CLOForm({ cLOId, handleAdd, handleEdit, setIsDialogOpen }) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <Button type="submit">Submit</Button>
       </form>
     </Form>

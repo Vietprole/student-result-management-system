@@ -93,7 +93,7 @@ function createBaiKiemTraColumns(handleEdit, handleDelete){
                     Edit the current Bai Kiểm Tra.
                   </DialogDescription>
                 </DialogHeader>
-              <BaiKiemTraForm baiKiemTraId={item.id} handleEdit={handleEdit}/>
+              <BaiKiemTraForm baiKiemTra={item} handleEdit={handleEdit}/>
               </DialogContent>
             </Dialog>
             <Dialog>

@@ -139,7 +139,7 @@ export default function HocPhanPage() {
                   <DialogTitle>Edit HocPhan</DialogTitle>
                   <DialogDescription>Edit the current item.</DialogDescription>
                 </DialogHeader>
-                <HocPhanForm hocphanId={item.id} handleEdit={handleEdit} />
+                <HocPhanForm hocphan={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
             <Dialog>
