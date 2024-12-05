@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Student_Result_Management_System.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,18 +54,19 @@ namespace Student_Result_Management_System.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Khoas",
+                name: "KiHocs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ten = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaKhoa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VietTat = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NamHoc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HanSuaDiem = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    HanSuaCongThucDiem = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Khoas", x => x.Id);
+                    table.PrimaryKey("PK_KiHocs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,6 +176,28 @@ namespace Student_Result_Management_System.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Khoas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ten = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaKhoa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VietTat = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TruongKhoaId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Khoas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Khoas_AspNetUsers_TruongKhoaId",
+                        column: x => x.TruongKhoaId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GiangViens",
                 columns: table => new
                 {
@@ -275,7 +298,12 @@ namespace Student_Result_Management_System.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ten = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HocPhanId = table.Column<int>(type: "int", nullable: false)
+                    HocPhanId = table.Column<int>(type: "int", nullable: false),
+                    KiHocId = table.Column<int>(type: "int", nullable: false),
+                    TenNguoiXacNhanCTD = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NgayXacNhanCTD = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TenNguoiChapNhanCTD = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NgayChapNhanCTD = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -284,6 +312,12 @@ namespace Student_Result_Management_System.Migrations
                         name: "FK_LopHocPhans_HocPhans_HocPhanId",
                         column: x => x.HocPhanId,
                         principalTable: "HocPhans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LopHocPhans_KiHocs_KiHocId",
+                        column: x => x.KiHocId,
+                        principalTable: "KiHocs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -457,7 +491,8 @@ namespace Student_Result_Management_System.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ten = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TrongSo = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
-                    BaiKiemTraId = table.Column<int>(type: "int", nullable: false)
+                    BaiKiemTraId = table.Column<int>(type: "int", nullable: false),
+                    ThangDiem = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -573,12 +608,33 @@ namespace Student_Result_Management_System.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0f9f5597-22c0-4d86-9f6a-3c8d0505324e", null, "TruongBoMon", "TRUONGBOMON" },
-                    { "1b3de155-3a7e-4e19-8b27-93e7a4ab91d8", null, "PhongDaoTao", "PHONGDAOTAO" },
-                    { "297a4ced-a670-466e-89a1-868e171d2c90", null, "Admin", "ADMIN" },
-                    { "8168c32a-e115-43b3-9a75-e58b56121d44", null, "GiangVien", "GIANGVIEN" },
-                    { "834cdf2b-9528-4eac-b607-71aff7ed673c", null, "SinhVien", "SINHVIEN" },
-                    { "ad2d2e3d-fe41-4960-88be-cc197a6fd249", null, "TruongKhoa", "TRUONGKHOA" }
+                    { "2ea39ac8-d105-4020-9038-2d4a53cf34d7", null, "GiangVien", "GIANGVIEN" },
+                    { "568d3dd5-de42-4733-b08e-714ed4c473f0", null, "TruongKhoa", "TRUONGKHOA" },
+                    { "75c2e63c-4c1b-4ab1-a7de-9087601d943b", null, "PhongDaoTao", "PHONGDAOTAO" },
+                    { "bcd0fac4-bf61-43a7-bd44-b5de16b82afb", null, "Admin", "ADMIN" },
+                    { "c202c42e-b700-4ef0-8fdd-d5fcd837f003", null, "SinhVien", "SINHVIEN" },
+                    { "d58e7e21-7fe0-4d2f-b26c-b034b8323098", null, "TruongBoMon", "TRUONGBOMON" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Khoas",
+                columns: new[] { "Id", "MaKhoa", "Ten", "TruongKhoaId", "VietTat" },
+                values: new object[,]
+                {
+                    { 1, "101", "Cơ khí", null, "CK" },
+                    { 2, "102", "Công nghệ thông tin", null, "CNTT" },
+                    { 3, "103", "Cơ khí giao thông", null, "CKGT" },
+                    { 4, "104", "Công nghệ nhiệt điện lạnh", null, "CNNDL" },
+                    { 5, "105", "Điện", null, "D" },
+                    { 6, "106", "Điện tử viễn thông", null, "DTVT" },
+                    { 7, "107", "Hóa", null, "H" },
+                    { 8, "108", "Xây dựng cầu đường", null, "XDCD" },
+                    { 9, "109", "Xây dựng dân dụng và công nghiệp", null, "XDDDCN" },
+                    { 10, "110", "Xây dựng công trình thủy", null, "XDCTT" },
+                    { 11, "111", "Môi trường", null, "MT" },
+                    { 12, "112", "Quản lý dự án", null, "QLDA" },
+                    { 13, "113", "Kiến trúc", null, "KT" },
+                    { 14, "114", "Khoa học công nghệ tiên tiến", null, "KHCTTT" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -697,9 +753,21 @@ namespace Student_Result_Management_System.Migrations
                 column: "SinhVienId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Khoas_TruongKhoaId",
+                table: "Khoas",
+                column: "TruongKhoaId",
+                unique: true,
+                filter: "[TruongKhoaId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LopHocPhans_HocPhanId",
                 table: "LopHocPhans",
                 column: "HocPhanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LopHocPhans_KiHocId",
+                table: "LopHocPhans",
+                column: "KiHocId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LopHocPhanSinhVien_SinhViensId",
@@ -792,9 +860,6 @@ namespace Student_Result_Management_System.Migrations
                 name: "BaiKiemTras");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Nganhs");
 
             migrationBuilder.DropTable(
@@ -804,7 +869,13 @@ namespace Student_Result_Management_System.Migrations
                 name: "HocPhans");
 
             migrationBuilder.DropTable(
+                name: "KiHocs");
+
+            migrationBuilder.DropTable(
                 name: "Khoas");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

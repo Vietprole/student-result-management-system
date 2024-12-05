@@ -48,12 +48,42 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tên
+          Tên Khoa
           <ArrowUpDown />
         </Button>
       );
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
+  },
+  {
+    accessorKey: "maKhoa",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "maKhoa")}
+        >
+          Mã Khoa
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maKhoa")}</div>,
+  },
+  {
+    accessorKey: "vietTat",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "vietTat")}
+        >
+          Viết tắt
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("vietTat")}</div>,
   },
   {
     id: "actions",
@@ -70,16 +100,16 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Hành động</DropdownMenuLabel>
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Sửa Sinh Viên
+                  Sửa thông tin Khoa
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Edit Khoa</DialogTitle>
+                  <DialogTitle>Sửa thông tin Khoa</DialogTitle>
                   <DialogDescription>Edit the current item.</DialogDescription>
                 </DialogHeader>
                 <KhoaForm khoaId={item.id} handleEdit={handleEdit} />
@@ -88,17 +118,17 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Xóa Sinh Viên
+                  Xóa Khoa Này
                 </DropdownMenuItem>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Delete Khoa</DialogTitle>
+                  <DialogTitle>Xóa Khoa</DialogTitle>
                   <DialogDescription>
-                    Delete the current item.
+                    Xóa khoa này
                   </DialogDescription>
                 </DialogHeader>
-                <p>Are you sure you want to delete this Khoa?</p>
+                <p>Bạn có muốn xóa khoa này không?</p>
                 <DialogFooter>
                   <Button type="submit" onClick={() => handleDelete(item.id)}>
                     Delete

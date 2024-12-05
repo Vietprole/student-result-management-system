@@ -64,7 +64,9 @@ builder.Services.AddScoped<IChucVuRepository,ChucVuRepository>();
 builder.Services.AddScoped<IKhoaRepository,KhoaRepository>();
 builder.Services.AddScoped<ISinhVienRepository,SinhVienRepository>();
 builder.Services.AddScoped<IGiangVienRepository,GiangVienRepository>();
-
+builder.Services.AddScoped<IKiHocRepository,KiHocRepository>();
+builder.Services.AddScoped<IBaiKiemTraRepository,BaiKiemTraRepository>();
+builder.Services.AddScoped<ICauHoiRepository,CauHoiRepository>();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

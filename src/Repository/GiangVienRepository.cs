@@ -79,11 +79,24 @@ namespace Student_Result_Management_System.Repository
             return exits;
         }
 
+        public async Task<List<GiangVien>> GetAll(int[] id)
+        {
+            var giangViens =await _context.GiangViens.Include(c=>c.TaiKhoan).Where(x => id.Contains(x.Id)).ToListAsync();
+            return giangViens;
+        }
+
+        public async Task<List<GiangVien>> GetAllByKhoaId(int khoaId)
+        {
+            List<GiangVien> giangViens = await _context.GiangViens.Include(x => x.TaiKhoan).Where(c=>c.KhoaId==khoaId).ToListAsync();
+            return giangViens;
+        }
+
         public async Task<List<GiangVien>> GetAllGiangVien()
         {
             List<GiangVien> giangViens = await _context.GiangViens.Include(c=>c.TaiKhoan).ToListAsync();
             return giangViens;
         }
+        
 
         public async Task<GiangVien?> GetById(int id)
         {
@@ -94,6 +107,16 @@ namespace Student_Result_Management_System.Repository
         {
             int count = await _context.GiangViens.CountAsync(x => x.KhoaId == khoaId);
             return count;
+        }
+
+        public async Task<string> GetKhoaId(string taikhoanId)
+        {
+            var gv= await _context.GiangViens.FirstOrDefaultAsync(x=>x.TaiKhoanId==taikhoanId);
+            if(gv==null)
+            {
+                return "";
+            }
+            return gv.KhoaId.ToString()??"";
         }
 
         public async Task<GiangVien?> UpdateGV(int id, UpdateGiangVienDTO updateGiangVienDTO)

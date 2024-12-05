@@ -97,6 +97,7 @@ namespace Student_Result_Management_System.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+        
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] TaiKhoanLoginDTO taiKhoanLoginDTO)
@@ -118,8 +119,8 @@ namespace Student_Result_Management_System.Controllers
             return Ok(
                 new NewTaiKhoanDTO
                 {
-                    Username = user.UserName,
-                    Token = await _tokenService.CreateToken(user)
+                    Username = user?.UserName ?? string.Empty,
+                    Token = user != null ? await _tokenService.CreateToken(user) : string.Empty
                 }
             );
         }

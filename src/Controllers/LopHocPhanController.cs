@@ -64,7 +64,7 @@ namespace Student_Result_Management_System.Controllers
             if (lopHocPhanToUpdate == null)
                 return NotFound();
 
-            lopHocPhanToUpdate.Ten = updateLopHocPhanDTO.Ten;
+            // lopHocPhanToUpdate.Ten = updateLopHocPhanDTO.Ten;
             lopHocPhanToUpdate.HocPhanId = updateLopHocPhanDTO.HocPhanId;
             
             await _context.SaveChangesAsync();

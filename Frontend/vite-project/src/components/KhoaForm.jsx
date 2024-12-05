@@ -74,16 +74,49 @@ export function KhoaForm({ khoaId, handleAdd, handleEdit, setIsDialogOpen }) {
             <FormItem>
               <FormLabel>Tên</FormLabel>
               <FormControl>
-                <Input placeholder="Nguyễn Văn A" {...field} />
+                <Input placeholder="Tên Khoa (vd: Công nghệ thông tin)..." {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                Đây là mục nhập tên Khoa.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="maKhoa"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tên</FormLabel>
+              <FormControl>
+                <Input placeholder="Mã Khoa..." {...field} />
+              </FormControl>
+              <FormDescription>
+                Đây là mục nhập mã Khoa.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="vietTat"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tên</FormLabel>
+              <FormControl>
+                <Input placeholder="Viết tắt..." {...field} />
+              </FormControl>
+              <FormDescription>
+                Đây là mục nhập viết tắt Khoa.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <Button type="submit">Lưu</Button>
       </form>
     </Form>
   );

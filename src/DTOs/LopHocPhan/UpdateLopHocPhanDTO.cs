@@ -9,4 +9,6 @@ public class UpdateLopHocPhanDTO
     public string Ten { get; set; } = string.Empty;
     [Required]
     public int HocPhanId { get; set; }
+    [Required]
+    public int KiHocId { get; set; }
 }
