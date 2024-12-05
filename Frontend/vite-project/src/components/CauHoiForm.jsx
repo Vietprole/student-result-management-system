@@ -36,12 +36,11 @@ const formSchema = z.object({
   }),
 });
 
-export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen }) {
+export function CauHoiForm({ cauHoi, handleAdd, handleEdit, setIsDialogOpen }) {
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      id: cauHoiId,
+    defaultValues: cauHoi ||{
       ten: "",
       trongSo: "",
       baiKiemTraId: "",
@@ -52,8 +51,8 @@ export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen })
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    if (cauHoiId) {
-      const data = await updateCauHoi(cauHoiId, values);
+    if (cauHoi) {
+      const data = await updateCauHoi(cauHoi.id, values);
       handleEdit(data);
     } else {
       const data = await addCauHoi(values);
@@ -65,7 +64,7 @@ export function CauHoiForm({ cauHoiId, handleAdd, handleEdit, setIsDialogOpen })
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {cauHoiId && (
+        {cauHoi && (
           <FormField
             control={form.control}
             name="id"

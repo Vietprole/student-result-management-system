@@ -69,7 +69,7 @@ export default function GradesPage() {
   }, [lopHocPhanId]);
 
   return (
-    <div className="container mx-auto py-10">
+    <div>
       <h1 className="text-2xl font-bold mb-6">Bảng điểm học phần</h1>
       {tableData.length > 0 && (
         <GradeTable

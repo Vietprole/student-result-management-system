@@ -173,7 +173,7 @@ export default function HocPhanPage() {
               <DialogContent className="w-auto max-w-none">
                 <DialogHeader>
                   <DialogTitle>
-                    Thêm plo có sẵn vào Chương trình đào tạo
+                    Thêm PLO có sẵn vào Học Phần
                   </DialogTitle>
                 </DialogHeader>
                 {console.log("item.id", item.id)}
@@ -205,7 +205,7 @@ export default function HocPhanPage() {
               <DialogContent className="w-auto max-w-none">
                 <DialogHeader>
                   <DialogTitle>
-                    Xem và xóa plo khỏi chương trình đào tạo
+                    Xem và xóa PLO khỏi Học Phần
                   </DialogTitle>
                 </DialogHeader>
                 <ManagePLOInHocPhanForm

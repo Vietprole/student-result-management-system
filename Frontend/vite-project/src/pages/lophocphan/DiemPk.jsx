@@ -121,7 +121,7 @@ const createColumns = (PLOs, diemDat) => [
       const cellClass = score >= diemDat ? "bg-green-500 text-white" : "bg-red-500 text-white";
       return (
         <div className={cellClass}>
-          {score.toFixed(2)}
+          {score}
         </div>
       )
     }

@@ -83,22 +83,22 @@ export const columns = [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
   {
-    accessorKey: "khoaId",
+    accessorKey: "moTa",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Khoa Id
+          Mô Tả
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("moTa")}</div>,
   },
   {
-    accessorKey: "namBatDau",
+    accessorKey: "tenCTDT",
     header: ({ column }) => {
       return (
         <Button
@@ -110,7 +110,7 @@ export const columns = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("namBatDau")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenCTDT")}</div>,
   },
 ]
 
@@ -129,6 +129,7 @@ const AddPLOToHocPhanForm = forwardRef(({ hocPhanId }, ref) => {
   console.log("hocPhanId 129=: ", hocPhanId);
   React.useEffect(() => {
     const fetchData = async () => {
+      // const getAllCTDTs = await getAllCTDTs();
       const allPLOs = await getAllPLOs();
       const pLOsInHocPhan = await getPLOsByHocPhanId(hocPhanId);
 

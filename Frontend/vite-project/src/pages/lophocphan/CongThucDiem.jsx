@@ -185,12 +185,12 @@ function createCauHoiColumns(handleEdit, handleDelete){
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Edit Bai Kiem Tra</DialogTitle>
+                  <DialogTitle>Edit Cau Hoi</DialogTitle>
                   <DialogDescription>
-                    Edit the current Bai Kiểm Tra.
+                    Edit the current Cau Hoi.
                   </DialogDescription>
                 </DialogHeader>
-              <CauHoiForm cauHoiId={item.id} handleEdit={handleEdit}/>
+              <CauHoiForm cauHoi={item} handleEdit={handleEdit}/>
               </DialogContent>
             </Dialog>
             <Dialog>

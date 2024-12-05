@@ -90,6 +90,7 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> GetPLOs([FromRoute] int id)
         {
             var hocPhan = await _context.HocPhans
+                .Include(l => l.CTDTs)
                 .Include(lhp => lhp.PLOs)
                 .FirstOrDefaultAsync(lhp => lhp.Id == id);
             if (hocPhan == null)

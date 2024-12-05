@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -7,7 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -15,9 +15,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -86,7 +83,7 @@ export const columns = [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
   {
-    accessorKey: "khoaId",
+    accessorKey: "moTa",
     header: ({ column }) => {
       return (
         <Button
@@ -98,10 +95,10 @@ export const columns = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("moTa")}</div>,
   },
   {
-    accessorKey: "namBatDau",
+    accessorKey: "tenCTDT",
     header: ({ column }) => {
       return (
         <Button
@@ -113,7 +110,7 @@ export const columns = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("namBatDau")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenCTDT")}</div>,
   },
 ]
 

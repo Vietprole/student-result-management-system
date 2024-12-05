@@ -24,9 +24,14 @@ import { Label } from "@/components/ui/label"
 import { calculateDiemPLO } from "@/api/api-ketqua"
 // import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
 // import { useParams } from "react-router-dom"
-import { getAllPLOs } from "@/api/api-plo"
+import { getAllPLOs, getPLOsByCTDTId } from "@/api/api-plo"
 import Layout from "./Layout"
 import { getAllSinhViens } from "@/api/api-sinhvien"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Check, ChevronsUpDown} from "lucide-react"
+import { getAllCTDTs } from "@/api/api-ctdt"
+import { cn } from "@/lib/utils"
 
 // const PLOs = [
 //   {
@@ -139,12 +144,21 @@ export default function XetChuanDauRaPage() {
   // const [isBase10, setIsBase10] = React.useState(false)
   const [diemDat, setDiemDat] = React.useState(5.0)
   const [inputValue, setInputValue] = React.useState(diemDat);
+  const [open, setOpen] = React.useState(false) // Use for combobox
+  const [value, setValue] = React.useState(null) // Use for combobox
+  const [comboBoxItems, setComboBoxItems] = React.useState([])
+  const [ctdtId, setCtdtId] = React.useState(null)
 
   React.useEffect(() => {
     const fetchData = async () => {
+      const comboBoxItems = await getAllCTDTs();
+      const mappedComboBoxItems = comboBoxItems.map(ctdt => ({ label: ctdt.ten, value: ctdt.id }));
+      console.log("mapped", mappedComboBoxItems);
+      setComboBoxItems(mappedComboBoxItems);
+
       const [sinhViens, PLOs] = await Promise.all([
         getAllSinhViens(),
-        getAllPLOs(),
+        getPLOsByCTDTId(ctdtId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
@@ -165,7 +179,7 @@ export default function XetChuanDauRaPage() {
       // setListDiemPLOMax(listDiemPkMax)
     }
     fetchData()
-  }, [])
+  }, [ctdtId])
 
   // const columns = createColumns(PLOs, listDiemPLOMax, isBase10, diemDat);
   const columns = createColumns(PLOs, diemDat);
@@ -187,6 +201,53 @@ export default function XetChuanDauRaPage() {
   return (
     <Layout>
       <h1>Tính điểm đạt chuẩn đầu ra của CTDT của Sinh Viên</h1>
+      <div className="flex">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {value !== null
+                ? comboBoxItems.find((comboBoxItem) => comboBoxItem.value === value)?.label
+                : "Select comboBoxItem..."}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search comboBoxItem..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No comboBoxItem found.</CommandEmpty>
+                <CommandGroup>
+                  {comboBoxItems.map((comboBoxItem) => (
+                    <CommandItem
+                      key={comboBoxItem.value}
+                      value={comboBoxItem.label}
+                      onSelect={() => {
+                        setValue(value === comboBoxItem.value ? null : comboBoxItem.value)
+                        setOpen(false)
+                      }}
+                    >
+                      {comboBoxItem.label}
+                      <Check
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          value === comboBoxItem.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        <Button onClick={() => setCtdtId(value)}>Go</Button>
+        {console.log("ctdtId", ctdtId)}
+      </div>
       <div>
         <div className="flex items-center py-4">
           <Input
