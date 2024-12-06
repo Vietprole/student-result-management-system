@@ -7,6 +7,8 @@ using Student_Result_Management_System.DTOs.GiangVien;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -17,20 +19,43 @@ namespace Student_Result_Management_System.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly IGiangVienRepository _giangVienRepository;
-        public GiangVienController(ApplicationDBContext context, IGiangVienRepository giangVienRepository)
+        private readonly IKhoaRepository _khoaRepository;
+        public GiangVienController(ApplicationDBContext context, IGiangVienRepository giangVienRepository,IKhoaRepository khoaRepository)
         {
             _context = context;
             _giangVienRepository = giangVienRepository;
+            _khoaRepository = khoaRepository;
         }
         [HttpGet]
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAllByRole() // async go with Task<> to make function asynchronous
         {
+            var role = User.Claims.Where(c=>c.Type==ClaimTypes.Role).Select(c=>c.Value).FirstOrDefault();
+            var nameid = User.Claims.Where(c => c.Type == JwtRegisteredClaimNames.NameId).Select(c => c.Value).FirstOrDefault();
+            if (role != null && nameid!=null)
+            {
+               if(role == "TruongKhoa")
+                {
+                    var khoa= await _khoaRepository.GetKhoaByTruongKhoaId(nameid);
+                    if (khoa != null)
+                    {
+                        var khoaGiangViens = await _giangVienRepository.GetAllByKhoaId(khoa.Id);
+                        var gvDTOs = khoaGiangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
+                        return Ok(gvDTOs);
+                    }
+                }else if(role == "GiangVien")
+                {
+                    
+                    
+                }
+
+            }
             var giangViens = await _giangVienRepository.GetAllGiangVien();
             var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
-            return Ok(giangVienDTOs);
+            return Ok();
+
         }
 
         [HttpGet("{id}")]

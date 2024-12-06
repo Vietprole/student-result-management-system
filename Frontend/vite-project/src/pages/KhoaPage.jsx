@@ -48,7 +48,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tên
+          Tên Khoa
           <ArrowUpDown />
         </Button>
       );
@@ -100,7 +100,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Hành động</DropdownMenuLabel>
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
@@ -109,7 +109,7 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Edit Khoa</DialogTitle>
+                  <DialogTitle>Sửa thông tin Khoa</DialogTitle>
                   <DialogDescription>Edit the current item.</DialogDescription>
                 </DialogHeader>
                 <KhoaForm khoa={item} handleEdit={handleEdit} />
@@ -123,12 +123,12 @@ const createKhoaColumns = (handleEdit, handleDelete) => [
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Delete Khoa</DialogTitle>
+                  <DialogTitle>Xóa Khoa</DialogTitle>
                   <DialogDescription>
-                    Delete the current item.
+                    Xóa khoa này
                   </DialogDescription>
                 </DialogHeader>
-                <p>Are you sure you want to delete this Khoa?</p>
+                <p>Bạn có muốn xóa khoa này không?</p>
                 <DialogFooter>
                   <Button type="submit" onClick={() => handleDelete(item.id)}>
                     Delete Khoa
