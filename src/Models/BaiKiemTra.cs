@@ -11,5 +11,4 @@ public class BaiKiemTra
     public decimal TrongSo { get; set; }
     public int LopHocPhanId { get; set; }
     public LopHocPhan LopHocPhan { get; set; } = null!;
-    public List<CauHoi> CauHois { get; set; } = [];
 }

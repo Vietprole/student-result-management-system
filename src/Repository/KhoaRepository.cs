@@ -27,25 +27,11 @@ namespace Student_Result_Management_System.Repository
             return khoa.Id;
         }
 
-        public async Task<bool> CheckTruongKhoa(string id)
-        {
-            var khoa = await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
-            if (khoa == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
         public async Task<Khoa?> CreateKhoa(Khoa khoa)
         {
             await _context.Khoas.AddAsync(khoa);
             await _context.SaveChangesAsync();
             return khoa;
-        }
-        public async Task<Khoa?> GetKhoaByTruongKhoaId(string id)
-        {
-            return await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
         }
 
         public async Task<Khoa?> GetKhoaId(int id)
@@ -67,20 +53,6 @@ namespace Student_Result_Management_System.Repository
                 return null;
             }
             return khoa.MaKhoa;
-        }
-
-        public async Task<Khoa?> UpdateTruongKhoa(int khoaid, TaiKhoan truongkhoa)
-        {
-            var khoa = await _context.Khoas.FindAsync(khoaid);
-            if (khoa == null)
-            {
-                return null;
-            }
-            khoa.TruongKhoaId =truongkhoa.Id;
-            khoa.TruongKhoa = truongkhoa;
-            _context.Khoas.Update(khoa);
-            await _context.SaveChangesAsync();
-            return khoa;
         }
     }
 }

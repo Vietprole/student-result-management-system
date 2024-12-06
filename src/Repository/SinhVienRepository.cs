@@ -89,12 +89,6 @@ namespace Student_Result_Management_System.Repository
             return exits;
         }
 
-        public async Task<List<SinhVien>> GetAll(int[] id)
-        {
-            List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).Where(x=>id.Contains(x.Id)).ToListAsync();
-            return sinhViens;
-        }
-
         public async Task<List<SinhVien>> GetAllSinhVien()
         {
             List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv => sv.Khoa).ToListAsync();

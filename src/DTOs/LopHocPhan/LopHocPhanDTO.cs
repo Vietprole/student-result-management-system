@@ -9,6 +9,4 @@ public class LopHocPhanDTO
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
     public int HocPhanId { get; set; }
-    public int KiHocId { get; set; }
-    
 }

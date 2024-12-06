@@ -17,13 +17,11 @@ namespace Student_Result_Management_System.Repository
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly IChucVuRepository _chucVuRepository;
         private readonly SignInManager<TaiKhoan> _signInManager;
-        private readonly IKhoaRepository _khoaRepository;
-        public TaiKhoanRepository(UserManager<TaiKhoan> userManager, IChucVuRepository chucVuRepository, SignInManager<TaiKhoan> signInManager,IKhoaRepository khoaRepository)
+        public TaiKhoanRepository(UserManager<TaiKhoan> userManager, IChucVuRepository chucVuRepository, SignInManager<TaiKhoan> signInManager)
         {
             _userManager = userManager;
             _chucVuRepository = chucVuRepository;
             _signInManager = signInManager;
-            _khoaRepository = khoaRepository;
         }
 
         public Task<bool> CheckPassword(TaiKhoan taikhoan, string password)
@@ -103,31 +101,12 @@ namespace Student_Result_Management_System.Repository
                     {
                         return null;
                     }
-                    if(createTaiKhoanDTO.TenChucVu.ToLower()=="truongkhoa")
+                    var result = await _userManager.CreateAsync(user, createTaiKhoanDTO.Password);
+                    if (result.Succeeded)
                     {
-                        if (createTaiKhoanDTO.KhoaId.HasValue)
-                        {
-                            var result = await _userManager.CreateAsync(user, createTaiKhoanDTO.Password);
-
-                            if (result.Succeeded)
-                            {
-                                await _khoaRepository.UpdateTruongKhoa(createTaiKhoanDTO.KhoaId.Value, user);
-                                await _userManager.AddToRoleAsync(user, chucVuDTO.TenChucVu);
-                                return user;
-                            }
-                        }
+                        await _userManager.AddToRoleAsync(user, chucVuDTO.TenChucVu);
+                        return user;
                     }
-                    else
-                    {
-                        var result = await _userManager.CreateAsync(user, createTaiKhoanDTO.Password);
-                        if (result.Succeeded)
-                        {
-                            await _userManager.AddToRoleAsync(user, chucVuDTO.TenChucVu);
-                            return user;
-                        }
-
-                    }
-
                 }
                 return null;
             }

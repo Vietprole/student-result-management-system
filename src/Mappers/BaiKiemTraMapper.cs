@@ -14,7 +14,6 @@ public static class BaiKiemTraMapper
             Loai = baiKiemTra.Loai,
             TrongSo = baiKiemTra.TrongSo,
             LopHocPhanId = baiKiemTra.LopHocPhanId,
-            CauHois = baiKiemTra.CauHois.Select(cauHoi => cauHoi.ToCauHoiDTO()).ToList(),
         };
     }
 

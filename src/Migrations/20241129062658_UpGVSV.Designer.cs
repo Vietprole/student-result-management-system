@@ -12,15 +12,15 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20241205072912_InitCreate")]
-    partial class InitCreate
+    [Migration("20241129062658_UpGVSV")]
+    partial class UpGVSV
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -144,37 +144,37 @@ namespace Student_Result_Management_System.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bcd0fac4-bf61-43a7-bd44-b5de16b82afb",
+                            Id = "f1e36b8b-b646-447d-bf82-460672b7ae98",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2ea39ac8-d105-4020-9038-2d4a53cf34d7",
+                            Id = "26bf66c8-0edc-417c-a5ef-6c553019fc14",
                             Name = "GiangVien",
                             NormalizedName = "GIANGVIEN"
                         },
                         new
                         {
-                            Id = "c202c42e-b700-4ef0-8fdd-d5fcd837f003",
+                            Id = "dcd22d3d-471b-4c95-a0e7-fc9bedf5a3f8",
                             Name = "SinhVien",
                             NormalizedName = "SINHVIEN"
                         },
                         new
                         {
-                            Id = "75c2e63c-4c1b-4ab1-a7de-9087601d943b",
+                            Id = "dc608489-0e5e-4945-bca6-688d6cf06400",
                             Name = "PhongDaoTao",
                             NormalizedName = "PHONGDAOTAO"
                         },
                         new
                         {
-                            Id = "568d3dd5-de42-4733-b08e-714ed4c473f0",
+                            Id = "8e8da6b3-07df-4fd5-b4f7-82f0635a9cb0",
                             Name = "TruongKhoa",
                             NormalizedName = "TRUONGKHOA"
                         },
                         new
                         {
-                            Id = "d58e7e21-7fe0-4d2f-b26c-b034b8323098",
+                            Id = "e820b120-4f48-4c64-881b-96cc138400d9",
                             Name = "TruongBoMon",
                             NormalizedName = "TRUONGBOMON"
                         });
@@ -301,8 +301,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<int>("LopHocPhanId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TrongSo")
-                        .HasColumnType("decimal(4, 2)");
+                    b.Property<float>("TrongSo")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -379,11 +379,8 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ThangDiem")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TrongSo")
-                        .HasColumnType("decimal(4, 2)");
+                    b.Property<float>("TrongSo")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -431,8 +428,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<bool>("LaCotLoi")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("SoTinChi")
-                        .HasColumnType("decimal(4, 2)");
+                    b.Property<float>("SoTinChi")
+                        .HasColumnType("real");
 
                     b.Property<string>("Ten")
                         .IsRequired()
@@ -456,8 +453,8 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<int>("CauHoiId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(4, 2)");
+                    b.Property<float>("Diem")
+                        .HasColumnType("real");
 
                     b.Property<int>("SinhVienId")
                         .HasColumnType("int");
@@ -487,147 +484,13 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TruongKhoaId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("VietTat")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TruongKhoaId")
-                        .IsUnique()
-                        .HasFilter("[TruongKhoaId] IS NOT NULL");
-
                     b.ToTable("Khoas");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MaKhoa = "101",
-                            Ten = "Cơ khí",
-                            VietTat = "CK"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            MaKhoa = "102",
-                            Ten = "Công nghệ thông tin",
-                            VietTat = "CNTT"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            MaKhoa = "103",
-                            Ten = "Cơ khí giao thông",
-                            VietTat = "CKGT"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            MaKhoa = "104",
-                            Ten = "Công nghệ nhiệt điện lạnh",
-                            VietTat = "CNNDL"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            MaKhoa = "105",
-                            Ten = "Điện",
-                            VietTat = "D"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            MaKhoa = "106",
-                            Ten = "Điện tử viễn thông",
-                            VietTat = "DTVT"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            MaKhoa = "107",
-                            Ten = "Hóa",
-                            VietTat = "H"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            MaKhoa = "108",
-                            Ten = "Xây dựng cầu đường",
-                            VietTat = "XDCD"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            MaKhoa = "109",
-                            Ten = "Xây dựng dân dụng và công nghiệp",
-                            VietTat = "XDDDCN"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            MaKhoa = "110",
-                            Ten = "Xây dựng công trình thủy",
-                            VietTat = "XDCTT"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            MaKhoa = "111",
-                            Ten = "Môi trường",
-                            VietTat = "MT"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            MaKhoa = "112",
-                            Ten = "Quản lý dự án",
-                            VietTat = "QLDA"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            MaKhoa = "113",
-                            Ten = "Kiến trúc",
-                            VietTat = "KT"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            MaKhoa = "114",
-                            Ten = "Khoa học công nghệ tiên tiến",
-                            VietTat = "KHCTTT"
-                        });
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.KiHoc", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("HanSuaCongThucDiem")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("HanSuaDiem")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NamHoc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Ten")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KiHocs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.LopHocPhan", b =>
@@ -641,30 +504,13 @@ namespace Student_Result_Management_System.Migrations
                     b.Property<int>("HocPhanId")
                         .HasColumnType("int");
 
-                    b.Property<int>("KiHocId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("NgayChapNhanCTD")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("NgayXacNhanCTD")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Ten")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenNguoiChapNhanCTD")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenNguoiXacNhanCTD")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("HocPhanId");
-
-                    b.HasIndex("KiHocId");
 
                     b.ToTable("LopHocPhans");
                 });
@@ -992,7 +838,7 @@ namespace Student_Result_Management_System.Migrations
             modelBuilder.Entity("Student_Result_Management_System.Models.CauHoi", b =>
                 {
                     b.HasOne("Student_Result_Management_System.Models.BaiKiemTra", "BaiKiemTra")
-                        .WithMany("CauHois")
+                        .WithMany()
                         .HasForeignKey("BaiKiemTraId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1047,16 +893,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("SinhVien");
                 });
 
-            modelBuilder.Entity("Student_Result_Management_System.Models.Khoa", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TruongKhoa")
-                        .WithOne()
-                        .HasForeignKey("Student_Result_Management_System.Models.Khoa", "TruongKhoaId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("TruongKhoa");
-                });
-
             modelBuilder.Entity("Student_Result_Management_System.Models.LopHocPhan", b =>
                 {
                     b.HasOne("Student_Result_Management_System.Models.HocPhan", "HocPhan")
@@ -1065,15 +901,7 @@ namespace Student_Result_Management_System.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Student_Result_Management_System.Models.KiHoc", "KiHoc")
-                        .WithMany()
-                        .HasForeignKey("KiHocId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("HocPhan");
-
-                    b.Navigation("KiHoc");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.Nganh", b =>
@@ -1112,11 +940,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("Khoa");
 
                     b.Navigation("TaiKhoan");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.BaiKiemTra", b =>
-                {
-                    b.Navigation("CauHois");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.CTDT", b =>

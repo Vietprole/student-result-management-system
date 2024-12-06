@@ -82,10 +82,10 @@ export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
             <FormItem>
               <FormLabel>Tên</FormLabel>
               <FormControl>
-                <Input placeholder="Tên Khoa (vd: Công nghệ thông tin)..." {...field} />
+                <Input placeholder="Nguyễn Văn A" {...field} />
               </FormControl>
               <FormDescription>
-                Đây là mục nhập tên Khoa.
+                This is your public display name.
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -8,5 +8,4 @@ public class CauHoiDTO
     public string Ten { get; set; } = string.Empty;
     public decimal TrongSo { get; set; }
     public int BaiKiemTraId { get; set; }
-    public int ThangDiem { get; set; }
 }
