@@ -36,37 +36,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ComboBox } from "./ComboBox";
 
 export default function DataTable({
   entity,
   createColumns,
-  getAllItems,
+  data,
+  setData,
   deleteItem,
   columnToBeFiltered,
   ItemForm,
 }) {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState(dataFromParent);
   // const [comboBoxItems, setComboBoxItems] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // if (getAllComboBoxItems) {
-      //   const comboBoxItems = await getAllComboBoxItems();
-      //   const mappedComboBoxItems = comboBoxItems.map(({ ten, ...rest }) => ({
-      //     ...rest,
-      //     label: ten
-      //   }));
-      //   console.log("mapped", mappedComboBoxItems);
-      //   setComboBoxItems(mappedComboBoxItems);
-      // }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // if (getAllComboBoxItems) {
+  //     //   const comboBoxItems = await getAllComboBoxItems();
+  //     //   const mappedComboBoxItems = comboBoxItems.map(({ ten, ...rest }) => ({
+  //     //     ...rest,
+  //     //     label: ten
+  //     //   }));
+  //     //   console.log("mapped", mappedComboBoxItems);
+  //     //   setComboBoxItems(mappedComboBoxItems);
+  //     // }
 
-      const data = await getAllItems();
-      setData(data);
-    };
-    fetchData();
-  }, [getAllItems]);
+  //     const data = await getAllItems();
+  //     setData(data);
+  //   };
+  //   fetchData();
+  // }, [getAllItems]);
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -111,7 +111,7 @@ export default function DataTable({
 
   return (
     <>
-      <h1>This is {entity} Page</h1>
+      {/* <h1>This is {entity} Page</h1> */}
       <div className="w-full">
         <div className="flex items-center py-4">
           <Input
@@ -223,10 +223,10 @@ export default function DataTable({
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
+          {/* <div className="flex-1 text-sm text-muted-foreground">
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
+          </div> */}
           <div className="space-x-2">
             <Button
               variant="outline"

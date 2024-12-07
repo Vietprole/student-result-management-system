@@ -15,6 +15,18 @@ export const getAllSinhViens = async () => {
   }
 };
 
+export const getSinhViens = async (khoaId) => {
+  try {
+    const url = khoaId ? `${API_SINHVIEN}?khoaId=${khoaId}` : API_SINHVIEN;
+    const response = await axios.get(url, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 // Function to get a single sinhvien by ID
 export const getSinhVienById = async (sinhvienId) => {
   try {

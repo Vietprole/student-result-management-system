@@ -15,6 +15,19 @@ export const getAllGiangViens = async () => {
   }
 }
 
+export const getGiangViens = async (khoaId) => {
+  try {
+    const url = khoaId ? `${API_GIANGVIEN}?khoaId=${khoaId}` : API_GIANGVIEN;
+    const response = await axios.get(url, {
+      headers: { Authorization: getAccessToken() }
+    });
+    console.log("response data: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 export const getGiangVienById = async (id) => {
   try {
     const response = await axios.get(`${API_GIANGVIEN}/${id}`, {

@@ -3,7 +3,7 @@ import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  getAllGiangViens,
+  getGiangViens,
   // updateGiangVien,
   deleteGiangVien,
 } from "@/api/api-giangvien";
@@ -25,6 +25,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { GiangVienForm } from "@/components/GiangVienForm";
+import { getAllKhoas } from "@/api/api-khoa";
+import { ComboBox } from "@/components/ComboBox";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const createGiangVienColumns = (handleEdit, handleDelete) => [
   {
@@ -151,13 +155,33 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
 ];
 
 export default function GiangVienPage() {
+  const [searchParams] = useSearchParams();
+  const khoaIdParam = searchParams.get("khoaId");
+  const [data, setData] = useState([]);
+  const [khoaItems, setKhoaItems] = useState([]);
+  const [khoaId, setKhoaId] = useState(khoaIdParam);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataKhoa = await getAllKhoas();
+      const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      setKhoaItems(mappedComboBoxItems);
+      const data = await getGiangViens(khoaId);
+      setData(data);
+    }
+    fetchData();
+  }, [khoaId]);
+
   return (
     <Layout>
       <div className="w-full">
+        <ComboBox items={khoaItems} setItemId={setKhoaId} initialItemId={khoaId}/>
+        {console.log("Khoa ID: ", khoaId)}
         <DataTable
           entity="Giang Vien"
           createColumns={createGiangVienColumns}
-          getAllItems={() => getAllGiangViens()}
+          data={data}
+          setData={setData}
           deleteItem={deleteGiangVien}
           columnToBeFiltered={"ten"}
           ItemForm={GiangVienForm}

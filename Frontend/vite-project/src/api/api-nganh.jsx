@@ -15,11 +15,24 @@ export const getNganhsByKhoaId = async (khoaId) => {
   }
 };
 
+export const getNganhs = async (khoaId) => {
+  try {
+    const url = khoaId ? `${API_NGANH}?khoaId=${khoaId}` : API_NGANH;
+    const response = await axios.get(url, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 export const getAllNganhs = async () => {
   try {
     const response = await axios.get(API_NGANH, {
       headers: { Authorization: getAccessToken() }
     });
+    console.log("response data: ", response.data);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

@@ -246,7 +246,6 @@ export default function XetChuanDauRaPage() {
           </PopoverContent>
         </Popover>
         <Button onClick={() => setCtdtId(value)}>Go</Button>
-        {console.log("ctdtId", ctdtId)}
       </div>
       <div>
         <div className="flex items-center py-4">

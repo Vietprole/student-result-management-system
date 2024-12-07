@@ -28,7 +28,8 @@ const LoginPage = () => {
                 // const userRole = decodedToken.role;
                 
                 // console.log('User Role:', userRole);
-                navigate('/main'); // Use navigate here
+                // navigate('/main'); // Use navigate here
+                navigate('/khoa'); // Use navigate here
               } else {
                 toast('Tên đăng nhập hoặc mật khẩu sai');
               }

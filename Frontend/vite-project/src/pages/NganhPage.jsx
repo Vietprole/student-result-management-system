@@ -4,7 +4,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getAllKhoas } from "@/api/api-khoa";
 import {
-  getAllNganhs,
+  getNganhs,
+  // getAllNganhs,
   deleteNganh,
 } from "@/api/api-nganh";
 import {
@@ -24,6 +25,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { NganhForm } from "@/components/NganhForm";
+import { useState, useEffect } from "react";
+import { ComboBox } from "@/components/ComboBox";
+import { useSearchParams } from "react-router-dom";
 
 const createNganhColumns = (handleEdit, handleDelete) => [
   {
@@ -135,17 +139,38 @@ const createNganhColumns = (handleEdit, handleDelete) => [
 ];
 
 export default function NganhPage() {
+  const [searchParams] = useSearchParams();
+  const khoaIdParam = searchParams.get("khoaId");
+  const [data, setData] = useState([]);
+  const [khoaItems, setKhoaItems] = useState([]);
+  const [khoaId, setKhoaId] = useState(khoaIdParam);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataKhoa = await getAllKhoas();
+      // Map khoa items to be used in ComboBox
+      const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      setKhoaItems(mappedComboBoxItems);
+      const data = await getNganhs(khoaId);
+      setData(data);
+    }
+    fetchData();
+  }, [khoaId]);
+
   return (
     <Layout>
       <div className="w-full">
+        <ComboBox items={khoaItems} setItemId={setKhoaId} initialItemId={khoaId}/>
+        {console.log("Khoa ID: ", khoaId)}
         <DataTable
           entity="Nganh"
           createColumns={createNganhColumns}
-          getAllItems={getAllNganhs}
+          // getAllItems={getAllNganhs}
+          data={data}
+          setData={setData}
           deleteItem={deleteNganh}
           columnToBeFiltered={"ten"}
           ItemForm={NganhForm}
-          getAllComboBoxItems={getAllKhoas}
         />
       </div>
     </Layout>
