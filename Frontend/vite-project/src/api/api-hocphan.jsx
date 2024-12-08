@@ -15,6 +15,17 @@ export const getAllHocPhans = async () => {
   }
 };
 
+export const getHocPhans = async (nganhId) => {
+  try {
+    const response = await axios.get(`${API_HOCPHAN}?nganhId=${nganhId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 // Function to get a single hocphan by ID
 export const getHocPhanById = async (hocphanId) => {
   try {

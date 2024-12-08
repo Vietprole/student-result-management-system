@@ -22,13 +22,22 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { HocPhanForm } from "@/components/HocPhanForm";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import AddPLOToHocPhanForm from "@/components/AddPLOToHocPhanForm";
 import ManagePLOInHocPhanForm from "@/components/ManagePLOInHocPhanForm";
 
 export default function HocPhanPage() {
   const addPLOFormRef = useRef(null);
   const managePLOFormRef = useRef(null);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllHocPhans();
+      setData(data);
+    };
+    fetchData();
+  }, []);
 
   const createHocPhanColumns = (handleEdit, handleDelete) => [
   {
@@ -240,7 +249,8 @@ export default function HocPhanPage() {
         <DataTable
           entity="HocPhan"
           createColumns={createHocPhanColumns}
-          getAllItems={() => getAllHocPhans()}
+          data={data}
+          setData={setData}
           deleteItem={deleteHocPhan}
           columnToBeFiltered={"ten"}
           ItemForm={HocPhanForm}

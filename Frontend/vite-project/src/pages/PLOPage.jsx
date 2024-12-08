@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { PLOForm } from "@/components/PLOForm";
 import Layout from "./Layout";
+import { useState, useEffect } from "react";
 
 const createPLOColumns = (handleEdit, handleDelete) => [
   {
@@ -165,13 +166,24 @@ const createPLOColumns = (handleEdit, handleDelete) => [
 ];
 
 export default function PLOPage() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllPLOs();
+      setData(data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <Layout>
       <div className="w-full">
         <DataTable
           entity="PLO"
           createColumns={createPLOColumns}
-          getAllItems={() => getAllPLOs()}
+          data={data}
+          setData={setData}
           deleteItem={deletePLO}
           columnToBeFiltered={"ten"}
           ItemForm={PLOForm}
