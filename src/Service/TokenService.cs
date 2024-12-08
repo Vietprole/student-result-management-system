@@ -21,7 +21,12 @@ namespace Student_Result_Management_System.Service
         {
             _config = config;
             _userManager = userManager;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+            var signingKey = _config["JWT:SigningKey"];
+            if (string.IsNullOrEmpty(signingKey))
+            {
+                throw new ArgumentNullException("JWT:SigningKey", "Signing key cannot be null or empty.");
+            }
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
 
         }
         public async Task<String> CreateToken(TaiKhoan user)
@@ -29,7 +34,7 @@ namespace Student_Result_Management_System.Service
             
              var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.GivenName,user.UserName) ,// GivenName is the username
+                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName ?? throw new ArgumentNullException(nameof(user.UserName))) ,// GivenName is the username
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.NameId,user.Id),
                 new Claim("fullname",user.HovaTen),
@@ -53,6 +58,19 @@ namespace Student_Result_Management_System.Service
             var token = await Task.Run(() => tokenHandler.CreateToken(tokenDescriptor));
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public Task<string> GetFullNameAndRole(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            if (!handler.CanReadToken(token))
+            {
+                throw new ArgumentException("Invalid JWT token");
+            }
+            var jwtToken = handler.ReadJwtToken(token);
+            var fullName = jwtToken.Claims.FirstOrDefault(c => c.Type == "fullname")?.Value ?? throw new ArgumentNullException("fullname", "Full name claim cannot be null.");
+        
+            return Task.FromResult(fullName);
         }
     }
 }

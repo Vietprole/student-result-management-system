@@ -11,4 +11,6 @@ public class CreateCauHoiDTO
     public decimal TrongSo { get; set; }
     [Required]
     public int BaiKiemTraId { get; set; }
+    [Required]
+    public int ThangDiem { get; set; }
 }

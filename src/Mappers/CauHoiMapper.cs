@@ -14,6 +14,7 @@ public static  class CauHoiMapper
             Ten = cauHoi.Ten,
             TrongSo = cauHoi.TrongSo,
             BaiKiemTraId = cauHoi.BaiKiemTraId,
+            ThangDiem = cauHoi.ThangDiem
         };
     }
 
@@ -24,6 +25,7 @@ public static  class CauHoiMapper
             Ten = createCauHoiDTO.Ten,
             TrongSo = createCauHoiDTO.TrongSo,
             BaiKiemTraId = createCauHoiDTO.BaiKiemTraId,
+            ThangDiem = createCauHoiDTO.ThangDiem
         };
     }
 }

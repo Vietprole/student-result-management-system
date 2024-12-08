@@ -10,6 +10,7 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface ISinhVienRepository
     {
+        public Task<List<SinhVien>> GetAll(int[] id);
         public Task<List<SinhVien>> GetAllSinhVien();
         public Task<SinhVien?> CreateSinhVien(SinhVien sinhvien,TaiKhoan taiKhoan);
         public Task<TaiKhoan?> CreateTaiKhoanSinhVien(CreateSinhVienDTO taikhoanSinhVien);

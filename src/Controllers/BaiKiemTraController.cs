@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.BaiKiemTra;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
@@ -15,74 +16,61 @@ namespace Student_Result_Management_System.Controllers
     public class BaiKiemTraController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public BaiKiemTraController(ApplicationDBContext context)
+        private readonly IBaiKiemTraRepository _IBaiKiemTraRepository;
+        private readonly ITokenSerivce _tokenSerivce;
+        public BaiKiemTraController(ApplicationDBContext context, IBaiKiemTraRepository IBaiKiemTraRepository, ITokenSerivce tokenSerivce)
         {
             _context = context;
+            _IBaiKiemTraRepository = IBaiKiemTraRepository;
+            _tokenSerivce = tokenSerivce;
         }
         [HttpGet]
-        // IActionResult return any value type
-        // public async Task<IActionResult> Get()
-        // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int lopHocPhanId) // async go with Task<> to make function asynchronous
         {
-            IQueryable<BaiKiemTra> query = _context.BaiKiemTras;
-            if (lopHocPhanId.HasValue)
+            if(lopHocPhanId<=0)
             {
-                query = query.Where(n => n.LopHocPhanId == lopHocPhanId.Value);
+                return BadRequest();
             }
-
-            var baiKiemTras = await query.ToListAsync();
-            var baiKiemTraDTOs = baiKiemTras.Select(sv => sv.ToBaiKiemTraDTO()).ToList();
+            var baiKiemTraDTOs = await _IBaiKiemTraRepository.GetAllBaiKiemTraByLopHocPhanId(lopHocPhanId);
             return Ok(baiKiemTraDTOs);
         }
-
         [HttpGet("{id}")]
-        // Get single entry
-        public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var student = await _context.BaiKiemTras.FindAsync(id);
-            if (student == null)
+            var baiKiemTraDTO = await _IBaiKiemTraRepository.GetBaiKiemTra(id);
+            if (baiKiemTraDTO == null)
+            {
                 return NotFound();
-            var studentDTO = student.ToBaiKiemTraDTO();
-            return Ok(studentDTO);
+            }
+            return Ok(baiKiemTraDTO);
         }
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {
-            var baiKiemTra = createBaiKiemTraDTO.ToBaiKiemTraFromCreateDTO();
-            await _context.BaiKiemTras.AddAsync(baiKiemTra);
-            await _context.SaveChangesAsync();
-            var baiKiemTraDTO = baiKiemTra.ToBaiKiemTraDTO();
-            return CreatedAtAction(nameof(GetById), new { id = baiKiemTra.Id }, baiKiemTraDTO);
+            var baiKiemTraDTO = await _IBaiKiemTraRepository.CreateBaiKiemTra(createBaiKiemTraDTO);
+            return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
         }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBaiKiemTraDTO updateBaiKiemTraDTO)
         {
-            var baiKiemTraToUpdate = await _context.BaiKiemTras.FindAsync(id);
-            if (baiKiemTraToUpdate == null)
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var fullName = await _tokenSerivce.GetFullNameAndRole(token);
+            var baiKiemTraDTO = await _IBaiKiemTraRepository.UpdateBaiKiemTra(id, updateBaiKiemTraDTO);
+            if (baiKiemTraDTO == null)
+            {
                 return NotFound();
-
-            baiKiemTraToUpdate.Loai = updateBaiKiemTraDTO.Loai;
-            baiKiemTraToUpdate.TrongSo = updateBaiKiemTraDTO.TrongSo;
-            baiKiemTraToUpdate.LopHocPhanId = updateBaiKiemTraDTO.LopHocPhanId;
-            
-            await _context.SaveChangesAsync();
-            var studentDTO = baiKiemTraToUpdate.ToBaiKiemTraDTO();
-            return Ok(studentDTO);
+            }
+            return Ok(baiKiemTraDTO);
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var baiKiemTraToDelete = await _context.BaiKiemTras.FindAsync(id);
-            if (baiKiemTraToDelete == null)
+            var baiKiemTraDTO = await _IBaiKiemTraRepository.DeleteBaiKiemTra(id);
+            if (baiKiemTraDTO == false)
+            {
                 return NotFound();
-            _context.BaiKiemTras.Remove(baiKiemTraToDelete);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            }
+            return Ok();
         }
-
     }
 }
