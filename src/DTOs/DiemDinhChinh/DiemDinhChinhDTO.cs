@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Student_Result_Management_System.DTOs.GiangVien;
+namespace Student_Result_Management_System.DTOs.DiemDinhChinh;
 
-public class CreateGiangVienDTO
+public class DiemDinhChinhDTO
 {
-    [Required]
+    public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
-    [Required]
     public int KhoaId { get; set; }
 }

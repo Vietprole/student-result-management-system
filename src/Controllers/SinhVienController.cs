@@ -17,9 +17,9 @@ namespace Student_Result_Management_System.Controllers
     public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly ISinhVienRepository    _sinhVienRepository;
-        private readonly ITaiKhoanRepository _taiKhoanRepository;
-        public SinhVienController(ApplicationDBContext context, ISinhVienRepository sinhVienRepository, ITaiKhoanRepository taiKhoanRepository)
+        private readonly ISinhVienService    _sinhVienRepository;
+        private readonly ITaiKhoanService _taiKhoanRepository;
+        public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienRepository, ITaiKhoanService taiKhoanRepository)
         {
             _context = context;
             _sinhVienRepository = sinhVienRepository;

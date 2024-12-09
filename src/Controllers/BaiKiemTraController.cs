@@ -16,9 +16,9 @@ namespace Student_Result_Management_System.Controllers
     public class BaiKiemTraController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IBaiKiemTraRepository _IBaiKiemTraRepository;
+        private readonly IBaiKiemTraService _IBaiKiemTraRepository;
         private readonly ITokenService _tokenSerivce;
-        public BaiKiemTraController(ApplicationDBContext context, IBaiKiemTraRepository IBaiKiemTraRepository, ITokenService tokenSerivce)
+        public BaiKiemTraController(ApplicationDBContext context, IBaiKiemTraService IBaiKiemTraRepository, ITokenService tokenSerivce)
         {
             _context = context;
             _IBaiKiemTraRepository = IBaiKiemTraRepository;

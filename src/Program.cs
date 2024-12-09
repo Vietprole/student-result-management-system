@@ -7,8 +7,8 @@ using Microsoft.OpenApi.Models;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
-using Student_Result_Management_System.Repository;
 using Student_Result_Management_System.Service;
+using Student_Result_Management_System.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,15 +58,15 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IChucVuRepository,ChucVuRepository>();
-builder.Services.AddScoped<IKhoaRepository,KhoaRepository>();
-builder.Services.AddScoped<ISinhVienRepository,SinhVienRepository>();
-builder.Services.AddScoped<IGiangVienRepository,GiangVienRepository>();
-builder.Services.AddScoped<IKiHocRepository,KiHocRepository>();
-builder.Services.AddScoped<IBaiKiemTraRepository,BaiKiemTraRepository>();
-builder.Services.AddScoped<ICauHoiRepository,CauHoiRepository>();
+builder.Services.AddScoped<IChucVuService, ChucVuService>();
+builder.Services.AddScoped<IKhoaService, KhoaService>();
+builder.Services.AddScoped<ISinhVienService, SinhVienService>();
+builder.Services.AddScoped<IGiangVienService, GiangVienService>();
+builder.Services.AddScoped<IHocKyRepository, HocKieservice>();
+builder.Services.AddScoped<IBaiKiemTraService, BaiKiemTraService>();
+builder.Services.AddScoped<ICauHoiService, CauHoiService>();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

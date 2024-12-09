@@ -29,7 +29,7 @@ namespace Student_Result_Management_System.Service
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
 
         }
-        public async Task<String> CreateToken(TaiKhoan user)
+        public async Task<string> CreateToken(TaiKhoan user)
         {
             
              var claims = new List<Claim>

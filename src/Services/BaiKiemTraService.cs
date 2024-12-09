@@ -8,13 +8,13 @@ using Student_Result_Management_System.DTOs.BaiKiemTra;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class BaiKiemTraRepository : IBaiKiemTraRepository
+    public class BaiKiemTraService : IBaiKiemTraService
     {
         private readonly ApplicationDBContext _context;
-        private readonly ICauHoiRepository _ICauHoiRepository;
-        public BaiKiemTraRepository(ApplicationDBContext context, ICauHoiRepository ICauHoiRepository)
+        private readonly ICauHoiService _ICauHoiRepository;
+        public BaiKiemTraService(ApplicationDBContext context, ICauHoiService ICauHoiRepository)
         {
             _context = context;
             _ICauHoiRepository = ICauHoiRepository;

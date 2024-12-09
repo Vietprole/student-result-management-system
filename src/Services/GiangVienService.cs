@@ -10,15 +10,15 @@ using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
     
-    public class GiangVienRepository : IGiangVienRepository
+    public class GiangVienService : IGiangVienService
     {
         private readonly ApplicationDBContext _context;
-        private readonly IKhoaRepository _khoaRepository;
-        private readonly ITaiKhoanRepository _taiKhoanRepository;
-        public GiangVienRepository(ApplicationDBContext context, IKhoaRepository khoaRepository,ITaiKhoanRepository taiKhoanRepository)
+        private readonly IKhoaService _khoaRepository;
+        private readonly ITaiKhoanService _taiKhoanRepository;
+        public GiangVienService(ApplicationDBContext context, IKhoaService khoaRepository,ITaiKhoanService taiKhoanRepository)
         {
             _context = context;
             _khoaRepository = khoaRepository;

@@ -13,8 +13,8 @@ namespace Student_Result_Management_System.Controllers
     [Authorize]
     public class ChucVuController : ControllerBase
     {
-        private readonly IChucVuRepository _chucVuRepository;
-        public ChucVuController(IChucVuRepository chucVuRepository)
+        private readonly IChucVuService _chucVuRepository;
+        public ChucVuController(IChucVuService chucVuRepository)
         {
             _chucVuRepository = chucVuRepository;
         }

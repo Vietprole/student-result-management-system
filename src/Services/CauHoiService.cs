@@ -8,12 +8,12 @@ using Student_Result_Management_System.DTOs.CauHoi;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class CauHoiRepository : ICauHoiRepository
+    public class CauHoiService : ICauHoiService
     {
         private readonly ApplicationDBContext _context;
-        public CauHoiRepository(ApplicationDBContext context)
+        public CauHoiService(ApplicationDBContext context)
         {
             _context = context;
         }

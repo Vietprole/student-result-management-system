@@ -11,12 +11,12 @@ using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class LopHocPhanRepository : ILopHocPhanRepository
+    public class LopHocPhanService : ILopHocPhanService
     {
         private readonly ApplicationDBContext _context;
-        public LopHocPhanRepository(ApplicationDBContext context)
+        public LopHocPhanService(ApplicationDBContext context)
         {
             _context = context;
         }
@@ -152,9 +152,9 @@ namespace Student_Result_Management_System.Repository
             return lopHocPhanDTOs;
         }
 
-        public async Task<List<LopHocPhanDTO>> GetAllLopHocPhanByKiHocId(int kiHocId)
+        public async Task<List<LopHocPhanDTO>> GetAllLopHocPhanByHocKyId(int hocKyId)
         {
-            var lopHocPhan = await _context.LopHocPhans.Where(s => s.HocKyId == kiHocId).ToListAsync();
+            var lopHocPhan = await _context.LopHocPhans.Where(s => s.HocKyId == hocKyId).ToListAsync();
             var lopHocPhanDTOs = lopHocPhan.Select(s => s.ToLopHocPhanDTO()).ToList();
             return lopHocPhanDTOs; 
         }
@@ -200,7 +200,7 @@ namespace Student_Result_Management_System.Repository
             }
             lopHocPhan.Ten = lopHocPhanDTO.Ten;
             lopHocPhan.HocPhanId = lopHocPhanDTO.HocPhanId;
-            lopHocPhan.HocKyId = lopHocPhanDTO.KiHocId;
+            lopHocPhan.HocKyId = lopHocPhanDTO.HocKyId;
             await _context.SaveChangesAsync();
             return lopHocPhan.ToLopHocPhanDTO();
         }

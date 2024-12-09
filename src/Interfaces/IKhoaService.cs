@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Interfaces
 {
-    public interface IKhoaRepository
+    public interface IKhoaService
     {
         public Task<bool> CheckTruongKhoa(string id); //Kiểm tra id đó có xuất hiện chưa (1 tài khoản - 1 trưởng khoa)
         public Task<List<Khoa>> GetListKhoa();

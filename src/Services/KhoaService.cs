@@ -7,12 +7,12 @@ using Student_Result_Management_System.Data;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class KhoaRepository : IKhoaRepository
+    public class KhoaService : IKhoaService
     {
         private readonly ApplicationDBContext _context;
-        public KhoaRepository(ApplicationDBContext context)
+        public KhoaService(ApplicationDBContext context)
         {
             _context = context;
         }

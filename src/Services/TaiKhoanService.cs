@@ -10,15 +10,15 @@ using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class TaiKhoanRepository : ITaiKhoanRepository
+    public class TaiKhoanService : ITaiKhoanService
     {
         private readonly UserManager<TaiKhoan> _userManager;
-        private readonly IChucVuRepository _chucVuRepository;
+        private readonly IChucVuService _chucVuRepository;
         private readonly SignInManager<TaiKhoan> _signInManager;
-        private readonly IKhoaRepository _khoaRepository;
-        public TaiKhoanRepository(UserManager<TaiKhoan> userManager, IChucVuRepository chucVuRepository, SignInManager<TaiKhoan> signInManager,IKhoaRepository khoaRepository)
+        private readonly IKhoaService _khoaRepository;
+        public TaiKhoanService(UserManager<TaiKhoan> userManager, IChucVuService chucVuRepository, SignInManager<TaiKhoan> signInManager,IKhoaService khoaRepository)
         {
             _userManager = userManager;
             _chucVuRepository = chucVuRepository;

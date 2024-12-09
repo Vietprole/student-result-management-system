@@ -15,8 +15,8 @@ namespace Student_Result_Management_System.Controllers
     public class KhoaController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IKhoaRepository _khoaRepository;
-        public KhoaController(ApplicationDBContext context,IKhoaRepository khoaRepository)
+        private readonly IKhoaService _khoaRepository;
+        public KhoaController(ApplicationDBContext context,IKhoaService khoaRepository)
         {
             _context = context;
             _khoaRepository = khoaRepository;

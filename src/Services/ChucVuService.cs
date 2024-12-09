@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class ChucVuRepository : IChucVuRepository
+    public class ChucVuService : IChucVuService
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        public ChucVuRepository(RoleManager<IdentityRole> roleManager)
+        public ChucVuService(RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
         }

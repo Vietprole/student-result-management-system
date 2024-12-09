@@ -5,42 +5,42 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Student_Result_Management_System.DTOs.KiHoc;
+using Student_Result_Management_System.DTOs.HocKy;
 using Student_Result_Management_System.Interfaces;
 
 namespace Student_Result_Management_System.Controllers
 {
-    [Route("api/kihoc")]
+    [Route("api/hocky")]
     [ApiController]
     [Authorize(Roles = "Admin")]
-    public class KiHocController:ControllerBase
+    public class HocKyController:ControllerBase
     {
-        private readonly IKiHocRepository _kiHocRepository;
-        public KiHocController(IKiHocRepository kiHocRepository)
+        private readonly IHocKyRepository _hocKyRepository;
+        public HocKyController(IHocKyRepository hocKyRepository)
         {
-            _kiHocRepository = kiHocRepository;
+            _hocKyRepository = hocKyRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var kiHocDTOs = await _kiHocRepository.GetAllKiHocDTO();
-            return Ok(kiHocDTOs);
+            var hocKyDTOs = await _hocKyRepository.GetAllHocKyDTO();
+            return Ok(hocKyDTOs);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var kiHocDTO = await _kiHocRepository.GetKiHocDTO(id);
-            if (kiHocDTO == null)
+            var hocKyDTO = await _hocKyRepository.GetHocKyDTO(id);
+            if (hocKyDTO == null)
             {
                 return NotFound();
             }
-            return Ok(kiHocDTO);
+            return Ok(hocKyDTO);
         }
         [HttpGet("{id}/duocsuadiem")]
         public async Task<IActionResult> CheckDuocSuaDiem([FromRoute] int id)
         {
-            bool duocSuaDiem = await _kiHocRepository.DuocSuaDiem(id);
+            bool duocSuaDiem = await _hocKyRepository.DuocSuaDiem(id);
             if(duocSuaDiem == false)
             {
                 return StatusCode(403, "Không được sửa điểm");
@@ -48,28 +48,28 @@ namespace Student_Result_Management_System.Controllers
             return Ok();
         }
         [HttpPost]
-        public async Task<IActionResult> AddKiHoc([FromBody] NewKiHocDTO newKiHocDTO)
+        public async Task<IActionResult> AddHocKy([FromBody] CreateHocKyDTO newHocKyDTO)
         {
-            var kiHocDTO = await _kiHocRepository.AddKiHocDTO(newKiHocDTO);
-            return Ok(kiHocDTO);
+            var hocKyDTO = await _hocKyRepository.AddHocKyDTO(newHocKyDTO);
+            return Ok(hocKyDTO);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateKiHoc([FromRoute] int id, [FromBody] NewKiHocDTO newKiHocDTO)
+        public async Task<IActionResult> UpdateHocKy([FromRoute] int id, [FromBody] CreateHocKyDTO newHocKyDTO)
         {
-            var kiHocDTO = await _kiHocRepository.UpdateKiHocDTO(id, newKiHocDTO);
-            if (kiHocDTO == null)
+            var hocKyDTO = await _hocKyRepository.UpdateHocKyDTO(id, newHocKyDTO);
+            if (hocKyDTO == null)
             {
                 return NotFound();
             }
-            return Ok(kiHocDTO);
+            return Ok(hocKyDTO);
         }
         [HttpPut("{id}/hansuadiem")]
         public async Task<IActionResult> UpdateHanSuaDiem([FromRoute] int id, [FromBody] DateOnly hanSuaDiem)
         {
             var hanSuaDiemAsDateTime = hanSuaDiem.ToDateTime(TimeOnly.MinValue);
 
-            var kiHocDTO = await _kiHocRepository.UpdateHanSuaDiem(id, hanSuaDiemAsDateTime);
-            if (!kiHocDTO)
+            var hocKyDTO = await _hocKyRepository.UpdateHanSuaDiem(id, hanSuaDiemAsDateTime);
+            if (!hocKyDTO)
             {
                 return NotFound();
             }
@@ -81,8 +81,8 @@ namespace Student_Result_Management_System.Controllers
         {
             var hanSuaCongThucDiemAsDateTime = hanSuaCongThucDiem.ToDateTime(TimeOnly.MinValue);
 
-            var kiHocDTO = await _kiHocRepository.UpdateHanSuaCongThucDiem(id, hanSuaCongThucDiemAsDateTime);
-            if (!kiHocDTO)
+            var hocKyDTO = await _hocKyRepository.UpdateHanSuaCongThucDiem(id, hanSuaCongThucDiemAsDateTime);
+            if (!hocKyDTO)
             {
                 return NotFound();
             }
@@ -91,10 +91,10 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteKiHoc([FromRoute] int id)
+        public async Task<IActionResult> DeleteHocKy([FromRoute] int id)
         {
-            var kiHocDTO = await _kiHocRepository.DeleteKiHocDTO(id);
-            if (kiHocDTO == false)
+            var hocKyDTO = await _hocKyRepository.DeleteHocKyDTO(id);
+            if (hocKyDTO == false)
             {
                 return NotFound();
             }

@@ -10,5 +10,5 @@ public class UpdateLopHocPhanDTO
     [Required]
     public int HocPhanId { get; set; }
     [Required]
-    public int KiHocId { get; set; }
+    public int HocKyId { get; set; }
 }

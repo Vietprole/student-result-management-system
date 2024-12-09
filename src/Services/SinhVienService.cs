@@ -10,14 +10,14 @@ using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class SinhVienRepository : ISinhVienRepository
+    public class SinhVienService : ISinhVienService
     {
         private readonly ApplicationDBContext _context;
-        private readonly IKhoaRepository _khoaRepository;
-        private readonly ITaiKhoanRepository _taiKhoanRepository;
-        public SinhVienRepository(ApplicationDBContext context, IKhoaRepository khoaRepository,ITaiKhoanRepository taiKhoanRepository)
+        private readonly IKhoaService _khoaRepository;
+        private readonly ITaiKhoanService _taiKhoanRepository;
+        public SinhVienService(ApplicationDBContext context, IKhoaService khoaRepository,ITaiKhoanService taiKhoanRepository)
         {
             _context = context;
             _khoaRepository = khoaRepository;

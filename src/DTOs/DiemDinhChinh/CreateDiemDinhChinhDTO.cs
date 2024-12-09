@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Student_Result_Management_System.DTOs.GiangVien;
+namespace Student_Result_Management_System.DTOs.DiemDinhChinh;
 
-public class CreateGiangVienDTO
+public class CreateDiemDinhChinhDTO
 {
     [Required]
     public string Ten { get; set; } = string.Empty;

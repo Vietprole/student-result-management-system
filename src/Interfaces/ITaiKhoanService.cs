@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Student_Result_Management_System.DTOs.ChucVu;
 using Student_Result_Management_System.DTOs.TaiKhoan;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Interfaces
 {
-    public interface ITaiKhoanRepository
+    public interface ITaiKhoanService
     {
         public Task<TaiKhoan?> GetById(string id);
         public Task<List<string>> GetRoles(TaiKhoan taikhoan);

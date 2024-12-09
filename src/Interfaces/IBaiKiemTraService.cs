@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Student_Result_Management_System.DTOs.BaiKiemTra;
 
 namespace Student_Result_Management_System.Interfaces
 {
-    public interface IBaiKiemTraRepository
+    public interface IBaiKiemTraService
     {
         public Task<List<BaiKiemTraDTO>> GetAllBaiKiemTra();
         public Task<List<BaiKiemTraDTO>> GetAllBaiKiemTraByLopHocPhanId(int lopHocPhanId);

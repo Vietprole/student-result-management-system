@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Student_Result_Management_System.DTOs.GiangVien;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Interfaces
 {
-    public interface IGiangVienRepository
+    public interface IGiangVienService
     {
         public Task<List<GiangVien>> GetAll(int[] id);
         public Task<List<GiangVien>> GetAllByKhoaId(int khoaId);

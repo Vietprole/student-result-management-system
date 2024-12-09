@@ -13,7 +13,7 @@ public static class LopHocPhanMapper
             Id = lopHocPhanModel.Id,
             Ten = lopHocPhanModel.Ten,
             HocPhanId = lopHocPhanModel.HocPhanId,
-            KiHocId = lopHocPhanModel.HocKyId
+            HocKyId = lopHocPhanModel.HocKyId
         };
     }
 
@@ -23,7 +23,7 @@ public static class LopHocPhanMapper
         {
             Ten = createLopHocPhanDTO.Ten,
             HocPhanId = createLopHocPhanDTO.HocPhanId,
-            HocKyId = createLopHocPhanDTO.KiHocId
+            HocKyId = createLopHocPhanDTO.HocKyId
         };
     }
 
@@ -33,7 +33,7 @@ public static class LopHocPhanMapper
         {
             Ten = updateLopHocPhanDTO.Ten,
             HocPhanId = updateLopHocPhanDTO.HocPhanId,
-            HocKyId = updateLopHocPhanDTO.KiHocId
+            HocKyId = updateLopHocPhanDTO.HocKyId
         };
     }
 }

@@ -4,35 +4,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
-using Student_Result_Management_System.DTOs.KiHoc;
+using Student_Result_Management_System.DTOs.HocKy;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 
-namespace Student_Result_Management_System.Repository
+namespace Student_Result_Management_System.Services
 {
-    public class KiHocRepository : IKiHocRepository
+    public class HocKieservice : IHocKyRepository
     {
         private readonly ApplicationDBContext _context;
-        public KiHocRepository(ApplicationDBContext context)
+        public HocKieservice(ApplicationDBContext context)
         {
             _context = context;
         }
-        public async Task<ViewKiHocDTO> AddKiHocDTO(NewKiHocDTO newKiHocDTO)
+        public async Task<HocKyDTO> AddHocKyDTO(CreateHocKyDTO newHocKyDTO)
         {
-            var kiHoc = newKiHocDTO.toKiHocFromNewDTO();
-            await _context.KiHocs.AddAsync(kiHoc);
+            var hocKy = newHocKyDTO.toHocKyFromNewDTO();
+            await _context.HocKies.AddAsync(hocKy);
             await _context.SaveChangesAsync();
-            return kiHoc.toDTOFromKiHoc();
+            return hocKy.toDTOFromHocKy();
 
         }
-        public bool CheckTenKiHoc(string tenKiHoc)
+        public bool CheckTenHocKy(string tenHocKy)
         {
-            if (string.IsNullOrEmpty(tenKiHoc))
+            if (string.IsNullOrEmpty(tenHocKy))
             {
                 return false;   
             }
             // Kiểm tra chuỗi có bằng đúng một trong các cụm từ yêu cầu
-            return tenKiHoc == "Kì 1" || tenKiHoc == "Kì 2" || tenKiHoc == "Kì hè";
+            return tenHocKy == "Kì 1" || tenHocKy == "Kì 2" || tenHocKy == "Kì hè";
         }
 
         public bool CheckNamHoc(string namHoc)
@@ -55,62 +55,62 @@ namespace Student_Result_Management_System.Repository
         }
 
 
-        public async Task<bool> DeleteKiHocDTO(int id)
+        public async Task<bool> DeleteHocKyDTO(int id)
         {
-            var kiHoc = await _context.KiHocs.FindAsync(id);
-            if (kiHoc == null)
+            var hocKy = await _context.HocKies.FindAsync(id);
+            if (hocKy == null)
             {
                 return false;
             }
-            _context.KiHocs.Remove(kiHoc);
+            _context.HocKies.Remove(hocKy);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<List<ViewKiHocDTO>> GetAllKiHocDTO()
+        public async Task<List<HocKyDTO>> GetAllHocKyDTO()
         {
-            var kiHocs = await _context.KiHocs.ToListAsync();
-            return kiHocs.Select(kiHoc => new ViewKiHocDTO
+            var hocKies = await _context.HocKies.ToListAsync();
+            return hocKies.Select(hocKy => new HocKyDTO
             {
-                Id = kiHoc.Id,
-                Ten = kiHoc.Ten,
-                NamHoc = kiHoc.NamHoc
+                Id = hocKy.Id,
+                Ten = hocKy.Ten,
+                NamHoc = hocKy.NamHoc
             }).ToList();
         }
 
-        public async Task<ViewKiHocDTO?> GetKiHocDTO(int id)
+        public async Task<HocKyDTO?> GetHocKyDTO(int id)
         {
-            var kiHoc = await _context.KiHocs.FindAsync(id);
-            if (kiHoc == null)
+            var hocKy = await _context.HocKies.FindAsync(id);
+            if (hocKy == null)
             {
                 return null;
             }
-            return kiHoc.toDTOFromKiHoc();
+            return hocKy.toDTOFromHocKy();
         }
 
 
-        public async Task<ViewKiHocDTO?> UpdateKiHocDTO(int id, NewKiHocDTO newKiHocDTO)
+        public async Task<HocKyDTO?> UpdateHocKyDTO(int id, CreateHocKyDTO newHocKyDTO)
         {
-            var kiHoc = await _context.KiHocs.FindAsync(id);
-            if (kiHoc == null)
+            var hocKy = await _context.HocKies.FindAsync(id);
+            if (hocKy == null)
             {
                 return null;
             }
-            kiHoc.Ten = newKiHocDTO.Ten;
-            kiHoc.NamHoc = newKiHocDTO.NamHoc;
+            hocKy.Ten = newHocKyDTO.Ten;
+            hocKy.NamHoc = newHocKyDTO.NamHoc;
             await _context.SaveChangesAsync();
-            return kiHoc.toDTOFromKiHoc();
+            return hocKy.toDTOFromHocKy();
         }
 
         public async Task<bool> DuocSuaDiem(int id)
         {
             DateTime now = DateTime.Now;
-            var kiHoc = await _context.KiHocs.FindAsync(id);
-            if (kiHoc == null)
+            var hocKy = await _context.HocKies.FindAsync(id);
+            if (hocKy == null)
             {
                 return false;
             }
-            if(kiHoc.HanSuaDiem.HasValue && DateOnly.FromDateTime(kiHoc.HanSuaDiem.Value) < DateOnly.FromDateTime(now))
+            if(hocKy.HanSuaDiem.HasValue && DateOnly.FromDateTime(hocKy.HanSuaDiem.Value) < DateOnly.FromDateTime(now))
             {
                 return false;
             }
@@ -119,24 +119,24 @@ namespace Student_Result_Management_System.Repository
 
         public async Task<bool> UpdateHanSuaDiem(int id, DateTime hanSuaDiem)
         {
-            var kiHoc = await _context.KiHocs.FindAsync(id);
-            if (kiHoc == null)
+            var hocKy = await _context.HocKies.FindAsync(id);
+            if (hocKy == null)
             {
                 return false;
             }
-            kiHoc.HanSuaDiem = hanSuaDiem;
+            hocKy.HanSuaDiem = hanSuaDiem;
             await _context.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> UpdateHanSuaCongThucDiem(int id, DateTime hanSuaCongThucDiem)
         {
-            var kiHoc = await _context.KiHocs.FindAsync(id);
-            if (kiHoc == null)
+            var hocKy = await _context.HocKies.FindAsync(id);
+            if (hocKy == null)
             {
                 return false;
             }
-            kiHoc.HanSuaCongThucDiem = hanSuaCongThucDiem;
+            hocKy.HanSuaCongThucDiem = hanSuaCongThucDiem;
             await _context.SaveChangesAsync();
             return true;
         }

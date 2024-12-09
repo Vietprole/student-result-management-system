@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Student_Result_Management_System.DTOs.CauHoi;
 
 namespace Student_Result_Management_System.Interfaces
 {
-    public interface ICauHoiRepository
+    public interface ICauHoiService
     {
         public Task<List<CauHoiDTO>> GetAllCauHoiByBaiKiemTraId(int baiKiemTraId);
         public Task<List<CauHoiDTO>> GetAllCauHoi();
