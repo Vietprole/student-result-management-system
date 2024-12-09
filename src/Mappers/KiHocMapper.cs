@@ -10,9 +10,9 @@ namespace Student_Result_Management_System.Mappers
 {
     public static class KiHocMapper
     {
-        public static KiHoc toKiHocFromDTO(this ViewKiHocDTO viewKiHocDTO)
+        public static HocKy toKiHocFromDTO(this ViewKiHocDTO viewKiHocDTO)
         {
-            return new KiHoc
+            return new HocKy
             {
                 Id = viewKiHocDTO.Id,
                 Ten = viewKiHocDTO.Ten,
@@ -21,7 +21,7 @@ namespace Student_Result_Management_System.Mappers
                 HanSuaCongThucDiem = viewKiHocDTO.HanSuaCongThucDiem
             };
         }
-        public static ViewKiHocDTO toDTOFromKiHoc(this KiHoc kiHoc)
+        public static ViewKiHocDTO toDTOFromKiHoc(this HocKy kiHoc)
         {
             return new ViewKiHocDTO
             {
@@ -33,9 +33,9 @@ namespace Student_Result_Management_System.Mappers
 
             };
         }
-        public static KiHoc toKiHocFromNewDTO(this NewKiHocDTO newKiHocDTO)
+        public static HocKy toKiHocFromNewDTO(this NewKiHocDTO newKiHocDTO)
         {
-            return new KiHoc
+            return new HocKy
             {
                 Ten = newKiHocDTO.Ten,
                 NamHoc = newKiHocDTO.NamHoc

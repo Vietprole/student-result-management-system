@@ -154,7 +154,7 @@ namespace Student_Result_Management_System.Repository
 
         public async Task<List<LopHocPhanDTO>> GetAllLopHocPhanByKiHocId(int kiHocId)
         {
-            var lopHocPhan = await _context.LopHocPhans.Where(s => s.KiHocId == kiHocId).ToListAsync();
+            var lopHocPhan = await _context.LopHocPhans.Where(s => s.HocKyId == kiHocId).ToListAsync();
             var lopHocPhanDTOs = lopHocPhan.Select(s => s.ToLopHocPhanDTO()).ToList();
             return lopHocPhanDTOs; 
         }
@@ -200,7 +200,7 @@ namespace Student_Result_Management_System.Repository
             }
             lopHocPhan.Ten = lopHocPhanDTO.Ten;
             lopHocPhan.HocPhanId = lopHocPhanDTO.HocPhanId;
-            lopHocPhan.KiHocId = lopHocPhanDTO.KiHocId;
+            lopHocPhan.HocKyId = lopHocPhanDTO.KiHocId;
             await _context.SaveChangesAsync();
             return lopHocPhan.ToLopHocPhanDTO();
         }

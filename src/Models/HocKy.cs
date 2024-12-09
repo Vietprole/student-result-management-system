@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 
 namespace Student_Result_Management_System.Models
 {
-    public class KiHoc
+    public class HocKy
     {
         public int Id { get; set; }
         public string Ten { get; set; } = string.Empty;
-        public string NamHoc { get; set; } = string.Empty;
-        public DateTime? HanSuaDiem { get; set; }
-        public DateTime? HanSuaCongThucDiem { get; set; }
+        public int NamHoc { get; set; }
+        public string MaHocKy { get; set; } = string.Empty;
         public List<LopHocPhan> lopHocPhans=new List<LopHocPhan>();
     }
 }

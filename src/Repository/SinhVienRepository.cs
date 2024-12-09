@@ -38,7 +38,7 @@ namespace Student_Result_Management_System.Repository
             {
                 KhoaId = khoa.Id,
                 Khoa = khoa,
-                NamBatDau = sinhVienDTO.NamBatDau
+                KhoaNhapHoc = sinhVienDTO.NamBatDau
             };
             return sinhVien;
 
@@ -120,9 +120,9 @@ namespace Student_Result_Management_System.Repository
             {
                 return null;
             }
-            exitsSV.TaiKhoan.HovaTen=updateSinhVienDTO.Ten;
+            exitsSV.TaiKhoan.Ten=updateSinhVienDTO.Ten;
             exitsSV.KhoaId=updateSinhVienDTO.KhoaId;
-            exitsSV.NamBatDau=updateSinhVienDTO.NamBatDau;
+            exitsSV.KhoaNhapHoc=updateSinhVienDTO.NamBatDau;
             await _context.SaveChangesAsync();
 
             exitsSV = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv=>sv.Khoa).FirstOrDefaultAsync(x=>x.Id==id);

@@ -12,7 +12,7 @@ using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Service
 {
-    public class TokenService : ITokenSerivce
+    public class TokenService : ITokenService
     {
         private readonly UserManager<TaiKhoan> _userManager;
         private readonly IConfiguration _config;
@@ -37,7 +37,7 @@ namespace Student_Result_Management_System.Service
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName ?? throw new ArgumentNullException(nameof(user.UserName))) ,// GivenName is the username
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.NameId,user.Id),
-                new Claim("fullname",user.HovaTen),
+                new Claim("fullname",user.Ten),
 
             };
             var roles = await _userManager.GetRolesAsync(user);

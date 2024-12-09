@@ -128,7 +128,7 @@ namespace Student_Result_Management_System.Repository
             {
                 return null;
             }
-            exitsGV.TaiKhoan.HovaTen=updateGiangVienDTO.Ten;
+            exitsGV.TaiKhoan.Ten=updateGiangVienDTO.Ten;
             exitsGV.KhoaId=updateGiangVienDTO.KhoaId;
             await _context.SaveChangesAsync();
 

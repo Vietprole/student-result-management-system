@@ -59,7 +59,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
-builder.Services.AddScoped<ITokenSerivce, TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IChucVuRepository,ChucVuRepository>();
 builder.Services.AddScoped<IKhoaRepository,KhoaRepository>();
 builder.Services.AddScoped<ISinhVienRepository,SinhVienRepository>();
@@ -103,6 +103,22 @@ builder.Services.AddAuthentication(options => {
 );
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDBContext>();
+        context.Database.Migrate();
+        Console.WriteLine("Database migrated successfully");
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        throw; // Re-throw to halt startup if migration fails
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

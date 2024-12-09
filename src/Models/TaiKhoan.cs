@@ -8,6 +8,6 @@ namespace Student_Result_Management_System.Models
 {
     public class TaiKhoan : IdentityUser
     {
-        public string HovaTen { get; set; } = string.Empty;
+        public string Ten { get; set; } = string.Empty;
     }
 }

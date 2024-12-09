@@ -6,8 +6,12 @@ namespace Student_Result_Management_System.Models;
 public class KetQua
 {
     public int Id { get; set; }
-    [Column(TypeName = "decimal(4, 2)")]
-    public decimal Diem { get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal DiemTam{ get; set; }
+    [Column(TypeName = "decimal(5, 2)")]
+    public decimal DiemChinhThuc { get; set; }
+    public bool DaCongBo { get; set; }
+    public bool DaXacNhan { get; set; }
     public int SinhVienId { get; set; }
     public SinhVien SinhVien { get; set; } = null!;
     public int CauHoiId { get; set; }

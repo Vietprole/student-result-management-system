@@ -19,10 +19,10 @@ namespace Student_Result_Management_System.Controllers
     public class TaiKhoanController : ControllerBase
     {
         private readonly ITaiKhoanRepository _taiKhoanRepository;
-        private readonly ITokenSerivce _tokenService;
+        private readonly ITokenService _tokenService;
         private readonly IChucVuRepository _chucVuRepository;
 
-        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository, ITokenSerivce tokenService, IChucVuRepository chucVuRepository)
+        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository, ITokenService tokenService, IChucVuRepository chucVuRepository)
         {
             _taiKhoanRepository = taiKhoanRepository;
             _tokenService = tokenService;

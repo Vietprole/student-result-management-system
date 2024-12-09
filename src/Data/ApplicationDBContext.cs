@@ -11,30 +11,22 @@ namespace Student_Result_Management_System.Data
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
-            try
-            {
-                // Apply any pending migrations
-                Database.Migrate();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
         }
         
-        public DbSet<BaiKiemTra> BaiKiemTras { get; set; }
-        public DbSet<CauHoi> CauHois { get; set; }
-        public DbSet<CLO> CLOs { get; set; }
-        public DbSet<CTDT> CTDTs {get; set;}
-        public DbSet<GiangVien> GiangViens { get; set; }
-        public DbSet<HocPhan> HocPhans { get; set; }
-        public DbSet<KetQua> KetQuas { get; set; }
-        public DbSet<Khoa> Khoas { get; set; }
-        public DbSet<LopHocPhan> LopHocPhans { get; set; }
-        public DbSet<Nganh> Nganhs { get; set; }
-        public DbSet<PLO> PLOs { get; set; }
-        public DbSet<SinhVien> SinhViens { get; set; }
-        public DbSet<KiHoc> KiHocs { get; set; }
+        public DbSet<BaiKiemTra> BaiKiemTras { get; set; } = default!;
+        public DbSet<CauHoi> CauHois { get; set; } = default!;
+        public DbSet<CLO> CLOs { get; set; } = default!;
+        public DbSet<DiemDinhChinh> DiemDinhChinhs { get; set; } = default!;
+        public DbSet<GiangVien> GiangViens { get; set; } = default!;
+        public DbSet<HocKy> HocKies { get; set; } = default!;
+        public DbSet<HocPhan> HocPhans { get; set; } = default!;
+        public DbSet<KetQua> KetQuas { get; set; } = default!;
+        public DbSet<Khoa> Khoas { get; set; } = default!;
+        public DbSet<LopHocPhan> LopHocPhans { get; set; } = default!;
+        public DbSet<Nganh> Nganhs { get; set; } = default!;
+        public DbSet<PLO> PLOs { get; set; } = default!;
+        public DbSet<SinhVien> SinhViens { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,7 +34,6 @@ namespace Student_Result_Management_System.Data
             // modelBuilder.Entity<IdentityUserRole<string>>().HasNoKey();
             // modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
             base.OnModelCreating(modelBuilder);
-
 
             modelBuilder.Entity<SinhVien>()
                 .HasOne(e => e.TaiKhoan)
@@ -54,7 +45,8 @@ namespace Student_Result_Management_System.Data
                 .HasOne(e => e.TaiKhoan)
                 .WithOne()          
                 .HasForeignKey<GiangVien>(s => s.TaiKhoanId) // FK
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<CLO>()
                 .HasMany(e => e.CauHois)
                 .WithMany(e => e.CLOs)
@@ -67,9 +59,11 @@ namespace Student_Result_Management_System.Data
                 .WithOne(e => e.Khoa)
                 .HasForeignKey(e => e.KhoaId)
                 .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related GiangViens
+
             modelBuilder.Entity<Khoa>()
                 .Property(k => k.Id)
                 .ValueGeneratedOnAdd();  // Cấu hình cho Id sử dụng identity.
+
             modelBuilder.Entity<Khoa>()
                 .HasMany(e => e.Nganhs)
                 .WithOne(e => e.Khoa)
@@ -82,17 +76,13 @@ namespace Student_Result_Management_System.Data
                 .HasForeignKey(e => e.KhoaId)
                 .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related HocPhans
 
-            modelBuilder.Entity<Nganh>()
-                .HasMany(e => e.CTDTs)
-                .WithOne(e => e.Nganh)
-                .HasForeignKey(e => e.NganhId)
-                .OnDelete(DeleteBehavior.SetNull); // Set NganhId to null in related CTDTs
 
             modelBuilder.Entity<Khoa>()
                 .HasOne(e => e.TruongKhoa)
                 .WithOne()
                 .HasForeignKey<Khoa>(e => e.TruongKhoaId)
                 .OnDelete(DeleteBehavior.SetNull); // Set TruongKhoaId to null in related Khoa
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole {Name = "Admin", NormalizedName = "ADMIN"},
@@ -106,25 +96,24 @@ namespace Student_Result_Management_System.Data
 
             List<Khoa> khoas = new List<Khoa>
             {
-                new Khoa { Id = 1, Ten = "Cơ khí", MaKhoa = "101", VietTat = "CK" },
-                new Khoa { Id = 2, Ten = "Công nghệ thông tin", MaKhoa = "102", VietTat = "CNTT" },
-                new Khoa { Id = 3, Ten = "Cơ khí giao thông", MaKhoa = "103", VietTat = "CKGT" },
-                new Khoa { Id = 4, Ten = "Công nghệ nhiệt điện lạnh", MaKhoa = "104", VietTat = "CNNDL" },
-                new Khoa { Id = 5, Ten = "Điện", MaKhoa = "105", VietTat = "D" },
-                new Khoa { Id = 6, Ten = "Điện tử viễn thông", MaKhoa = "106", VietTat = "DTVT" },
-                new Khoa { Id = 7, Ten = "Hóa", MaKhoa = "107", VietTat = "H" },
-                new Khoa { Id = 8, Ten = "Xây dựng cầu đường", MaKhoa = "108", VietTat = "XDCD" },
-                new Khoa { Id = 9, Ten = "Xây dựng dân dụng và công nghiệp", MaKhoa = "109", VietTat = "XDDDCN" },
-                new Khoa { Id = 10, Ten = "Xây dựng công trình thủy", MaKhoa = "110", VietTat = "XDCTT" },
-                new Khoa { Id = 11, Ten = "Môi trường", MaKhoa = "111", VietTat = "MT" },
-                new Khoa { Id = 12, Ten = "Quản lý dự án", MaKhoa = "112", VietTat = "QLDA" },
-                new Khoa { Id = 13, Ten = "Kiến trúc", MaKhoa = "113", VietTat = "KT" },
-                new Khoa { Id = 14, Ten = "Khoa học công nghệ tiên tiến", MaKhoa = "114", VietTat = "KHCTTT" }
+                new Khoa { Id = 1, Ten = "Cơ khí", MaKhoa = "101" },
+                new Khoa { Id = 2, Ten = "Công nghệ thông tin", MaKhoa = "102" },
+                new Khoa { Id = 3, Ten = "Cơ khí giao thông", MaKhoa = "103" },
+                new Khoa { Id = 4, Ten = "Công nghệ nhiệt điện lạnh", MaKhoa = "104"},
+                new Khoa { Id = 5, Ten = "Điện", MaKhoa = "105" },
+                new Khoa { Id = 6, Ten = "Điện tử viễn thông", MaKhoa = "106" },
+                new Khoa { Id = 7, Ten = "Hóa", MaKhoa = "107"},
+                new Khoa { Id = 8, Ten = "Xây dựng cầu đường", MaKhoa = "108" },
+                new Khoa { Id = 9, Ten = "Xây dựng dân dụng và công nghiệp", MaKhoa = "109" },
+                new Khoa { Id = 10, Ten = "Xây dựng công trình thủy", MaKhoa = "110" },
+                new Khoa { Id = 11, Ten = "Môi trường", MaKhoa = "111" },
+                new Khoa { Id = 12, Ten = "Quản lý dự án", MaKhoa = "112" },
+                new Khoa { Id = 13, Ten = "Kiến trúc", MaKhoa = "113" },
+                new Khoa { Id = 14, Ten = "Khoa học công nghệ tiên tiến", MaKhoa = "114" }
             };
 
             modelBuilder.Entity<Khoa>().HasData(khoas);
             
-
         }
     }
 }
