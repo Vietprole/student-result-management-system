@@ -24,6 +24,10 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -58,27 +62,15 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IChucVuService, ChucVuService>();
 builder.Services.AddScoped<IKhoaService, KhoaService>();
 builder.Services.AddScoped<ISinhVienService, SinhVienService>();
 builder.Services.AddScoped<IGiangVienService, GiangVienService>();
 builder.Services.AddScoped<IHocKyRepository, HocKieservice>();
 builder.Services.AddScoped<IBaiKiemTraService, BaiKiemTraService>();
 builder.Services.AddScoped<ICauHoiService, CauHoiService>();
-builder.Services.AddDbContext<ApplicationDBContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
 
-builder.Services.AddIdentity<TaiKhoan, IdentityRole>(options => {
-        options.Password.RequireDigit = true; // Mật khẩu phải chứa ít nhất 1 số
-        options.Password.RequireLowercase = true; // Mật khẩu phải chứa ít nhất 1 chữ thường
-        options.Password.RequireNonAlphanumeric = true; // Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt
-        options.Password.RequireUppercase = true; // Mật khẩu phải chứa ít nhất 1 chữ hoa
-        options.Password.RequiredLength = 12;
-}).AddEntityFrameworkStores<ApplicationDBContext>();
+
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = 

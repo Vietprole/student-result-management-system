@@ -13,8 +13,8 @@ public static class PLOMapper
             Id = pLOModel.Id,
             Ten = pLOModel.Ten,
             MoTa = pLOModel.MoTa,
-            CTDTId = pLOModel.CTDTId,
-            TenCTDT = pLOModel.CTDT?.Ten ?? string.Empty,
+            //CTDTId = pLOModel.CTDTId,
+            //TenCTDT = pLOModel.CTDT?.Ten ?? string.Empty,
         };
     }
 
@@ -24,7 +24,7 @@ public static class PLOMapper
         {
             Ten = createPLODTO.Ten,
             MoTa = createPLODTO.MoTa,
-            CTDTId = createPLODTO.CTDTId,
+            //CTDTId = createPLODTO.CTDTId,
         };
     }
 }

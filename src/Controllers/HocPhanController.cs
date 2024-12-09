@@ -68,7 +68,7 @@ namespace Student_Result_Management_System.Controllers
             hocPhanToUpdate.Ten = updateHocPhanDTO.Ten;
             hocPhanToUpdate.SoTinChi = updateHocPhanDTO.SoTinChi;
             hocPhanToUpdate.LaCotLoi = updateHocPhanDTO.LaCotLoi;
-            hocPhanToUpdate.KhoaId = updateHocPhanDTO.KhoaId;
+            //hocPhanToUpdate.KhoaId = updateHocPhanDTO.KhoaId;
             
             await _context.SaveChangesAsync();
             var studentDTO = hocPhanToUpdate.ToHocPhanDTO();
@@ -86,46 +86,46 @@ namespace Student_Result_Management_System.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}/view-plos")]
-        public async Task<IActionResult> GetPLOs([FromRoute] int id)
-        {
-            var hocPhan = await _context.HocPhans
-                .Include(l => l.CTDTs)
-                .Include(lhp => lhp.PLOs)
-                .FirstOrDefaultAsync(lhp => lhp.Id == id);
-            if (hocPhan == null)
-                return NotFound();
+        //[HttpGet("{id}/view-plos")]
+        //public async Task<IActionResult> GetPLOs([FromRoute] int id)
+        //{
+        //    var hocPhan = await _context.HocPhans
+        //        .Include(l => l.CTDTs)
+        //        .Include(lhp => lhp.PLOs)
+        //        .FirstOrDefaultAsync(lhp => lhp.Id == id);
+        //    if (hocPhan == null)
+        //        return NotFound();
 
-            var pLODTOs = hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList();
-            return Ok(pLODTOs);
-        }
+        //    var pLODTOs = hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList();
+        //    return Ok(pLODTOs);
+        //}
 
 
-        [HttpPost("{id}/add-plos")]
-        public async Task<IActionResult> AddPLOs([FromRoute] int id, [FromBody] int[] pLOIds)
-        {
-            var hocPhan = await _context.HocPhans
-                .Include(lhp => lhp.PLOs) // Include PLOs to ensure the collection is loaded
-                .FirstOrDefaultAsync(lhp => lhp.Id == id);
-            if (hocPhan == null)
-                return NotFound("HocPhan not found");
+        //[HttpPost("{id}/add-plos")]
+        //public async Task<IActionResult> AddPLOs([FromRoute] int id, [FromBody] int[] pLOIds)
+        //{
+        //    var hocPhan = await _context.HocPhans
+        //        .Include(lhp => lhp.PLOs) // Include PLOs to ensure the collection is loaded
+        //        .FirstOrDefaultAsync(lhp => lhp.Id == id);
+        //    if (hocPhan == null)
+        //        return NotFound("HocPhan not found");
 
-            foreach (var pLOId in pLOIds)
-            {
-                var pLO = await _context.PLOs.FindAsync(pLOId);
-                if (pLO == null)
-                    return NotFound($"PLO with ID {pLOId} not found");
+        //    foreach (var pLOId in pLOIds)
+        //    {
+        //        var pLO = await _context.PLOs.FindAsync(pLOId);
+        //        if (pLO == null)
+        //            return NotFound($"PLO with ID {pLOId} not found");
 
-                // Check if the PLO is already in the HocPhan to avoid duplicates
-                if (!hocPhan.PLOs.Contains(pLO))
-                {
-                    hocPhan.PLOs.Add(pLO);
-                }
-            }
+        //        // Check if the PLO is already in the HocPhan to avoid duplicates
+        //        if (!hocPhan.PLOs.Contains(pLO))
+        //        {
+        //            hocPhan.PLOs.Add(pLO);
+        //        }
+        //    }
 
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetPLOs), new { id = hocPhan.Id }, hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList());
-        }
+        //    await _context.SaveChangesAsync();
+        //    return CreatedAtAction(nameof(GetPLOs), new { id = hocPhan.Id }, hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList());
+        //}
 
         [HttpPut("{id}/update-plos")]
         public async Task<IActionResult> UpdatePLOs([FromRoute] int id, [FromBody] int[] pLOIds)
@@ -165,28 +165,28 @@ namespace Student_Result_Management_System.Controllers
             return Ok(hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList());
         }
 
-        [HttpDelete("{id}/remove-plo/{pLOId}")]
-        public async Task<IActionResult> RemovePLO([FromRoute] int id, [FromRoute] int pLOId)
-        {
-            var hocPhan = await _context.HocPhans
-                .Include(lhp => lhp.PLOs) // Include PLOs to ensure the collection is loaded
-                .FirstOrDefaultAsync(lhp => lhp.Id == id);
-            if (hocPhan == null)
-                return NotFound("HocPhan not found");
+        //[HttpDelete("{id}/remove-plo/{pLOId}")]
+        //public async Task<IActionResult> RemovePLO([FromRoute] int id, [FromRoute] int pLOId)
+        //{
+        //    var hocPhan = await _context.HocPhans
+        //        .Include(lhp => lhp.PLOs) // Include PLOs to ensure the collection is loaded
+        //        .FirstOrDefaultAsync(lhp => lhp.Id == id);
+        //    if (hocPhan == null)
+        //        return NotFound("HocPhan not found");
 
-            var pLO = await _context.PLOs.FindAsync(pLOId);
-            if (pLO == null)
-                return NotFound($"PLO with ID {pLOId} not found");
+        //    var pLO = await _context.PLOs.FindAsync(pLOId);
+        //    if (pLO == null)
+        //        return NotFound($"PLO with ID {pLOId} not found");
 
-            // Check if the HocPhan is in the CTDT to avoid removing non-existing HocPhan
-            if (!hocPhan.PLOs.Contains(pLO))
-            {
-                return NotFound($"PLO with ID {pLOId} is not found in HocPhan with ID {id}");
-            }
-            hocPhan.PLOs.Remove(pLO);
+        //    // Check if the HocPhan is in the CTDT to avoid removing non-existing HocPhan
+        //    if (!hocPhan.PLOs.Contains(pLO))
+        //    {
+        //        return NotFound($"PLO with ID {pLOId} is not found in HocPhan with ID {id}");
+        //    }
+        //    hocPhan.PLOs.Remove(pLO);
 
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetPLOs), new { id = hocPhan.Id }, hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList());
-        }
+        //    await _context.SaveChangesAsync();
+        //    return CreatedAtAction(nameof(GetPLOs), new { id = hocPhan.Id }, hocPhan.PLOs.Select(sv => sv.ToPLODTO()).ToList());
+        //}
     }
 }

@@ -43,37 +43,37 @@ namespace Student_Result_Management_System.Controllers
             return Ok(studentDTO);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
-        {
-            var khoa=await _khoaRepository.CreateKhoa(createKhoaDTO.ToKhoaFromCreateDTO());
-            if (khoa == null)
-            {
-                return BadRequest("Không thể tạo khoa mới.");
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
+        //{
+        //    var khoa=await _khoaRepository.CreateKhoa(createKhoaDTO.ToKhoaFromCreateDTO());
+        //    if (khoa == null)
+        //    {
+        //        return BadRequest("Không thể tạo khoa mới.");
+        //    }
 
-            return CreatedAtAction(
-                nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về Khoa
-                new { id = khoa.Id }, // Truyền id của khoa vừa tạo
-                khoa.ToKhoaDTO() // Trả về DTO của khoa vừa tạo
-            );
-        }
+        //    return CreatedAtAction(
+        //        nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về Khoa
+        //        new { id = khoa.Id }, // Truyền id của khoa vừa tạo
+        //        khoa.ToKhoaDTO() // Trả về DTO của khoa vừa tạo
+        //    );
+        //}
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKhoaDTO updateKhoaDTO)
-        {
-            var khoaToUpdate = await _context.Khoas.FindAsync(id);
-            if (khoaToUpdate == null)
-                return NotFound();
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKhoaDTO updateKhoaDTO)
+        //{
+        //    var khoaToUpdate = await _context.Khoas.FindAsync(id);
+        //    if (khoaToUpdate == null)
+        //        return NotFound();
 
-            khoaToUpdate.Ten = updateKhoaDTO.Ten;
-            khoaToUpdate.MaKhoa = updateKhoaDTO.MaKhoa;
-            khoaToUpdate.VietTat = updateKhoaDTO.VietTat;
+        //    khoaToUpdate.Ten = updateKhoaDTO.Ten;
+        //    khoaToUpdate.MaKhoa = updateKhoaDTO.MaKhoa;
+        //    khoaToUpdate.VietTat = updateKhoaDTO.VietTat;
             
-            await _context.SaveChangesAsync();
-            var studentDTO = khoaToUpdate.ToKhoaDTO();
-            return Ok(studentDTO);
-        }
+        //    await _context.SaveChangesAsync();
+        //    var studentDTO = khoaToUpdate.ToKhoaDTO();
+        //    return Ok(studentDTO);
+        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)

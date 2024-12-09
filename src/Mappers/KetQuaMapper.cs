@@ -11,7 +11,7 @@ public static class KetQuaMapper
         return new KetQuaDTO
         {
             Id = ketQua.Id,
-            Diem = ketQua.Diem,
+            //Diem = ketQua.Diem,
             SinhVienId = ketQua.SinhVienId,
             CauHoiId = ketQua.CauHoiId
         };
@@ -21,7 +21,7 @@ public static class KetQuaMapper
     {
         return new KetQua
         {
-            Diem = createKetQuaDTO.Diem,
+            //Diem = createKetQuaDTO.Diem,
             SinhVienId = createKetQuaDTO.SinhVienId,
             CauHoiId = createKetQuaDTO.CauHoiId
         };
@@ -31,7 +31,7 @@ public static class KetQuaMapper
     {
         return new KetQua
         {
-            Diem = updateKetQuaDTO.Diem,
+            //Diem = updateKetQuaDTO.Diem,
             SinhVienId = updateKetQuaDTO.SinhVienId,
             CauHoiId = updateKetQuaDTO.CauHoiId
         };

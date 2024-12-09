@@ -37,16 +37,16 @@ namespace Student_Result_Management_System.Controllers
             }
             return Ok(hocKyDTO);
         }
-        [HttpGet("{id}/duocsuadiem")]
-        public async Task<IActionResult> CheckDuocSuaDiem([FromRoute] int id)
-        {
-            bool duocSuaDiem = await _hocKyRepository.DuocSuaDiem(id);
-            if(duocSuaDiem == false)
-            {
-                return StatusCode(403, "Không được sửa điểm");
-            }
-            return Ok();
-        }
+        //[HttpGet("{id}/duocsuadiem")]
+        //public async Task<IActionResult> CheckDuocSuaDiem([FromRoute] int id)
+        //{
+        //    bool duocSuaDiem = await _hocKyRepository.DuocSuaDiem(id);
+        //    if(duocSuaDiem == false)
+        //    {
+        //        return StatusCode(403, "Không được sửa điểm");
+        //    }
+        //    return Ok();
+        //}
         [HttpPost]
         public async Task<IActionResult> AddHocKy([FromBody] CreateHocKyDTO newHocKyDTO)
         {

@@ -16,9 +16,8 @@ namespace Student_Result_Management_System.Mappers
             {
                 Id = viewHocKyDTO.Id,
                 Ten = viewHocKyDTO.Ten,
-                NamHoc = viewHocKyDTO.NamHoc,
-                HanSuaDiem = viewHocKyDTO.HanSuaDiem,
-                HanSuaCongThucDiem = viewHocKyDTO.HanSuaCongThucDiem
+                NamHoc = viewHocKyDTO.NamHoc
+                //HanSuaCongThucDiem = viewHocKyDTO.HanSuaCongThucDiem
             };
         }
         public static HocKyDTO toDTOFromHocKy(this HocKy hocKy)
@@ -27,9 +26,7 @@ namespace Student_Result_Management_System.Mappers
             {
                 Id = hocKy.Id,
                 Ten = hocKy.Ten,
-                NamHoc = hocKy.NamHoc,
-                HanSuaDiem = hocKy.HanSuaDiem,
-                HanSuaCongThucDiem = hocKy.HanSuaCongThucDiem
+                NamHoc = hocKy.NamHoc
 
             };
         }

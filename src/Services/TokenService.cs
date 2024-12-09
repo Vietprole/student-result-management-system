@@ -14,13 +14,11 @@ namespace Student_Result_Management_System.Service
 {
     public class TokenService : ITokenService
     {
-        private readonly UserManager<TaiKhoan> _userManager;
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration config,UserManager<TaiKhoan> userManager)
+        public TokenService(IConfiguration config)
         {
             _config = config;
-            _userManager = userManager;
             var signingKey = _config["JWT:SigningKey"];
             if (string.IsNullOrEmpty(signingKey))
             {
@@ -34,14 +32,11 @@ namespace Student_Result_Management_System.Service
             
              var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName ?? throw new ArgumentNullException(nameof(user.UserName))) ,// GivenName is the username
+          
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.NameId,user.Id),
                 new Claim("fullname",user.Ten),
 
             };
-            var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role,role)));
             var creds = new SigningCredentials(_key,SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor

@@ -13,15 +13,15 @@ namespace Student_Result_Management_System.Interfaces
         public Task<LopHocPhanDTO?> GetLopHocPhan(int id);
         public Task<LopHocPhanDTO> AddLopHocPhan(CreateLopHocPhanDTO lopHocPhanDTO);
         public Task<LopHocPhanDTO?> UpdateLopHocPhan(int id,UpdateLopHocPhanDTO lopHocPhanDTO);
-        public Task<LopHocPhanDTO?> DeleteLopHocPhan(int id);
-        public Task<List<SinhVienDTO>?> GetSinhVienDTOs(int lopHocPhanId);
-        public Task<List<GiangVienDTO>?> GetGiangVienDTOs(int lopHocPhanId);
-        public Task<List<SinhVienDTO>?> AddSinhViens(int lopHocPhanId, List<SinhVien> sinhViens);
-        public Task<List<GiangVienDTO>?> AddGiangViens(int lopHocPhanId, List<GiangVien> giangViens);
+        //public Task<LopHocPhanDTO?> DeleteLopHocPhan(int id);
+        //public Task<List<SinhVienDTO>?> GetSinhVienDTOs(int lopHocPhanId);
+        //public Task<List<GiangVienDTO>?> GetGiangVienDTOs(int lopHocPhanId);
+        //public Task<List<SinhVienDTO>?> AddSinhViens(int lopHocPhanId, List<SinhVien> sinhViens);
+        //public Task<List<GiangVienDTO>?> AddGiangViens(int lopHocPhanId, List<GiangVien> giangViens);
         public Task<SinhVienDTO?> DeleteSinhViens(int lopHocPhanId, SinhVien sinhViens);
-        public Task<GiangVienDTO?> DeleteGiangViens(int lopHocPhanId, GiangVien giangViens);
-        public Task<DateTime?> CapNhatNgayXacNhanCTD(int lopHocPhanId, string tenNguoiXacNhanCTD);
-        public Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD);
+        //public Task<GiangVienDTO?> DeleteGiangViens(int lopHocPhanId, GiangVien giangViens);
+        //public Task<DateTime?> CapNhatNgayXacNhanCTD(int lopHocPhanId, string tenNguoiXacNhanCTD);
+        //public Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD);
         
     }
 }

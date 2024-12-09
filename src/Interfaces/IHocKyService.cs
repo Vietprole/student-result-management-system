@@ -14,7 +14,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<HocKyDTO>> GetAllHocKyDTO();
         public Task<HocKyDTO> AddHocKyDTO(CreateHocKyDTO newHocKyDTO);
         public Task<HocKyDTO?> UpdateHocKyDTO(int id, CreateHocKyDTO newHocKyDTO);
-        public Task<bool> DuocSuaDiem(int id);
         public Task<bool> UpdateHanSuaDiem(int id, DateTime hanSuaDiem);
         public Task<bool> UpdateHanSuaCongThucDiem(int id, DateTime hanSuaCongThucDiem);
         public Task<bool> DeleteHocKyDTO(int id);

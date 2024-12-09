@@ -20,25 +20,25 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        public async Task<List<GiangVienDTO>?> AddGiangViens(int lopHocPhanId, List<GiangVien> giangViens)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Include(c=>c.GiangViens).ThenInclude(x=>x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            foreach (var giangVien in giangViens)
-            {
-                // Kiểm tra nếu giảng viên chưa tồn tại trong danh sách
-                if (!lopHocPhan.GiangViens.Any(g => g.Id == giangVien.Id))
-                {
-                    lopHocPhan.GiangViens.Add(giangVien);
-                }
-            }
-            await _context.SaveChangesAsync();
-            var giangVienDTOs = giangViens.Select(s => s.ToGiangVienDTO()).ToList();
-            return giangVienDTOs;
-        }
+        //public async Task<List<GiangVienDTO>?> AddGiangViens(int lopHocPhanId, List<GiangVien> giangViens)
+        //{
+        //    var lopHocPhan = await _context.LopHocPhans.Include(c=>c.GiangViens).ThenInclude(x=>x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
+        //    if (lopHocPhan == null)
+        //    {
+        //        return null;
+        //    }
+        //    foreach (var giangVien in giangViens)
+        //    {
+        //        // Kiểm tra nếu giảng viên chưa tồn tại trong danh sách
+        //        if (!lopHocPhan.GiangViens.Any(g => g.Id == giangVien.Id))
+        //        {
+        //            lopHocPhan.GiangViens.Add(giangVien);
+        //        }
+        //    }
+        //    await _context.SaveChangesAsync();
+        //    var giangVienDTOs = giangViens.Select(s => s.ToGiangVienDTO()).ToList();
+        //    return giangVienDTOs;
+        //}
 
         public async Task<LopHocPhanDTO> AddLopHocPhan(CreateLopHocPhanDTO lopHocPhanDTO)
         {
@@ -67,48 +67,48 @@ namespace Student_Result_Management_System.Services
             return sinhVienDTOs;
         }
 
-        public async Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD)
-        {
-            var lopHocPhan =await _context.LopHocPhans.FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            lopHocPhan.TenNguoiChapNhanCTD = tenNguoiChapNhanCTD;
-            lopHocPhan.NgayChapNhanCTD = DateTime.Now.Date;
-            await _context.SaveChangesAsync();
-            return lopHocPhan.NgayChapNhanCTD;
+        //public async Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD)
+        //{
+        //    var lopHocPhan =await _context.LopHocPhans.FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
+        //    if (lopHocPhan == null)
+        //    {
+        //        return null;
+        //    }
+        //    lopHocPhan.TenNguoiChapNhanCTD = tenNguoiChapNhanCTD;
+        //    lopHocPhan.NgayChapNhanCTD = DateTime.Now.Date;
+        //    await _context.SaveChangesAsync();
+        //    return lopHocPhan.NgayChapNhanCTD;
 
-        }
+        //}
 
-        public async Task<DateTime?> CapNhatNgayXacNhanCTD(int lopHocPhanId, string tenNguoiXacNhanCTD)
-        {
-            var lopHocPhan = await _context.LopHocPhans.FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            lopHocPhan.TenNguoiXacNhanCTD = tenNguoiXacNhanCTD;
-            lopHocPhan.NgayXacNhanCTD = DateTime.Now.Date;
-            await _context.SaveChangesAsync();
-            return lopHocPhan.NgayXacNhanCTD;
-        }
+        //public async Task<DateTime?> CapNhatNgayXacNhanCTD(int lopHocPhanId, string tenNguoiXacNhanCTD)
+        //{
+        //    var lopHocPhan = await _context.LopHocPhans.FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
+        //    if (lopHocPhan == null)
+        //    {
+        //        return null;
+        //    }
+        //    lopHocPhan.TenNguoiXacNhanCTD = tenNguoiXacNhanCTD;
+        //    lopHocPhan.NgayXacNhanCTD = DateTime.Now.Date;
+        //    await _context.SaveChangesAsync();
+        //    return lopHocPhan.NgayXacNhanCTD;
+        //}
 
-        public async Task<GiangVienDTO?> DeleteGiangViens(int lopHocPhanId, GiangVien giangViens)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Include(c => c.GiangViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            if (!lopHocPhan.GiangViens.Any(s => s.Id == giangViens.Id)) //Kiểm tra xem giảng viên có trong danh sách không
-            {
-                return null;
-            }
-            lopHocPhan.GiangViens.Remove(giangViens);
-            await _context.SaveChangesAsync();
-            return giangViens.ToGiangVienDTO();
-        }
+        //public async Task<GiangVienDTO?> DeleteGiangViens(int lopHocPhanId, GiangVien giangViens)
+        //{
+        //    var lopHocPhan = await _context.LopHocPhans.Include(c => c.GiangViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
+        //    if (lopHocPhan == null)
+        //    {
+        //        return null;
+        //    }
+        //    if (!lopHocPhan.GiangViens.Any(s => s.Id == giangViens.Id)) //Kiểm tra xem giảng viên có trong danh sách không
+        //    {
+        //        return null;
+        //    }
+        //    lopHocPhan.GiangViens.Remove(giangViens);
+        //    await _context.SaveChangesAsync();
+        //    return giangViens.ToGiangVienDTO();
+        //}
 
         public async Task<LopHocPhanDTO?> DeleteLopHocPhan(int id)
         {
@@ -159,16 +159,16 @@ namespace Student_Result_Management_System.Services
             return lopHocPhanDTOs; 
         }
 
-        public async Task<List<GiangVienDTO>?> GetGiangVienDTOs(int lopHocPhanId)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Include(c => c.GiangViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            var giangVienDTOs = lopHocPhan.GiangViens.Select(s => s.ToGiangVienDTO()).ToList();
-            return giangVienDTOs;
-        }
+        //public async Task<List<GiangVienDTO>?> GetGiangVienDTOs(int lopHocPhanId)
+        //{
+        //    var lopHocPhan = await _context.LopHocPhans.Include(c => c.GiangViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
+        //    if (lopHocPhan == null)
+        //    {
+        //        return null;
+        //    }
+        //    var giangVienDTOs = lopHocPhan.GiangViens.Select(s => s.ToGiangVienDTO()).ToList();
+        //    return giangVienDTOs;
+        //}
 
         public async Task<LopHocPhanDTO?> GetLopHocPhan(int id)
         {

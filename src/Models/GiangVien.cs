@@ -9,6 +9,6 @@ public class GiangVien
     public int? KhoaId { get; set; }
     public Khoa? Khoa { get; set; }
     public List<LopHocPhan> LopHocPhans { get; set; } = [];
-    public string TaiKhoanId { get; set; } = string.Empty;
-    public TaiKhoan TaiKhoan { get; set; } = new TaiKhoan();
+    public int? TaiKhoanId { get; set; }
+    public TaiKhoan? TaiKhoan { get; set; } = new TaiKhoan();
 }

@@ -17,36 +17,37 @@ namespace Student_Result_Management_System.Services
             _context = context;
         }
 
-        public async Task<int> CheckKhoa(string tenKhoa)
-        {
-            var khoa= await _context.Khoas.FirstOrDefaultAsync(x => x.Ten.ToLower() == tenKhoa.ToLower() || x.VietTat.ToLower() == tenKhoa.ToLower());
-            if (khoa == null)
-            {
-                return 0;
-            }
-            return khoa.Id;
-        }
+        //public async Task<int> CheckKhoa(string tenKhoa)
+        //{
+        //    //var khoa= await _context.Khoas.FirstOrDefaultAsync(x => x.Ten.ToLower() == tenKhoa.ToLower() || x.VietTat.ToLower() == tenKhoa.ToLower());
+        //    //if (khoa == null)
+        //    //{
+        //    //    return 0;
+        //    //}
+        //    //return khoa.Id;
+        //    return 1;
+        //}
 
-        public async Task<bool> CheckTruongKhoa(string id)
-        {
-            var khoa = await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
-            if (khoa == null)
-            {
-                return false;
-            }
-            return true;
-        }
+        //public async Task<bool> CheckTruongKhoa(string id)
+        //{
+        //    var khoa = await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
+        //    if (khoa == null)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
-        public async Task<Khoa?> CreateKhoa(Khoa khoa)
-        {
-            await _context.Khoas.AddAsync(khoa);
-            await _context.SaveChangesAsync();
-            return khoa;
-        }
-        public async Task<Khoa?> GetKhoaByTruongKhoaId(string id)
-        {
-            return await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
-        }
+        //public async Task<Khoa?> CreateKhoa(Khoa khoa)
+        //{
+        //    await _context.Khoas.AddAsync(khoa);
+        //    await _context.SaveChangesAsync();
+        //    return khoa;
+        //}
+        //public async Task<Khoa?> GetKhoaByTruongKhoaId(string id)
+        //{
+        //    return await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
+        //}
 
         public async Task<Khoa?> GetKhoaId(int id)
         {

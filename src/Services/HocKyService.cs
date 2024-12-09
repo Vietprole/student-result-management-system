@@ -102,20 +102,7 @@ namespace Student_Result_Management_System.Services
             return hocKy.toDTOFromHocKy();
         }
 
-        public async Task<bool> DuocSuaDiem(int id)
-        {
-            DateTime now = DateTime.Now;
-            var hocKy = await _context.HocKies.FindAsync(id);
-            if (hocKy == null)
-            {
-                return false;
-            }
-            if(hocKy.HanSuaDiem.HasValue && DateOnly.FromDateTime(hocKy.HanSuaDiem.Value) < DateOnly.FromDateTime(now))
-            {
-                return false;
-            }
-            return true;
-        }
+      
 
         public async Task<bool> UpdateHanSuaDiem(int id, DateTime hanSuaDiem)
         {
@@ -124,7 +111,6 @@ namespace Student_Result_Management_System.Services
             {
                 return false;
             }
-            hocKy.HanSuaDiem = hanSuaDiem;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -136,7 +122,6 @@ namespace Student_Result_Management_System.Services
             {
                 return false;
             }
-            hocKy.HanSuaCongThucDiem = hanSuaCongThucDiem;
             await _context.SaveChangesAsync();
             return true;
         }

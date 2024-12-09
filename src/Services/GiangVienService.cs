@@ -17,12 +17,10 @@ namespace Student_Result_Management_System.Services
     {
         private readonly ApplicationDBContext _context;
         private readonly IKhoaService _khoaRepository;
-        private readonly ITaiKhoanService _taiKhoanRepository;
-        public GiangVienService(ApplicationDBContext context, IKhoaService khoaRepository,ITaiKhoanService taiKhoanRepository)
+        public GiangVienService(ApplicationDBContext context, IKhoaService khoaRepository)
         {
             _context = context;
             _khoaRepository = khoaRepository;
-            _taiKhoanRepository = taiKhoanRepository;
         }
         public async Task<GiangVien?> CheckGiangVien(CreateGiangVienDTO giangVienDTO)
         {
@@ -38,48 +36,48 @@ namespace Student_Result_Management_System.Services
             };
         }
 
-        public async Task<GiangVien?> CreateGiangVien(GiangVien giangVien,TaiKhoan taiKhoan)
-        {
-            giangVien.TaiKhoanId=taiKhoan.Id;
-            giangVien.TaiKhoan=taiKhoan;
-            await _context.GiangViens.AddAsync(giangVien);
-            await _context.SaveChangesAsync();
+        //public async Task<GiangVien?> CreateGiangVien(GiangVien giangVien,TaiKhoan taiKhoan)
+        //{
+        //    giangVien.TaiKhoanId=taiKhoan.Id;
+        //    giangVien.TaiKhoan=taiKhoan;
+        //    await _context.GiangViens.AddAsync(giangVien);
+        //    await _context.SaveChangesAsync();
 
-            giangVien = await _context.GiangViens.Include(gv => gv.Khoa).FirstOrDefaultAsync(x => x.Id == giangVien.Id) ?? giangVien;
-            return giangVien;
-        }
+        //    giangVien = await _context.GiangViens.Include(gv => gv.Khoa).FirstOrDefaultAsync(x => x.Id == giangVien.Id) ?? giangVien;
+        //    return giangVien;
+        //}
 
-        public async Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO)
-        {
-            string? MaKhoa = await  _khoaRepository.GetMaKhoa(createGiangVienDTO.KhoaId);
-            if (MaKhoa == null)
-            {
-                return null;
-            }
-            int soluong = await GetCountGiangVien(createGiangVienDTO.KhoaId)+1;
-            string Magiangvien = MaKhoa+(soluong + 1).ToString("D7");
-            CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
-            {
-                Username = "gv"+Magiangvien,
-                Password = "Gv@"+Magiangvien,
-                TenChucVu = "GiangVien",
-                HovaTen = createGiangVienDTO.Ten
-            };
-            TaiKhoan? taiKhoanId = await _taiKhoanRepository.CreateTaiKhoanGiangVien(createTaiKhoanDTO);
-            return taiKhoanId;
-        }
+        //public async Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO)
+        //{
+        //    string? MaKhoa = await  _khoaRepository.GetMaKhoa(createGiangVienDTO.KhoaId);
+        //    if (MaKhoa == null)
+        //    {
+        //        return null;
+        //    }
+        //    int soluong = await GetCountGiangVien(createGiangVienDTO.KhoaId)+1;
+        //    string Magiangvien = MaKhoa+(soluong + 1).ToString("D7");
+        //    CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
+        //    {
+        //        Username = "gv"+Magiangvien,
+        //        Password = "Gv@"+Magiangvien,
+        //        TenChucVu = "GiangVien",
+        //        HovaTen = createGiangVienDTO.Ten
+        //    };
+        //    TaiKhoan? taiKhoanId = await _taiKhoanRepository.CreateTaiKhoanGiangVien(createTaiKhoanDTO);
+        //    return taiKhoanId;
+        //}
 
-        public async Task<GiangVien?> DeleteGV(int id)
-        {
-            var exits = await _context.GiangViens.Include(c=>c.TaiKhoan).FirstOrDefaultAsync(x=>x.Id==id);
-            if(exits==null)
-            {
-                return null;
-            }
-            var taikhoan= await _taiKhoanRepository.DeleteUser(exits.TaiKhoan);
-            _context.GiangViens.Remove(exits);
-            return exits;
-        }
+        //public async Task<GiangVien?> DeleteGV(int id)
+        //{
+        //    var exits = await _context.GiangViens.Include(c=>c.TaiKhoan).FirstOrDefaultAsync(x=>x.Id==id);
+        //    if(exits==null)
+        //    {
+        //        return null;
+        //    }
+        //    var taikhoan= await _taiKhoanRepository.DeleteUser(exits.TaiKhoan);
+        //    _context.GiangViens.Remove(exits);
+        //    return exits;
+        //}
 
         public async Task<List<GiangVien>> GetAll(int[] id)
         {
@@ -111,15 +109,15 @@ namespace Student_Result_Management_System.Services
             return count;
         }
 
-        public async Task<string> GetKhoaId(string taikhoanId)
-        {
-            var gv= await _context.GiangViens.FirstOrDefaultAsync(x=>x.TaiKhoanId==taikhoanId);
-            if(gv==null)
-            {
-                return "";
-            }
-            return gv.KhoaId.ToString()??"";
-        }
+        // public async Task<string> GetKhoaId(string taikhoanId)
+        // {
+        //     var gv= await _context.GiangViens.FirstOrDefaultAsync(x=>x.TaiKhoanId==taikhoanId);
+        //     if(gv==null)
+        //     {
+        //         return "";
+        //     }
+        //     return gv.KhoaId.ToString()??"";
+        // }
 
         public async Task<GiangVien?> UpdateGV(int id, UpdateGiangVienDTO updateGiangVienDTO)
         {

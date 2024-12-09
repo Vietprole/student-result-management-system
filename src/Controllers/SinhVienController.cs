@@ -18,12 +18,10 @@ namespace Student_Result_Management_System.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly ISinhVienService    _sinhVienRepository;
-        private readonly ITaiKhoanService _taiKhoanRepository;
-        public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienRepository, ITaiKhoanService taiKhoanRepository)
+        public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienRepository)
         {
             _context = context;
             _sinhVienRepository = sinhVienRepository;
-            _taiKhoanRepository = taiKhoanRepository;
         }
         [HttpGet]
         // IActionResult return any value type
@@ -51,31 +49,31 @@ namespace Student_Result_Management_System.Controllers
             return Ok(studentDTO);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
-        {
-            SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
-            if (newSV == null)
-            {
-                return StatusCode(500, "Create sinh vien failed");
-            }
-            TaiKhoan? taiKhoan = await _sinhVienRepository.CreateTaiKhoanSinhVien(createSinhVienDTO);
-            if(taiKhoan==null)
-            {
-                return StatusCode(500, "Create sinh vien failed");
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
+        //{
+        //    SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
+        //    if (newSV == null)
+        //    {
+        //        return StatusCode(500, "Create sinh vien failed");
+        //    }
+        //    TaiKhoan? taiKhoan = await _sinhVienRepository.CreateTaiKhoanSinhVien(createSinhVienDTO);
+        //    if(taiKhoan==null)
+        //    {
+        //        return StatusCode(500, "Create sinh vien failed");
+        //    }
 
-            SinhVien? newSinhVien = await _sinhVienRepository.CreateSinhVien(newSV,taiKhoan);
-            if (newSinhVien == null)
-            {
-                return StatusCode(500, "Create sinh vien failed");
-            }
-            return CreatedAtAction(
-                nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
-                new { id = newSinhVien.Id}, // Truyền id của SinhVien vừa tạo
-                newSinhVien.ToSinhVienDTO() // Trả về DTO của SinhVien vừa tạo
-            );
-        }
+        //    SinhVien? newSinhVien = await _sinhVienRepository.CreateSinhVien(newSV,taiKhoan);
+        //    if (newSinhVien == null)
+        //    {
+        //        return StatusCode(500, "Create sinh vien failed");
+        //    }
+        //    return CreatedAtAction(
+        //        nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
+        //        new { id = newSinhVien.Id}, // Truyền id của SinhVien vừa tạo
+        //        newSinhVien.ToSinhVienDTO() // Trả về DTO của SinhVien vừa tạo
+        //    );
+        //}
         [HttpPut("{id}")] //sua
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSinhVienDTO updateSinhVienDTO)
         {
@@ -88,15 +86,15 @@ namespace Student_Result_Management_System.Controllers
             return Ok(studentDTO);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            var sinhvienDelete= await _sinhVienRepository.DeleteSV(id);
-            if(sinhvienDelete==null)
-            {
-                return NotFound();
-            }
-            return NoContent();
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete([FromRoute] int id)
+        //{
+        //    var sinhvienDelete= await _sinhVienRepository.DeleteSV(id);
+        //    if(sinhvienDelete==null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return NoContent();
+        //}
     }
 }
