@@ -32,6 +32,17 @@ namespace Student_Result_Management_System.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Get all entity types
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // Get all foreign keys for this entity
+                foreach (var foreignKey in entityType.GetForeignKeys())
+                {
+                    // Set DeleteBehavior.Restrict as default
+                    foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+                }
+            }
+
             modelBuilder.Entity<SinhVien>()
                 .HasOne(e => e.TaiKhoan)
                  .WithOne()         
@@ -44,35 +55,88 @@ namespace Student_Result_Management_System.Data
                 .HasForeignKey<GiangVien>(s => s.TaiKhoanId) // FK
                 .OnDelete(DeleteBehavior.SetNull);
 
+            // modelBuilder.Entity<GiangVien>()
+            //     .HasMany(e => e.LopHocPhans)
+            //     .WithOne(e => e.GiangVien)
+            //     .HasForeignKey(e => e.GiangVienId)
+            //     .OnDelete(DeleteBehavior.SetNull); //Set GiangVienId in LopHocPhan to null when GiangVien is deleted
+
+            // modelBuilder.Entity<Khoa>()
+            //     .HasMany(e => e.Nganhs)
+            //     .WithOne(e => e.Khoa)
+            //     .HasForeignKey(e => e.KhoaId)
+            //     .OnDelete(DeleteBehavior.Restrict); // Prevent Khoa from being deleted if there are Nganhs associated with it
+
+            // modelBuilder.Entity<HocPhan>()
+            //     .HasMany(e => e.Nganhs)
+            //     .WithMany(e => e.HocPhans)
+            //     .UsingEntity(
+            //         l => l.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When Nganh is deleted, delete join entries
+            //         r => r.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.ClientCascade)); // When HocPhan is deleted, delete join entries client-side
+
+            // modelBuilder.Entity<LopHocPhan>()
+            //     .HasMany(e => e.SinhViens)
+            //     .WithMany(e => e.LopHocPhans)
+            //     .UsingEntity(
+            //         l => l.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When SinhVien is deleted, delete join entries
+            //         r => r.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.ClientCascade)); // When LopHocPhan is deleted, delete join entries client-side
+
             modelBuilder.Entity<CLO>()
                 .HasMany(e => e.CauHois)
                 .WithMany(e => e.CLOs)
                 .UsingEntity(
-                    l => l.HasOne(typeof(CauHoi)).WithMany().OnDelete(DeleteBehavior.Cascade),
-                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.ClientCascade));
+                    l => l.HasOne(typeof(CauHoi)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When CauHoi is deleted, delete join entries
+                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When CLO is deleted, delete join entries client-side
 
-            modelBuilder.Entity<Khoa>()
-                .HasMany(e => e.GiangViens)
-                .WithOne(e => e.Khoa)
-                .HasForeignKey(e => e.KhoaId)
-                .OnDelete(DeleteBehavior.SetNull); // Set KhoaId to null in related GiangViens
+            modelBuilder.Entity<PLO>()
+                .HasMany(e => e.CLOs)
+                .WithMany(e => e.PLOs)
+                .UsingEntity(
+                    l => l.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When CLO is deleted, delete join entries
+                    r => r.HasOne(typeof(PLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When PLO is deleted, delete join entries client-side
+
+            modelBuilder.Entity<HocPhan>()
+                .HasMany(e => e.PLOs)
+                .WithMany(e => e.HocPhans)
+                .UsingEntity(
+                    l => l.HasOne(typeof(PLO)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When CLO is deleted, delete join entries
+                    r => r.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When HocPhan is deleted, delete join entries client-side
+
+            modelBuilder.Entity<SinhVien>()
+                .HasMany(e => e.LopHocPhans)
+                .WithMany(e => e.SinhViens)
+                .UsingEntity(
+                    l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
+                    r => r.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When SinhVien is deleted, delete join entries client-side
+
+            modelBuilder.Entity<Nganh>()
+                .HasMany(e => e.HocPhans)
+                .WithMany(e => e.Nganhs)
+                .UsingEntity(
+                    l => l.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When HocPhan is deleted, delete join entries
+                    r => r.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When Nganh is deleted, delete join entries client-side
+
+            // modelBuilder.Entity<Khoa>()
+            //     .HasMany(e => e.GiangViens)
+            //     .WithOne(e => e.Khoa)
+            //     .HasForeignKey(e => e.KhoaId)
+            //     .OnDelete(DeleteBehavior.SetNull); // Set KhoaId in GiangVien to null when Khoa is deleted
 
             modelBuilder.Entity<Khoa>()
                 .Property(k => k.Id)
                 .ValueGeneratedOnAdd();  // Cấu hình cho Id sử dụng identity.
 
-            modelBuilder.Entity<Khoa>()
-                .HasMany(e => e.Nganhs)
-                .WithOne(e => e.Khoa)
-                .HasForeignKey(e => e.KhoaId)
-                .OnDelete(DeleteBehavior.Cascade); // Set KhoaId to null in related Nganhs
+            // modelBuilder.Entity<Khoa>()
+            //     .HasMany(e => e.Nganhs)
+            //     .WithOne(e => e.Khoa)
+            //     .HasForeignKey(e => e.KhoaId)
+            //     .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Khoa>()
-                .HasMany(e => e.HocPhans)
-                .WithOne(e => e.Khoa)
-                .HasForeignKey(e => e.KhoaId)
-                .OnDelete(DeleteBehavior.Cascade); // Set KhoaId to null in related HocPhan
-            
+            // modelBuilder.Entity<Khoa>()
+            //     .HasMany(e => e.HocPhans)
+            //     .WithOne(e => e.Khoa)
+            //     .HasForeignKey(e => e.KhoaId)
+            //     .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
