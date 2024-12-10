@@ -1,6 +1,6 @@
 import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
-// import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getAllCTDTs, deleteCTDT } from "@/api/api-ctdt";
@@ -23,13 +23,23 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { CTDTForm } from "@/components/CTDTForm";
-import { useRef } from "react";
-import AddHocPhanToCTDTForm from "@/components/AddHocPhanToCTDTForm";
-import ManageHocPhanInCTDTForm from "@/components/ManageHocPhanInCTDTForm";
+import { getNganhs } from "@/api/api-nganh";
+import ComboBox from "@/components/ComboBox";
 
 export default function CTDTPage() {
   const addHocPhanFormRef = useRef(null);
   const manageHocPhanFormRef = useRef(null);
+  const [nganhItems, setNganhItems] = useState([]);
+  const [selectedNganhId, setSelectedNganhId] = useState(null);
+
+  useEffect(() => {
+    const fetchNganhs = async () => {
+      const dataNganh = await getNganhs();
+      const mappedNganhItems = dataNganh.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      setNganhItems(mappedNganhItems);
+    };
+    fetchNganhs();
+  }, []);
 
   const createCTDTColumns = (handleEdit, handleDelete) => [
     {
@@ -199,6 +209,7 @@ export default function CTDTPage() {
   return (
     <Layout>
       <div className="w-full">
+        <ComboBox items={nganhItems} setItemId={setSelectedNganhId} initialItemId={selectedNganhId} />
         <DataTable
           entity="Chương Trình"
           createColumns={createCTDTColumns}
