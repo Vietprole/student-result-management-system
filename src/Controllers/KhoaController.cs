@@ -15,11 +15,11 @@ namespace Student_Result_Management_System.Controllers
     public class KhoaController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IKhoaService _khoaRepository;
-        public KhoaController(ApplicationDBContext context,IKhoaService khoaRepository)
+        private readonly IKhoaService _khoaService;
+        public KhoaController(ApplicationDBContext context,IKhoaService khoaService)
         {
             _context = context;
-            _khoaRepository = khoaRepository;
+            _khoaService = khoaService;
         }
         [HttpGet]
         // IActionResult return any value type
@@ -27,7 +27,7 @@ namespace Student_Result_Management_System.Controllers
         // ActionResult return specific value type, the type will displayed in Schemas section
         public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
         {
-            var khoas = await _khoaRepository.GetListKhoa();
+            var khoas = await _khoaService.GetListKhoa();
             var khoaDTOs = khoas.Select(sv => sv.ToKhoaDTO()).ToList();
             return Ok(khoaDTOs);
         }
@@ -46,7 +46,7 @@ namespace Student_Result_Management_System.Controllers
         //[HttpPost]
         //public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         //{
-        //    var khoa=await _khoaRepository.CreateKhoa(createKhoaDTO.ToKhoaFromCreateDTO());
+        //    var khoa=await _khoaService.CreateKhoa(createKhoaDTO.ToKhoaFromCreateDTO());
         //    if (khoa == null)
         //    {
         //        return BadRequest("Không thể tạo khoa mới.");

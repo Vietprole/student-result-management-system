@@ -17,17 +17,40 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        public async Task<CauHoiDTO> CreateCauHoi(CreateCauHoiDTO createCauHoiDTO)
+
+        public async Task<List<CauHoiDTO>> GetAllCauHoisAsync()
         {
-            var cauHoi=createCauHoiDTO.ToCauHoiFromCreateDTO();
+            var cauHois = await _context.CauHois.ToListAsync();
+            return cauHois.Select(cauHoi => cauHoi.ToCauHoiDTO()).ToList();
+        }
+
+        public async Task<List<CauHoiDTO>> GetCauHoisByBaiKiemTraIdAsync(int baiKiemTraId)
+        {
+            var cauHois = await _context.CauHois.Where(cauHoi => cauHoi.BaiKiemTraId == baiKiemTraId).ToListAsync();
+            return cauHois.Select(cauHoi => cauHoi.ToCauHoiDTO()).ToList();
+        }
+
+        public async Task<CauHoiDTO?> GetCauHoiByIdAsync(int id)
+        {
+            var cauHoi = await _context.CauHois.FindAsync(id);
+            if (cauHoi == null)
+            {
+                return null;
+            }
+            return cauHoi.ToCauHoiDTO();
+        }
+        
+        public async Task<CauHoiDTO> CreateCauHoiAsync(CreateCauHoiDTO createCauHoiDTO)
+        {
+            var cauHoi = createCauHoiDTO.ToCauHoiFromCreateDTO();
             await _context.CauHois.AddAsync(cauHoi);
             await _context.SaveChangesAsync();
             return cauHoi.ToCauHoiDTO();
         }
 
-        public async Task<bool> DeleteCauHoi(int id)
+        public async Task<bool> DeleteCauHoiAsync(int id)
         {
-            var cauHoi =await _context.CauHois.FindAsync(id);
+            var cauHoi = await _context.CauHois.FindAsync(id);
             if (cauHoi == null)
             {
                 return false;
@@ -37,31 +60,9 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<List<CauHoiDTO>> GetAllCauHoi()
-        {
-            var cauHois = await _context.CauHois.ToListAsync();
-            return cauHois.Select(cauHoi => cauHoi.ToCauHoiDTO()).ToList();
-        }
-
-        public async Task<List<CauHoiDTO>> GetAllCauHoiByBaiKiemTraId(int baiKiemTraId)
-        {
-            var cauHois =await _context.CauHois.Where(cauHoi => cauHoi.BaiKiemTraId == baiKiemTraId).ToListAsync();
-            return cauHois.Select(cauHoi => cauHoi.ToCauHoiDTO()).ToList();
-        }
-
-        public async Task<CauHoiDTO?> GetCauHoi(int id)
+        public async Task<CauHoiDTO?> UpdateCauHoiAsync(int id, UpdateCauHoiDTO updateCauHoiDTO)
         {
             var cauHoi = await _context.CauHois.FindAsync(id);
-            if (cauHoi == null)
-            {
-                return null;
-            }
-            return cauHoi.ToCauHoiDTO();
-        }
-
-        public async Task<CauHoiDTO?> UpdateCauHoi(int id, UpdateCauHoiDTO updateCauHoiDTO)
-        {
-            var cauHoi =await _context.CauHois.FindAsync(id);
             if (cauHoi == null)
             {
                 return null;
@@ -69,9 +70,38 @@ namespace Student_Result_Management_System.Services
             cauHoi.TrongSo = updateCauHoiDTO.TrongSo;
             cauHoi.BaiKiemTraId = updateCauHoiDTO.BaiKiemTraId;
             cauHoi.Ten = updateCauHoiDTO.Ten;
-            cauHoi.ThangDiem=updateCauHoiDTO.ThangDiem;
+            cauHoi.ThangDiem = updateCauHoiDTO.ThangDiem;
             await _context.SaveChangesAsync();
             return cauHoi.ToCauHoiDTO();
+        }
+
+        public async Task<bool> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds)
+        {
+            var cauHoi = await _context.CauHois
+                .Include(ch => ch.CLOs)
+                .FirstOrDefaultAsync(ch => ch.Id == cauHoiId);
+
+            if (cauHoi == null)
+            {
+                return false;
+            }
+
+            foreach (var cLOId in cLOIds)
+            {
+                var cLO = await _context.CLOs.FindAsync(cLOId);
+                if (cLO == null)
+                {
+                    return false;
+                }
+
+                if (!cauHoi.CLOs.Contains(cLO))
+                {
+                    cauHoi.CLOs.Add(cLO);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

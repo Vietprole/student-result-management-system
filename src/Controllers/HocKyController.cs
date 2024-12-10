@@ -15,22 +15,22 @@ namespace Student_Result_Management_System.Controllers
     [Authorize(Roles = "Admin")]
     public class HocKyController:ControllerBase
     {
-        private readonly IHocKyRepository _hocKyRepository;
-        public HocKyController(IHocKyRepository hocKyRepository)
+        private readonly IHocKyService _hocKyService;
+        public HocKyController(IHocKyService hocKyService)
         {
-            _hocKyRepository = hocKyRepository;
+            _hocKyService = hocKyService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var hocKyDTOs = await _hocKyRepository.GetAllHocKyDTO();
+            var hocKyDTOs = await _hocKyService.GetAllHocKyDTO();
             return Ok(hocKyDTOs);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var hocKyDTO = await _hocKyRepository.GetHocKyDTO(id);
+            var hocKyDTO = await _hocKyService.GetHocKyDTO(id);
             if (hocKyDTO == null)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ namespace Student_Result_Management_System.Controllers
         //[HttpGet("{id}/duocsuadiem")]
         //public async Task<IActionResult> CheckDuocSuaDiem([FromRoute] int id)
         //{
-        //    bool duocSuaDiem = await _hocKyRepository.DuocSuaDiem(id);
+        //    bool duocSuaDiem = await _hocKyService.DuocSuaDiem(id);
         //    if(duocSuaDiem == false)
         //    {
         //        return StatusCode(403, "Không được sửa điểm");
@@ -50,13 +50,13 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> AddHocKy([FromBody] CreateHocKyDTO newHocKyDTO)
         {
-            var hocKyDTO = await _hocKyRepository.AddHocKyDTO(newHocKyDTO);
+            var hocKyDTO = await _hocKyService.AddHocKyDTO(newHocKyDTO);
             return Ok(hocKyDTO);
         }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateHocKy([FromRoute] int id, [FromBody] CreateHocKyDTO newHocKyDTO)
         {
-            var hocKyDTO = await _hocKyRepository.UpdateHocKyDTO(id, newHocKyDTO);
+            var hocKyDTO = await _hocKyService.UpdateHocKyDTO(id, newHocKyDTO);
             if (hocKyDTO == null)
             {
                 return NotFound();
@@ -68,7 +68,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var hanSuaDiemAsDateTime = hanSuaDiem.ToDateTime(TimeOnly.MinValue);
 
-            var hocKyDTO = await _hocKyRepository.UpdateHanSuaDiem(id, hanSuaDiemAsDateTime);
+            var hocKyDTO = await _hocKyService.UpdateHanSuaDiem(id, hanSuaDiemAsDateTime);
             if (!hocKyDTO)
             {
                 return NotFound();
@@ -81,7 +81,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var hanSuaCongThucDiemAsDateTime = hanSuaCongThucDiem.ToDateTime(TimeOnly.MinValue);
 
-            var hocKyDTO = await _hocKyRepository.UpdateHanSuaCongThucDiem(id, hanSuaCongThucDiemAsDateTime);
+            var hocKyDTO = await _hocKyService.UpdateHanSuaCongThucDiem(id, hanSuaCongThucDiemAsDateTime);
             if (!hocKyDTO)
             {
                 return NotFound();
@@ -93,7 +93,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHocKy([FromRoute] int id)
         {
-            var hocKyDTO = await _hocKyRepository.DeleteHocKyDTO(id);
+            var hocKyDTO = await _hocKyService.DeleteHocKyDTO(id);
             if (hocKyDTO == false)
             {
                 return NotFound();

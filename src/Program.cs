@@ -66,7 +66,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IKhoaService, KhoaService>();
 builder.Services.AddScoped<ISinhVienService, SinhVienService>();
 builder.Services.AddScoped<IGiangVienService, GiangVienService>();
-builder.Services.AddScoped<IHocKyRepository, HocKieservice>();
+builder.Services.AddScoped<IHocKyService, HocKyService>();
 builder.Services.AddScoped<IBaiKiemTraService, BaiKiemTraService>();
 builder.Services.AddScoped<ICauHoiService, CauHoiService>();
 

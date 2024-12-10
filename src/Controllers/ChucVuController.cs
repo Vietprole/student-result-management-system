@@ -13,17 +13,17 @@ namespace Student_Result_Management_System.Controllers
     [Authorize]
     public class ChucVuController : ControllerBase
     {
-        private readonly IChucVuService _chucVuRepository;
-        public ChucVuController(IChucVuService chucVuRepository)
+        private readonly IChucVuService _chucVuService;
+        public ChucVuController(IChucVuService chucVuService)
         {
-            _chucVuRepository = chucVuRepository;
+            _chucVuService = chucVuService;
         }
         [HttpGet("getlistchucvu")]
         public async Task<IActionResult> GetListChucVu()
         {
             try
             {
-                var rs = await _chucVuRepository.GetListChucVu();
+                var rs = await _chucVuService.GetListChucVu();
                 return Ok(rs);
             }
             catch (Exception e)

@@ -6,6 +6,8 @@ using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CauHoi;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Interfaces;
+using StudentResultManagementSystem.Interfaces;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -14,86 +16,71 @@ namespace Student_Result_Management_System.Controllers
     [Authorize]
     public class CauHoiController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public CauHoiController(ApplicationDBContext context)
+        private readonly ICauHoiService _cauHoiService;
+        private readonly ICLOService _cLOService;
+        public CauHoiController(ICauHoiService cauHoiService, ICLOService cLOService)
         {
-            _context = context;
+            _cauHoiService = cauHoiService;
+            _cLOService = cLOService;
         }
+
         [HttpGet]
-        // IActionResult return any value type
-        // public async Task<IActionResult> Get()
-        // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId)
         {
-            IQueryable<CauHoi> query = _context.CauHois;
+            List<CauHoiDTO> cauHoiDTOs;
             if (baiKiemTraId.HasValue)
             {
-                query = query.Where(n => n.BaiKiemTraId == baiKiemTraId.Value);
+                cauHoiDTOs = await _cauHoiService.GetAllCauHoiByBaiKiemTraId(baiKiemTraId.Value);
             }
-
-            var cauHois = await query.ToListAsync();
-            var cauHoiDTOs = cauHois.Select(sv => sv.ToCauHoiDTO()).ToList();
+            else
+            {
+                cauHoiDTOs = await _cauHoiService.GetAllCauHoi();
+            }
             return Ok(cauHoiDTOs);
         }
 
         [HttpGet("{id}")]
-        // Get single entry
-        public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var student = await _context.CauHois.FindAsync(id);
-            if (student == null)
+            var cauHoiDTO = await _cauHoiService.GetCauHoi(id);
+            if (cauHoiDTO == null)
                 return NotFound();
-            var studentDTO = student.ToCauHoiDTO();
-            return Ok(studentDTO);
+            return Ok(cauHoiDTO);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCauHoiDTO createCauHoiDTO)
         {
-            var cauHoi = createCauHoiDTO.ToCauHoiFromCreateDTO();
-            await _context.CauHois.AddAsync(cauHoi);
-            await _context.SaveChangesAsync();
-            var cauHoiDTO = cauHoi.ToCauHoiDTO();
-            return CreatedAtAction(nameof(GetById), new { id = cauHoi.Id }, cauHoiDTO);
+            var cauHoiDTO = await _cauHoiService.CreateCauHoi(createCauHoiDTO);
+            return CreatedAtAction(nameof(GetById), new { id = cauHoiDTO.Id }, cauHoiDTO);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCauHoiDTO updateCauHoiDTO)
         {
-            var cauHoiToUpdate = await _context.CauHois.FindAsync(id);
-            if (cauHoiToUpdate == null)
+            var cauHoiDTO = await _cauHoiService.UpdateCauHoi(id, updateCauHoiDTO);
+            if (cauHoiDTO == null)
                 return NotFound();
-
-            cauHoiToUpdate.Ten = updateCauHoiDTO.Ten;
-            cauHoiToUpdate.TrongSo = updateCauHoiDTO.TrongSo;
-            cauHoiToUpdate.BaiKiemTraId = updateCauHoiDTO.BaiKiemTraId;
-            
-            await _context.SaveChangesAsync();
-            var studentDTO = cauHoiToUpdate.ToCauHoiDTO();
-            return Ok(studentDTO);
+            return Ok(cauHoiDTO);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var cauHoiToDelete = await _context.CauHois.FindAsync(id);
-            if (cauHoiToDelete == null)
+            var result = await _cauHoiService.DeleteCauHoi(id);
+            if (!result)
                 return NotFound();
-            _context.CauHois.Remove(cauHoiToDelete);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpGet("{id}/view-clos")]
         public async Task<IActionResult> GetCLOs([FromRoute] int id)
         {
-            var cauHoi = await _context.CauHois
-                .Include(lhp => lhp.CLOs)
-                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            var cauHoi = await _cauHoiService.GetCauHoiByIdAsync(id);
             if (cauHoi == null)
-                return NotFound();
+                return NotFound("CauHoi not found");
 
-            var cLODTOs = cauHoi.CLOs.Select(sv => sv.ToCLODTO()).ToList();
+            var cLODTOs = await _cLOService.GetCLOsByCauHoiIdAsync(id);
             return Ok(cLODTOs);
         }
 
@@ -101,15 +88,15 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost("{id}/add-clos")]
         public async Task<IActionResult> AddCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
         {
-            var cauHoi = await _context.CauHois
-                .Include(lhp => lhp.CLOs) // Include CLOs to ensure the collection is loaded
-                .FirstOrDefaultAsync(lhp => lhp.Id == id);
+            var cauHoi = await _cauHoiService.GetCauHoiByIdAsync(id);
             if (cauHoi == null)
                 return NotFound("CauHoi not found");
 
+            // AddCLOsToCauHoi() is a method in the CauHoiService that adds CLOs to a CauHoi
+
             foreach (var cLOId in cLOIds)
             {
-                var cLO = await _context.CLOs.FindAsync(cLOId);
+                var cLO = await _cLOService.GetCLOByIdAsync(cLOId);
                 if (cLO == null)
                     return NotFound($"CLO with ID {cLOId} not found");
 

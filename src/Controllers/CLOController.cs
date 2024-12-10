@@ -6,6 +6,7 @@ using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CLO;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Services;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -14,73 +15,54 @@ namespace Student_Result_Management_System.Controllers
     [Authorize]
     public class CLOController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public CLOController(ApplicationDBContext context)
+        private readonly CLOService _cloService;
+        public CLOController(CLOService cloService)
         {
-            _context = context;
+            _cloService = cloService;
         }
+
         [HttpGet]
-        // IActionResult return any value type
-        // public async Task<IActionResult> Get()
-        // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId)
         {
-            IQueryable<CLO> query = _context.CLOs;
+            var cLODTOs = await _cloService.GetAllCLOsAsync();
             if (lopHocPhanId.HasValue)
             {
-                query = query.Where(n => n.LopHocPhanId == lopHocPhanId.Value);
+                cLODTOs = cLODTOs.Where(n => n.LopHocPhanId == lopHocPhanId.Value).ToList();
             }
-
-            var cLOs = await query.ToListAsync();
-            var cLODTOs = cLOs.Select(sv => sv.ToCLODTO()).ToList();
             return Ok(cLODTOs);
         }
 
         [HttpGet("{id}")]
-        // Get single entry
-        public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var student = await _context.CLOs.FindAsync(id);
-            if (student == null)
+            var cLODTO = await _cloService.GetCLOByIdAsync(id);
+            if (cLODTO == null)
                 return NotFound();
-            var studentDTO = student.ToCLODTO();
-            return Ok(studentDTO);
+            return Ok(cLODTO);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCLODTO createCLODTO)
         {
-            var cLO = createCLODTO.ToCLOFromCreateDTO();
-            await _context.CLOs.AddAsync(cLO);
-            await _context.SaveChangesAsync();
-            var cLODTO = cLO.ToCLODTO();
-            return CreatedAtAction(nameof(GetById), new { id = cLO.Id }, cLODTO);
+            var cLODTO = await _cloService.CreateCLOAsync(createCLODTO);
+            return CreatedAtAction(nameof(GetById), new { id = cLODTO.Id }, cLODTO);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCLODTO updateCLODTO)
         {
-            var cLOToUpdate = await _context.CLOs.FindAsync(id);
-            if (cLOToUpdate == null)
+            var cLODTO = await _cloService.UpdateCLOAsync(id, updateCLODTO);
+            if (cLODTO == null)
                 return NotFound();
-
-            cLOToUpdate.Ten = updateCLODTO.Ten;
-            cLOToUpdate.MoTa = updateCLODTO.MoTa;
-            cLOToUpdate.LopHocPhanId = updateCLODTO.LopHocPhanId;
-            
-            await _context.SaveChangesAsync();
-            var studentDTO = cLOToUpdate.ToCLODTO();
-            return Ok(studentDTO);
+            return Ok(cLODTO);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var cLOToDelete = await _context.CLOs.FindAsync(id);
-            if (cLOToDelete == null)
+            var result = await _cloService.DeleteCLOAsync(id);
+            if (!result)
                 return NotFound();
-            _context.CLOs.Remove(cLOToDelete);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 

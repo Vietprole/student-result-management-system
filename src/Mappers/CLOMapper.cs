@@ -27,13 +27,11 @@ public static class CLOMapper
         };
     }
 
-    public static CLO ToCLOFromUpdateDTO(this UpdateCLODTO updateCLODTO)
+    public static CLO ToCLOFromUpdateDTO(this UpdateCLODTO updateCLODTO, CLO existingCLO)
     {
-        return new CLO
-        {
-            Ten = updateCLODTO.Ten,
-            MoTa = updateCLODTO.MoTa,
-            LopHocPhanId = updateCLODTO.LopHocPhanId,
-        };
+        existingCLO.Ten = updateCLODTO.Ten;
+        existingCLO.MoTa = updateCLODTO.MoTa;
+        existingCLO.LopHocPhanId = updateCLODTO.LopHocPhanId;
+        return existingCLO;
     }
 }

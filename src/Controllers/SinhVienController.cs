@@ -17,11 +17,11 @@ namespace Student_Result_Management_System.Controllers
     public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly ISinhVienService    _sinhVienRepository;
-        public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienRepository)
+        private readonly ISinhVienService    _sinhVienService;
+        public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienService)
         {
             _context = context;
-            _sinhVienRepository = sinhVienRepository;
+            _sinhVienService = sinhVienService;
         }
         [HttpGet]
         // IActionResult return any value type
@@ -29,7 +29,7 @@ namespace Student_Result_Management_System.Controllers
         // ActionResult return specific value type, the type will displayed in Schemas section
         public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
         {
-            List<SinhVien> sinhViens = await _sinhVienRepository.GetAllSinhVien();
+            List<SinhVien> sinhViens = await _sinhVienService.GetAllSinhVien();
             List<SinhVienDTO> result = new List<SinhVienDTO>();
             foreach(SinhVien sv in sinhViens)
             {
@@ -42,7 +42,7 @@ namespace Student_Result_Management_System.Controllers
         // Get single entry
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
-            var student = await _sinhVienRepository.GetById(id);
+            var student = await _sinhVienService.GetById(id);
             if (student == null)
                 return NotFound();
             var studentDTO = student.ToSinhVienDTO();
@@ -52,18 +52,18 @@ namespace Student_Result_Management_System.Controllers
         //[HttpPost]
         //public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
         //{
-        //    SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
+        //    SinhVien? newSV = await _sinhVienService.CheckSinhVien(createSinhVienDTO);
         //    if (newSV == null)
         //    {
         //        return StatusCode(500, "Create sinh vien failed");
         //    }
-        //    TaiKhoan? taiKhoan = await _sinhVienRepository.CreateTaiKhoanSinhVien(createSinhVienDTO);
+        //    TaiKhoan? taiKhoan = await _sinhVienService.CreateTaiKhoanSinhVien(createSinhVienDTO);
         //    if(taiKhoan==null)
         //    {
         //        return StatusCode(500, "Create sinh vien failed");
         //    }
 
-        //    SinhVien? newSinhVien = await _sinhVienRepository.CreateSinhVien(newSV,taiKhoan);
+        //    SinhVien? newSinhVien = await _sinhVienService.CreateSinhVien(newSV,taiKhoan);
         //    if (newSinhVien == null)
         //    {
         //        return StatusCode(500, "Create sinh vien failed");
@@ -77,7 +77,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpPut("{id}")] //sua
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSinhVienDTO updateSinhVienDTO)
         {
-            var studentToUpdate = await _sinhVienRepository.UpdateSV(id,updateSinhVienDTO);
+            var studentToUpdate = await _sinhVienService.UpdateSV(id,updateSinhVienDTO);
             if(studentToUpdate==null)
             {
                 return NotFound();
@@ -89,7 +89,7 @@ namespace Student_Result_Management_System.Controllers
         //[HttpDelete("{id}")]
         //public async Task<IActionResult> Delete([FromRoute] int id)
         //{
-        //    var sinhvienDelete= await _sinhVienRepository.DeleteSV(id);
+        //    var sinhvienDelete= await _sinhVienService.DeleteSV(id);
         //    if(sinhvienDelete==null)
         //    {
         //        return NotFound();

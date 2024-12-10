@@ -18,13 +18,13 @@ namespace Student_Result_Management_System.Controllers
     public class GiangVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IGiangVienService _giangVienRepository;
-        private readonly IKhoaService _khoaRepository;
-        public GiangVienController(ApplicationDBContext context, IGiangVienService giangVienRepository,IKhoaService khoaRepository)
+        private readonly IGiangVienService _giangVienService;
+        private readonly IKhoaService _khoaService;
+        public GiangVienController(ApplicationDBContext context, IGiangVienService giangVienService,IKhoaService khoaService)
         {
             _context = context;
-            _giangVienRepository = giangVienRepository;
-            _khoaRepository = khoaRepository;
+            _giangVienService = giangVienService;
+            _khoaService = khoaService;
         }
         //[HttpGet]
         //// IActionResult return any value type
@@ -38,10 +38,10 @@ namespace Student_Result_Management_System.Controllers
         //    {
         //       if(role == "TruongKhoa")
         //        {
-        //            var khoa= await _khoaRepository.GetKhoaByTruongKhoaId(nameid);
+        //            var khoa= await _khoaService.GetKhoaByTruongKhoaId(nameid);
         //            if (khoa != null)
         //            {
-        //                var khoaGiangViens = await _giangVienRepository.GetAllByKhoaId(khoa.Id);
+        //                var khoaGiangViens = await _giangVienService.GetAllByKhoaId(khoa.Id);
         //                var gvDTOs = khoaGiangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
         //                return Ok(gvDTOs);
         //            }
@@ -52,7 +52,7 @@ namespace Student_Result_Management_System.Controllers
         //        }
 
         //    }
-        //    var giangViens = await _giangVienRepository.GetAllGiangVien();
+        //    var giangViens = await _giangVienService.GetAllGiangVien();
         //    var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
         //    return Ok();
 
@@ -62,7 +62,7 @@ namespace Student_Result_Management_System.Controllers
         // Get single entry
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
-            var student = await _giangVienRepository.GetById(id);
+            var student = await _giangVienService.GetById(id);
             if (student == null)
                 return NotFound();
             var studentDTO = student.ToGiangVienDTO();
@@ -72,17 +72,17 @@ namespace Student_Result_Management_System.Controllers
         //[HttpPost]
         //public async Task<IActionResult> Create([FromBody] CreateGiangVienDTO createGiangVienDTO)
         //{
-        //    GiangVien? gv = await _giangVienRepository.CheckGiangVien(createGiangVienDTO);
+        //    GiangVien? gv = await _giangVienService.CheckGiangVien(createGiangVienDTO);
         //    if (gv == null)
         //    {
         //        return StatusCode(500, "Create giang vien failed1");
         //    }
-        //    TaiKhoan? taiKhoan = await _giangVienRepository.CreateTaiKhoanGiangVien(createGiangVienDTO);
+        //    TaiKhoan? taiKhoan = await _giangVienService.CreateTaiKhoanGiangVien(createGiangVienDTO);
         //    if(taiKhoan==null)
         //    {
         //        return StatusCode(500, "Create giang vien failed2");
         //    }
-        //    GiangVien? newGiangVien = await _giangVienRepository.CreateGiangVien(gv,taiKhoan);
+        //    GiangVien? newGiangVien = await _giangVienService.CreateGiangVien(gv,taiKhoan);
         //    if (newGiangVien == null)
         //    {
         //        return StatusCode(500, "Create giang vien failed3");
@@ -94,7 +94,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateGiangVienDTO updateGiangVienDTO)
         {
-            var giangVienToUpdate = await _giangVienRepository.UpdateGV(id,updateGiangVienDTO);
+            var giangVienToUpdate = await _giangVienService.UpdateGV(id,updateGiangVienDTO);
             if(giangVienToUpdate==null)
             {
                 return NotFound();
@@ -105,7 +105,7 @@ namespace Student_Result_Management_System.Controllers
         //[HttpDelete("{id}")]
         //public async Task<IActionResult> Delete([FromRoute] int id)
         //{
-        //    var giangVienToDelete = await _giangVienRepository.DeleteGV(id);
+        //    var giangVienToDelete = await _giangVienService.DeleteGV(id);
         //    if (giangVienToDelete == null)
         //        return NotFound();
         //    return NoContent();

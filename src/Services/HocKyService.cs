@@ -10,10 +10,10 @@ using Student_Result_Management_System.Mappers;
 
 namespace Student_Result_Management_System.Services
 {
-    public class HocKieservice : IHocKyRepository
+    public class HocKyService : IHocKyService
     {
         private readonly ApplicationDBContext _context;
-        public HocKieservice(ApplicationDBContext context)
+        public HocKyService(ApplicationDBContext context)
         {
             _context = context;
         }

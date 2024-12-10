@@ -16,12 +16,12 @@ namespace Student_Result_Management_System.Controllers
     public class BaiKiemTraController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly IBaiKiemTraService _IBaiKiemTraRepository;
+        private readonly IBaiKiemTraService _IBaiKiemTraService;
         private readonly ITokenService _tokenSerivce;
-        public BaiKiemTraController(ApplicationDBContext context, IBaiKiemTraService IBaiKiemTraRepository, ITokenService tokenSerivce)
+        public BaiKiemTraController(ApplicationDBContext context, IBaiKiemTraService IBaiKiemTraService, ITokenService tokenSerivce)
         {
             _context = context;
-            _IBaiKiemTraRepository = IBaiKiemTraRepository;
+            _IBaiKiemTraService = IBaiKiemTraService;
             _tokenSerivce = tokenSerivce;
         }
         [HttpGet]
@@ -31,13 +31,13 @@ namespace Student_Result_Management_System.Controllers
             {
                 return BadRequest();
             }
-            var baiKiemTraDTOs = await _IBaiKiemTraRepository.GetAllBaiKiemTraByLopHocPhanId(lopHocPhanId);
+            var baiKiemTraDTOs = await _IBaiKiemTraService.GetAllBaiKiemTraByLopHocPhanId(lopHocPhanId);
             return Ok(baiKiemTraDTOs);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var baiKiemTraDTO = await _IBaiKiemTraRepository.GetBaiKiemTra(id);
+            var baiKiemTraDTO = await _IBaiKiemTraService.GetBaiKiemTra(id);
             if (baiKiemTraDTO == null)
             {
                 return NotFound();
@@ -47,7 +47,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {
-            var baiKiemTraDTO = await _IBaiKiemTraRepository.CreateBaiKiemTra(createBaiKiemTraDTO);
+            var baiKiemTraDTO = await _IBaiKiemTraService.CreateBaiKiemTra(createBaiKiemTraDTO);
             return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
         }
         [HttpPut("{id}")]
@@ -55,7 +55,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var fullName = await _tokenSerivce.GetFullNameAndRole(token);
-            var baiKiemTraDTO = await _IBaiKiemTraRepository.UpdateBaiKiemTra(id, updateBaiKiemTraDTO);
+            var baiKiemTraDTO = await _IBaiKiemTraService.UpdateBaiKiemTra(id, updateBaiKiemTraDTO);
             if (baiKiemTraDTO == null)
             {
                 return NotFound();
@@ -65,7 +65,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var baiKiemTraDTO = await _IBaiKiemTraRepository.DeleteBaiKiemTra(id);
+            var baiKiemTraDTO = await _IBaiKiemTraService.DeleteBaiKiemTra(id);
             if (baiKiemTraDTO == false)
             {
                 return NotFound();

@@ -13,11 +13,11 @@ namespace Student_Result_Management_System.Services
     public class BaiKiemTraService : IBaiKiemTraService
     {
         private readonly ApplicationDBContext _context;
-        private readonly ICauHoiService _ICauHoiRepository;
-        public BaiKiemTraService(ApplicationDBContext context, ICauHoiService ICauHoiRepository)
+        private readonly ICauHoiService _ICauHoiService;
+        public BaiKiemTraService(ApplicationDBContext context, ICauHoiService ICauHoiService)
         {
             _context = context;
-            _ICauHoiRepository = ICauHoiRepository;
+            _ICauHoiService = ICauHoiService;
         }
         public async Task<BaiKiemTraDTO> CreateBaiKiemTra(CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {

@@ -16,7 +16,5 @@ namespace Student_Result_Management_System.DTOs.SinhVien
         public int KhoaId { get; set; }
         [Required]
         public int NamBatDau { get; set; }
-        
-
     }
 }

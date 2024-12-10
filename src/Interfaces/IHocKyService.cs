@@ -6,7 +6,7 @@ using Student_Result_Management_System.DTOs.HocKy;
 
 namespace Student_Result_Management_System.Interfaces
 {
-    public interface IHocKyRepository
+    public interface IHocKyService
     {
         public bool CheckTenHocKy(string tenHocKy);
         public bool CheckNamHoc(string namHoc);

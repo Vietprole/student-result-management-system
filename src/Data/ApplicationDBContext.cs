@@ -86,35 +86,35 @@ namespace Student_Result_Management_System.Data
                 .WithMany(e => e.CLOs)
                 .UsingEntity(
                     l => l.HasOne(typeof(CauHoi)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When CauHoi is deleted, delete join entries
-                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When CLO is deleted, delete join entries client-side
+                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When CLO is deleted, delete join entries 
 
             modelBuilder.Entity<PLO>()
                 .HasMany(e => e.CLOs)
                 .WithMany(e => e.PLOs)
                 .UsingEntity(
                     l => l.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When CLO is deleted, delete join entries
-                    r => r.HasOne(typeof(PLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When PLO is deleted, delete join entries client-side
+                    r => r.HasOne(typeof(PLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When PLO is deleted, delete join entries 
 
             modelBuilder.Entity<HocPhan>()
                 .HasMany(e => e.PLOs)
                 .WithMany(e => e.HocPhans)
                 .UsingEntity(
                     l => l.HasOne(typeof(PLO)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When CLO is deleted, delete join entries
-                    r => r.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When HocPhan is deleted, delete join entries client-side
+                    r => r.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When HocPhan is deleted, delete join entries 
 
             modelBuilder.Entity<SinhVien>()
                 .HasMany(e => e.LopHocPhans)
                 .WithMany(e => e.SinhViens)
                 .UsingEntity(
                     l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
-                    r => r.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When SinhVien is deleted, delete join entries client-side
+                    r => r.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When SinhVien is deleted, delete join entries 
 
             modelBuilder.Entity<Nganh>()
                 .HasMany(e => e.HocPhans)
                 .WithMany(e => e.Nganhs)
                 .UsingEntity(
                     l => l.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When HocPhan is deleted, delete join entries
-                    r => r.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When Nganh is deleted, delete join entries client-side
+                    r => r.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When Nganh is deleted, delete join entries 
 
             // modelBuilder.Entity<Khoa>()
             //     .HasMany(e => e.GiangViens)

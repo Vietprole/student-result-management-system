@@ -16,15 +16,15 @@ namespace Student_Result_Management_System.Services
     public class GiangVienService : IGiangVienService
     {
         private readonly ApplicationDBContext _context;
-        private readonly IKhoaService _khoaRepository;
-        public GiangVienService(ApplicationDBContext context, IKhoaService khoaRepository)
+        private readonly IKhoaService _khoaService;
+        public GiangVienService(ApplicationDBContext context, IKhoaService khoaService)
         {
             _context = context;
-            _khoaRepository = khoaRepository;
+            _khoaService = khoaService;
         }
         public async Task<GiangVien?> CheckGiangVien(CreateGiangVienDTO giangVienDTO)
         {
-            Khoa? khoa = await _khoaRepository.GetKhoaId(giangVienDTO.KhoaId);
+            Khoa? khoa = await _khoaService.GetKhoaId(giangVienDTO.KhoaId);
             if (khoa == null)
             {
                 return null;
@@ -49,7 +49,7 @@ namespace Student_Result_Management_System.Services
 
         //public async Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO)
         //{
-        //    string? MaKhoa = await  _khoaRepository.GetMaKhoa(createGiangVienDTO.KhoaId);
+        //    string? MaKhoa = await  _khoaService.GetMaKhoa(createGiangVienDTO.KhoaId);
         //    if (MaKhoa == null)
         //    {
         //        return null;
@@ -63,7 +63,7 @@ namespace Student_Result_Management_System.Services
         //        TenChucVu = "GiangVien",
         //        HovaTen = createGiangVienDTO.Ten
         //    };
-        //    TaiKhoan? taiKhoanId = await _taiKhoanRepository.CreateTaiKhoanGiangVien(createTaiKhoanDTO);
+        //    TaiKhoan? taiKhoanId = await _taiKhoanService.CreateTaiKhoanGiangVien(createTaiKhoanDTO);
         //    return taiKhoanId;
         //}
 
@@ -74,7 +74,7 @@ namespace Student_Result_Management_System.Services
         //    {
         //        return null;
         //    }
-        //    var taikhoan= await _taiKhoanRepository.DeleteUser(exits.TaiKhoan);
+        //    var taikhoan= await _taiKhoanService.DeleteUser(exits.TaiKhoan);
         //    _context.GiangViens.Remove(exits);
         //    return exits;
         //}

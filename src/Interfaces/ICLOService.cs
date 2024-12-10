@@ -4,7 +4,9 @@ namespace StudentResultManagementSystem.Interfaces
 {
     public interface ICLOService
     {
-        public Task<List<CLODTO>> GetCLOsAsync(int? lopHocPhanId);
+        public Task<List<CLODTO>> GetAllCLOsAsync();
+        public Task<List<CLODTO>> GetCLOsByLopHocPhanIdAsync(int lopHocPhanId);
+        public Task<List<CLODTO>> GetCLOsByCauHoiIdAsync(int cauHoiId);
         public Task<CLODTO?> GetCLOByIdAsync(int id);
         public Task<CLODTO> CreateCLOAsync(CreateCLODTO createCLODTO);
         public Task<CLODTO?> UpdateCLOAsync(int id, UpdateCLODTO updateCLODTO);
