@@ -29,9 +29,10 @@ public static class CLOMapper
 
     public static CLO ToCLOFromUpdateDTO(this UpdateCLODTO updateCLODTO, CLO existingCLO)
     {
-        existingCLO.Ten = updateCLODTO.Ten;
-        existingCLO.MoTa = updateCLODTO.MoTa;
-        existingCLO.LopHocPhanId = updateCLODTO.LopHocPhanId;
+        existingCLO.Ten = updateCLODTO.Ten ?? existingCLO.Ten;
+        existingCLO.MoTa = updateCLODTO.MoTa ?? existingCLO.MoTa;
+        existingCLO.LopHocPhanId = updateCLODTO.LopHocPhanId ?? existingCLO.LopHocPhanId;
+        
         return existingCLO;
     }
 }

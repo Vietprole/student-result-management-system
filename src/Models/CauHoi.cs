@@ -11,7 +11,7 @@ public class CauHoi
     public decimal TrongSo { get; set; }
     public int BaiKiemTraId { get; set; }
     [Column(TypeName = "decimal(5, 2)")]
-    public int ThangDiem { get; set; }
+    public decimal ThangDiem { get; set; }
     public BaiKiemTra BaiKiemTra { get; set; } = null!;
     public List<CLO> CLOs { get; set; } = [];
 }

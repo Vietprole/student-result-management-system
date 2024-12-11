@@ -22,7 +22,7 @@ namespace Student_Result_Management_System.Services
             var hocKy = newHocKyDTO.toHocKyFromNewDTO();
             await _context.HocKies.AddAsync(hocKy);
             await _context.SaveChangesAsync();
-            return hocKy.toDTOFromHocKy();
+            return hocKy.ToHocKyDTO();
 
         }
         public bool CheckTenHocKy(string tenHocKy)
@@ -85,7 +85,7 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            return hocKy.toDTOFromHocKy();
+            return hocKy.ToHocKyDTO();
         }
 
 
@@ -99,7 +99,7 @@ namespace Student_Result_Management_System.Services
             hocKy.Ten = newHocKyDTO.Ten;
             hocKy.NamHoc = newHocKyDTO.NamHoc;
             await _context.SaveChangesAsync();
-            return hocKy.toDTOFromHocKy();
+            return hocKy.ToHocKyDTO();
         }
 
       

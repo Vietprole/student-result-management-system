@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CauHoi;
+using Student_Result_Management_System.DTOs.CLO;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
@@ -48,6 +50,19 @@ namespace Student_Result_Management_System.Services
             return cauHoi.ToCauHoiDTO();
         }
 
+        public async Task<CauHoiDTO?> UpdateCauHoiAsync(int id, UpdateCauHoiDTO updateCauHoiDTO)
+        {
+            var cauHoi = await _context.CauHois.FindAsync(id);
+            if (cauHoi == null)
+            {
+                return null;
+            }
+
+            cauHoi = updateCauHoiDTO.ToCauHoiFromUpdateDTO(cauHoi);
+            await _context.SaveChangesAsync();
+            return cauHoi.ToCauHoiDTO();
+        }
+
         public async Task<bool> DeleteCauHoiAsync(int id)
         {
             var cauHoi = await _context.CauHois.FindAsync(id);
@@ -60,48 +75,52 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<CauHoiDTO?> UpdateCauHoiAsync(int id, UpdateCauHoiDTO updateCauHoiDTO)
-        {
-            var cauHoi = await _context.CauHois.FindAsync(id);
-            if (cauHoi == null)
-            {
-                return null;
-            }
-            cauHoi.TrongSo = updateCauHoiDTO.TrongSo;
-            cauHoi.BaiKiemTraId = updateCauHoiDTO.BaiKiemTraId;
-            cauHoi.Ten = updateCauHoiDTO.Ten;
-            cauHoi.ThangDiem = updateCauHoiDTO.ThangDiem;
-            await _context.SaveChangesAsync();
-            return cauHoi.ToCauHoiDTO();
-        }
+        // public async Task<ServiceResult<List<CLODTO>>> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds)
+        // {
+        //     var cauHoi = await _context.CauHois
+        //         .Include(ch => ch.CLOs)
+        //         .FirstOrDefaultAsync(ch => ch.Id == cauHoiId);
 
-        public async Task<bool> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds)
+        //     if (cauHoi == null)
+        //         return ServiceResult<List<CLODTO>>.Failure($"CauHoi with id {cauHoiId} not found");
+
+        //     foreach (var cLOId in cLOIds)
+        //     {
+        //         var clo = await _context.CLOs.FindAsync(cLOId);
+        //         if (clo == null)
+        //             return ServiceResult<List<CLODTO>>.Failure($"CLO with id {cLOId} not found");
+
+        //         if (!cauHoi.CLOs.Contains(clo))
+        //             cauHoi.CLOs.Add(clo);
+        //     }
+
+        //     await _context.SaveChangesAsync();
+        //     var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
+        //     return ServiceResult<List<CLODTO>>.Success(cloList);
+        // }
+
+        public async Task<ServiceResult<List<CLODTO>>> UpdateCLOsOfCauHoiAsync(int id, int[] cLOIds)
         {
             var cauHoi = await _context.CauHois
                 .Include(ch => ch.CLOs)
-                .FirstOrDefaultAsync(ch => ch.Id == cauHoiId);
+                .FirstOrDefaultAsync(ch => ch.Id == id);
 
             if (cauHoi == null)
-            {
-                return false;
-            }
+                return ServiceResult<List<CLODTO>>.Failure($"CauHoi with id {id} not found");
 
+            cauHoi.CLOs.Clear();
             foreach (var cLOId in cLOIds)
             {
-                var cLO = await _context.CLOs.FindAsync(cLOId);
-                if (cLO == null)
-                {
-                    return false;
-                }
+                var clo = await _context.CLOs.FindAsync(cLOId);
+                if (clo == null)
+                    return ServiceResult<List<CLODTO>>.Failure($"CLO with id {cLOId} not found");
 
-                if (!cauHoi.CLOs.Contains(cLO))
-                {
-                    cauHoi.CLOs.Add(cLO);
-                }
+                cauHoi.CLOs.Add(clo);
             }
 
             await _context.SaveChangesAsync();
-            return true;
+            var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
+            return ServiceResult<List<CLODTO>>.Success(cloList);
         }
     }
 }

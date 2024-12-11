@@ -2,8 +2,8 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CLO;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
-using StudentResultManagementSystem.Interfaces;
 
 namespace Student_Result_Management_System.Services;
 
@@ -34,6 +34,15 @@ public class CLOService : ICLOService
             .Where(clo => clo.CauHois.Any(ch => ch.Id == cauHoiId))
             .ToListAsync();
             
+        return clos.Select(clo => clo.ToCLODTO()).ToList();
+    }
+
+    public async Task<List<CLODTO>> GetCLOsByPLOIdAsync(int ploId)
+    {
+        var clos = await _context.CLOs
+            .Include(c => c.PLOs)
+            .Where(clo => clo.PLOs.Any(plo => plo.Id == ploId))
+            .ToListAsync();
         return clos.Select(clo => clo.ToCLODTO()).ToList();
     }
 

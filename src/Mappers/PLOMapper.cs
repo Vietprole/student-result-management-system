@@ -13,8 +13,7 @@ public static class PLOMapper
             Id = pLOModel.Id,
             Ten = pLOModel.Ten,
             MoTa = pLOModel.MoTa,
-            //CTDTId = pLOModel.CTDTId,
-            //TenCTDT = pLOModel.CTDT?.Ten ?? string.Empty,
+            NganhId = pLOModel.NganhId,
         };
     }
 
@@ -24,7 +23,16 @@ public static class PLOMapper
         {
             Ten = createPLODTO.Ten,
             MoTa = createPLODTO.MoTa,
-            //CTDTId = createPLODTO.CTDTId,
+            NganhId = createPLODTO.NganhId,
         };
+    }
+
+    public static PLO ToPLOFromUpdateDTO(this UpdatePLODTO updatePLODTO, PLO pLOModel)
+    {
+        pLOModel.Ten = updatePLODTO.Ten ?? pLOModel.Ten;
+        pLOModel.MoTa = updatePLODTO.MoTa ?? pLOModel.MoTa;
+        pLOModel.NganhId = updatePLODTO.NganhId ?? pLOModel.NganhId;
+
+        return pLOModel;
     }
 }

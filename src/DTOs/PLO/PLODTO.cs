@@ -7,6 +7,5 @@ public class PLODTO
     public int Id { get; set; }
     public string Ten { get; set; } = string.Empty;
     public string MoTa { get; set; } = string.Empty;
-    public int CTDTId { get; set; }
-    public string TenCTDT { get; set; } = string.Empty;
+    public int NganhId { get; set; }
 }

@@ -25,18 +25,17 @@ public static class HocPhanMapper
             Ten = createHocPhanDTO.Ten,
             SoTinChi = createHocPhanDTO.SoTinChi,
             LaCotLoi = createHocPhanDTO.LaCotLoi,
-            //KhoaId = createHocPhanDTO.KhoaId,
+            KhoaId = createHocPhanDTO.KhoaId,
         };
     }
 
-    public static HocPhan ToHocPhanFromUpdateDTO(this UpdateHocPhanDTO updateHocPhanDTO)
+    public static HocPhan ToHocPhanFromUpdateDTO(this UpdateHocPhanDTO updateHocPhanDTO, HocPhan hocPhan)
     {
-        return new HocPhan
-        {
-            Ten = updateHocPhanDTO.Ten,
-            SoTinChi = updateHocPhanDTO.SoTinChi,
-            LaCotLoi = updateHocPhanDTO.LaCotLoi,
-            //KhoaId = updateHocPhanDTO.KhoaId,
-        };
+        hocPhan.Ten = updateHocPhanDTO.Ten ?? hocPhan.Ten;
+        hocPhan.SoTinChi = updateHocPhanDTO.SoTinChi ?? hocPhan.SoTinChi;
+        hocPhan.LaCotLoi = updateHocPhanDTO.LaCotLoi ?? hocPhan.LaCotLoi;
+        hocPhan.KhoaId = updateHocPhanDTO.KhoaId ?? hocPhan.KhoaId;
+
+        return hocPhan;
     }
 }

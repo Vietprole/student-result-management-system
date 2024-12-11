@@ -4,11 +4,11 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface IBaiKiemTraService
     {
-        public Task<List<BaiKiemTraDTO>> GetAllBaiKiemTra();
-        public Task<List<BaiKiemTraDTO>> GetAllBaiKiemTraByLopHocPhanId(int lopHocPhanId);
-        public Task<BaiKiemTraDTO?> GetBaiKiemTra(int id);
-        public Task<BaiKiemTraDTO> CreateBaiKiemTra(CreateBaiKiemTraDTO createBaiKiemTraDTO);
-        public Task<BaiKiemTraDTO?> UpdateBaiKiemTra(int id, UpdateBaiKiemTraDTO updateBaiKiemTraDTO);
-        public Task<bool> DeleteBaiKiemTra(int id);
+        public Task<List<BaiKiemTraDTO>> GetAllBaiKiemTrasAsync();
+        public Task<List<BaiKiemTraDTO>> GetBaiKiemTrasByLopHocPhanIdAsync(int lopHocPhanId);
+        public Task<BaiKiemTraDTO?> GetBaiKiemTraByIdAsync(int id);
+        public Task<BaiKiemTraDTO> CreateBaiKiemTraAsync(CreateBaiKiemTraDTO createBaiKiemTraDTO);
+        public Task<BaiKiemTraDTO?> UpdateBaiKiemTraAsync(int id, UpdateBaiKiemTraDTO updateBaiKiemTraDTO);
+        public Task<bool> DeleteBaiKiemTraAsync(int id);
     }
 }

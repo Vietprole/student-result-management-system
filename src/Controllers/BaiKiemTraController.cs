@@ -31,13 +31,13 @@ namespace Student_Result_Management_System.Controllers
             {
                 return BadRequest();
             }
-            var baiKiemTraDTOs = await _IBaiKiemTraService.GetAllBaiKiemTraByLopHocPhanId(lopHocPhanId);
+            var baiKiemTraDTOs = await _IBaiKiemTraService.GetBaiKiemTrasByLopHocPhanIdAsync(lopHocPhanId);
             return Ok(baiKiemTraDTOs);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var baiKiemTraDTO = await _IBaiKiemTraService.GetBaiKiemTra(id);
+            var baiKiemTraDTO = await _IBaiKiemTraService.GetBaiKiemTraByIdAsync(id);
             if (baiKiemTraDTO == null)
             {
                 return NotFound();
@@ -47,7 +47,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {
-            var baiKiemTraDTO = await _IBaiKiemTraService.CreateBaiKiemTra(createBaiKiemTraDTO);
+            var baiKiemTraDTO = await _IBaiKiemTraService.CreateBaiKiemTraAsync(createBaiKiemTraDTO);
             return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
         }
         [HttpPut("{id}")]
@@ -55,7 +55,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var fullName = await _tokenSerivce.GetFullNameAndRole(token);
-            var baiKiemTraDTO = await _IBaiKiemTraService.UpdateBaiKiemTra(id, updateBaiKiemTraDTO);
+            var baiKiemTraDTO = await _IBaiKiemTraService.UpdateBaiKiemTraAsync(id, updateBaiKiemTraDTO);
             if (baiKiemTraDTO == null)
             {
                 return NotFound();
@@ -65,7 +65,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var baiKiemTraDTO = await _IBaiKiemTraService.DeleteBaiKiemTra(id);
+            var baiKiemTraDTO = await _IBaiKiemTraService.DeleteBaiKiemTraAsync(id);
             if (baiKiemTraDTO == false)
             {
                 return NotFound();

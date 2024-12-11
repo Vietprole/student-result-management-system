@@ -28,4 +28,14 @@ public static  class CauHoiMapper
             ThangDiem = createCauHoiDTO.ThangDiem
         };
     }
+
+    public static CauHoi ToCauHoiFromUpdateDTO(this UpdateCauHoiDTO updateDTO, CauHoi existingCauHoi)
+    {
+        existingCauHoi.Ten = updateDTO.Ten ?? existingCauHoi.Ten;
+        existingCauHoi.TrongSo = updateDTO.TrongSo ?? existingCauHoi.TrongSo;
+        existingCauHoi.BaiKiemTraId = updateDTO.BaiKiemTraId ?? existingCauHoi.BaiKiemTraId;
+        existingCauHoi.ThangDiem = updateDTO.ThangDiem ?? existingCauHoi.ThangDiem;
+
+        return existingCauHoi;
+    }
 }

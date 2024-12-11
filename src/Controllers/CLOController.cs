@@ -24,11 +24,12 @@ namespace Student_Result_Management_System.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId)
         {
-            var cLODTOs = await _cloService.GetAllCLOsAsync();
             if (lopHocPhanId.HasValue)
             {
-                cLODTOs = cLODTOs.Where(n => n.LopHocPhanId == lopHocPhanId.Value).ToList();
+                var cLODTOs1 = await _cloService.GetCLOsByLopHocPhanIdAsync(lopHocPhanId.Value);
+                return Ok(cLODTOs1);
             }
+            var cLODTOs = await _cloService.GetAllCLOsAsync();
             return Ok(cLODTOs);
         }
 
@@ -37,7 +38,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var cLODTO = await _cloService.GetCLOByIdAsync(id);
             if (cLODTO == null)
-                return NotFound();
+                return NotFound("CLO not found");
             return Ok(cLODTO);
         }
 
@@ -53,7 +54,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var cLODTO = await _cloService.UpdateCLOAsync(id, updateCLODTO);
             if (cLODTO == null)
-                return NotFound();
+                return NotFound("CLO not found");
             return Ok(cLODTO);
         }
 
@@ -62,7 +63,7 @@ namespace Student_Result_Management_System.Controllers
         {
             var result = await _cloService.DeleteCLOAsync(id);
             if (!result)
-                return NotFound();
+                return NotFound("CLO not found");
             return NoContent();
         }
 

@@ -19,7 +19,7 @@ namespace Student_Result_Management_System.Services
             _context = context;
             _ICauHoiService = ICauHoiService;
         }
-        public async Task<BaiKiemTraDTO> CreateBaiKiemTra(CreateBaiKiemTraDTO createBaiKiemTraDTO)
+        public async Task<BaiKiemTraDTO> CreateBaiKiemTraAsync(CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {
             var baiKiemTra = createBaiKiemTraDTO.ToBaiKiemTraFromCreateDTO();
             await _context.BaiKiemTras.AddAsync(baiKiemTra);
@@ -27,7 +27,7 @@ namespace Student_Result_Management_System.Services
             return baiKiemTra.ToBaiKiemTraDTO();
         }
 
-        public async Task<bool> DeleteBaiKiemTra(int id)
+        public async Task<bool> DeleteBaiKiemTraAsync(int id)
         {
             var baiKiemTra =await _context.BaiKiemTras.FindAsync(id);
             if (baiKiemTra == null)
@@ -39,19 +39,19 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<List<BaiKiemTraDTO>> GetAllBaiKiemTra()
+        public async Task<List<BaiKiemTraDTO>> GetAllBaiKiemTrasAsync()
         {
-            var baiKiemTras =await _context.BaiKiemTras.Include(c=>c.CauHois).ToListAsync();
+            var baiKiemTras = await _context.BaiKiemTras.Include(c => c.CauHois).ToListAsync();
             return baiKiemTras.Select(baiKiemTra => baiKiemTra.ToBaiKiemTraDTO()).ToList();
         }
 
-        public async Task<List<BaiKiemTraDTO>> GetAllBaiKiemTraByLopHocPhanId(int lopHocPhanId)
+        public async Task<List<BaiKiemTraDTO>> GetBaiKiemTrasByLopHocPhanIdAsync(int lopHocPhanId)
         {
-            var baiKiemTras =await _context.BaiKiemTras.Include(c=>c.CauHois).Where(baiKiemTra => baiKiemTra.LopHocPhanId == lopHocPhanId).ToListAsync();
+            var baiKiemTras = await _context.BaiKiemTras.Include(c => c.CauHois).Where(baiKiemTra => baiKiemTra.LopHocPhanId == lopHocPhanId).ToListAsync();
             return baiKiemTras.Select(baiKiemTra => baiKiemTra.ToBaiKiemTraDTO()).ToList();
         }
 
-        public async Task<BaiKiemTraDTO?> GetBaiKiemTra(int id)
+        public async Task<BaiKiemTraDTO?> GetBaiKiemTraByIdAsync(int id)
         {
             var baiKiemTra =await _context.BaiKiemTras.Include(c=>c.CauHois).FirstOrDefaultAsync(x => x.Id == id);
             if (baiKiemTra == null)
@@ -61,19 +61,16 @@ namespace Student_Result_Management_System.Services
             return baiKiemTra.ToBaiKiemTraDTO();
         }
 
-        public async Task<BaiKiemTraDTO?> UpdateBaiKiemTra(int id, UpdateBaiKiemTraDTO updateBaiKiemTraDTO)
+        public async Task<BaiKiemTraDTO?> UpdateBaiKiemTraAsync(int id, UpdateBaiKiemTraDTO updateBaiKiemTraDTO)
         {
             var baiKiemTraToUpdate = await _context.BaiKiemTras.FindAsync(id);
             if (baiKiemTraToUpdate == null)
             {
                 return null;
             }
-            baiKiemTraToUpdate.LopHocPhanId = updateBaiKiemTraDTO.LopHocPhanId;
-            baiKiemTraToUpdate.Loai = updateBaiKiemTraDTO.Loai;
-            baiKiemTraToUpdate.TrongSo = updateBaiKiemTraDTO.TrongSo;
+            baiKiemTraToUpdate = updateBaiKiemTraDTO.ToBaiKiemTraFromUpdateDTO(baiKiemTraToUpdate);
             await _context.SaveChangesAsync();
             return baiKiemTraToUpdate.ToBaiKiemTraDTO();
-
         }
     }
 }
