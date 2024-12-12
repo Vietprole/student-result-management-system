@@ -83,28 +83,21 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<ServiceResult<List<CLODTO>>> UpdateCLOsOfPLOAsync(int id, int[] cLOIds)
+        public async Task<List<CLODTO>> UpdateCLOsOfPLOAsync(int id, int[] cLOIds)
         {
             var pLO = await _context.PLOs
                 .Include(ch => ch.CLOs)
-                .FirstOrDefaultAsync(ch => ch.Id == id);
-
-            if (pLO == null)
-                return ServiceResult<List<CLODTO>>.Failure($"PLO with id {id} not found");
-
+                .FirstOrDefaultAsync(ch => ch.Id == id) ?? throw new BusinessLogicException($"PLO with id {id} not found");
             pLO.CLOs.Clear();
             foreach (var cLOId in cLOIds)
             {
-                var clo = await _context.CLOs.FindAsync(cLOId);
-                if (clo == null)
-                    return ServiceResult<List<CLODTO>>.Failure($"CLO with id {cLOId} not found");
-
+                var clo = await _context.CLOs.FindAsync(cLOId) ?? throw new BusinessLogicException($"CLO with id {cLOId} not found");
                 pLO.CLOs.Add(clo);
             }
 
             await _context.SaveChangesAsync();
             var cloList = pLO.CLOs.Select(c => c.ToCLODTO()).ToList();
-            return ServiceResult<List<CLODTO>>.Success(cloList);
+            return cloList;
         }
     }
 }

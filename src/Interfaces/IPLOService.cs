@@ -14,6 +14,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<PLODTO> CreatePLOAsync(CreatePLODTO createPLODTO);
         public Task<PLODTO?> UpdatePLOAsync(int id, UpdatePLODTO updatePLODTO);
         public Task<bool> DeletePLOAsync(int id);
-        public Task<ServiceResult<List<CLODTO>>> UpdateCLOsOfPLOAsync(int ploId, int[] cLOIds);
+        public Task<List<CLODTO>> UpdateCLOsOfPLOAsync(int ploId, int[] cLOIds);
     }
 }

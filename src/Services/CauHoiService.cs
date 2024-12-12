@@ -75,20 +75,20 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        // public async Task<ServiceResult<List<CLODTO>>> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds)
+        // public async Task<List<CLODTO>> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds)
         // {
         //     var cauHoi = await _context.CauHois
         //         .Include(ch => ch.CLOs)
         //         .FirstOrDefaultAsync(ch => ch.Id == cauHoiId);
 
         //     if (cauHoi == null)
-        //         return ServiceResult<List<CLODTO>>.Failure($"CauHoi with id {cauHoiId} not found");
+        //         throw new BusinessLogicException($"CauHoi with id {cauHoiId} not found");
 
         //     foreach (var cLOId in cLOIds)
         //     {
         //         var clo = await _context.CLOs.FindAsync(cLOId);
         //         if (clo == null)
-        //             return ServiceResult<List<CLODTO>>.Failure($"CLO with id {cLOId} not found");
+        //             throw new BusinessLogicException($"CLO with id {cLOId} not found");
 
         //         if (!cauHoi.CLOs.Contains(clo))
         //             cauHoi.CLOs.Add(clo);
@@ -96,31 +96,24 @@ namespace Student_Result_Management_System.Services
 
         //     await _context.SaveChangesAsync();
         //     var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
-        //     return ServiceResult<List<CLODTO>>.Success(cloList);
+        //     return cloList;
         // }
 
-        public async Task<ServiceResult<List<CLODTO>>> UpdateCLOsOfCauHoiAsync(int id, int[] cLOIds)
+        public async Task<List<CLODTO>> UpdateCLOsOfCauHoiAsync(int id, int[] cLOIds)
         {
             var cauHoi = await _context.CauHois
                 .Include(ch => ch.CLOs)
-                .FirstOrDefaultAsync(ch => ch.Id == id);
-
-            if (cauHoi == null)
-                return ServiceResult<List<CLODTO>>.Failure($"CauHoi with id {id} not found");
-
+                .FirstOrDefaultAsync(ch => ch.Id == id) ?? throw new BusinessLogicException($"Không tìm thấy câu hỏi với id: {id}");
             cauHoi.CLOs.Clear();
             foreach (var cLOId in cLOIds)
             {
-                var clo = await _context.CLOs.FindAsync(cLOId);
-                if (clo == null)
-                    return ServiceResult<List<CLODTO>>.Failure($"CLO with id {cLOId} not found");
-
+                var clo = await _context.CLOs.FindAsync(cLOId) ?? throw new BusinessLogicException($"Không tìm thấy CLO với id: {cLOId}");
                 cauHoi.CLOs.Add(clo);
             }
 
             await _context.SaveChangesAsync();
             var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
-            return ServiceResult<List<CLODTO>>.Success(cloList);
+            return cloList;
         }
     }
 }

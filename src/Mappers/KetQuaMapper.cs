@@ -11,7 +11,10 @@ public static class KetQuaMapper
         return new KetQuaDTO
         {
             Id = ketQua.Id,
-            //Diem = ketQua.Diem,
+            DiemTam = ketQua.DiemTam,
+            DiemChinhThuc = ketQua.DiemChinhThuc,
+            DaCongBo = ketQua.DaCongBo,
+            DaXacNhan = ketQua.DaXacNhan,
             SinhVienId = ketQua.SinhVienId,
             CauHoiId = ketQua.CauHoiId
         };
@@ -21,19 +24,22 @@ public static class KetQuaMapper
     {
         return new KetQua
         {
-            //Diem = createKetQuaDTO.Diem,
+            DiemTam = createKetQuaDTO.DiemTam,
+            DiemChinhThuc = createKetQuaDTO.DiemChinhThuc,
+            DaCongBo = createKetQuaDTO.DaCongBo,
+            DaXacNhan = createKetQuaDTO.DaXacNhan,
             SinhVienId = createKetQuaDTO.SinhVienId,
             CauHoiId = createKetQuaDTO.CauHoiId
         };
     }
 
-    public static KetQua ToKetQuaFromUpdate(this UpdateKetQuaDTO updateKetQuaDTO)
+    public static KetQua ToKetQuaFromUpdateDTO(this UpdateKetQuaDTO updateKetQuaDTO, KetQua existingKetQua)
     {
-        return new KetQua
-        {
-            //Diem = updateKetQuaDTO.Diem,
-            SinhVienId = updateKetQuaDTO.SinhVienId,
-            CauHoiId = updateKetQuaDTO.CauHoiId
-        };
+        existingKetQua.DiemTam = updateKetQuaDTO.DiemTam ?? existingKetQua.DiemTam;
+        existingKetQua.DiemChinhThuc = updateKetQuaDTO.DiemChinhThuc ?? existingKetQua.DiemChinhThuc;
+        existingKetQua.DaCongBo = updateKetQuaDTO.DaCongBo ?? existingKetQua.DaCongBo;
+        existingKetQua.DaXacNhan = updateKetQuaDTO.DaXacNhan ?? existingKetQua.DaXacNhan;
+
+        return existingKetQua;
     }
 }

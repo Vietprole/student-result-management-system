@@ -9,6 +9,7 @@ using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Interfaces;
 using StudentResultManagementSystem.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -91,9 +92,9 @@ namespace Student_Result_Management_System.Controllers
         //     var cauHoi = await _cauHoiService.GetCauHoiByIdAsync(id);
         //     if (cauHoi == null)
         //         return NotFound("CauHoi not found");
-            
+
         //     var result = await _cauHoiService.AddCLOsToCauHoiAsync(id, cLOIds);
-            
+
         //     if (!result.IsSuccess)
         //         return NotFound(result.ErrorMessage);
 
@@ -107,11 +108,19 @@ namespace Student_Result_Management_System.Controllers
             if (cauHoi == null)
                 return NotFound("CauHoi not found");
 
-            var updatedCLOs = await _cauHoiService.UpdateCLOsOfCauHoiAsync(id, cLOIds);
-            if (!updatedCLOs.IsSuccess)
-                return NotFound(updatedCLOs.ErrorMessage);
-
-            return Ok(updatedCLOs.Data);
+            try
+            {
+                var updatedCLOs = await _cauHoiService.UpdateCLOsOfCauHoiAsync(id, cLOIds);
+                return Ok(updatedCLOs);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred");
+            }
         }
 
         // [HttpDelete("{id}/clo/{cLOId}")]

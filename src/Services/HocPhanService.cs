@@ -75,20 +75,20 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        // public async Task<ServiceResult<List<PLODTO>>> AddPLOsToHocPhanAsync(int hocPhanId, int[] pLOIds)
+        // public async Task<List<PLODTO>> AddPLOsToHocPhanAsync(int hocPhanId, int[] pLOIds)
         // {
         //     var hocPhan = await _context.HocPhans
         //         .Include(ch => ch.PLOs)
         //         .FirstOrDefaultAsync(ch => ch.Id == hocPhanId);
 
         //     if (hocPhan == null)
-        //         return ServiceResult<List<PLODTO>>.Failure($"HocPhan with id {hocPhanId} not found");
+        //         throw new BusinessLogicException($"HocPhan with id {hocPhanId} not found");
 
         //     foreach (var pLOId in pLOIds)
         //     {
         //         var plo = await _context.PLOs.FindAsync(pLOId);
         //         if (plo == null)
-        //             return ServiceResult<List<PLODTO>>.Failure($"PLO with id {pLOId} not found");
+        //             throw new BusinessLogicException($"PLO with id {pLOId} not found");
 
         //         if (!hocPhan.PLOs.Contains(plo))
         //             hocPhan.PLOs.Add(plo);
@@ -96,31 +96,24 @@ namespace Student_Result_Management_System.Services
 
         //     await _context.SaveChangesAsync();
         //     var ploList = hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList();
-        //     return ServiceResult<List<PLODTO>>.Success(ploList);
+        //     return ploList;
         // }
 
-        public async Task<ServiceResult<List<PLODTO>>> UpdatePLOsOfHocPhanAsync(int id, int[] pLOIds)
+        public async Task<List<PLODTO>> UpdatePLOsOfHocPhanAsync(int id, int[] pLOIds)
         {
             var hocPhan = await _context.HocPhans
                 .Include(ch => ch.PLOs)
-                .FirstOrDefaultAsync(ch => ch.Id == id);
-
-            if (hocPhan == null)
-                return ServiceResult<List<PLODTO>>.Failure($"HocPhan with id {id} not found");
-
+                .FirstOrDefaultAsync(ch => ch.Id == id) ?? throw new BusinessLogicException($"Không tìm thấy học phần với id: {id}");
             hocPhan.PLOs.Clear();
             foreach (var pLOId in pLOIds)
             {
-                var plo = await _context.PLOs.FindAsync(pLOId);
-                if (plo == null)
-                    return ServiceResult<List<PLODTO>>.Failure($"PLO with id {pLOId} not found");
-
+                var plo = await _context.PLOs.FindAsync(pLOId) ?? throw new BusinessLogicException($"Không tìm thấy PLO với id: {pLOId}");
                 hocPhan.PLOs.Add(plo);
             }
 
             await _context.SaveChangesAsync();
             var ploList = hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList();
-            return ServiceResult<List<PLODTO>>.Success(ploList);
+            return ploList;
         }
     }
 }

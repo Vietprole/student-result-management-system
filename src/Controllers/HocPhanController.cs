@@ -8,6 +8,7 @@ using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -106,11 +107,19 @@ namespace Student_Result_Management_System.Controllers
             if (hocPhan == null)
                 return NotFound("HocPhan not found");
 
-            var updatedPLOs = await _hocPhanService.UpdatePLOsOfHocPhanAsync(id, pLOIds);
-            if (!updatedPLOs.IsSuccess)
-                return NotFound(updatedPLOs.ErrorMessage);
-
-            return Ok(updatedPLOs.Data);
+            try
+            {
+                var updatedPLOs = await _hocPhanService.UpdatePLOsOfHocPhanAsync(id, pLOIds);
+                return Ok(updatedPLOs);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred");
+            }
         }
 
         // [HttpDelete("{id}/plo/{pLOId}")]

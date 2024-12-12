@@ -7,6 +7,7 @@ using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.BaiKiemTra;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Services
 {
@@ -18,25 +19,6 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
             _ICauHoiService = ICauHoiService;
-        }
-        public async Task<BaiKiemTraDTO> CreateBaiKiemTraAsync(CreateBaiKiemTraDTO createBaiKiemTraDTO)
-        {
-            var baiKiemTra = createBaiKiemTraDTO.ToBaiKiemTraFromCreateDTO();
-            await _context.BaiKiemTras.AddAsync(baiKiemTra);
-            await _context.SaveChangesAsync();
-            return baiKiemTra.ToBaiKiemTraDTO();
-        }
-
-        public async Task<bool> DeleteBaiKiemTraAsync(int id)
-        {
-            var baiKiemTra =await _context.BaiKiemTras.FindAsync(id);
-            if (baiKiemTra == null)
-            {
-                return false;
-            }
-            _context.BaiKiemTras.Remove(baiKiemTra);
-            await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<List<BaiKiemTraDTO>> GetAllBaiKiemTrasAsync()
@@ -61,6 +43,14 @@ namespace Student_Result_Management_System.Services
             return baiKiemTra.ToBaiKiemTraDTO();
         }
 
+        public async Task<BaiKiemTraDTO> CreateBaiKiemTraAsync(CreateBaiKiemTraDTO createBaiKiemTraDTO)
+        {
+            var baiKiemTra = createBaiKiemTraDTO.ToBaiKiemTraFromCreateDTO();
+            await _context.BaiKiemTras.AddAsync(baiKiemTra);
+            await _context.SaveChangesAsync();
+            return baiKiemTra.ToBaiKiemTraDTO();
+        }
+
         public async Task<BaiKiemTraDTO?> UpdateBaiKiemTraAsync(int id, UpdateBaiKiemTraDTO updateBaiKiemTraDTO)
         {
             var baiKiemTraToUpdate = await _context.BaiKiemTras.FindAsync(id);
@@ -71,6 +61,28 @@ namespace Student_Result_Management_System.Services
             baiKiemTraToUpdate = updateBaiKiemTraDTO.ToBaiKiemTraFromUpdateDTO(baiKiemTraToUpdate);
             await _context.SaveChangesAsync();
             return baiKiemTraToUpdate.ToBaiKiemTraDTO();
+        }
+
+        public async Task<bool> DeleteBaiKiemTraAsync(int id)
+        {
+            var baiKiemTra =await _context.BaiKiemTras.FindAsync(id);
+            if (baiKiemTra == null)
+            {
+                return false;
+            }
+            _context.BaiKiemTras.Remove(baiKiemTra);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CheckDuplicateBaiKiemTraLoaiInLopHocPhan(string? loai, int lopHocPhanId)
+        {
+            if (loai == null)
+            {
+                return false;
+            }
+            var baiKiemTra = await _context.BaiKiemTras.FirstOrDefaultAsync(x => x.Loai == loai && x.LopHocPhanId == lopHocPhanId);
+            return baiKiemTra != null;
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Student_Result_Management_System.DTOs.PLO;
 using Student_Result_Management_System.Interfaces;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -101,11 +102,18 @@ namespace Student_Result_Management_System.Controllers
             if (pLO == null)
                 return NotFound("PLO not found");
 
-            var updatedCLOs = await _ploService.UpdateCLOsOfPLOAsync(id, cLOIds);
-            if (!updatedCLOs.IsSuccess)
-                return NotFound(updatedCLOs.ErrorMessage);
-                
-            return Ok(updatedCLOs);
+            try {
+                var updatedCLOs = await _ploService.UpdateCLOsOfPLOAsync(id, cLOIds);
+                return Ok(updatedCLOs);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred");
+            }
         }
 
         // [HttpDelete("{id}/remove-clo/{cLOId}")]

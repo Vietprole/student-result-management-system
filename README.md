@@ -58,9 +58,7 @@ dotnet ef migrations remove
 ## Github Action is triggers when push to master!
 
 ## Delete action consequences
-- Delete Khoa, Nganh **WILL NOT** delete CTDT, HocPhan. Instead setting null.
-- Delete CTDT **WILL** delete its PLOs, so be cautious.
-- Delete HocPhan **WILL** delete LopHocPhan, so be cautious.
+- Restrict Deletion if entity has any child entity.
 - Delete CLO is set to ClientCascade to CauHoi, so make sure to **include CauHoi** whenever you delete CLO or it will cause error.
 ```C#
 var clo = await _context.CLOs
@@ -79,3 +77,7 @@ if (clo != null)
 docker exec -it sqlserver "bash"
 /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Viet@123456 -C
 ```
+
+## Error Message Standard
+- "Không tìm thấy câu hỏi với id: {id}"
+- "An unexpected error occured"

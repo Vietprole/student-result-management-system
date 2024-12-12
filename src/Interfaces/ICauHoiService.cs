@@ -12,8 +12,8 @@ namespace Student_Result_Management_System.Interfaces
         public Task<CauHoiDTO> CreateCauHoiAsync(CreateCauHoiDTO createCauHoiDTO);
         public Task<CauHoiDTO?> UpdateCauHoiAsync(int id, UpdateCauHoiDTO updateCauHoiDTO);
         public Task<bool> DeleteCauHoiAsync(int id);
-        // public Task<ServiceResult<List<CLODTO>>> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds);
-        public Task<ServiceResult<List<CLODTO>>> UpdateCLOsOfCauHoiAsync(int id, int[] cLOIds);
-        // public Task<ServiceResult<List<CLODTO>>> RemoveCLOsFromCauHoiAsync(int id, int[] cLOIds);
+        // public Task<<List<CLODTO>> AddCLOsToCauHoiAsync(int cauHoiId, int[] cLOIds);
+        public Task<List<CLODTO>> UpdateCLOsOfCauHoiAsync(int id, int[] cLOIds);
+        // public Task<List<CLODTO>> RemoveCLOsFromCauHoiAsync(int id, int[] cLOIds);
     }
 }
