@@ -3,7 +3,7 @@
     public class SinhVien
     {
         public int Id { get; set; }
-        public int KhoaNhapHoc { get; set; }
+        public int NamNhapHoc { get; set; }
         public int KhoaId { get; set; }
         public Khoa Khoa { get; set; } = null!;
         public List<LopHocPhan> LopHocPhans { get; set; } = [];

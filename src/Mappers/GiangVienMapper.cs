@@ -11,7 +11,7 @@ public static class GiangVienMapper
         return new GiangVienDTO
         {
             Id = giangVien.Id,
-            Ten = giangVien.TaiKhoan.Ten,
+            Ten = giangVien.TaiKhoan?.Ten ?? string.Empty,
             KhoaId = giangVien.KhoaId,
             TenKhoa = giangVien.Khoa?.Ten ?? string.Empty,
         };

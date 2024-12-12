@@ -49,31 +49,25 @@ namespace Student_Result_Management_System.Controllers
             return Ok(studentDTO);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
-        //{
-        //    SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
-        //    if (newSV == null)
-        //    {
-        //        return StatusCode(500, "Create sinh vien failed");
-        //    }
-        //    TaiKhoan? taiKhoan = await _sinhVienRepository.CreateTaiKhoanSinhVien(createSinhVienDTO);
-        //    if(taiKhoan==null)
-        //    {
-        //        return StatusCode(500, "Create sinh vien failed");
-        //    }
-
-        //    SinhVien? newSinhVien = await _sinhVienRepository.CreateSinhVien(newSV,taiKhoan);
-        //    if (newSinhVien == null)
-        //    {
-        //        return StatusCode(500, "Create sinh vien failed");
-        //    }
-        //    return CreatedAtAction(
-        //        nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
-        //        new { id = newSinhVien.Id}, // Truyền id của SinhVien vừa tạo
-        //        newSinhVien.ToSinhVienDTO() // Trả về DTO của SinhVien vừa tạo
-        //    );
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
+        {
+           SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
+           if (newSV == null)
+           {
+               return StatusCode(500, "Không thể tạo sinh viên mới.");
+           }
+           var newSinhVien = await _sinhVienRepository.CreateSinhVien(createSinhVienDTO);
+            if (newSinhVien == null)
+            {
+            return StatusCode(500, "Không thể tạo sinh viên mới.");
+            }
+           return CreatedAtAction(
+               nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
+               new { id = newSinhVien.Id}, // Truyền id của SinhVien vừa tạo
+               newSinhVien // Trả về DTO của SinhVien vừa tạo
+           );
+        }
         [HttpPut("{id}")] //sua
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSinhVienDTO updateSinhVienDTO)
         {
