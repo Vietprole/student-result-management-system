@@ -8,7 +8,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<GiangVien>> GetAll(int[] id);
         public Task<List<GiangVien>> GetAllByKhoaId(int khoaId);
         public Task<List<GiangVien>> GetAllGiangVien();
-        // public Task<string> GetKhoaId(string taikhoanId);
+        // public Task<string> GetKhoaByIdAsync(string taikhoanId);
         public Task<GiangVien?> GetById(int id);
         //public Task<TaiKhoan?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO);
         //public Task<GiangVien?> CreateGiangVien(GiangVien giangVien,TaiKhoan taiKhoan);

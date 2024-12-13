@@ -23,7 +23,7 @@ namespace Student_Result_Management_System.Services
         }
         public async Task<SinhVien?> CheckSinhVien(CreateSinhVienDTO sinhVienDTO)
         {
-            Khoa? khoa = await _khoaService.GetKhoaId(sinhVienDTO.KhoaId);
+            Khoa? khoa = await _khoaService.GetKhoaByIdAsync(sinhVienDTO.KhoaId);
             if (khoa == null)
             {
                 return null;

@@ -27,7 +27,7 @@ namespace Student_Result_Management_System.Controllers
         // ActionResult return specific value type, the type will displayed in Schemas section
         public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
         {
-            var khoas = await _khoaService.GetListKhoa();
+            var khoas = await _khoaService.GetAllKhoasAsync();
             var khoaDTOs = khoas.Select(sv => sv.ToKhoaDTO()).ToList();
             return Ok(khoaDTOs);
         }

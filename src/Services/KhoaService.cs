@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.Khoa;
 using Student_Result_Management_System.Interfaces;
+using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Services
@@ -49,25 +51,21 @@ namespace Student_Result_Management_System.Services
         //    return await _context.Khoas.FirstOrDefaultAsync(x => x.TruongKhoaId == id);
         //}
 
-        public async Task<Khoa?> GetKhoaId(int id)
+        public async Task<List<KhoaDTO>> GetAllKhoasAsync()
         {
-            return await _context.Khoas.FindAsync(id);
+            var list_khoa = await _context.Khoas.ToListAsync();
+            return list_khoa.Select(k => k.ToKhoaDTO()).ToList();
         }
-
-        public async Task<List<Khoa>> GetListKhoa()
+        public async Task<KhoaDTO?> GetKhoaByIdAsync(int id)
         {
-            List<Khoa> list_khoa = await _context.Khoas.ToListAsync();
-            return list_khoa;
+            var khoa = await _context.Khoas.FindAsync(id);
+            return khoa?.ToKhoaDTO();
         }
 
         public async Task<string?> GetMaKhoa(int id)
         {
             var khoa = await _context.Khoas.FindAsync(id);
-            if (khoa == null)
-            {
-                return null;
-            }
-            return khoa.MaKhoa;
+            return khoa?.MaKhoa;
         }
 
         public async Task<Khoa?> UpdateTruongKhoa(int khoaid, TaiKhoan truongkhoa)
@@ -77,7 +75,7 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            khoa.TruongKhoaId =truongkhoa.Id;
+            khoa.TruongKhoaId = truongkhoa.Id;
             khoa.TruongKhoa = truongkhoa;
             _context.Khoas.Update(khoa);
             await _context.SaveChangesAsync();

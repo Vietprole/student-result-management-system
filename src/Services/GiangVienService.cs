@@ -24,7 +24,7 @@ namespace Student_Result_Management_System.Services
         }
         public async Task<GiangVien?> CheckGiangVien(CreateGiangVienDTO giangVienDTO)
         {
-            Khoa? khoa = await _khoaService.GetKhoaId(giangVienDTO.KhoaId);
+            Khoa? khoa = await _khoaService.GetKhoaByIdAsync(giangVienDTO.KhoaId);
             if (khoa == null)
             {
                 return null;
@@ -109,7 +109,7 @@ namespace Student_Result_Management_System.Services
             return count;
         }
 
-        // public async Task<string> GetKhoaId(string taikhoanId)
+        // public async Task<string> GetKhoaByIdAsync(string taikhoanId)
         // {
         //     var gv= await _context.GiangViens.FirstOrDefaultAsync(x=>x.TaiKhoanId==taikhoanId);
         //     if(gv==null)
