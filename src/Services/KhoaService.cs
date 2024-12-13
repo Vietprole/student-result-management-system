@@ -25,15 +25,16 @@ namespace Student_Result_Management_System.Services
            return khoa;
         }
 
-        public async Task<List<KhoaDTO>> GetAllKhoasAsync()
+        public async Task<List<Khoa>> GetAllKhoasAsync()
         {
             var list_khoa = await _context.Khoas.ToListAsync();
-            return list_khoa.Select(k => k.ToKhoaDTO()).ToList();
+            return list_khoa;
         }
-        public async Task<KhoaDTO?> GetKhoaByIdAsync(int id)
+        public async Task<Khoa?> GetKhoaByIdAsync(int id)
         {
             var khoa = await _context.Khoas.FindAsync(id);
-            return khoa?.ToKhoaDTO();
+            // return khoa?.ToKhoaDTO();
+            return khoa;
         }
 
         public async Task<string?> GetMaKhoa(int id)

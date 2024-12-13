@@ -32,7 +32,7 @@ namespace Student_Result_Management_System.Controllers
         // ActionResult return specific value type, the type will displayed in Schemas section
         public async Task<IActionResult> GetAllByRole() // async go with Task<> to make function asynchronous
         {
-           var giangViens = await _giangVienRepository.GetAllGiangVien();
+           var giangViens = await _giangVienService.GetAllGiangVien();
            var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
            return Ok();
         }
@@ -51,12 +51,12 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateGiangVienDTO createGiangVienDTO)
         {
-           GiangVien? gv = await _giangVienRepository.CheckGiangVien(createGiangVienDTO);
+           GiangVien? gv = await _giangVienService.CheckGiangVien(createGiangVienDTO);
            if (gv == null)
            {
                return NotFound("Khoa không tồn tại");
            }
-           var newGiangVien = await _giangVienRepository.CreateGiangVien(createGiangVienDTO);
+           var newGiangVien = await _giangVienService.CreateGiangVien(createGiangVienDTO);
             if (newGiangVien == null)
             {
             return StatusCode(500, "Create giang vien failed");

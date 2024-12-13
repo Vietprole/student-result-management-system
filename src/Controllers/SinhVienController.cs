@@ -17,7 +17,7 @@ namespace Student_Result_Management_System.Controllers
     public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        private readonly ISinhVienService    _sinhVienService;
+        private readonly ISinhVienService _sinhVienService;
         public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienService)
         {
             _context = context;
@@ -31,7 +31,7 @@ namespace Student_Result_Management_System.Controllers
         {
             List<SinhVien> sinhViens = await _sinhVienService.GetAllSinhVien();
             List<SinhVienDTO> result = new List<SinhVienDTO>();
-            foreach(SinhVien sv in sinhViens)
+            foreach (SinhVien sv in sinhViens)
             {
                 result.Add(sv.ToSinhVienDTO());
             }
@@ -52,27 +52,27 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSinhVienDTO createSinhVienDTO)
         {
-           SinhVien? newSV = await _sinhVienRepository.CheckSinhVien(createSinhVienDTO);
-           if (newSV == null)
-           {
-               return StatusCode(500, "Không thể tạo sinh viên mới.");
-           }
-           var newSinhVien = await _sinhVienRepository.CreateSinhVien(createSinhVienDTO);
+            SinhVien? newSV = await _sinhVienService.CheckSinhVien(createSinhVienDTO);
+            if (newSV == null)
+            {
+                return StatusCode(500, "Không thể tạo sinh viên mới.");
+            }
+            var newSinhVien = await _sinhVienService.CreateSinhVien(createSinhVienDTO);
             if (newSinhVien == null)
             {
-            return StatusCode(500, "Không thể tạo sinh viên mới.");
+                return StatusCode(500, "Không thể tạo sinh viên mới.");
             }
-           return CreatedAtAction(
-               nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
-               new { id = newSinhVien.Id}, // Truyền id của SinhVien vừa tạo
-               newSinhVien // Trả về DTO của SinhVien vừa tạo
-           );
+            return CreatedAtAction(
+                nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về SinhVien
+                new { id = newSinhVien.Id }, // Truyền id của SinhVien vừa tạo
+                newSinhVien // Trả về DTO của SinhVien vừa tạo
+            );
         }
         [HttpPut("{id}")] //sua
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSinhVienDTO updateSinhVienDTO)
         {
-            var studentToUpdate = await _sinhVienService.UpdateSV(id,updateSinhVienDTO);
-            if(studentToUpdate==null)
+            var studentToUpdate = await _sinhVienService.UpdateSV(id, updateSinhVienDTO);
+            if (studentToUpdate == null)
             {
                 return NotFound();
             }
