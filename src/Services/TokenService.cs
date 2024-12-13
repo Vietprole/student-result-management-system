@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 
-namespace Student_Result_Management_System.Service
+namespace Student_Result_Management_System.Services
 {
     public class TokenService : ITokenService
     {

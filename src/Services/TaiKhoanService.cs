@@ -66,7 +66,7 @@ namespace Student_Result_Management_System.Services
                     return null;
                 }
             }
-            var khoa = await _khoaService.GetKhoaId(username.KhoaId??0);
+            var khoa = await _khoaService.GetKhoaByIdAsync(username.KhoaId??0);
             taiKhoan.ChucVuId = chucVu.Id;
             taiKhoan.ChucVu = chucVu;
             await _context.TaiKhoans.AddAsync(taiKhoan);

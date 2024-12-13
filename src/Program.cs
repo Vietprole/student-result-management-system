@@ -1,13 +1,10 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.Interfaces;
-using Student_Result_Management_System.Models;
-using Student_Result_Management_System.Service;
 using Student_Result_Management_System.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,14 +59,24 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddScoped<ITokenService, TokenService>();
+
+
+builder.Services.AddScoped<IChucVuService, ChucVuService>();
 builder.Services.AddScoped<IKhoaService, KhoaService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPasswordHashService, PashwordHashService>();
+builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ISinhVienService, SinhVienService>();
 builder.Services.AddScoped<IGiangVienService, GiangVienService>();
-builder.Services.AddScoped<IHocKyService, HocKyService>();
+
 builder.Services.AddScoped<IBaiKiemTraService, BaiKiemTraService>();
 builder.Services.AddScoped<ICauHoiService, CauHoiService>();
-
+builder.Services.AddScoped<ICLOService, CLOService>();
+builder.Services.AddScoped<IHocKyService, HocKyService>();
+builder.Services.AddScoped<IHocPhanService, HocPhanService>();
+builder.Services.AddScoped<IKetQuaService, KetQuaService>();
+builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
+builder.Services.AddScoped<IPLOService, PLOService>();
 
 
 builder.Services.AddAuthentication(options => {
