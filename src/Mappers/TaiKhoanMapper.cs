@@ -14,7 +14,9 @@ namespace Student_Result_Management_System.Mappers
             return new TaiKhoan
             {
                 Username = createTaiKhoanDTO.Username,
-                Ten = createTaiKhoanDTO.HovaTen
+                Ten = createTaiKhoanDTO.HovaTen,
+                Password = createTaiKhoanDTO.Password
+               
             };
         }
         public static TaiKhoanProfileDTO ToTaiKhoanProfileDTO(this TaiKhoan taiKhoan, string chucVu)
@@ -23,6 +25,16 @@ namespace Student_Result_Management_System.Mappers
             {
                 HovaTen = taiKhoan.Ten,
                 ChucVu = chucVu 
+            };
+        }
+        public static TaiKhoanDTO ToTaiKhoanDTO(this TaiKhoan taiKhoan)
+        {
+            return new TaiKhoanDTO
+            {
+                Id = taiKhoan.Id,
+                Username = taiKhoan.Username,
+                Ten = taiKhoan.Ten,
+                TenChucVu = taiKhoan.ChucVu.TenChucVu
             };
         }
 

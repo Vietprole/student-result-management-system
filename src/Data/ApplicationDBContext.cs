@@ -137,6 +137,15 @@ namespace Student_Result_Management_System.Data
             //     .WithOne(e => e.Khoa)
             //     .HasForeignKey(e => e.KhoaId)
             //     .OnDelete(DeleteBehavior.Cascade);
+            // List<ChucVu> list_chuc_vu = new List<ChucVu>{
+            //     new ChucVu{Id = 1, TenChucVu = "Admin"},
+            //     new ChucVu{Id = 2, TenChucVu = "GiangVien"},
+            //     new ChucVu{Id = 3, TenChucVu = "SinhVien"},
+            //     new ChucVu{Id = 4, TenChucVu = "TruongKhoa"},
+            //     new ChucVu{Id = 5, TenChucVu = "PhongDaoTao"},
+            //     new ChucVu{Id = 6, TenChucVu = "TruongBoMon"},
+            // };
+            // modelBuilder.Entity<ChucVu>().HasData(list_chuc_vu);
         }
     }
 }

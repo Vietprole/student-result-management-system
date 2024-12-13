@@ -26,37 +26,16 @@ namespace Student_Result_Management_System.Controllers
             _giangVienService = giangVienService;
             _khoaService = khoaService;
         }
-        //[HttpGet]
-        //// IActionResult return any value type
-        //// public async Task<IActionResult> Get()
-        //// ActionResult return specific value type, the type will displayed in Schemas section
-        //public async Task<IActionResult> GetAllByRole() // async go with Task<> to make function asynchronous
-        //{
-        //    var role = User.Claims.Where(c=>c.Type==ClaimTypes.Role).Select(c=>c.Value).FirstOrDefault();
-        //    var nameid = User.Claims.Where(c => c.Type == JwtRegisteredClaimNames.NameId).Select(c => c.Value).FirstOrDefault();
-        //    if (role != null && nameid!=null)
-        //    {
-        //       if(role == "TruongKhoa")
-        //        {
-        //            var khoa= await _khoaService.GetKhoaByTruongKhoaId(nameid);
-        //            if (khoa != null)
-        //            {
-        //                var khoaGiangViens = await _giangVienService.GetAllByKhoaId(khoa.Id);
-        //                var gvDTOs = khoaGiangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
-        //                return Ok(gvDTOs);
-        //            }
-        //        }else if(role == "GiangVien")
-        //        {
-                    
-                    
-        //        }
-
-        //    }
-        //    var giangViens = await _giangVienService.GetAllGiangVien();
-        //    var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
-        //    return Ok();
-
-        //}
+        [HttpGet]
+        // IActionResult return any value type
+        // public async Task<IActionResult> Get()
+        // ActionResult return specific value type, the type will displayed in Schemas section
+        public async Task<IActionResult> GetAllByRole() // async go with Task<> to make function asynchronous
+        {
+           var giangViens = await _giangVienRepository.GetAllGiangVien();
+           var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
+           return Ok();
+        }
 
         [HttpGet("{id}")]
         // Get single entry
@@ -69,27 +48,21 @@ namespace Student_Result_Management_System.Controllers
             return Ok(studentDTO);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] CreateGiangVienDTO createGiangVienDTO)
-        //{
-        //    GiangVien? gv = await _giangVienService.CheckGiangVien(createGiangVienDTO);
-        //    if (gv == null)
-        //    {
-        //        return StatusCode(500, "Create giang vien failed1");
-        //    }
-        //    TaiKhoan? taiKhoan = await _giangVienService.CreateTaiKhoanGiangVien(createGiangVienDTO);
-        //    if(taiKhoan==null)
-        //    {
-        //        return StatusCode(500, "Create giang vien failed2");
-        //    }
-        //    GiangVien? newGiangVien = await _giangVienService.CreateGiangVien(gv,taiKhoan);
-        //    if (newGiangVien == null)
-        //    {
-        //        return StatusCode(500, "Create giang vien failed3");
-        //    }
-        //    var giangVienDTO = newGiangVien.ToGiangVienDTO();
-        //    return CreatedAtAction(nameof(GetById), new { id = newGiangVien.Id }, giangVienDTO);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateGiangVienDTO createGiangVienDTO)
+        {
+           GiangVien? gv = await _giangVienRepository.CheckGiangVien(createGiangVienDTO);
+           if (gv == null)
+           {
+               return NotFound("Khoa không tồn tại");
+           }
+           var newGiangVien = await _giangVienRepository.CreateGiangVien(createGiangVienDTO);
+            if (newGiangVien == null)
+            {
+            return StatusCode(500, "Create giang vien failed");
+            }
+           return CreatedAtAction(nameof(GetById), new { id = newGiangVien.Id }, newGiangVien);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateGiangVienDTO updateGiangVienDTO)
