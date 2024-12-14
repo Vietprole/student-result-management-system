@@ -17,12 +17,10 @@ namespace Student_Result_Management_System.Controllers
     // [Authorize]
     public class GiangVienController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
         private readonly IGiangVienService _giangVienService;
         private readonly IKhoaService _khoaService;
-        public GiangVienController(ApplicationDBContext context, IGiangVienService giangVienService,IKhoaService khoaService)
+        public GiangVienController(IGiangVienService giangVienService,IKhoaService khoaService)
         {
-            _context = context;
             _giangVienService = giangVienService;
             _khoaService = khoaService;
         }

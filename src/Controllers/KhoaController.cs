@@ -16,11 +16,9 @@ namespace Student_Result_Management_System.Controllers
     // [Authorize]
     public class KhoaController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
         private readonly IKhoaService _khoaService;
-        public KhoaController(ApplicationDBContext context, IKhoaService khoaService)
+        public KhoaController(IKhoaService khoaService)
         {
-            _context = context;
             _khoaService = khoaService;
         }
         [HttpGet]
@@ -69,10 +67,13 @@ namespace Student_Result_Management_System.Controllers
         {
             try {
                 var khoaToUpdate = await _khoaService.UpdateKhoaAsync(id, updateKhoaDTO);
-                return Ok(khoaToUpdate);
+                return Ok(khoaToUpdate?.ToKhoaDTO());
             }
             catch (BusinessLogicException ex){
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException e){
+                return NotFound(e.Message);
             }
         }
 

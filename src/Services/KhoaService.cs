@@ -55,7 +55,11 @@ namespace Student_Result_Management_System.Services
 
         public async Task<Khoa?> UpdateKhoaAsync(int id, UpdateKhoaDTO updateKhoaDTO)
         {
-            var khoa = await _context.Khoas.FindAsync(id) ?? throw new BusinessLogicException("Không tìm thấy Khoa");
+            var khoa = await _context.Khoas.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Khoa");
+            if (updateKhoaDTO.MaKhoa != null && await IsMaKhoaExisted(updateKhoaDTO.MaKhoa))
+            {
+                throw new BusinessLogicException("Mã khoa đã tồn tại");
+            }
             khoa = updateKhoaDTO.ToKhoaFromUpdateDTO(khoa);
 
             await _context.SaveChangesAsync();
