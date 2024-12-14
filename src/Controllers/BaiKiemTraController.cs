@@ -12,7 +12,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/baikiemtra")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class BaiKiemTraController : ControllerBase
     {
         private readonly IBaiKiemTraService _baiKiemTraService;
@@ -24,13 +24,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int lopHocPhanId) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
-            if(lopHocPhanId<=0)
+            List<BaiKiemTraDTO> baiKiemTraDTOs;
+            if(lopHocPhanId.HasValue)
             {
-                return BadRequest("Lớp Học Phần Id phải lớn hơn 0");
+                // return BadRequest("Lớp Học Phần Id phải lớn hơn 0");
+                baiKiemTraDTOs = await _baiKiemTraService.GetBaiKiemTrasByLopHocPhanIdAsync(lopHocPhanId.Value);
+                return Ok(baiKiemTraDTOs);
             }
-            var baiKiemTraDTOs = await _baiKiemTraService.GetBaiKiemTrasByLopHocPhanIdAsync(lopHocPhanId);
+            
+            baiKiemTraDTOs = await _baiKiemTraService.GetAllBaiKiemTrasAsync();
             return Ok(baiKiemTraDTOs);
         }
 

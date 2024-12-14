@@ -6,6 +6,7 @@ using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.Khoa;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -16,7 +17,7 @@ namespace Student_Result_Management_System.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly IKhoaService _khoaService;
-        public KhoaController(ApplicationDBContext context,IKhoaService khoaService)
+        public KhoaController(ApplicationDBContext context, IKhoaService khoaService)
         {
             _context = context;
             _khoaService = khoaService;
@@ -36,53 +37,50 @@ namespace Student_Result_Management_System.Controllers
         // Get single entry
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
-            var student = await _context.Khoas.FindAsync(id);
-            if (student == null)
+            var khoa = await _khoaService.GetKhoaByIdAsync(id);
+            if (khoa == null)
                 return NotFound();
-            var studentDTO = student.ToKhoaDTO();
-            return Ok(studentDTO);
+            var khoaDTO = khoa.ToKhoaDTO();
+            return Ok(khoaDTO);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
-        //{
-        //    var khoa=await _khoaService.CreateKhoa(createKhoaDTO.ToKhoaFromCreateDTO());
-        //    if (khoa == null)
-        //    {
-        //        return BadRequest("Không thể tạo khoa mới.");
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
+        {
+            var khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO.ToKhoaFromCreateDTO());
+            if (khoa == null)
+            {
+                return BadRequest("Không thể tạo khoa mới.");
+            }
 
-        //    return CreatedAtAction(
-        //        nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về Khoa
-        //        new { id = khoa.Id }, // Truyền id của khoa vừa tạo
-        //        khoa.ToKhoaDTO() // Trả về DTO của khoa vừa tạo
-        //    );
-        //}
+            return CreatedAtAction(
+                nameof(GetById), // Phương thức sẽ trả về thông tin chi tiết về Khoa
+                new { id = khoa.Id }, // Truyền id của khoa vừa tạo
+                khoa.ToKhoaDTO() // Trả về DTO của khoa vừa tạo
+            );
+        }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKhoaDTO updateKhoaDTO)
-        //{
-        //    var khoaToUpdate = await _context.Khoas.FindAsync(id);
-        //    if (khoaToUpdate == null)
-        //        return NotFound();
-
-        //    khoaToUpdate.Ten = updateKhoaDTO.Ten;
-        //    khoaToUpdate.MaKhoa = updateKhoaDTO.MaKhoa;
-        //    khoaToUpdate.VietTat = updateKhoaDTO.VietTat;
-            
-        //    await _context.SaveChangesAsync();
-        //    var studentDTO = khoaToUpdate.ToKhoaDTO();
-        //    return Ok(studentDTO);
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKhoaDTO updateKhoaDTO)
+        {
+            try {
+                var khoaToUpdate = await _khoaService.UpdateKhoaAsync(id, updateKhoaDTO);
+                return Ok(khoaToUpdate);
+            }
+            catch (BusinessLogicException ex){
+                return NotFound(ex.Message);
+            }
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var khoaToDelete = await _context.Khoas.FindAsync(id);
-            if (khoaToDelete == null)
-                return NotFound();
-            _context.Khoas.Remove(khoaToDelete);
-            await _context.SaveChangesAsync();
+            try {
+                await _khoaService.DeleteKhoaAsync(id);
+            }
+            catch (BusinessLogicException ex){
+                return BadRequest(ex.Message);
+            }
             return NoContent();
         }
 

@@ -9,6 +9,4 @@ public class CreateKhoaDTO
     public string Ten { get; set; } = string.Empty;
     [Required]
     public string MaKhoa { get; set; } = string.Empty;
-    [Required]
-    public string VietTat { get; set; } = string.Empty;
 }

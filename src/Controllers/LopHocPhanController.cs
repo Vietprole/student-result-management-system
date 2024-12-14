@@ -11,7 +11,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/lophocphan")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class LopHocPhanController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

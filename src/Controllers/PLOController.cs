@@ -8,7 +8,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/plo")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class PLOController : ControllerBase
     {
         private readonly IPLOService _ploService;

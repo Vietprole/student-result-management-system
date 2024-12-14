@@ -12,7 +12,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/clo")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class CLOController : ControllerBase
     {
         private readonly CLOService _cloService;

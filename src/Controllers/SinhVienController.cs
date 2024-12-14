@@ -13,7 +13,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/sinhvien")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class SinhVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

@@ -15,7 +15,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/cauhoi")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class CauHoiController : ControllerBase
     {
         private readonly ICauHoiService _cauHoiService;

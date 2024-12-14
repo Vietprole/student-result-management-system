@@ -45,6 +45,7 @@ namespace Student_Result_Management_System.Services
         }
         private static bool IsValidUsername(string username) //Kiểm tra username có hợp lệ không
         {
+            // username phải có ít nhất 6 ký tự và không chứa ký tự đặc biệt
             string pattern = @"^[a-zA-Z0-9]{6,}$";
             return Regex.IsMatch(username, pattern);
         }

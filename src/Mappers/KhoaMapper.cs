@@ -13,7 +13,6 @@ public static class KhoaMapper
             Id = khoa.Id,
             Ten = khoa.Ten,
             MaKhoa = khoa.MaKhoa,
-            //VietTat = khoa.VietTat
         };
     }
 
@@ -23,15 +22,13 @@ public static class KhoaMapper
         {
             Ten = createKhoaDTO.Ten,
             MaKhoa = createKhoaDTO.MaKhoa,
-            //VietTat = createKhoaDTO.VietTat
         };
     }
 
-    public static Khoa ToKhoaFromUpdateDTO(this UpdateKhoaDTO updateKhoaDTO)
+    public static Khoa ToKhoaFromUpdateDTO(this UpdateKhoaDTO updateKhoaDTO, Khoa existingKhoa)
     {
-        return new Khoa
-        {
-            Ten = updateKhoaDTO.Ten,
-        };
+        existingKhoa.Ten = updateKhoaDTO.Ten ?? existingKhoa.Ten;
+        existingKhoa.MaKhoa = updateKhoaDTO.MaKhoa ?? existingKhoa.MaKhoa;
+        return existingKhoa;
     }
 }

@@ -8,6 +8,7 @@ using Student_Result_Management_System.DTOs.Khoa;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
@@ -18,7 +19,7 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        public async Task<Khoa?> CreateKhoa(Khoa khoa)
+        public async Task<Khoa?> CreateKhoaAsync(Khoa khoa)
         {
            await _context.Khoas.AddAsync(khoa);
            await _context.SaveChangesAsync();
@@ -43,6 +44,15 @@ namespace Student_Result_Management_System.Services
             return khoa?.MaKhoa;
         }
 
+        public async Task<Khoa?> UpdateKhoaAsync(int id, UpdateKhoaDTO updateKhoaDTO)
+        {
+            var khoa = await _context.Khoas.FindAsync(id) ?? throw new BusinessLogicException("Không tìm thấy Khoa");
+            khoa = updateKhoaDTO.ToKhoaFromUpdateDTO(khoa);
+
+            await _context.SaveChangesAsync();
+            return khoa;
+        }
+
         public async Task<Khoa?> UpdateTruongKhoa(int khoaid, TaiKhoan truongkhoa)
         {
             var khoa = await _context.Khoas.FindAsync(khoaid);
@@ -55,6 +65,20 @@ namespace Student_Result_Management_System.Services
             _context.Khoas.Update(khoa);
             await _context.SaveChangesAsync();
             return khoa;
+        }
+
+        public async Task<bool> DeleteKhoaAsync(int id)
+        {
+            var khoa = await _context.Khoas.FindAsync(id) ?? throw new BusinessLogicException("Không tìm thấy Khoa");
+            try {
+                _context.Khoas.Remove(khoa);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new BusinessLogicException("Khoa chứa các đối tượng con, không thể xóa");
+            }
+            return true;
         }
     }
 }

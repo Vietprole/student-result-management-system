@@ -12,7 +12,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/hocky")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public class HocKyController:ControllerBase
     {
         private readonly IHocKyService _hocKyService;

@@ -11,7 +11,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/nganh")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class NganhController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

@@ -10,7 +10,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/chucvu")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class ChucVuController : ControllerBase
     {
         private readonly IChucVuService _chucVuService;

@@ -14,7 +14,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/giangvien")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class GiangVienController : ControllerBase
     {
         private readonly ApplicationDBContext _context;

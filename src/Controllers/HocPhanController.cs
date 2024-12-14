@@ -14,7 +14,7 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/hocphan")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class HocPhanController : ControllerBase
     {
         private readonly IHocPhanService _hocPhanService;

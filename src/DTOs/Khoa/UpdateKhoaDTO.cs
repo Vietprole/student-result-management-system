@@ -5,10 +5,6 @@ namespace Student_Result_Management_System.DTOs.Khoa;
 
 public class UpdateKhoaDTO
 {
-    [Required]
-    public string Ten { get; set; } = string.Empty;
-    [Required]
-    public string MaKhoa { get; set; } = string.Empty;
-    [Required]
-    public string VietTat { get; set; } = string.Empty;
+    public string? Ten { get; set; } = string.Empty;
+    public string? MaKhoa { get; set; } = string.Empty;
 }
