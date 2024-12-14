@@ -84,21 +84,6 @@ export default function KhoaPage() {
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maKhoa")}</div>,
     },
     {
-      accessorKey: "vietTat",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Viết Tắt
-            <ArrowUpDown />
-          </Button>
-        );
-      },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("vietTat")}</div>,
-    },
-    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {

@@ -19,11 +19,20 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        public async Task<Khoa?> CreateKhoaAsync(Khoa khoa)
+        private async Task<bool> IsMaKhoaExisted(string maKhoa)
         {
-           await _context.Khoas.AddAsync(khoa);
-           await _context.SaveChangesAsync();
-           return khoa;
+            var khoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == maKhoa);
+            return khoa != null;
+        }
+        public async Task<Khoa> CreateKhoaAsync(Khoa khoa)
+        {
+            if (await IsMaKhoaExisted(khoa.MaKhoa))
+            {
+                throw new BusinessLogicException("Mã khoa đã tồn tại");
+            }
+            await _context.Khoas.AddAsync(khoa);
+            await _context.SaveChangesAsync();
+            return khoa;
         }
 
         public async Task<List<Khoa>> GetAllKhoasAsync()
@@ -70,7 +79,8 @@ namespace Student_Result_Management_System.Services
         public async Task<bool> DeleteKhoaAsync(int id)
         {
             var khoa = await _context.Khoas.FindAsync(id) ?? throw new BusinessLogicException("Không tìm thấy Khoa");
-            try {
+            try
+            {
                 _context.Khoas.Remove(khoa);
                 await _context.SaveChangesAsync();
             }

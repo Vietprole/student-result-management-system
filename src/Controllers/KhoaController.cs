@@ -6,6 +6,7 @@ using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.Khoa;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
@@ -47,10 +48,13 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         {
-            var khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO.ToKhoaFromCreateDTO());
-            if (khoa == null)
+            Khoa khoa;
+            try {
+                khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO.ToKhoaFromCreateDTO());
+            }
+            catch (BusinessLogicException ex)
             {
-                return BadRequest("Không thể tạo khoa mới.");
+                return BadRequest(ex.Message);
             }
 
             return CreatedAtAction(

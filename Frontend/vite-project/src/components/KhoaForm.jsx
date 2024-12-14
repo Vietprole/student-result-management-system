@@ -19,11 +19,10 @@ const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
-  maKhoa: z.string().min(2, {
-    message: "MaKhoa must be at least 2 characters.",
-  }),
-  vietTat: z.string().min(1, {
-    message: "VietTat must be at least 1 characters.",
+  maKhoa: z.coerce.number({
+    message: "MaKhoa must be a number.",
+  }).min(3, {
+    message: "MaKhoa must be at least 3 characters.",
   }),
 });
 
@@ -34,7 +33,6 @@ export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
     defaultValues: khoa || {
       ten: "",
       maKhoa: "",
-      vietTat: "",
     },
   });
 
@@ -99,22 +97,6 @@ export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
               <FormLabel>Mã Khoa</FormLabel>
               <FormControl>
                 <Input placeholder="101" {...field} readOnly={!!khoa}/>
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="vietTat"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Viết Tắt</FormLabel>
-              <FormControl>
-                <Input placeholder="CNTT" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
