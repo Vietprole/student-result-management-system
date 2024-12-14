@@ -19,21 +19,21 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        private async Task<bool> IsMaNganhExisted(string maNganh)
-        {
-            var nganh = await _context.Nganhs.FirstOrDefaultAsync(k => k.MaNganh == maNganh);
-            return nganh != null;
-        }
-        public async Task<Nganh> CreateNganhAsync(Nganh nganh)
-        {
-            if (await IsMaNganhExisted(nganh.MaNganh))
-            {
-                throw new BusinessLogicException("Mã nganh đã tồn tại");
-            }
-            await _context.Nganhs.AddAsync(nganh);
-            await _context.SaveChangesAsync();
-            return nganh;
-        }
+        // private async Task<bool> IsMaNganhExisted(string maNganh)
+        // {
+        //     var nganh = await _context.Nganhs.FirstOrDefaultAsync(k => k.MaNganh == maNganh);
+        //     return nganh != null;
+        // }
+        // public async Task<Nganh> CreateNganhAsync(Nganh nganh)
+        // {
+        //     if (await IsMaNganhExisted(nganh.MaNganh))
+        //     {
+        //         throw new BusinessLogicException("Mã nganh đã tồn tại");
+        //     }
+        //     await _context.Nganhs.AddAsync(nganh);
+        //     await _context.SaveChangesAsync();
+        //     return nganh;
+        // }
 
         public async Task<List<Nganh>> GetAllNganhsAsync()
         {
@@ -47,38 +47,38 @@ namespace Student_Result_Management_System.Services
             return nganh;
         }
 
-        public async Task<string?> GetMaNganh(int id)
-        {
-            var nganh = await _context.Nganhs.FindAsync(id);
-            return nganh?.MaNganh;
-        }
+        // public async Task<string?> GetMaNganh(int id)
+        // {
+        //     var nganh = await _context.Nganhs.FindAsync(id);
+        //     return nganh?.MaNganh;
+        // }
 
-        public async Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO)
-        {
-            var nganh = await _context.Nganhs.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Nganh");
-            if (updateNganhDTO.MaNganh != null && await IsMaNganhExisted(updateNganhDTO.MaNganh))
-            {
-                throw new BusinessLogicException("Mã nganh đã tồn tại");
-            }
-            nganh = updateNganhDTO.ToNganhFromUpdateDTO(nganh);
+        // public async Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO)
+        // {
+        //     var nganh = await _context.Nganhs.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Nganh");
+        //     if (updateNganhDTO.MaNganh != null && await IsMaNganhExisted(updateNganhDTO.MaNganh))
+        //     {
+        //         throw new BusinessLogicException("Mã nganh đã tồn tại");
+        //     }
+        //     nganh = updateNganhDTO.ToNganhFromUpdateDTO(nganh);
 
-            await _context.SaveChangesAsync();
-            return nganh;
-        }
+        //     await _context.SaveChangesAsync();
+        //     return nganh;
+        // }
 
-        public async Task<Nganh?> UpdateTruongNganh(int nganhid, TaiNganhn truongnganh)
-        {
-            var nganh = await _context.Nganhs.FindAsync(nganhid);
-            if (nganh == null)
-            {
-                return null;
-            }
-            nganh.TruongNganhId = truongnganh.Id;
-            nganh.TruongNganh = truongnganh;
-            _context.Nganhs.Update(nganh);
-            await _context.SaveChangesAsync();
-            return nganh;
-        }
+        // public async Task<Nganh?> UpdateTruongNganh(int nganhid, TaiNganhn truongnganh)
+        // {
+        //     var nganh = await _context.Nganhs.FindAsync(nganhid);
+        //     if (nganh == null)
+        //     {
+        //         return null;
+        //     }
+        //     nganh.TruongNganhId = truongnganh.Id;
+        //     nganh.TruongNganh = truongnganh;
+        //     _context.Nganhs.Update(nganh);
+        //     await _context.SaveChangesAsync();
+        //     return nganh;
+        // }
 
         public async Task<bool> DeleteNganhAsync(int id)
         {
