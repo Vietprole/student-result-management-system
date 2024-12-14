@@ -98,7 +98,7 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            if(!_passwordHashService.VerifyPassword(taiKhoan.Password, taiKhoanLoginDTO.MatKhau))
+            if(!_passwordHashService.VerifyPassword(taiKhoanLoginDTO.MatKhau, taiKhoan.Password))
             {
                 return null;
             }

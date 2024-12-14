@@ -40,11 +40,6 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] TaiKhoanLoginDTO taiKhoanLoginDTO)
         {
-            string checkUsername = await _taiKhoanService.CheckUsername(taiKhoanLoginDTO.TenDangNhap);
-            if (checkUsername != "Username hợp lệ")
-            {
-                return BadRequest(checkUsername);
-            }
             string checkPassword = _taiKhoanService.CheckPassword(taiKhoanLoginDTO.MatKhau);
             if (checkPassword != "Password hợp lệ")
             {
