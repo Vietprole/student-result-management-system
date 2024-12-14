@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.ChucVu;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 

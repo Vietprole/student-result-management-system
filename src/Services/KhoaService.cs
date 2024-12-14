@@ -43,6 +43,20 @@ namespace Student_Result_Management_System.Services
             return khoa?.MaKhoa;
         }
 
+        public async Task<KhoaDTO?> UpdateKhoa(int id, UpdateKhoaDTO updateKhoaDTO)
+        {
+            var khoa = await _context.Khoas.FindAsync(id);
+            if (khoa == null)
+            {
+                return null;
+            }
+            khoa.Ten = updateKhoaDTO.Ten;
+            khoa.MaKhoa = updateKhoaDTO.MaKhoa;
+            _context.Khoas.Update(khoa);
+            await _context.SaveChangesAsync();
+            return khoa.ToKhoaDTO();
+        }
+
         public async Task<Khoa?> UpdateTruongKhoa(int khoaid, TaiKhoan truongkhoa)
         {
             var khoa = await _context.Khoas.FindAsync(khoaid);
