@@ -3,6 +3,7 @@ import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getAllHocPhans, deleteHocPhan } from "@/api/api-hocphan";
+import { getNganhs } from "@/api/api-nganh";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,16 +26,23 @@ import { HocPhanForm } from "@/components/HocPhanForm";
 import { useRef, useState, useEffect } from "react";
 import AddPLOToHocPhanForm from "@/components/AddPLOToHocPhanForm";
 import ManagePLOInHocPhanForm from "@/components/ManagePLOInHocPhanForm";
+import { ComboBox } from "@/components/ComboBox";
 
 export default function HocPhanPage() {
   const addPLOFormRef = useRef(null);
   const managePLOFormRef = useRef(null);
   const [data, setData] = useState([]);
+  const [nganhItems, setNganhItems] = useState([]);
+  const [selectedNganhId, setSelectedNganhId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllHocPhans();
       setData(data);
+      
+      const dataNganh = await getNganhs();
+      const mappedNganhItems = dataNganh.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      setNganhItems(mappedNganhItems);
     };
     fetchData();
   }, []);
@@ -246,10 +254,11 @@ export default function HocPhanPage() {
   return (
     <Layout>
       <div className="w-full">
+        <ComboBox items={nganhItems} setItemId={setSelectedNganhId} initialItemId={selectedNganhId} />
         <DataTable
           entity="HocPhan"
           createColumns={createHocPhanColumns}
-          data={data}
+          data={Array.isArray(data) ? data : []}
           setData={setData}
           deleteItem={deleteHocPhan}
           columnToBeFiltered={"ten"}

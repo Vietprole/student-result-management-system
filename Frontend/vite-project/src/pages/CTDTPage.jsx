@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { CTDTForm } from "@/components/CTDTForm";
 import { getNganhs } from "@/api/api-nganh";
-import ComboBox from "@/components/ComboBox";
+
 
 export default function CTDTPage() {
   const addHocPhanFormRef = useRef(null);
@@ -209,7 +209,6 @@ export default function CTDTPage() {
   return (
     <Layout>
       <div className="w-full">
-        <ComboBox items={nganhItems} setItemId={setSelectedNganhId} initialItemId={selectedNganhId} />
         <DataTable
           entity="Chương Trình"
           createColumns={createCTDTColumns}
