@@ -31,4 +31,12 @@ public static class KhoaMapper
         existingKhoa.MaKhoa = updateKhoaDTO.MaKhoa ?? existingKhoa.MaKhoa;
         return existingKhoa;
     }
+    // public static Khoa ToKhoaFromUpdateDTO(this UpdateKhoaDTO updateKhoaDTO, Khoa existingKhoa)
+    // {
+    //     if (updateKhoaDTO.Ten != null)
+    //         existingKhoa.Ten = updateKhoaDTO.Ten;
+    //     if (updateKhoaDTO.MaKhoa != null)
+    //         existingKhoa.MaKhoa = updateKhoaDTO.MaKhoa;
+    //     return existingKhoa;
+    // }
 }

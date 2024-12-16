@@ -69,6 +69,7 @@ builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
 builder.Services.AddScoped<ISinhVienService, SinhVienService>();
 builder.Services.AddScoped<IGiangVienService, GiangVienService>();
 
+builder.Services.AddScoped<INganhService, NganhService>();
 builder.Services.AddScoped<IBaiKiemTraService, BaiKiemTraService>();
 builder.Services.AddScoped<ICauHoiService, CauHoiService>();
 builder.Services.AddScoped<ICLOService, CLOService>();
