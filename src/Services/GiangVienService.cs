@@ -49,7 +49,9 @@ namespace Student_Result_Management_System.Services
             {
                 TaiKhoanId = taiKhoanId.Id,
                 TaiKhoan = await _taiKhoanService.GetTaiKhoanById(taiKhoanId.Id),
-                KhoaId = createGiangVienDTO.KhoaId
+                KhoaId = createGiangVienDTO.KhoaId,
+                MaGiangVien = taiKhoanId.Username
+                
             };
             _context.GiangViens.Add(giangVien);
             await _context.SaveChangesAsync();
@@ -64,6 +66,17 @@ namespace Student_Result_Management_System.Services
                return null;
            }
            int soluong = await GetCountGiangVien(createGiangVienDTO.KhoaId)+1;
+           while(true)
+           {
+               if(await _context.GiangViens.AnyAsync(gv => gv.MaGiangVien == MaKhoa + (soluong + 1).ToString("D7")))
+               {
+                   soluong++;
+               }
+               else
+               {
+                   break;
+               }
+           }
            string Magiangvien = MaKhoa+(soluong + 1).ToString("D7");
            CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
            {

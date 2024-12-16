@@ -51,6 +51,10 @@ namespace lopHocPhan_Result_Management_System.Controllers
         public async Task<IActionResult> Create([FromBody] CreateLopHocPhanDTO createLopHocPhanDTO)
         {
             var lopHocPhan = await _lopHocPhanService.CreateLopHocPhanAsync(createLopHocPhanDTO);
+            if (lopHocPhan == null)
+            {
+                return BadRequest("Không thể tạo lớp học phần mới.");
+            }
             var lopHocPhanDTO = lopHocPhan.ToLopHocPhanDTO();
             return CreatedAtAction(nameof(GetById), new { id = lopHocPhan.Id }, lopHocPhanDTO);
         }
@@ -147,8 +151,15 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpPost("{id}/add-congthucdiem")]
         public async Task<IActionResult> AddCongThucDiem([FromRoute] int id, [FromBody] List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
         {
-            string check =await _lopHocPhanService.CheckCongThucDiem(createBaiKiemTraDTOs);
-            if(check!="OK")
+            if (!ModelState.IsValid)
+            {
+                // Lấy thông tin lỗi chi tiết
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { Message = "Dữ liệu không hợp lệ", Errors = errors });
+            }
+
+            string check = await _lopHocPhanService.CheckCongThucDiem(createBaiKiemTraDTOs);
+            if (check != "OK")
             {
                 return BadRequest(check);
             }
@@ -158,8 +169,8 @@ namespace lopHocPhan_Result_Management_System.Controllers
                 return BadRequest("Không thể tạo công thức điểm");
             }
             return Ok(congThucDiemDTO);
-
         }
+
 
         //[HttpGet("{id}/view-giangviens")]
         //public async Task<IActionResult> GetGiangViens([FromRoute] int id)

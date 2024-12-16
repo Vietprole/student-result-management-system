@@ -42,9 +42,27 @@ namespace Student_Result_Management_System.Services
             return hocPhan.ToHocPhanDTO();
         }
         
-        public async Task<HocPhanDTO> CreateHocPhanAsync(CreateHocPhanDTO createHocPhanDTO)
+        public async Task<HocPhanDTO?> CreateHocPhanAsync(CreateHocPhanDTO createHocPhanDTO)
         {
             var hocPhan = createHocPhanDTO.ToHocPhanFromCreateDTO();
+            var khoa = await _context.Khoas.FindAsync(createHocPhanDTO.KhoaId);
+            if (khoa == null)
+            {
+                return null;
+            }
+            int soluong = await _context.HocPhans.CountAsync()+1;
+            while(true)
+            {
+                if(await _context.HocPhans.AnyAsync(hp => hp.MaHocPhan == khoa.MaKhoa + soluong.ToString("D4")))
+                {
+                    soluong++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            hocPhan.MaHocPhan = khoa.MaKhoa + soluong.ToString("D4");
             await _context.HocPhans.AddAsync(hocPhan);
             await _context.SaveChangesAsync();
             return hocPhan.ToHocPhanDTO();

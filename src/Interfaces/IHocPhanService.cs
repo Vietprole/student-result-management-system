@@ -9,7 +9,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<HocPhanDTO>> GetAllHocPhansAsync();
         public Task<List<HocPhanDTO>> GetHocPhansByKhoaIdAsync(int khoaId);
         public Task<HocPhanDTO?> GetHocPhanByIdAsync(int id);
-        public Task<HocPhanDTO> CreateHocPhanAsync(CreateHocPhanDTO createHocPhanDTO);
+        public Task<HocPhanDTO?> CreateHocPhanAsync(CreateHocPhanDTO createHocPhanDTO);
         public Task<HocPhanDTO?> UpdateHocPhanAsync(int id, UpdateHocPhanDTO updateHocPhanDTO);
         public Task<bool> DeleteHocPhanAsync(int id);
         // public Task<List<PLODTO>> AddPLOsToHocPhanAsync(int hocPhanId, int[] pLOIds);

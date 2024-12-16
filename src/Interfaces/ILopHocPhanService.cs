@@ -11,7 +11,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<LopHocPhan>> GetAllLopHocPhansAsync();
         public Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId);
         public Task<LopHocPhan?> GetLopHocPhanByIdAsync(int id);
-        public Task<LopHocPhan> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO);
+        public Task<LopHocPhan?> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO);
         public Task<LopHocPhan?> UpdateLopHocPhanAsync(int id,UpdateLopHocPhanDTO lopHocPhanDTO);
         public Task<bool> DeleteLopHocPhanAsync(int id);
         public Task<List<SinhVien>> GetSinhViensInLopHocPhanAsync(int lopHocPhanId);
