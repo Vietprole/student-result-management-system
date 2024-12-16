@@ -112,9 +112,19 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public Task<string> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO)
+        public async Task<string> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO)
         {
-            throw new NotImplementedException();
+            var exitsTen = await _context.Khoas.FirstOrDefaultAsync(k => k.Ten == createKhoaDTO.Ten);
+            var exitsMaKhoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == createKhoaDTO.MaKhoa);
+            if (exitsTen != null)
+            {
+                return "Tên khoa đã tồn tại";
+            }
+            if (exitsMaKhoa != null)
+            {
+                return "Mã khoa đã tồn tại";
+            }
+            return "Khoa hợp lệ";
         }
     }
 }

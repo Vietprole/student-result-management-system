@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.SinhVien;
@@ -57,7 +53,8 @@ namespace Student_Result_Management_System.Services
                 TaiKhoanId = taiKhoan.Id,
                 TaiKhoan =await _taiKhoanService.GetTaiKhoanById(taiKhoan.Id),
                 KhoaId = createSinhVienDTO.KhoaId,
-                NamNhapHoc = createSinhVienDTO.NamNhapHoc
+                NamNhapHoc = createSinhVienDTO.NamNhapHoc,
+                MaSinhVien = taiKhoan.Username
             };
             _context.SinhViens.Add(sinhVien);
             await _context.SaveChangesAsync();
@@ -75,6 +72,17 @@ namespace Student_Result_Management_System.Services
            }
            string NamNhapHoc = taikhoanSinhVien.NamNhapHoc.ToString().Substring(taikhoanSinhVien.NamNhapHoc.ToString().Length - 2);
            int soluong = await GetSinhVienByKhoa(taikhoanSinhVien.KhoaId)+1;
+           while(true)
+           {
+               if(await _context.SinhViens.AnyAsync(sv => sv.MaSinhVien == MaKhoa + NamNhapHoc + (soluong + 1).ToString("D4")))
+               {
+                   soluong++;
+               }
+               else
+               {
+                   break;
+               }
+           }
            string MaSinhVien = MaKhoa + NamNhapHoc + (soluong + 1).ToString("D4");
            CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
            {
@@ -136,7 +144,10 @@ namespace Student_Result_Management_System.Services
             }
             if (exitsSV.TaiKhoan != null)
             {
-                exitsSV.TaiKhoan.Ten = updateSinhVienDTO.Ten;
+                if (updateSinhVienDTO.Ten != null)
+                {
+                    exitsSV.TaiKhoan.Ten = updateSinhVienDTO.Ten;
+                }
             }
             exitsSV.KhoaId= (int)updateSinhVienDTO.KhoaId;
             exitsSV.NamNhapHoc= (int)updateSinhVienDTO.NamNhapHoc;

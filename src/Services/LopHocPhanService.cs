@@ -52,9 +52,32 @@ namespace Student_Result_Management_System.Services
             return lopHocPhan;
         }
 
-        public async Task<LopHocPhan> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO)
+        public async Task<LopHocPhan?> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO)
         {
             var lopHocPhan = lopHocPhanDTO.ToLopHocPhanFromCreateDTO();
+            var hocPhan = await _context.HocPhans.FindAsync(lopHocPhanDTO.HocPhanId);
+            if (hocPhan == null)
+            {
+                return null;
+            }
+            var hocKy = await _context.HocKies.FindAsync(lopHocPhanDTO.HocKyId);
+            if (hocKy == null)
+            {
+                return null;
+            }
+            int soluong = await _context.LopHocPhans.CountAsync()+1;
+            while(true)
+            {
+                if(await _context.LopHocPhans.AnyAsync(lhp => lhp.MaLopHocPhan == hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3")))
+                {
+                    soluong++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            lopHocPhan.MaLopHocPhan = hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3");
             await _context.LopHocPhans.AddAsync(lopHocPhan);
             await _context.SaveChangesAsync();
             return lopHocPhan;
@@ -146,6 +169,11 @@ namespace Student_Result_Management_System.Services
 
         public Task<string> CheckCongThucDiem(List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
         {
+            bool ck = createBaiKiemTraDTOs.GroupBy(x=>x.Loai).Any(g=>g.Count()>1);
+            if(ck)
+            {
+                return Task.FromResult("Loại bài kiểm tra không được trùng nhau");
+            }
             decimal sum = 0;
             foreach(CreateBaiKiemTraDTO i in createBaiKiemTraDTOs)
             {
