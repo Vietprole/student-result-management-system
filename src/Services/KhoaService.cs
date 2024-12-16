@@ -24,6 +24,7 @@ namespace Student_Result_Management_System.Services
             var khoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == maKhoa);
             return khoa != null;
         }
+        
         public async Task<Khoa> CreateKhoaAsync(Khoa khoa)
         {
             if (await IsMaKhoaExisted(khoa.MaKhoa))
@@ -92,6 +93,11 @@ namespace Student_Result_Management_System.Services
                 throw new BusinessLogicException("Khoa chứa các đối tượng con, không thể xóa");
             }
             return true;
+        }
+
+        public Task<string> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO)
+        {
+            throw new NotImplementedException();
         }
     }
 }
