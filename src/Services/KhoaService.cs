@@ -18,6 +18,22 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
+
+        public async Task<string> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO)
+        {
+            var exits = await _context.Khoas.FirstOrDefaultAsync(x=>x.Ten.ToLower()==createKhoaDTO.Ten.ToLower());
+            if (exits != null)
+            {
+                return "Khoa đã tồn tại";
+            }
+            var exitsMa= await _context.Khoas.FirstOrDefaultAsync(x=>x.MaKhoa.ToLower()==createKhoaDTO.MaKhoa.ToLower());
+            if (exitsMa != null)
+            {
+                return "Mã khoa đã tồn tại";
+            }
+            return "Khoa hợp lệ";
+        }
+
         public async Task<Khoa?> CreateKhoa(Khoa khoa)
         {
            await _context.Khoas.AddAsync(khoa);

@@ -50,7 +50,21 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> AddHocKy([FromBody] CreateHocKyDTO newHocKyDTO)
         {
+            bool CheckTenHocKy = _hocKyService.CheckTenHocKy(newHocKyDTO.Ten);
+            if (CheckTenHocKy == false)
+            {
+                return BadRequest("Tên học kỳ không hợp lệ");
+            }
+
+            if (newHocKyDTO.NamHoc<2000 || newHocKyDTO.NamHoc>DateTime.Now.Year)
+            {
+                return BadRequest("Năm học không hợp lệ");
+            }
             var hocKyDTO = await _hocKyService.AddHocKyDTO(newHocKyDTO);
+            if (hocKyDTO == null)
+            {
+                return BadRequest("Không thế tạo học kỳ mới");
+            }
             return Ok(hocKyDTO);
         }
         [HttpPut("{id}")]

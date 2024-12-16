@@ -5,6 +5,7 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface IKhoaService
     {
+        public Task<string> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO);
         public Task<List<Khoa>> GetAllKhoasAsync();
         public Task<Khoa?> CreateKhoa(Khoa khoa);
         public Task<KhoaDTO?> UpdateKhoa(int id, UpdateKhoaDTO updateKhoaDTO);

@@ -12,10 +12,7 @@ namespace Student_Result_Management_System.DTOs.HocKy
         [MinLength(1)]
         public string Ten { get; set; } = string.Empty;
         [Required]
-        [Range(0, 9999)]
+        [Range(0, 5000)]
         public int NamHoc { get; set; }
-        [Required]
-        [MinLength(1)]
-        public string MaHocKy { get; set; } = string.Empty;
     }
 }

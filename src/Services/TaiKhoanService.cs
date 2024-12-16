@@ -92,7 +92,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<NewTaiKhoanDTO?> Login(TaiKhoanLoginDTO taiKhoanLoginDTO)
         {
-            var taiKhoan = await _context.TaiKhoans.FirstOrDefaultAsync(x => x.Username == taiKhoanLoginDTO.TenDangNhap);
+            var taiKhoan = await _context.TaiKhoans.Include(c=>c.ChucVu).FirstOrDefaultAsync(x => x.Username == taiKhoanLoginDTO.TenDangNhap);
             if (taiKhoan == null)
             {
                 return null;
