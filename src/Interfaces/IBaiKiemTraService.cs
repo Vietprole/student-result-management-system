@@ -1,4 +1,5 @@
 using Student_Result_Management_System.DTOs.BaiKiemTra;
+using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Interfaces
@@ -12,5 +13,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<BaiKiemTraDTO?> UpdateBaiKiemTraAsync(int id, UpdateBaiKiemTraDTO updateBaiKiemTraDTO);
         public Task<bool> DeleteBaiKiemTraAsync(int id);
         public Task<bool> CheckDuplicateBaiKiemTraLoaiInLopHocPhan(string? loai, int lopHocPhanId);
+        public Task<CongThucDiemDTO?> CreateCongThucDiem(int lopHocPhanId,List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs);
     }
 }

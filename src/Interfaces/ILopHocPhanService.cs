@@ -1,3 +1,4 @@
+using Student_Result_Management_System.DTOs.BaiKiemTra;
 using Student_Result_Management_System.DTOs.GiangVien;
 using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.DTOs.SinhVien;
@@ -23,5 +24,6 @@ namespace Student_Result_Management_System.Interfaces
         //public Task<DateTime?> CapNhatNgayXacNhanCTD(int lopHocPhanId, string tenNguoiXacNhanCTD);
         //public Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD);
         
+        public Task<string> CheckCongThucDiem(List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs);
     }
 }

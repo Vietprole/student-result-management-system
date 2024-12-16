@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.BaiKiemTra;
 using Student_Result_Management_System.DTOs.GiangVien;
 using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.DTOs.SinhVien;
@@ -203,6 +204,20 @@ namespace Student_Result_Management_System.Services
             lopHocPhan.HocKyId = lopHocPhanDTO.HocKyId;
             await _context.SaveChangesAsync();
             return lopHocPhan.ToLopHocPhanDTO();
+        }
+
+        public Task<string> CheckCongThucDiem(List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
+        {
+            decimal sum = 0;
+            foreach(CreateBaiKiemTraDTO i in createBaiKiemTraDTOs)
+            {
+                sum += i.TrongSo ?? 0;
+            }
+            if(sum!=1)
+            {
+                return Task.FromResult("Tổng trọng số phải bằng 1");
+            }
+            return Task.FromResult("OK");
         }
     }
 }
