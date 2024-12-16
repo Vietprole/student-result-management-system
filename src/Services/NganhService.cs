@@ -20,12 +20,26 @@ namespace Student_Result_Management_System.Services
             _context = context;
         }
 
-        private async Task<bool> IsMaNganhExisted(string maNganh)
+        public async Task<string> GenerateMaNganhAsync(int khoaId)
         {
-            var nganh = await _context.Nganhs.FirstOrDefaultAsync(n => n.MaNganh == maNganh);
-            return nganh != null;
-        }
+            // Get MaKhoa
+            var khoa = await _context.Khoas.FindAsync(khoaId) ?? throw new NotFoundException($"Không tìm thấy Khoa với Id: {khoaId}");
+            string maKhoa = khoa.MaKhoa;
 
+            // Get existing Nganh count for this Khoa
+            int existingNganhCount = await _context.Nganhs
+                .CountAsync(n => n.KhoaId == khoaId);
+
+            // Calculate next sequential number
+            int nextSequentialNumber = existingNganhCount + 1;
+            if (nextSequentialNumber > 9999)
+                throw new BusinessLogicException("Đã đạt đến số lượng Ngành tối đa cho Khoa này");
+
+            // Combine MaKhoa and sequential number
+            string maNganh = $"{maKhoa}{nextSequentialNumber:D4}";
+
+            return maNganh;
+        }
         public async Task<List<Nganh>> GetAllNganhsAsync()
         {
             return await _context.Nganhs.Include(n => n.Khoa).ToListAsync();
@@ -48,10 +62,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<Nganh> CreateNganhAsync(Nganh nganh)
         {
-            if (await IsMaNganhExisted(nganh.MaNganh))
-            {
-                throw new BusinessLogicException("Mã ngành đã tồn tại");
-            }
+            nganh.MaNganh = await GenerateMaNganhAsync(nganh.KhoaId);
             await _context.Nganhs.AddAsync(nganh);
             await _context.SaveChangesAsync();
             return await GetNganhByIdAsync(nganh.Id);
@@ -61,12 +72,6 @@ namespace Student_Result_Management_System.Services
         {
             var nganh = await _context.Nganhs.FindAsync(id) ?? 
                 throw new NotFoundException("Không tìm thấy Ngành");
-
-            if (updateNganhDTO.MaNganh != null && updateNganhDTO.MaNganh != nganh.MaNganh && 
-                await IsMaNganhExisted(updateNganhDTO.MaNganh))
-            {
-                throw new BusinessLogicException("Mã ngành đã tồn tại");
-            }
 
             nganh = updateNganhDTO.ToNganhFromUpdateDTO(nganh);
             await _context.SaveChangesAsync();

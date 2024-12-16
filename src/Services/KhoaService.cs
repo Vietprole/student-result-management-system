@@ -24,6 +24,16 @@ namespace Student_Result_Management_System.Services
             var khoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == maKhoa);
             return khoa != null;
         }
+
+        private async Task<bool> DoesKhoaHasRelatedEntities(int khoaId)
+        {
+            var khoa = await _context.Khoas
+                .Include(k => k.Nganhs)
+                .Include(k => k.GiangViens)
+                .FirstOrDefaultAsync(k => k.Id == khoaId);
+
+            return khoa?.Nganhs.Count != 0 || khoa?.GiangViens.Count != 0;
+        }
         
         public async Task<Khoa> CreateKhoaAsync(Khoa khoa)
         {
@@ -56,9 +66,16 @@ namespace Student_Result_Management_System.Services
         public async Task<Khoa?> UpdateKhoaAsync(int id, UpdateKhoaDTO updateKhoaDTO)
         {
             var khoa = await _context.Khoas.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Khoa");
-            if (updateKhoaDTO.MaKhoa != null && await IsMaKhoaExisted(updateKhoaDTO.MaKhoa))
+            if (updateKhoaDTO.MaKhoa != null && updateKhoaDTO.MaKhoa != khoa.MaKhoa)
             {
-                throw new BusinessLogicException("Mã khoa đã tồn tại");
+                if (await IsMaKhoaExisted(updateKhoaDTO.MaKhoa))
+                {
+                    throw new BusinessLogicException("Mã khoa đã tồn tại");
+                }
+                if (await DoesKhoaHasRelatedEntities(id))
+                {
+                    throw new BusinessLogicException("Khoa chứa các đối tượng con, không thể thay đổi mã khoa");
+                }
             }
             khoa = updateKhoaDTO.ToKhoaFromUpdateDTO(khoa);
 

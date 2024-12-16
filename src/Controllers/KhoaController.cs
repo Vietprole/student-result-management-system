@@ -46,11 +46,11 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         {
-           string check=await _khoaService.CheckCreateKhoa(createKhoaDTO);
-            if (check!="Khoa hợp lệ")
-            {
-            return BadRequest(check);
-            }
+        //    string check=await _khoaService.CheckCreateKhoa(createKhoaDTO);
+        //     if (check!="Khoa hợp lệ")
+        //     {
+        //     return BadRequest(check);
+        //     }
             var khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO.ToKhoaFromCreateDTO());
            if (khoa == null)
            {

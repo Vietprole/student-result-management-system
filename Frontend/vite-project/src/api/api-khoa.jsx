@@ -33,6 +33,7 @@ export const addKhoa = async (studentData) => {
     const response = await axios.post(API_KHOA, studentData, {
       headers: { Authorization: getAccessToken() }
     });
+    console.log("response khoa: ", response);
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);

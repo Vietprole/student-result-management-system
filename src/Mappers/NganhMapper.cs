@@ -12,6 +12,7 @@ public static class NganhMapper
         {
             Id = nganh.Id,
             Ten = nganh.Ten,
+            MaNganh = nganh.MaNganh,
             KhoaId = nganh.KhoaId,
             TenKhoa = nganh.Khoa?.Ten ?? string.Empty,
         };
@@ -29,7 +30,6 @@ public static class NganhMapper
     public static Nganh ToNganhFromUpdateDTO(this UpdateNganhDTO updateNganhDTO, Nganh existingNganh)
     {
         existingNganh.Ten = updateNganhDTO.Ten ?? existingNganh.Ten;
-        existingNganh.KhoaId = updateNganhDTO.KhoaId ?? existingNganh.KhoaId;
         return existingNganh;
     }
 }

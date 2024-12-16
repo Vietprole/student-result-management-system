@@ -5,7 +5,5 @@ namespace Student_Result_Management_System.DTOs.Nganh;
 
 public class UpdateNganhDTO
 {
-    public string? Ten { get; set; } = string.Empty;
-    public string? MaNganh { get; set; } = string.Empty;
-    public int? KhoaId { get; set; }
+    public string? Ten { get; set; }
 }

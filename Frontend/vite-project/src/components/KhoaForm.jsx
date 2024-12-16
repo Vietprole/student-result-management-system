@@ -19,11 +19,14 @@ const formSchema = z.object({
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
-  maKhoa: z.coerce.number({
-    message: "MaKhoa must be a number.",
-  }).min(3, {
-    message: "MaKhoa must be at least 3 characters.",
-  }),
+  maKhoa: z.preprocess(
+    (val) => Number(val),
+    z.number({
+      invalid_type_error: "MaKhoa must be a number.",
+    }).int().min(100, {
+      message: "MaKhoa must be at least 3 digits.",
+    })
+  ).transform((val) => val.toString()),
 });
 
 export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
@@ -41,7 +44,8 @@ export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log("values 43: ", values);
-    if (khoa.id) {
+    console.log("khoa: ", khoa);
+    if (khoa) {
       console.log("values", values);
       const data = await updateKhoa(khoa.id, values);
       handleEdit(data);
