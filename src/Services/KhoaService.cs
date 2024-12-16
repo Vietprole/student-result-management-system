@@ -43,7 +43,6 @@ namespace Student_Result_Management_System.Services
         public async Task<Khoa?> GetKhoaByIdAsync(int id)
         {
             var khoa = await _context.Khoas.FindAsync(id);
-            // return khoa?.ToKhoaDTO();
             return khoa;
         }
 

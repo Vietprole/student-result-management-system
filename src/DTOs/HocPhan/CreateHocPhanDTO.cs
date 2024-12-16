@@ -8,7 +8,7 @@ public class CreateHocPhanDTO
 {
     [Required(ErrorMessage = "Tên học phần không được để trống")]
     public string Ten { get; set; } = string.Empty;
-    [Required]
+    [Required(ErrorMessage = "Số tín chỉ không được để trống")]
     [Column(TypeName = "decimal(3, 1)")]
     [Range(0.0, double.MaxValue, ErrorMessage = "Số tín chỉ phải lớn hơn hoặc bằng 0")]
     public decimal SoTinChi { get; set; }

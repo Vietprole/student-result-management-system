@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.Nganh;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -14,88 +16,78 @@ namespace Student_Result_Management_System.Controllers
     // [Authorize]
     public class NganhController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        public NganhController(ApplicationDBContext context)
+        private readonly INganhService _nganhService;
+        public NganhController(INganhService nganhService)
         {
-            _context = context;
+            _nganhService = nganhService;
         }
+
         [HttpGet]
-        // IActionResult return any value type
-        // public async Task<IActionResult> Get()
-        // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? khoaId) // [FromQuery] binds to query parameter
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId)
         {
-            IQueryable<Nganh> query = _context.Nganhs.Include(n => n.Khoa);
-
-            if (khoaId.HasValue)
-            {
-                query = query.Where(n => n.KhoaId == khoaId.Value);
-            }
-
-            var nganhs = await query.ToListAsync(); // Use query instead of _context.Nganhs
-            var nganhDTOs = nganhs.Select(sv => sv.ToNganhDTO()).ToList();
-            return Ok(nganhDTOs);
+            var nganhs = khoaId.HasValue ? 
+                await _nganhService.GetNganhsByKhoaIdAsync(khoaId.Value) :
+                await _nganhService.GetAllNganhsAsync();
+            return Ok(nganhs.Select(n => n.ToNganhDTO()));
         }
 
         [HttpGet("{id}")]
-        // Get single entry
-        public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var nganh = await _context.Nganhs
-                .Include(n => n.Khoa)
-                .FirstOrDefaultAsync(n => n.Id == id);
+            var nganh = await _nganhService.GetNganhByIdAsync(id);
             if (nganh == null)
                 return NotFound();
-            var nganhDTO = nganh.ToNganhDTO();
-            return Ok(nganhDTO);
+            return Ok(nganh.ToNganhDTO());
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateNganhDTO createNganhDTO)
         {
-            var nganh = createNganhDTO.ToNganhFromCreateDTO();
-            await _context.Nganhs.AddAsync(nganh);
-            await _context.SaveChangesAsync();
-
-            // Reload entity with Khoa included
-            nganh = await _context.Nganhs
-                .Include(n => n.Khoa)
-                .FirstOrDefaultAsync(n => n.Id == nganh.Id);
-
-            var nganhDTO = nganh?.ToNganhDTO();
-            return CreatedAtAction(nameof(GetById), new { id = nganh?.Id }, nganhDTO);
+            try
+            {
+                var nganh = await _nganhService.CreateNganhAsync(createNganhDTO.ToNganhFromCreateDTO());
+                return CreatedAtAction(nameof(GetById), new { id = nganh.Id }, nganh.ToNganhDTO());
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateNganhDTO updateNganhDTO)
         {
-            var nganhToUpdate = await _context.Nganhs
-                .FirstOrDefaultAsync(n => n.Id == id);
-            if (nganhToUpdate == null)
-                return NotFound();
-
-            nganhToUpdate.Ten = updateNganhDTO.Ten;
-            nganhToUpdate.KhoaId = updateNganhDTO.KhoaId;
-            
-            await _context.SaveChangesAsync();
-            // Reload to get updated Khoa information
-            nganhToUpdate = await _context.Nganhs
-                .Include(n => n.Khoa)
-                .FirstOrDefaultAsync(n => n.Id == id);
-
-            var nganhDTO = nganhToUpdate?.ToNganhDTO();
-            return Ok(nganhDTO);
+            try
+            {
+                var nganh = await _nganhService.UpdateNganhAsync(id, updateNganhDTO);
+                return Ok(nganh?.ToNganhDTO());
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var nganhToDelete = await _context.Nganhs.FindAsync(id);
-            if (nganhToDelete == null)
-                return NotFound();
-            _context.Nganhs.Remove(nganhToDelete);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _nganhService.DeleteNganhAsync(id);
+                return NoContent();
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
     }

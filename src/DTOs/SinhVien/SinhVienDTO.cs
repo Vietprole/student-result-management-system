@@ -6,5 +6,5 @@ public class SinhVienDTO
     public string Ten { get; set; } = string.Empty;
     public int KhoaId { get; set; }
     public string TenKhoa { get; set; } = string.Empty;
-    public int NamBatDau { get; set; }
+    public int NamNhapHoc { get; set; }
 }

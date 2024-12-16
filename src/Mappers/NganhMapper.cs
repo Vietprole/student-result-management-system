@@ -26,12 +26,10 @@ public static class NganhMapper
         };
     }
 
-    public static Nganh ToNganhFromUpdateDTO(this UpdateNganhDTO updateNganhDTO)
+    public static Nganh ToNganhFromUpdateDTO(this UpdateNganhDTO updateNganhDTO, Nganh existingNganh)
     {
-        return new Nganh
-        {
-            Ten = updateNganhDTO.Ten,
-            KhoaId = updateNganhDTO.KhoaId,
-        };
+        existingNganh.Ten = updateNganhDTO.Ten ?? existingNganh.Ten;
+        existingNganh.KhoaId = updateNganhDTO.KhoaId ?? existingNganh.KhoaId;
+        return existingNganh;
     }
 }

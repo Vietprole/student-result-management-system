@@ -7,21 +7,15 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface ILopHocPhanService
     {
-        public Task<List<LopHocPhanDTO>> GetAllLopHocPhan();
-        public Task<List<LopHocPhanDTO>> GetAllLopHocPhanByHocKyId(int hocKyId);
-        public Task<List<LopHocPhanDTO>> GetAllLopHocPhanByHocPhanId(int hocPhanId);
-        public Task<LopHocPhanDTO?> GetLopHocPhan(int id);
-        public Task<LopHocPhanDTO> AddLopHocPhan(CreateLopHocPhanDTO lopHocPhanDTO);
-        public Task<LopHocPhanDTO?> UpdateLopHocPhan(int id,UpdateLopHocPhanDTO lopHocPhanDTO);
-        //public Task<LopHocPhanDTO?> DeleteLopHocPhan(int id);
-        //public Task<List<SinhVienDTO>?> GetSinhVienDTOs(int lopHocPhanId);
-        //public Task<List<GiangVienDTO>?> GetGiangVienDTOs(int lopHocPhanId);
-        //public Task<List<SinhVienDTO>?> AddSinhViens(int lopHocPhanId, List<SinhVien> sinhViens);
-        //public Task<List<GiangVienDTO>?> AddGiangViens(int lopHocPhanId, List<GiangVien> giangViens);
-        public Task<SinhVienDTO?> DeleteSinhViens(int lopHocPhanId, SinhVien sinhViens);
-        //public Task<GiangVienDTO?> DeleteGiangViens(int lopHocPhanId, GiangVien giangViens);
-        //public Task<DateTime?> CapNhatNgayXacNhanCTD(int lopHocPhanId, string tenNguoiXacNhanCTD);
-        //public Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD);
-        
+        public Task<List<LopHocPhan>> GetAllLopHocPhansAsync();
+        public Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId);
+        public Task<LopHocPhan?> GetLopHocPhanByIdAsync(int id);
+        public Task<LopHocPhan> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO);
+        public Task<LopHocPhan?> UpdateLopHocPhanAsync(int id,UpdateLopHocPhanDTO lopHocPhanDTO);
+        public Task<bool> DeleteLopHocPhanAsync(int id);
+        public Task<List<SinhVien>> GetSinhViensInLopHocPhanAsync(int lopHocPhanId);
+        public Task<List<SinhVien>> AddSinhViensToLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds);
+        public Task<List<SinhVien>> UpdateSinhViensInLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds);
+        public Task<List<SinhVien>> RemoveSinhVienFromLopHocPhanAsync(int lopHocPhanId, int sinhVienId);
     }
 }

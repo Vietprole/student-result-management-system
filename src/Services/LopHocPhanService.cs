@@ -10,6 +10,7 @@ using Student_Result_Management_System.DTOs.SinhVien;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
@@ -20,51 +21,126 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        //public async Task<List<GiangVienDTO>?> AddGiangViens(int lopHocPhanId, List<GiangVien> giangViens)
-        //{
-        //    var lopHocPhan = await _context.LopHocPhans.Include(c=>c.GiangViens).ThenInclude(x=>x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-        //    if (lopHocPhan == null)
-        //    {
-        //        return null;
-        //    }
-        //    foreach (var giangVien in giangViens)
-        //    {
-        //        // Kiểm tra nếu giảng viên chưa tồn tại trong danh sách
-        //        if (!lopHocPhan.GiangViens.Any(g => g.Id == giangVien.Id))
-        //        {
-        //            lopHocPhan.GiangViens.Add(giangVien);
-        //        }
-        //    }
-        //    await _context.SaveChangesAsync();
-        //    var giangVienDTOs = giangViens.Select(s => s.ToGiangVienDTO()).ToList();
-        //    return giangVienDTOs;
-        //}
 
-        public async Task<LopHocPhanDTO> AddLopHocPhan(CreateLopHocPhanDTO lopHocPhanDTO)
+        public async Task<List<LopHocPhan>> GetAllLopHocPhansAsync()
+        {
+            var lopHocPhans =await _context.LopHocPhans.ToListAsync();
+            return lopHocPhans;
+        }
+
+        public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId)
+        {
+            IQueryable<LopHocPhan> query = _context.LopHocPhans;
+
+            if (hocPhanId.HasValue)
+            {
+                query = query.Where(lhp => lhp.HocPhanId == hocPhanId.Value);
+            }
+
+            if (hocKyId.HasValue)
+            {
+                query = query.Where(lhp => lhp.HocKyId == hocKyId.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<LopHocPhan?> GetLopHocPhanByIdAsync(int id)
+        {
+            var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
+            return lopHocPhan;
+        }
+
+        public async Task<LopHocPhan> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO)
         {
             var lopHocPhan = lopHocPhanDTO.ToLopHocPhanFromCreateDTO();
             await _context.LopHocPhans.AddAsync(lopHocPhan);
             await _context.SaveChangesAsync();
-            return lopHocPhan.ToLopHocPhanDTO();
+            return lopHocPhan;
         }
 
-        public async Task<List<SinhVienDTO>?> AddSinhViens(int lopHocPhanId, List<SinhVien> sinhViens)
+        public async Task<LopHocPhan?> UpdateLopHocPhanAsync(int id, UpdateLopHocPhanDTO lopHocPhanDTO)
         {
-            var lopHocPhan = await _context.LopHocPhans.Include(c => c.SinhViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
+            var lopHocPhan = await _context.LopHocPhans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+            lopHocPhanDTO.ToLopHocPhanFromUpdateDTO(lopHocPhan);
+            await _context.SaveChangesAsync();
+            return lopHocPhan;
+        }
+
+        public async Task<bool> DeleteLopHocPhanAsync(int id)
+        {
+            var lopHocPhan = await _context.LopHocPhans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+            try {
+                _context.LopHocPhans.Remove(lopHocPhan);
+                await _context.SaveChangesAsync();
             }
-            foreach (var sinhVien in sinhViens)
+            catch (Exception)
             {
-                if (!lopHocPhan.SinhViens.Any(s => s.Id == sinhVien.Id))
+                throw new BusinessLogicException("Lớp học phần chứa các đối tượng con, không thể xóa");
+            }
+            return true;
+        }
+
+        public async Task<List<SinhVien>> GetSinhViensInLopHocPhanAsync(int lopHocPhanId)
+        {
+            var lopHocPhan = await _context.LopHocPhans.Include(c => c.SinhViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+            var sinhViens = lopHocPhan.SinhViens.ToList();
+            return sinhViens;
+        }
+
+        public async Task<List<SinhVien>> AddSinhViensToLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.SinhViens)
+                .ThenInclude(t => t.TaiKhoan)
+                .FirstOrDefaultAsync(lhp => lhp.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+            
+            foreach (var sinhVienId in sinhVienIds)
+            {
+                var sinhVien = await _context.SinhViens.FindAsync(sinhVienId);
+                if (sinhVien == null) continue;
+                if (!lopHocPhan.SinhViens.Contains(sinhVien))
                 {
                     lopHocPhan.SinhViens.Add(sinhVien);
                 }
             }
+
             await _context.SaveChangesAsync();
-            var sinhVienDTOs = sinhViens.Select(s => s.ToSinhVienDTO()).ToList();
-            return sinhVienDTOs;
+            return [.. lopHocPhan.SinhViens];
+        }
+
+        public async Task<List<SinhVien>> UpdateSinhViensInLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(p => p.SinhViens)
+                .ThenInclude(t => t.TaiKhoan)
+                .FirstOrDefaultAsync(p => p.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
+            
+            var sinhVienSet = new HashSet<int>(sinhVienIds);
+            var sinhViens = await _context.SinhViens
+                .Where(sv => sinhVienSet.Contains(sv.Id))
+                .ToListAsync();
+
+            lopHocPhan.SinhViens.Clear();
+            lopHocPhan.SinhViens.AddRange(sinhViens);
+
+            await _context.SaveChangesAsync();
+
+            return [.. lopHocPhan.SinhViens];
+        }
+
+        public async Task<List<SinhVien>> RemoveSinhVienFromLopHocPhanAsync(int lopHocPhanId, int sinhVienId)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.SinhViens)
+                .FirstOrDefaultAsync(lhp => lhp.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
+            
+            var sinhVien = await _context.SinhViens.FindAsync(sinhVienId) ?? throw new NotFoundException($"Không tìm thấy sinh viên có id: {sinhVienId}");
+            if (!lopHocPhan.SinhViens.Contains(sinhVien)) throw new BusinessLogicException($"Sinh viên có id: {sinhVienId} không học trong lớp học phần này");
+
+            lopHocPhan.SinhViens.Remove(sinhVien);
+            await _context.SaveChangesAsync();
+            return [.. lopHocPhan.SinhViens];
         }
 
         //public async Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD)
@@ -93,116 +169,5 @@ namespace Student_Result_Management_System.Services
         //    await _context.SaveChangesAsync();
         //    return lopHocPhan.NgayXacNhanCTD;
         //}
-
-        //public async Task<GiangVienDTO?> DeleteGiangViens(int lopHocPhanId, GiangVien giangViens)
-        //{
-        //    var lopHocPhan = await _context.LopHocPhans.Include(c => c.GiangViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-        //    if (lopHocPhan == null)
-        //    {
-        //        return null;
-        //    }
-        //    if (!lopHocPhan.GiangViens.Any(s => s.Id == giangViens.Id)) //Kiểm tra xem giảng viên có trong danh sách không
-        //    {
-        //        return null;
-        //    }
-        //    lopHocPhan.GiangViens.Remove(giangViens);
-        //    await _context.SaveChangesAsync();
-        //    return giangViens.ToGiangVienDTO();
-        //}
-
-        public async Task<LopHocPhanDTO?> DeleteLopHocPhan(int id)
-        {
-            var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            _context.LopHocPhans.Remove(lopHocPhan);
-            await _context.SaveChangesAsync();
-            return lopHocPhan.ToLopHocPhanDTO();
-        }
-
-        public async Task<SinhVienDTO?> DeleteSinhViens(int lopHocPhanId, SinhVien sinhViens)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Include(c => c.SinhViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            if (!lopHocPhan.SinhViens.Any(s => s.Id == sinhViens.Id))
-            {
-                return null;
-            }
-            lopHocPhan.SinhViens.Remove(sinhViens);
-            await _context.SaveChangesAsync();
-            return sinhViens.ToSinhVienDTO();
-        }
-
-        public async Task<List<LopHocPhanDTO>> GetAllLopHocPhan()
-        {
-            var lopHocPhans =await _context.LopHocPhans.ToListAsync();
-            var lopHocPhanDTOs=lopHocPhans.Select(s=>s.ToLopHocPhanDTO()).ToList();
-            return lopHocPhanDTOs;
-        }
-
-        public async Task<List<LopHocPhanDTO>> GetAllLopHocPhanByHocPhanId(int hocPhanId)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Where(s => s.HocPhanId == hocPhanId).ToListAsync();
-            var lopHocPhanDTOs = lopHocPhan.Select(s => s.ToLopHocPhanDTO()).ToList();
-            return lopHocPhanDTOs;
-        }
-
-        public async Task<List<LopHocPhanDTO>> GetAllLopHocPhanByHocKyId(int hocKyId)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Where(s => s.HocKyId == hocKyId).ToListAsync();
-            var lopHocPhanDTOs = lopHocPhan.Select(s => s.ToLopHocPhanDTO()).ToList();
-            return lopHocPhanDTOs; 
-        }
-
-        //public async Task<List<GiangVienDTO>?> GetGiangVienDTOs(int lopHocPhanId)
-        //{
-        //    var lopHocPhan = await _context.LopHocPhans.Include(c => c.GiangViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-        //    if (lopHocPhan == null)
-        //    {
-        //        return null;
-        //    }
-        //    var giangVienDTOs = lopHocPhan.GiangViens.Select(s => s.ToGiangVienDTO()).ToList();
-        //    return giangVienDTOs;
-        //}
-
-        public async Task<LopHocPhanDTO?> GetLopHocPhan(int id)
-        {
-            var lopHocPhan =await _context.LopHocPhans.FindAsync(id);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            return lopHocPhan.ToLopHocPhanDTO();
-        }
-
-        public async Task<List<SinhVienDTO>?> GetSinhVienDTOs(int lopHocPhanId)
-        {
-            var lopHocPhan = await _context.LopHocPhans.Include(c => c.SinhViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            var sinhVienDTOs = lopHocPhan.SinhViens.Select(s => s.ToSinhVienDTO()).ToList();
-            return sinhVienDTOs;
-        }
-
-        public async Task<LopHocPhanDTO?> UpdateLopHocPhan(int id,UpdateLopHocPhanDTO lopHocPhanDTO)
-        {
-            var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
-            if (lopHocPhan == null)
-            {
-                return null;
-            }
-            lopHocPhan.Ten = lopHocPhanDTO.Ten;
-            lopHocPhan.HocPhanId = lopHocPhanDTO.HocPhanId;
-            lopHocPhan.HocKyId = lopHocPhanDTO.HocKyId;
-            await _context.SaveChangesAsync();
-            return lopHocPhan.ToLopHocPhanDTO();
-        }
     }
 }

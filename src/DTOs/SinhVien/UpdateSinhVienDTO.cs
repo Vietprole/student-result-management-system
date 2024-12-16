@@ -5,10 +5,7 @@ namespace Student_Result_Management_System.DTOs.SinhVien;
 
 public class UpdateSinhVienDTO
 {
-    [Required]
-    public string Ten { get; set; } = string.Empty;
-    [Required]
-    public int KhoaId { get; set; }
-    [Required]
-    public int NamBatDau { get; set; }
+    public string? Ten { get; set; } = string.Empty;
+    public int? KhoaId { get; set; }
+    public int? NamNhapHoc { get; set; }
 }

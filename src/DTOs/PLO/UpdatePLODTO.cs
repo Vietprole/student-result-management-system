@@ -5,10 +5,7 @@ namespace Student_Result_Management_System.DTOs.PLO;
 
 public class UpdatePLODTO
 {
-    [Required(ErrorMessage = "Tên PLO không được để trống")]
-    public string Ten { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Mô tả không được để trống")]
-    public string MoTa { get; set; } = string.Empty;
-    [Required]
-    public int NganhId { get; set; }
+    public string? Ten { get; set; } = string.Empty;
+    public string? MoTa { get; set; } = string.Empty;
+    public int? NganhId { get; set; }
 }

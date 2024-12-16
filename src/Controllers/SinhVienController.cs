@@ -80,15 +80,15 @@ namespace Student_Result_Management_System.Controllers
             return Ok(studentDTO);
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete([FromRoute] int id)
-        //{
-        //    var sinhvienDelete= await _sinhVienService.DeleteSV(id);
-        //    if(sinhvienDelete==null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+           var sinhvienDelete= await _sinhVienService.DeleteSV(id);
+           if(sinhvienDelete==null)
+           {
+               return NotFound();
+           }
+           return NoContent();
+        }
     }
 }

@@ -10,7 +10,8 @@ public class DiemDinhChinh
 	public KetQua KetQua { get; set; } = null!;
 	[Column(TypeName = "decimal(5, 2)")]
 	public decimal DiemMoi { get; set; }
-	public DateTime ThoiGian { get; set; }
+	public DateTime ThoiDiemMo { get; set; }
+	public DateTime? ThoiDiemDuyet { get; set; }
 	public bool DuocDuyet { get; set; }
 	public int? NguoiDuyetId { get; set; }
 }

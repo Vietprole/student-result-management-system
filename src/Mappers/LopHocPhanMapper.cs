@@ -27,13 +27,12 @@ public static class LopHocPhanMapper
         };
     }
 
-    public static LopHocPhan ToLopHocPhanFromUpdateDTO(this UpdateLopHocPhanDTO updateLopHocPhanDTO)
+    public static LopHocPhan ToLopHocPhanFromUpdateDTO(this UpdateLopHocPhanDTO updateLopHocPhanDTO, LopHocPhan existingLopHocPhan)
     {
-        return new LopHocPhan
-        {
-            Ten = updateLopHocPhanDTO.Ten,
-            HocPhanId = updateLopHocPhanDTO.HocPhanId,
-            HocKyId = updateLopHocPhanDTO.HocKyId
-        };
+        existingLopHocPhan.Ten = updateLopHocPhanDTO.Ten ?? existingLopHocPhan.Ten;
+        existingLopHocPhan.HocPhanId = updateLopHocPhanDTO.HocPhanId ?? existingLopHocPhan.HocPhanId;
+        existingLopHocPhan.HocKyId = updateLopHocPhanDTO.HocKyId ?? existingLopHocPhan.HocKyId;
+        
+        return existingLopHocPhan;
     }
 }

@@ -31,7 +31,7 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            if(sinhVienDTO.NamBatDau>=DateTime.Now.Year && sinhVienDTO.NamBatDau<2010)
+            if(sinhVienDTO.NamNhapHoc>=DateTime.Now.Year && sinhVienDTO.NamNhapHoc<2010)
             {
                 return null;
             }
@@ -39,7 +39,7 @@ namespace Student_Result_Management_System.Services
             {
                 KhoaId = khoa.Id,
                 Khoa = khoa,
-                NamNhapHoc = sinhVienDTO.NamBatDau
+                NamNhapHoc = sinhVienDTO.NamNhapHoc
             };
             return sinhVien;
 
@@ -57,7 +57,7 @@ namespace Student_Result_Management_System.Services
                 TaiKhoanId = taiKhoan.Id,
                 TaiKhoan =await _taiKhoanService.GetTaiKhoanById(taiKhoan.Id),
                 KhoaId = createSinhVienDTO.KhoaId,
-                NamNhapHoc = createSinhVienDTO.NamBatDau
+                NamNhapHoc = createSinhVienDTO.NamNhapHoc
             };
             _context.SinhViens.Add(sinhVien);
             await _context.SaveChangesAsync();
@@ -73,9 +73,9 @@ namespace Student_Result_Management_System.Services
            {
                return null;
            }
-           string NamBatDau = taikhoanSinhVien.NamBatDau.ToString().Substring(taikhoanSinhVien.NamBatDau.ToString().Length - 2);
+           string NamNhapHoc = taikhoanSinhVien.NamNhapHoc.ToString().Substring(taikhoanSinhVien.NamNhapHoc.ToString().Length - 2);
            int soluong = await GetSinhVienByKhoa(taikhoanSinhVien.KhoaId)+1;
-           string MaSinhVien = MaKhoa + NamBatDau + (soluong + 1).ToString("D4");
+           string MaSinhVien = MaKhoa + NamNhapHoc + (soluong + 1).ToString("D4");
            CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
            {
                Username = MaSinhVien,
@@ -138,8 +138,8 @@ namespace Student_Result_Management_System.Services
             {
                 exitsSV.TaiKhoan.Ten = updateSinhVienDTO.Ten;
             }
-            exitsSV.KhoaId=updateSinhVienDTO.KhoaId;
-            exitsSV.NamNhapHoc=updateSinhVienDTO.NamBatDau;
+            exitsSV.KhoaId= (int)updateSinhVienDTO.KhoaId;
+            exitsSV.NamNhapHoc= (int)updateSinhVienDTO.NamNhapHoc;
             await _context.SaveChangesAsync();
 
             exitsSV = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv=>sv.Khoa).FirstOrDefaultAsync(x=>x.Id==id);

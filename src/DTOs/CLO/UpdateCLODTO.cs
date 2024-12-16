@@ -4,12 +4,10 @@ namespace Student_Result_Management_System.DTOs.CLO;
 
 public class UpdateCLODTO
 {
-    [Required]
-    [MinLength(1)]
-    public string Ten { get; set; } = string.Empty;
-    [Required]
-    [MinLength(1)]
-    public string MoTa { get; set; } = string.Empty;
-    [Required]
-    public int LopHocPhanId { get; set; }
+    // [Required]
+    public string? Ten { get; set; } = string.Empty;
+    // [Required]
+    public string? MoTa { get; set; } = string.Empty;
+    // [Required]
+    public int? LopHocPhanId { get; set; }
 }

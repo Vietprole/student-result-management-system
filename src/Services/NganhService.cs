@@ -19,80 +19,74 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        // private async Task<bool> IsMaNganhExisted(string maNganh)
-        // {
-        //     var nganh = await _context.Nganhs.FirstOrDefaultAsync(k => k.MaNganh == maNganh);
-        //     return nganh != null;
-        // }
-        // public async Task<Nganh> CreateNganhAsync(Nganh nganh)
-        // {
-        //     if (await IsMaNganhExisted(nganh.MaNganh))
-        //     {
-        //         throw new BusinessLogicException("Mã nganh đã tồn tại");
-        //     }
-        //     await _context.Nganhs.AddAsync(nganh);
-        //     await _context.SaveChangesAsync();
-        //     return nganh;
-        // }
+
+        private async Task<bool> IsMaNganhExisted(string maNganh)
+        {
+            var nganh = await _context.Nganhs.FirstOrDefaultAsync(n => n.MaNganh == maNganh);
+            return nganh != null;
+        }
 
         public async Task<List<Nganh>> GetAllNganhsAsync()
         {
-            var list_nganh = await _context.Nganhs.ToListAsync();
-            return list_nganh;
+            return await _context.Nganhs.Include(n => n.Khoa).ToListAsync();
         }
+
+        public async Task<List<Nganh>> GetNganhsByKhoaIdAsync(int khoaId)
+        {
+            return await _context.Nganhs
+                .Include(n => n.Khoa)
+                .Where(n => n.KhoaId == khoaId)
+                .ToListAsync();
+        }
+
         public async Task<Nganh?> GetNganhByIdAsync(int id)
         {
-            var nganh = await _context.Nganhs.FindAsync(id);
-            // return nganh?.ToNganhDTO();
-            return nganh;
+            return await _context.Nganhs
+                .Include(n => n.Khoa)
+                .FirstOrDefaultAsync(n => n.Id == id);
         }
 
-        // public async Task<string?> GetMaNganh(int id)
-        // {
-        //     var nganh = await _context.Nganhs.FindAsync(id);
-        //     return nganh?.MaNganh;
-        // }
+        public async Task<Nganh> CreateNganhAsync(Nganh nganh)
+        {
+            if (await IsMaNganhExisted(nganh.MaNganh))
+            {
+                throw new BusinessLogicException("Mã ngành đã tồn tại");
+            }
+            await _context.Nganhs.AddAsync(nganh);
+            await _context.SaveChangesAsync();
+            return await GetNganhByIdAsync(nganh.Id);
+        }
 
-        // public async Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO)
-        // {
-        //     var nganh = await _context.Nganhs.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Nganh");
-        //     if (updateNganhDTO.MaNganh != null && await IsMaNganhExisted(updateNganhDTO.MaNganh))
-        //     {
-        //         throw new BusinessLogicException("Mã nganh đã tồn tại");
-        //     }
-        //     nganh = updateNganhDTO.ToNganhFromUpdateDTO(nganh);
+        public async Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO)
+        {
+            var nganh = await _context.Nganhs.FindAsync(id) ?? 
+                throw new NotFoundException("Không tìm thấy Ngành");
 
-        //     await _context.SaveChangesAsync();
-        //     return nganh;
-        // }
+            if (updateNganhDTO.MaNganh != null && updateNganhDTO.MaNganh != nganh.MaNganh && 
+                await IsMaNganhExisted(updateNganhDTO.MaNganh))
+            {
+                throw new BusinessLogicException("Mã ngành đã tồn tại");
+            }
 
-        // public async Task<Nganh?> UpdateTruongNganh(int nganhid, TaiNganhn truongnganh)
-        // {
-        //     var nganh = await _context.Nganhs.FindAsync(nganhid);
-        //     if (nganh == null)
-        //     {
-        //         return null;
-        //     }
-        //     nganh.TruongNganhId = truongnganh.Id;
-        //     nganh.TruongNganh = truongnganh;
-        //     _context.Nganhs.Update(nganh);
-        //     await _context.SaveChangesAsync();
-        //     return nganh;
-        // }
+            nganh = updateNganhDTO.ToNganhFromUpdateDTO(nganh);
+            await _context.SaveChangesAsync();
+            return await GetNganhByIdAsync(id);
+        }
 
         public async Task<bool> DeleteNganhAsync(int id)
         {
-            var nganh = await _context.Nganhs.FindAsync(id) ?? throw new BusinessLogicException("Không tìm thấy Nganh");
+            var nganh = await _context.Nganhs.FindAsync(id) ?? 
+                throw new NotFoundException("Không tìm thấy Ngành");
             try
             {
                 _context.Nganhs.Remove(nganh);
                 await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception)
             {
-                throw new BusinessLogicException("Nganh chứa các đối tượng con, không thể xóa");
+                throw new BusinessLogicException("Ngành chứa các đối tượng con, không thể xóa");
             }
-            return true;
         }
     }
 }

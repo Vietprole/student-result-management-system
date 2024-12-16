@@ -6,14 +6,10 @@ namespace Student_Result_Management_System.DTOs.HocPhan;
 
 public class UpdateHocPhanDTO
 {
-    [Required(ErrorMessage = "Tên học phần không được để trống")]
-    public string Ten { get; set; } = string.Empty;
-    [Required]
+    public string? Ten { get; set; } = string.Empty;
     [Column(TypeName = "decimal(3, 1)")]
     [Range(0.0, double.MaxValue, ErrorMessage = "Số tín chỉ phải lớn hơn hoặc bằng 0")]
-    public decimal SoTinChi { get; set; }
-    [Required]
-    public bool LaCotLoi { get; set; }
-    [Required]
-    public int KhoaId { get; set; }
+    public decimal? SoTinChi { get; set; }
+    public bool? LaCotLoi { get; set; }
+    public int? KhoaId { get; set; }
 }
