@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-
 namespace Student_Result_Management_System.DTOs.CLO;
 
 public class CLODTO

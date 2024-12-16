@@ -1,7 +1,5 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Student_Result_Management_System.DTOs.CauHoi;
 
 namespace Student_Result_Management_System.DTOs.BaiKiemTra;
 

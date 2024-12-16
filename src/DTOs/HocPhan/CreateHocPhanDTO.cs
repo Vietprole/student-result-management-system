@@ -6,8 +6,7 @@ namespace Student_Result_Management_System.DTOs.HocPhan;
 
 public class CreateHocPhanDTO
 {
-    [Required]
-    [MinLength(1)]
+    [Required(ErrorMessage = "Tên học phần không được để trống")]
     public string Ten { get; set; } = string.Empty;
     [Required]
     [Column(TypeName = "decimal(3, 1)")]

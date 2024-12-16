@@ -1,6 +1,3 @@
-using System;
-using Student_Result_Management_System.DTOs.CauHoi;
-
 namespace Student_Result_Management_System.DTOs.BaiKiemTra;
 
 public class BaiKiemTraDTO

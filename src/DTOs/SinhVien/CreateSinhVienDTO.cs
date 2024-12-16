@@ -5,10 +5,10 @@ namespace Student_Result_Management_System.DTOs.SinhVien;
 
 public class CreateSinhVienDTO
 {
-    [Required]
+    [Required(ErrorMessage = "Tên sinh viên không được để trống")]
     public string Ten { get; set; } = string.Empty;
-    [Required]
+    [Required(ErrorMessage = "Năm nhập học không được để trống")]
+    public int NamNhapHoc { get; set; }
     public int KhoaId { get; set; }
-    [Required]
-    public int NamBatDau { get; set; }
+    public int? TaiKhoanId { get; set; }
 }

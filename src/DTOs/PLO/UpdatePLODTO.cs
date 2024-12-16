@@ -5,9 +5,10 @@ namespace Student_Result_Management_System.DTOs.PLO;
 
 public class UpdatePLODTO
 {
-    [MinLength(1)]
-    public string? Ten { get; set; } = string.Empty;
-    [MinLength(1)]
-    public string? MoTa { get; set; } = string.Empty;
-    public int? NganhId { get; set; }
+    [Required(ErrorMessage = "Tên PLO không được để trống")]
+    public string Ten { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Mô tả không được để trống")]
+    public string MoTa { get; set; } = string.Empty;
+    [Required]
+    public int NganhId { get; set; }
 }

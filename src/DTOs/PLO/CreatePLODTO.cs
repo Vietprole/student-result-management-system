@@ -5,11 +5,9 @@ namespace Student_Result_Management_System.DTOs.PLO;
 
 public class CreatePLODTO
 {
-    [Required]
-    [MinLength(1)]
+    [Required(ErrorMessage = "Tên PLO không được để trống")]
     public string Ten { get; set; } = string.Empty;
-    [Required]
-    [MinLength(1)]
+    [Required(ErrorMessage = "Mô tả không được để trống")]
     public string MoTa { get; set; } = string.Empty;
     [Required]
     public int NganhId { get; set; }
