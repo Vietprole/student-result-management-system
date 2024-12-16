@@ -27,13 +27,7 @@ public static class BaiKiemTraMapper
         return new BaiKiemTra
         {
             Loai = createBaiKiemTraDTO.Loai,
-            TrongSo = createBaiKiemTraDTO.TrongSo,
-            TrongSoDeXuat = createBaiKiemTraDTO.TrongSoDeXuat,
-            NgayMoNhapDiem = createBaiKiemTraDTO.NgayMoNhapDiem,
-            HanNhapDiem = createBaiKiemTraDTO.HanNhapDiem,
-            HanDinhChinh = createBaiKiemTraDTO.HanDinhChinh,
-            NgayXacNhan = createBaiKiemTraDTO.NgayXacNhan,
-            LopHocPhanId = createBaiKiemTraDTO.LopHocPhanId,
+            TrongSo = createBaiKiemTraDTO.TrongSo
         };
     }
 

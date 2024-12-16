@@ -14,8 +14,5 @@ namespace Student_Result_Management_System.DTOs.HocKy
         [Required]
         [Range(1900, 9999, ErrorMessage = "Năm học phải từ 1900 đến 9999")]
         public int NamHoc { get; set; }
-
-        [Required(ErrorMessage = "Mã học kỳ không được để trống")]
-        public string MaHocKy { get; set; } = string.Empty;
     }
 }

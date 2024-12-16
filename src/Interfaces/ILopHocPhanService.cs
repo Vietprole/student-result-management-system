@@ -1,3 +1,4 @@
+using Student_Result_Management_System.DTOs.BaiKiemTra;
 using Student_Result_Management_System.DTOs.GiangVien;
 using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.DTOs.SinhVien;
@@ -17,5 +18,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<SinhVien>> AddSinhViensToLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds);
         public Task<List<SinhVien>> UpdateSinhViensInLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds);
         public Task<List<SinhVien>> RemoveSinhVienFromLopHocPhanAsync(int lopHocPhanId, int sinhVienId);
+        public Task<string> CheckCongThucDiem(List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs);
     }
 }

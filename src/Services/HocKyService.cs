@@ -17,9 +17,33 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        public async Task<HocKyDTO> AddHocKyDTO(CreateHocKyDTO newHocKyDTO)
+        public async Task<HocKyDTO?> AddHocKyDTO(CreateHocKyDTO newHocKyDTO)
         {
+
+            string MaHocKi = String.Empty;
+            if(newHocKyDTO.Ten.ToString()=="Kì 1")
+            {
+                MaHocKi = "10";
+            }else if(newHocKyDTO.Ten.ToString()=="Kì 2")
+            {
+                MaHocKi = "20";
+            }else if(newHocKyDTO.Ten.ToString()=="Kì hè")
+            {
+                MaHocKi = "21";
+            }
+            else
+            {
+                return null;
+            }
+
+            string result = newHocKyDTO.NamHoc.ToString().Substring(newHocKyDTO.NamHoc.ToString().Length - 2);
+            var exits = await _context.HocKies.FirstOrDefaultAsync(x=>x.MaHocKy==result+MaHocKi);
+            if(exits!=null)
+            {
+                return null;
+            }
             var hocKy = newHocKyDTO.toHocKyFromNewDTO();
+            hocKy.MaHocKy=result+MaHocKi;
             await _context.HocKies.AddAsync(hocKy);
             await _context.SaveChangesAsync();
             return hocKy.ToHocKyDTO();
@@ -33,25 +57,6 @@ namespace Student_Result_Management_System.Services
             }
             // Kiểm tra chuỗi có bằng đúng một trong các cụm từ yêu cầu
             return tenHocKy == "Kì 1" || tenHocKy == "Kì 2" || tenHocKy == "Kì hè";
-        }
-
-        public bool CheckNamHoc(string namHoc)
-        {
-            if (string.IsNullOrEmpty(namHoc))
-            {
-                return false;
-            }
-            var parts = namHoc.Split('-'); //Tách chuỗi
-            if (parts.Length != 2)
-                return false;
-
-
-            if (int.TryParse(parts[0], out int startYear) && int.TryParse(parts[1], out int endYear)) //Kiểm tra xem có phải số không
-            {
-                return endYear - startYear == 1; //Kiểm tra xem năm kết thúc có phải năm bắt đầu + 1 không
-            }
-
-            return false;
         }
 
 

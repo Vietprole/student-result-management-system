@@ -26,8 +26,7 @@ namespace Student_Result_Management_System.Mappers
             return new HocKy
             {
                 Ten = createHocKyDTO.Ten,
-                NamHoc = createHocKyDTO.NamHoc,
-                MaHocKy = createHocKyDTO.MaHocKy
+                NamHoc = createHocKyDTO.NamHoc
             };
         }
 

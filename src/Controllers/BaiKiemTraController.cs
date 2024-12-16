@@ -49,17 +49,17 @@ namespace Student_Result_Management_System.Controllers
             return Ok(baiKiemTraDTO);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
-        {
-            var checkDuplicate = await _baiKiemTraService.CheckDuplicateBaiKiemTraLoaiInLopHocPhan(createBaiKiemTraDTO.Loai, createBaiKiemTraDTO.LopHocPhanId);
-            if (checkDuplicate)
-            {
-                return BadRequest($"Bài kiểm tra với loại {createBaiKiemTraDTO.Loai} đã tồn tại trong lớp học phần");
-            }
-            var baiKiemTraDTO = await _baiKiemTraService.CreateBaiKiemTraAsync(createBaiKiemTraDTO);
-            return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
+        //{
+        //    var checkDuplicate = await _baiKiemTraService.CheckDuplicateBaiKiemTraLoaiInLopHocPhan(createBaiKiemTraDTO.Loai, createBaiKiemTraDTO.LopHocPhanId);
+        //    if (checkDuplicate)
+        //    {
+        //        return BadRequest($"Bài kiểm tra với loại {createBaiKiemTraDTO.Loai} đã tồn tại trong lớp học phần");
+        //    }
+        //    var baiKiemTraDTO = await _baiKiemTraService.CreateBaiKiemTraAsync(createBaiKiemTraDTO);
+        //    return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
+        //}
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBaiKiemTraDTO updateBaiKiemTraDTO)
