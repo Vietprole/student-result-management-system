@@ -8,6 +8,7 @@ using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.PLO;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
+using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
@@ -132,6 +133,25 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             var ploList = hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList();
             return ploList;
+        }
+
+        public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId)
+        {
+            IQueryable<HocPhan> query = _context.HocPhans
+                .Include(hp => hp.Nganhs); // Include the Nganhs navigation property
+
+            if (khoaId.HasValue)
+            {
+                query = query.Where(hp => hp.KhoaId == khoaId.Value);
+            }
+
+            if (nganhId.HasValue)
+            {
+                query = query.Where(hp => hp.Nganhs.Any(n => n.Id == nganhId.Value));
+            }
+
+            var hocPhans = await query.ToListAsync();
+            return hocPhans.Select(hp => hp.ToHocPhanDTO()).ToList();
         }
     }
 }

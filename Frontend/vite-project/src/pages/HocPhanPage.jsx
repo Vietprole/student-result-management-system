@@ -25,19 +25,52 @@ import { HocPhanForm } from "@/components/HocPhanForm";
 import { useRef, useState, useEffect } from "react";
 import AddPLOToHocPhanForm from "@/components/AddPLOToHocPhanForm";
 import ManagePLOInHocPhanForm from "@/components/ManagePLOInHocPhanForm";
+import { getAllNganhs } from "@/api/api-nganh";
+import { getHocPhans } from "@/api/api-hocphan";
+import { ComboBox } from "@/components/ComboBox";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { getAllKhoas } from "@/api/api-khoa";
+import { createSearchURL } from "@/utils/string";
 
 export default function HocPhanPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nganhIdParam = searchParams.get("nganhId");
+  const khoaIdParam = searchParams.get("khoaId");
   const addPLOFormRef = useRef(null);
   const managePLOFormRef = useRef(null);
   const [data, setData] = useState([]);
+  const [nganhItems, setNganhItems] = useState([]);
+  const [khoaItems, setKhoaItems] = useState([]);
+  const [nganhId, setNganhId] = useState(nganhIdParam);
+  const [khoaId, setKhoaId] = useState(khoaIdParam);
+  const baseUrl = "/hocphan";
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllHocPhans();
+      const dataNganh = await getAllNganhs();
+      const mappedComboBoxItems = dataNganh.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      setNganhItems(mappedComboBoxItems);
+      const dataKhoa = await getAllKhoas();
+      const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      setKhoaItems(mappedKhoaItems);
+      const data = await getHocPhans(khoaId, nganhId);
       setData(data);
-    };
+    }
     fetchData();
-  }, []);
+  }, [khoaId, nganhId]);
+
+  const handleNganhChange = (newNganhId) => {
+    setNganhId(newNganhId);
+    const url = createSearchURL(baseUrl, { nganhId: newNganhId, khoaId });
+    navigate(url);
+  };
+  
+  const handleKhoaChange = (newKhoaId) => {
+    setKhoaId(newKhoaId);
+    const url = createSearchURL(baseUrl, { nganhId, khoaId: newKhoaId });
+    navigate(url);
+  };
 
   const createHocPhanColumns = (handleEdit, handleDelete) => [
   {
@@ -246,6 +279,9 @@ export default function HocPhanPage() {
   return (
     <Layout>
       <div className="w-full">
+        <ComboBox items={nganhItems} setItemId={handleNganhChange} initialItemId={nganhId}/>
+        <ComboBox items={khoaItems} setItemId={handleKhoaChange} initialItemId={khoaId}/>
+        {/* <Button onClick={() => setItemId(value)}>Go</Button> */}
         <DataTable
           entity="HocPhan"
           createColumns={createHocPhanColumns}

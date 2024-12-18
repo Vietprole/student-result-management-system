@@ -1,6 +1,7 @@
 import API_BASE_URL from "./base-url";
 import axios from 'axios';
 import { getAccessToken } from "../utils/storage";
+import { createSearchURL } from "../utils/string";
 
 const API_HOCPHAN = `${API_BASE_URL}/api/hocphan`;
 
@@ -15,9 +16,13 @@ export const getAllHocPhans = async () => {
   }
 };
 
-export const getHocPhans = async (nganhId) => {
+export const getHocPhans = async (khoaId, nganhId) => {
   try {
-    const response = await axios.get(`${API_HOCPHAN}?nganhId=${nganhId}`, {
+    const paramsObj = { khoaId, nganhId };
+    const url = createSearchURL(API_HOCPHAN, paramsObj);
+    console.log("url: ", url);
+
+    const response = await axios.get(url, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

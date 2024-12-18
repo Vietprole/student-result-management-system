@@ -90,5 +90,75 @@ namespace Student_Result_Management_System.Controllers
             }
         }
 
+        [HttpGet("{id}/hocphan")]
+        public async Task<IActionResult> GetHocPhans([FromRoute] int id)
+        {
+            try {
+                var hocPhans = await _nganhService.GetHocPhansInNganhAsync(id);
+                return Ok(hocPhans.Select(hp => hp.ToHocPhanDTO()));
+            }
+            catch (BusinessLogicException ex){
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex){
+                return NotFound(ex.Message);
+            }
+        }
+        
+        [HttpPost("{id}/hocphan")]
+        public async Task<IActionResult> AddHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
+        {
+            try
+            {
+                var hocPhans = await _nganhService.AddHocPhansToNganhAsync(id, hocPhanIds);
+                return CreatedAtAction(nameof(GetById), new { id = id }, hocPhans.Select(hp => hp.ToHocPhanDTO()));
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}/hocphan")]
+        public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
+        {
+            try
+            {
+                var hocPhans = await _nganhService.UpdateHocPhansOfNganhAsync(id, hocPhanIds);
+                return Ok(hocPhans.Select(hp => hp.ToHocPhanDTO()));
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}/hocphan/{hocPhanId}")]
+        public async Task<IActionResult> RemoveHocPhan([FromRoute] int id, [FromRoute] int hocPhanId)
+        {
+            try
+            {
+                var result = await _nganhService.RemoveHocPhanFromNganhAsync(id, hocPhanId);
+                if (!result)
+                    return NotFound();
+                return NoContent();
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

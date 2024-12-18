@@ -26,12 +26,12 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int? khoaId)
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId)
         {
             List<HocPhanDTO> hocPhanDTOs;
-            if (khoaId.HasValue)
+            if (khoaId.HasValue || nganhId.HasValue)
             {
-                hocPhanDTOs = await _hocPhanService.GetHocPhansByKhoaIdAsync(khoaId.Value);
+                hocPhanDTOs = await _hocPhanService.GetFilteredHocPhansAsync(khoaId, nganhId);
             }
             else
             {

@@ -93,5 +93,63 @@ namespace Student_Result_Management_System.Services
                 throw new BusinessLogicException("Ngành chứa các đối tượng con, không thể xóa");
             }
         }
+
+        public async Task<List<HocPhan>> AddHocPhansToNganhAsync(int nganhId, int[] hocPhanIds)
+        {
+            var nganh = await _context.Nganhs
+                .Include(n => n.HocPhans)
+                .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
+
+            foreach (var hocPhanId in hocPhanIds)
+            {
+                var hocPhan = await _context.HocPhans.FindAsync(hocPhanId) ?? throw new NotFoundException($"Không tìm thấy Học Phần với id: {hocPhanId}");
+                if (!nganh.HocPhans.Contains(hocPhan))
+                    nganh.HocPhans.Add(hocPhan);
+            }
+
+            await _context.SaveChangesAsync();
+            return nganh.HocPhans.ToList();
+        }
+
+        public async Task<List<HocPhan>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds)
+        {
+            var nganh = await _context.Nganhs
+                .Include(n => n.HocPhans)
+                .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
+
+            nganh.HocPhans.Clear();
+            foreach (var hocPhanId in hocPhanIds)
+            {
+                var hocPhan = await _context.HocPhans.FindAsync(hocPhanId) ?? throw new NotFoundException($"Không tìm thấy Học Phần với id: {hocPhanId}");
+                nganh.HocPhans.Add(hocPhan);
+            }
+
+            await _context.SaveChangesAsync();
+            return nganh.HocPhans.ToList();
+        }
+
+        public async Task<bool> RemoveHocPhanFromNganhAsync(int nganhId, int hocPhanId)
+        {
+            var nganh = await _context.Nganhs
+                .Include(n => n.HocPhans)
+                .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
+
+            var hocPhan = await _context.HocPhans.FindAsync(hocPhanId) ?? throw new NotFoundException($"Không tìm thấy Học Phần với id: {hocPhanId}");
+
+            if (!nganh.HocPhans.Contains(hocPhan))
+                return false;
+
+            nganh.HocPhans.Remove(hocPhan);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<HocPhan>> GetHocPhansInNganhAsync(int nganhId)
+        {
+            var nganh = await _context.Nganhs
+                .Include(n => n.HocPhans)
+                .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
+            return nganh.HocPhans.ToList();
+        }
     }
 }

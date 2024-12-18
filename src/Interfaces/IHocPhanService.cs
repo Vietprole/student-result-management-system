@@ -15,5 +15,6 @@ namespace Student_Result_Management_System.Interfaces
         // public Task<List<PLODTO>> AddPLOsToHocPhanAsync(int hocPhanId, int[] pLOIds);
         public Task<List<PLODTO>> UpdatePLOsOfHocPhanAsync(int id, int[] pLOIds);
         // public Task<List<PLODTO>> RemovePLOsFromHocPhanAsync(int id, int[] pLOIds);
+        public Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId);
     }
 }

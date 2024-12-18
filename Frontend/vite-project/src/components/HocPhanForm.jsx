@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addHocPhan, updateHocPhan } from "@/api/api-hocphan";
+import { getAllNganhs } from "@/api/api-nganh";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useSearchParams } from "react-router-dom";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
@@ -24,34 +30,39 @@ const formSchema = z.object({
       message: "So Tin Chi must be a number",
     })
     .min(1, {
-      message: "So Tin Chi must be at least 1 characters.",
+      message: "So Tin Chi must be at least 1.",
     }),
   laCotLoi: z.boolean(),
-  khoaId: z.coerce
-    .number({
-      message: "Lop Hoc Phan Id must be a number",
-    })
-    .min(1, {
-      message: "Lop Hoc Phan Id must be at least 1 characters.",
-    }),
+  nganhId: z.number({
+    required_error: "Please select a Nganh.",
+  }),
 });
 
 export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen }) {
-  // 1. Define your form.
+  const [searchParams] = useSearchParams();
+  const nganhIdParam = searchParams.get("nganhId");
+  const [comboBoxItems, setComboBoxItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const comboBoxItems = await getAllNganhs();
+      const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      setComboBoxItems(mappedComboBoxItems);
+    };
+    fetchData();
+  }, []);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: hocphan || {
       ten: "",
       soTinChi: "",
       laCotLoi: false,
-      khoaId: "",
+      nganhId: nganhIdParam ? parseInt(nganhIdParam) : null,
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     if (hocphan) {
       const data = await updateHocPhan(hocphan.id, values);
       handleEdit(data);
@@ -137,6 +148,71 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
             </FormItem>
           )}
         />
+        {nganhIdParam == null && (
+          <FormField
+            control={form.control}
+            name="nganhId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Chọn Ngành</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? comboBoxItems.find(
+                              (item) => item.value === field.value
+                            )?.label
+                          : "Select Nganh..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search nganh..." />
+                      <CommandList>
+                        <CommandEmpty>No nganh found.</CommandEmpty>
+                        <CommandGroup>
+                          {comboBoxItems.map((item) => (
+                            <CommandItem
+                              value={item.label}
+                              key={item.value}
+                              onSelect={() => {
+                                form.setValue("nganhId", item.value)
+                              }}
+                            >
+                              {item.label}
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  item.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Select the Nganh this HocPhan belongs to.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="khoaId"
