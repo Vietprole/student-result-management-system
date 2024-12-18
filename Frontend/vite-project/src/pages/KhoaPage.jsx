@@ -37,6 +37,11 @@ export default function KhoaPage() {
     fetchData();
   }, []);
 
+  const fetchData = async () => {
+    const khoas = await getAllKhoas();
+    setData(khoas);
+  };
+
   const createKhoaColumns = (handleEdit, handleDelete) => [
     {
       accessorKey: "id",
@@ -54,21 +59,6 @@ export default function KhoaPage() {
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
     },
     {
-      accessorKey: "ten",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Tên
-            <ArrowUpDown />
-          </Button>
-        );
-      },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
-    },
-    {
       accessorKey: "maKhoa",
       header: ({ column }) => {
         return (
@@ -82,6 +72,21 @@ export default function KhoaPage() {
         );
       },
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maKhoa")}</div>,
+    },
+    {
+      accessorKey: "ten",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Tên
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
     },
     {
       id: "actions",
@@ -151,7 +156,7 @@ export default function KhoaPage() {
           entity="Khoa"
           createColumns={createKhoaColumns}
           data={data}
-          setData={setData}
+          fetchData={fetchData}
           deleteItem={deleteKhoa}
           columnToBeFiltered={"ten"}
           ItemForm={KhoaForm}

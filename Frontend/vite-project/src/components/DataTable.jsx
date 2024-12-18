@@ -1,5 +1,5 @@
 // import Layout from "../pages/Layout";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,51 +41,30 @@ export default function DataTable({
   entity,
   createColumns,
   data,
-  setData,
+  fetchData,
   deleteItem,
   columnToBeFiltered,
   ItemForm,
+  hasCheckBox,
 }) {
-  // const [data, setData] = useState(dataFromParent);
-  // const [comboBoxItems, setComboBoxItems] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     // if (getAllComboBoxItems) {
-  //     //   const comboBoxItems = await getAllComboBoxItems();
-  //     //   const mappedComboBoxItems = comboBoxItems.map(({ ten, ...rest }) => ({
-  //     //     ...rest,
-  //     //     label: ten
-  //     //   }));
-  //     //   console.log("mapped", mappedComboBoxItems);
-  //     //   setComboBoxItems(mappedComboBoxItems);
-  //     // }
-
-  //     const data = await getAllItems();
-  //     setData(data);
-  //   };
-  //   fetchData();
-  // }, [getAllItems]);
 
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const handleAdd = (newItem) => {
-    setData([...data, newItem]);
+  const handleAdd = () => {
+    fetchData();
   };
 
-  const handleEdit = (editedItem) => {
-    setData(
-      data.map((item) => (item.id === editedItem.id ? editedItem : item))
-    );
+  const handleEdit = () => {
+    fetchData();
   };
 
   async function handleDelete(itemId) {
     await deleteItem(itemId);
-    setData(data.filter((item) => item.id !== itemId));
+    fetchData();
   }
 
   const columns = createColumns(handleEdit, handleDelete);
@@ -155,7 +134,7 @@ export default function DataTable({
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="ml-2">
-                Thêm {entity}
+                Tạo {entity}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -223,10 +202,12 @@ export default function DataTable({
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          {/* <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div> */}
+          {hasCheckBox && (
+            <div className="flex-1 text-sm text-muted-foreground">
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </div>
+          )}
           <div className="space-x-2">
             <Button
               variant="outline"

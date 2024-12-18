@@ -22,7 +22,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { HocPhanForm } from "@/components/HocPhanForm";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import AddPLOToHocPhanForm from "@/components/AddPLOToHocPhanForm";
 import ManagePLOInHocPhanForm from "@/components/ManagePLOInHocPhanForm";
 import { getAllNganhs } from "@/api/api-nganh";
@@ -31,6 +31,8 @@ import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getAllKhoas } from "@/api/api-khoa";
 import { createSearchURL } from "@/utils/string";
+import { Checkbox } from "@/components/ui/checkbox";
+import React from "react";
 
 export default function HocPhanPage() {
   const navigate = useNavigate();
@@ -44,35 +46,55 @@ export default function HocPhanPage() {
   const [khoaItems, setKhoaItems] = useState([]);
   const [nganhId, setNganhId] = useState(nganhIdParam);
   const [khoaId, setKhoaId] = useState(khoaIdParam);
+  const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
+  const [comboBoxNganhId, setComboBoxNganhId] = useState(nganhIdParam);
   const baseUrl = "/hocphan";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const dataNganh = await getAllNganhs();
-      const mappedComboBoxItems = dataNganh.map(nganh => ({ label: nganh.ten, value: nganh.id }));
-      setNganhItems(mappedComboBoxItems);
-      const dataKhoa = await getAllKhoas();
-      const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      setKhoaItems(mappedKhoaItems);
-      const data = await getHocPhans(khoaId, nganhId);
-      setData(data);
-    }
-    fetchData();
+  const fetchData = useCallback(async () => {
+    const dataNganh = await getAllNganhs();
+    const mappedComboBoxItems = dataNganh.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+    setNganhItems(mappedComboBoxItems);
+    const dataKhoa = await getAllKhoas();
+    const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+    setKhoaItems(mappedKhoaItems);
+    const data = await getHocPhans(khoaId, nganhId);
+    setData(data);
   }, [khoaId, nganhId]);
 
-  const handleNganhChange = (newNganhId) => {
-    setNganhId(newNganhId);
-    const url = createSearchURL(baseUrl, { nganhId: newNganhId, khoaId });
-    navigate(url);
-  };
-  
-  const handleKhoaChange = (newKhoaId) => {
-    setKhoaId(newKhoaId);
-    const url = createSearchURL(baseUrl, { nganhId, khoaId: newKhoaId });
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleGoClick = () => {
+    setNganhId(comboBoxNganhId);
+    setKhoaId(comboBoxKhoaId);
+    const url = createSearchURL(baseUrl, { nganhId: comboBoxNganhId, khoaId: comboBoxKhoaId });
     navigate(url);
   };
 
   const createHocPhanColumns = (handleEdit, handleDelete) => [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -87,6 +109,21 @@ export default function HocPhanPage() {
       );
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "maHocPhan",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Mã Học Phần
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maHocPhan")}</div>,
   },
   {
     accessorKey: "ten",
@@ -138,20 +175,20 @@ export default function HocPhanPage() {
     ),
   },
   {
-    accessorKey: "khoaId",
+    accessorKey: "tenKhoa",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Khoa Id
+          Khoa
           <ArrowUpDown />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="px-4 py-2">{row.getValue("khoaId")}</div>
+      <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>
     ),
   },
   {
@@ -279,17 +316,20 @@ export default function HocPhanPage() {
   return (
     <Layout>
       <div className="w-full">
-        <ComboBox items={nganhItems} setItemId={handleNganhChange} initialItemId={nganhId}/>
-        <ComboBox items={khoaItems} setItemId={handleKhoaChange} initialItemId={khoaId}/>
-        {/* <Button onClick={() => setItemId(value)}>Go</Button> */}
+        <div className="flex">
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId}/>
+          <Button onClick={handleGoClick}>Go</Button>
+        </div>
         <DataTable
           entity="HocPhan"
           createColumns={createHocPhanColumns}
           data={data}
-          setData={setData}
+          fetchData={fetchData}
           deleteItem={deleteHocPhan}
           columnToBeFiltered={"ten"}
           ItemForm={HocPhanForm}
+          hasCheckBox={true}
         />
       </div>
     </Layout>

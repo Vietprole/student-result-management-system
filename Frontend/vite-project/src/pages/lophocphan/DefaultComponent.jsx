@@ -27,13 +27,45 @@ import AddSinhVienToLopHocPhanForm from "@/components/AddSinhVienToLopHocPhanFor
 import ManageSinhVienInLopHocPhanForm from "@/components/ManageSinhVienInLopHocPhanForm";
 import AddGiangVienToLopHocPhanForm from "@/components/AddGiangVienToLopHocPhanForm";
 import ManageGiangVienInLopHocPhanForm from "@/components/ManageGiangVienInLopHocPhanForm";
-import { useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export default function LopHocPhanPage() {
   const addSinhVienFormRef = useRef(null);
   const manageSinhVienFormRef = useRef(null);
   const addGiangVienFormRef = useRef(null);
   const manageGiangVienFormRef = useRef(null);
+
+    // const navigate = useNavigate();
+    // const [searchParams] = useSearchParams();
+    // const khoaIdParam = searchParams.get("khoaId");
+    const [data, setData] = useState([]);
+    // const [khoaItems, setKhoaItems] = useState([]);
+    // const [khoaId, setKhoaId] = useState(khoaIdParam);
+    // const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
+  
+    const fetchData = useCallback(async () => {
+      // const dataKhoa = await getAllKhoas();
+      // // Map khoa items to be used in ComboBox
+      // const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      // setKhoaItems(mappedComboBoxItems);
+      // const data = await getNganhs(khoaId);
+      const data = await getAllLopHocPhans();
+      setData(data);
+    }, []);
+  
+    useEffect(() => {
+      fetchData();
+    }, [fetchData]);
+  
+    // const handleGoClick = () => {
+    //   setKhoaId(comboBoxKhoaId);
+    //   if (comboBoxKhoaId === null) {
+    //     navigate(`/nganh`);
+    //     return;
+    //   }
+    //   navigate(`/nganh?khoaId=${comboBoxKhoaId}`);
+    // };
+
   const createLopHocPhanColumns = (handleEdit, handleDelete, ) => [
     {
       accessorKey: "id",
@@ -249,7 +281,9 @@ export default function LopHocPhanPage() {
       <DataTable
         entity="Lop Hoc Phan"
         createColumns={createLopHocPhanColumns}
-        getAllItems={() => getAllLopHocPhans()}
+        data={data}
+        setData={setData}
+        fetchData={fetchData}
         deleteItem={deleteLopHocPhan}
         columnToBeFiltered={"ten"}
         ItemForm={LopHocPhanForm}

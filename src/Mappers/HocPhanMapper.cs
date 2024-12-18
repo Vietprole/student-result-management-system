@@ -16,6 +16,7 @@ public static class HocPhanMapper
             LaCotLoi = hocPhan.LaCotLoi,
             KhoaId = hocPhan.KhoaId,
             MaHocPhan = hocPhan.MaHocPhan,
+            TenKhoa = hocPhan.Khoa.Ten,
         };
     }
 

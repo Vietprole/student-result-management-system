@@ -23,19 +23,38 @@ namespace Student_Result_Management_System.Services
 
         public async Task<List<HocPhanDTO>> GetAllHocPhansAsync()
         {
-            var hocPhans = await _context.HocPhans.ToListAsync();
+            var hocPhans = await _context.HocPhans.Include(hp => hp.Khoa).ToListAsync();
             return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
         }
 
         public async Task<List<HocPhanDTO>> GetHocPhansByKhoaIdAsync(int khoaId)
         {
-            var hocPhans = await _context.HocPhans.Where(hocPhan => hocPhan.KhoaId == khoaId).ToListAsync();
+            var hocPhans = await _context.HocPhans.Include(hp => hp.Khoa).Where(hocPhan => hocPhan.KhoaId == khoaId).ToListAsync();
             return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
+        }
+
+        public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId)
+        {
+            IQueryable<HocPhan> query = _context.HocPhans.Include(hp => hp.Khoa) // Include the Khoa navigation property
+                .Include(hp => hp.Nganhs); // Include the Nganhs navigation property
+
+            if (khoaId.HasValue)
+            {
+                query = query.Where(hp => hp.KhoaId == khoaId.Value);
+            }
+
+            if (nganhId.HasValue)
+            {
+                query = query.Where(hp => hp.Nganhs.Any(n => n.Id == nganhId.Value));
+            }
+
+            var hocPhans = await query.ToListAsync();
+            return hocPhans.Select(hp => hp.ToHocPhanDTO()).ToList();
         }
 
         public async Task<HocPhanDTO?> GetHocPhanByIdAsync(int id)
         {
-            var hocPhan = await _context.HocPhans.FindAsync(id);
+            var hocPhan = await _context.HocPhans.Include(hp => hp.Khoa).FirstOrDefaultAsync(hp => hp.Id == id);
             if (hocPhan == null)
             {
                 return null;
@@ -71,7 +90,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<HocPhanDTO?> UpdateHocPhanAsync(int id, UpdateHocPhanDTO updateHocPhanDTO)
         {
-            var hocPhan = await _context.HocPhans.FindAsync(id);
+            var hocPhan = await _context.HocPhans.Include(hp => hp.Khoa).FirstOrDefaultAsync(hp => hp.Id == id);
             if (hocPhan == null)
             {
                 return null;
@@ -133,25 +152,6 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             var ploList = hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList();
             return ploList;
-        }
-
-        public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId)
-        {
-            IQueryable<HocPhan> query = _context.HocPhans
-                .Include(hp => hp.Nganhs); // Include the Nganhs navigation property
-
-            if (khoaId.HasValue)
-            {
-                query = query.Where(hp => hp.KhoaId == khoaId.Value);
-            }
-
-            if (nganhId.HasValue)
-            {
-                query = query.Where(hp => hp.Nganhs.Any(n => n.Id == nganhId.Value));
-            }
-
-            var hocPhans = await query.ToListAsync();
-            return hocPhans.Select(hp => hp.ToHocPhanDTO()).ToList();
         }
     }
 }

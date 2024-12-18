@@ -49,6 +49,7 @@ export function ComboBox({ items, setItemId, initialItemId }) {
                     value={item.label}
                     onSelect={() => {
                       setValue(value === item.value ? null : item.value)
+                      setItemId(value === item.value ? null : item.value)
                       setOpen(false)
                     }}
                   >
@@ -66,7 +67,6 @@ export function ComboBox({ items, setItemId, initialItemId }) {
           </Command>
         </PopoverContent>
       </Popover>
-      <Button onClick={() => setItemId(value)}>Go</Button>
     </div>
   )
 }

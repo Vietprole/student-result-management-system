@@ -14,12 +14,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addHocPhan, updateHocPhan } from "@/api/api-hocphan";
-import { getAllNganhs } from "@/api/api-nganh";
+import { getAllKhoas } from "@/api/api-khoa";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
@@ -33,20 +34,20 @@ const formSchema = z.object({
       message: "So Tin Chi must be at least 1.",
     }),
   laCotLoi: z.boolean(),
-  nganhId: z.number({
-    required_error: "Please select a Nganh.",
+  khoaId: z.number({
+    required_error: "Please select a Khoa.",
   }),
 });
 
 export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen }) {
   const [searchParams] = useSearchParams();
-  const nganhIdParam = searchParams.get("nganhId");
+  const khoaIdParam = searchParams.get("khoaId");
   const [comboBoxItems, setComboBoxItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const comboBoxItems = await getAllNganhs();
-      const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      const comboBoxItems = await getAllKhoas();
+      const mappedComboBoxItems = comboBoxItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
       setComboBoxItems(mappedComboBoxItems);
     };
     fetchData();
@@ -58,7 +59,7 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
       ten: "",
       soTinChi: "",
       laCotLoi: false,
-      nganhId: nganhIdParam ? parseInt(nganhIdParam) : null,
+      khoaId: khoaIdParam ? parseInt(khoaIdParam) : null,
     },
   });
 
@@ -94,43 +95,45 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
             )}
           />
         )}
-        <FormField
-          control={form.control}
-          name="ten"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên</FormLabel>
-              <FormControl>
-                <Input placeholder="CNTT" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="soTinChi"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Số Tín Chỉ</FormLabel>
-              <FormControl>
-                <Input placeholder="2" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex space-x-1">
+          <FormField
+            control={form.control}
+            name="ten"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tên</FormLabel>
+                <FormControl>
+                  <Input placeholder="CNTT" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="soTinChi"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel>Số Tín Chỉ</FormLabel>
+                <FormControl>
+                  <Input placeholder="2" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="laCotLoi"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+            <FormItem className=" flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -148,13 +151,13 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
             </FormItem>
           )}
         />
-        {nganhIdParam == null && (
+        {khoaIdParam == null && (
           <FormField
             control={form.control}
-            name="nganhId"
+            name="khoaId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Chọn Ngành</FormLabel>
+              <FormItem className=" flex flex-col">
+                <FormLabel>Chọn Khoa</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -170,23 +173,23 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
                           ? comboBoxItems.find(
                               (item) => item.value === field.value
                             )?.label
-                          : "Select Nganh..."}
+                          : "Select Khoa..."}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-[200px] p-0">
                     <Command>
-                      <CommandInput placeholder="Search nganh..." />
+                      <CommandInput placeholder="Search khoa..." />
                       <CommandList>
-                        <CommandEmpty>No nganh found.</CommandEmpty>
+                        <CommandEmpty>No khoa found.</CommandEmpty>
                         <CommandGroup>
                           {comboBoxItems.map((item) => (
                             <CommandItem
                               value={item.label}
                               key={item.value}
                               onSelect={() => {
-                                form.setValue("nganhId", item.value)
+                                form.setValue("khoaId", item.value)
                               }}
                             >
                               {item.label}
@@ -206,29 +209,13 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
                   </PopoverContent>
                 </Popover>
                 <FormDescription>
-                  Select the Nganh this HocPhan belongs to.
+                  Select the Khoa this HocPhan belongs to.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
         )}
-        <FormField
-          control={form.control}
-          name="khoaId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ID Khoa</FormLabel>
-              <FormControl>
-                <Input placeholder="1" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>

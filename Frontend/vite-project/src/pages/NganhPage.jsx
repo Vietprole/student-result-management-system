@@ -25,7 +25,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { NganhForm } from "@/components/NganhForm";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -37,26 +37,28 @@ export default function NganhPage() {
   const [data, setData] = useState([]);
   const [khoaItems, setKhoaItems] = useState([]);
   const [khoaId, setKhoaId] = useState(khoaIdParam);
+  const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const dataKhoa = await getAllKhoas();
-      // Map khoa items to be used in ComboBox
-      const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      setKhoaItems(mappedComboBoxItems);
-      const data = await getNganhs(khoaId);
-      setData(data);
-    }
-    fetchData();
+  const fetchData = useCallback(async () => {
+    const dataKhoa = await getAllKhoas();
+    // Map khoa items to be used in ComboBox
+    const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+    setKhoaItems(mappedComboBoxItems);
+    const data = await getNganhs(khoaId);
+    setData(data);
   }, [khoaId]);
 
-  const handleKhoaChange = (newKhoaId) => {
-    setKhoaId(newKhoaId);
-    if (newKhoaId === null) {
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleGoClick = () => {
+    setKhoaId(comboBoxKhoaId);
+    if (comboBoxKhoaId === null) {
       navigate(`/nganh`);
       return;
     }
-    navigate(`/nganh?khoaId=${newKhoaId}`);
+    navigate(`/nganh?khoaId=${comboBoxKhoaId}`);
   };
 
   const createNganhColumns = (handleEdit, handleDelete) => [
@@ -113,7 +115,7 @@ export default function NganhPage() {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Tên Khoa
+            Khoa
             <ArrowUpDown />
           </Button>
         );
@@ -189,14 +191,14 @@ export default function NganhPage() {
   return (
     <Layout>
       <div className="w-full">
-        <ComboBox items={khoaItems} setItemId={handleKhoaChange} initialItemId={khoaId}/>
-        {console.log("Khoa ID: ", khoaId)}
+        <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId}/>
+        <Button onClick={handleGoClick}>Go</Button>
         <DataTable
           entity="Nganh"
           createColumns={createNganhColumns}
-          // getAllItems={getAllNganhs}
           data={data}
           setData={setData}
+          fetchData={fetchData}
           deleteItem={deleteNganh}
           columnToBeFiltered={"ten"}
           ItemForm={NganhForm}

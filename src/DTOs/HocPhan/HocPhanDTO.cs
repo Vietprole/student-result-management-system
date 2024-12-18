@@ -10,4 +10,5 @@ public class HocPhanDTO
     public decimal SoTinChi { get; set; }
     public bool LaCotLoi { get; set; }
     public int KhoaId { get; set; }
+    public string TenKhoa { get; set; } = string.Empty;
 }
