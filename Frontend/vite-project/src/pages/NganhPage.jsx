@@ -181,6 +181,9 @@ export default function NganhPage() {
               <DropdownMenuItem onSelect={() => navigate(`/hocphan?nganhId=${item.id}`)}>
                 Xem Học Phần
               </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => navigate(`/plo?nganhId=${item.id}`)}>
+                Xem PLO
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -191,8 +194,10 @@ export default function NganhPage() {
   return (
     <Layout>
       <div className="w-full">
-        <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId}/>
-        <Button onClick={handleGoClick}>Go</Button>
+        <div className="flex">
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId}/>
+          <Button onClick={handleGoClick}>Go</Button>
+        </div>
         <DataTable
           entity="Nganh"
           createColumns={createNganhColumns}

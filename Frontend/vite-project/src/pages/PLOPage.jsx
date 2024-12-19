@@ -1,11 +1,12 @@
-// import Layout from "./Layout";
+import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  getAllPLOs,
+  getPLOs,
   deletePLO,
 } from "@/api/api-plo";
+import { getAllNganhs } from "@/api/api-nganh";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +24,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PLOForm } from "@/components/PLOForm";
-import Layout from "./Layout";
-import { useState, useEffect } from "react";
+import { ComboBox } from "@/components/ComboBox";
+import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 
 const createPLOColumns = (handleEdit, handleDelete) => [
   {
@@ -72,35 +75,20 @@ const createPLOColumns = (handleEdit, handleDelete) => [
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("moTa")}</div>,
   },
-  // {
-  //   accessorKey: "ctdtId",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         CTDT Id
-  //         <ArrowUpDown />
-  //       </Button>
-  //     );
-  //   },
-  //   cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ctdtId")}</div>,
-  // },
   {
-    accessorKey: "tenCTDT",
+    accessorKey: "tenNganh",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Tên CTDT
+          Tên Ngành
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenCTDT")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenNganh")}</div>,
   },
   {
     id: "actions",
@@ -166,24 +154,48 @@ const createPLOColumns = (handleEdit, handleDelete) => [
 ];
 
 export default function PLOPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nganhIdParam = searchParams.get("nganhId");
   const [data, setData] = useState([]);
+  const [nganhItems, setNganhItems] = useState([]);
+  const [nganhId, setNganhId] = useState(nganhIdParam);
+  const [comboBoxNganhId, setComboBoxNganhId] = useState(nganhIdParam);
+
+  const fetchData = useCallback(async () => {
+    const dataNganh = await getAllNganhs();
+    const mappedComboBoxItems = dataNganh.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+    setNganhItems(mappedComboBoxItems);
+    const data = await getPLOs(nganhId);
+    setData(data);
+  }, [nganhId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllPLOs();
-      setData(data);
-    };
     fetchData();
-  }, []);
+  }, [fetchData]);
+
+  const handleGoClick = () => {
+    setNganhId(comboBoxNganhId);
+    if (comboBoxNganhId === null) {
+      navigate(`/plo`);
+      return;
+    }
+    navigate(`/plo?nganhId=${comboBoxNganhId}`);
+  };
 
   return (
     <Layout>
       <div className="w-full">
+        <div className="flex">
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={comboBoxNganhId}/>
+          <Button onClick={handleGoClick}>Go</Button>
+        </div>
         <DataTable
           entity="PLO"
           createColumns={createPLOColumns}
           data={data}
           setData={setData}
+          fetchData={fetchData}
           deleteItem={deletePLO}
           columnToBeFiltered={"ten"}
           ItemForm={PLOForm}

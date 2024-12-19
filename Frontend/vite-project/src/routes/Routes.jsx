@@ -7,6 +7,7 @@ import GiangVienPage from "@/pages/GiangVienPage";
 import CTDTPage from "@/pages/CTDTPage";
 import HocPhanPage from "@/pages/HocPhanPage";
 import PLOPage from "@/pages/PLOPage";
+import MapHocPhanPLOPage from "@/pages/MapHocPhanPLOPage";
 import LopHocPhanPage from "@/pages/LopHocPhanPage";
 import KetQuaPage from "@/pages/KetQuaPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
@@ -22,6 +23,7 @@ import DiemPk from "@/pages/lophocphan/DiemPk";
 import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
 import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
+
 const lophocphans = [
   {
     path: "/",
@@ -58,6 +60,10 @@ const lophocphans = [
   {
     path: "/plo",
     element: <PLOPage />,
+  },
+  {
+    path: "/maphocphanplo",
+    element: <MapHocPhanPLOPage />,
   },
   {
     path: "/lophocphan",

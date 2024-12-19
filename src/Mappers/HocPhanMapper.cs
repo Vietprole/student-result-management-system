@@ -36,7 +36,6 @@ public static class HocPhanMapper
         hocPhan.Ten = updateHocPhanDTO.Ten ?? hocPhan.Ten;
         hocPhan.SoTinChi = updateHocPhanDTO.SoTinChi ?? hocPhan.SoTinChi;
         hocPhan.LaCotLoi = updateHocPhanDTO.LaCotLoi ?? hocPhan.LaCotLoi;
-        hocPhan.KhoaId = updateHocPhanDTO.KhoaId ?? hocPhan.KhoaId;
 
         return hocPhan;
     }

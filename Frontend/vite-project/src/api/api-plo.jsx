@@ -38,6 +38,18 @@ export const getAllPLOs = async () => {
   }
 }
 
+export const getPLOs = async (nganhId) => {
+  try {
+    const url = nganhId ? `${API_PLO}?nganhId=${nganhId}` : API_PLO;
+    const response = await axios.get(url, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 export const getPLOById = async (id) => {
   try {
     const response = await axios.get(`${API_PLO}/${id}`, {

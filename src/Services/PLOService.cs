@@ -19,31 +19,31 @@ namespace Student_Result_Management_System.Services
 
         public async Task<List<PLODTO>> GetAllPLOsAsync()
         {
-            var plos = await _context.PLOs.ToListAsync();
+            var plos = await _context.PLOs.Include(p => p.Nganh).ToListAsync();
             return plos.Select(plo => plo.ToPLODTO()).ToList();
         }
 
         public async Task<List<PLODTO>> GetPLOsByNganhIdAsync(int nganhId)
         {
-            var plos = await _context.PLOs.Where(p => p.NganhId == nganhId).ToListAsync();
+            var plos = await _context.PLOs.Include(p => p.Nganh).Where(p => p.NganhId == nganhId).ToListAsync();
             return plos.Select(plo => plo.ToPLODTO()).ToList();
         }
 
         public async Task<List<PLODTO>> GetPLOsByLopHocPhanIdAsync(int lopHocPhanId)
         {
-            var plos = await _context.PLOs.Where(p => p.HocPhans.Any(hp => hp.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId))).ToListAsync();
+            var plos = await _context.PLOs.Include(p => p.Nganh).Where(p => p.HocPhans.Any(hp => hp.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId))).ToListAsync();
             return plos.Select(plo => plo.ToPLODTO()).ToList();
         }
 
         public async Task<List<PLODTO>> GetPLOsByHocPhanIdAsync(int hocPhanId)
         {
-            var plos = await _context.PLOs.Where(p => p.HocPhans.Any(hp => hp.Id == hocPhanId)).ToListAsync();
+            var plos = await _context.PLOs.Include(p => p.Nganh).Where(p => p.HocPhans.Any(hp => hp.Id == hocPhanId)).ToListAsync();
             return plos.Select(plo => plo.ToPLODTO()).ToList();
         }
 
         public async Task<PLODTO?> GetPLOByIdAsync(int id)
         {
-            var plo = await _context.PLOs.FindAsync(id);
+            var plo = await _context.PLOs.Include(p => p.Nganh).FirstOrDefaultAsync(p => p.Id == id);
             if (plo == null)
             {
                 return null;
@@ -56,7 +56,7 @@ namespace Student_Result_Management_System.Services
             var plo = createPLODTO.ToPLOFromCreateDTO();
             await _context.PLOs.AddAsync(plo);
             await _context.SaveChangesAsync();
-            return plo.ToPLODTO();
+            return await GetPLOByIdAsync(plo.Id) ?? throw new Exception("Failed to create PLO");
         }
 
         public async Task<PLODTO?> UpdatePLOAsync(int id, UpdatePLODTO updatePLODTO)
@@ -68,7 +68,7 @@ namespace Student_Result_Management_System.Services
             }
             plo = updatePLODTO.ToPLOFromUpdateDTO(plo);
             await _context.SaveChangesAsync();
-            return plo.ToPLODTO();
+            return await GetPLOByIdAsync(id) ?? throw new Exception("Failed to update PLO");
         }
 
         public async Task<bool> DeletePLOAsync(int id)

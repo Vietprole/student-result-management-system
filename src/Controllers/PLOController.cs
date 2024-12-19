@@ -21,7 +21,7 @@ namespace Student_Result_Management_System.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAll(
-           [FromQuery] int? cTDTId,
+           [FromQuery] int? nganhId,
            [FromQuery] int? lopHocPhanId)
         {
             if (lopHocPhanId.HasValue)
@@ -30,9 +30,9 @@ namespace Student_Result_Management_System.Controllers
                 return Ok(plos);
             }
             
-            if (cTDTId.HasValue)
+            if (nganhId.HasValue)
             {
-                var plos = await _ploService.GetPLOsByNganhIdAsync(cTDTId.Value);
+                var plos = await _ploService.GetPLOsByNganhIdAsync(nganhId.Value);
                 return Ok(plos);
             }
 

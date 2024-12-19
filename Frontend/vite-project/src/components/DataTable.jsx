@@ -36,6 +36,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ComboBox } from "@/components/ComboBox";
+import { addHocPhan } from "@/api/api-hocphan";
 
 export default function DataTable({
   entity,
@@ -46,6 +48,10 @@ export default function DataTable({
   columnToBeFiltered,
   ItemForm,
   hasCheckBox,
+  hasAddButton,
+  parentEntity,
+  comboBoxItems,
+  addItemsToParent,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -53,6 +59,7 @@ export default function DataTable({
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  const [comboBoxItemId, setComboBoxItemId] = useState(null);
 
   const handleAdd = () => {
     fetchData();
@@ -88,6 +95,13 @@ export default function DataTable({
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  const handleAddItemsToParent = async (parentId) => {
+    const selectedItemIds = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
+    console.log("selectedItemIds: ", selectedItemIds);
+    addItemsToParent(parentId, selectedItemIds);
+    fetchData();
+  }
+
   return (
     <>
       {/* <h1>This is {entity} Page</h1> */}
@@ -105,6 +119,15 @@ export default function DataTable({
             }
             className="max-w-sm"
           />
+          {hasAddButton && (
+            <>
+              <p>Thêm {entity} vào {parentEntity} </p>
+              <ComboBox items={comboBoxItems} setItemId={setComboBoxItemId} initialItemId={null}/>
+              <Button variant="outline" onClick={() => handleAddItemsToParent(comboBoxItemId)}>
+                Thêm
+              </Button>
+            </>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">

@@ -8,4 +8,5 @@ public class PLODTO
     public string Ten { get; set; } = string.Empty;
     public string MoTa { get; set; } = string.Empty;
     public int NganhId { get; set; }
+    public string TenNganh { get; set;} = string.Empty;
 }

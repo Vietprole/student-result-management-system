@@ -87,3 +87,36 @@ export const deleteNganh = async (nganhId) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getHocPhansByNganhId = async (nganhId) => {
+  try {
+    const response = await axios.get(`${API_NGANH}/${nganhId}/hocphan`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+export const addHocPhansToNganh = async (nganhId, hocPhanIdsList) => {
+  try {
+    const response = await axios.post(`${API_NGANH}/${nganhId}/hocphan`, hocPhanIdsList, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const removeHocPhanFromNganh = async (nganhId, hocPhanId) => {
+  try {
+    const response = await axios.delete(`${API_NGANH}/${nganhId}/hocphan/${hocPhanId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}

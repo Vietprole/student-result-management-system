@@ -131,6 +131,16 @@ const adminItem = [
     icon: HocPhanIcon,
   },
   {
+    title: "PLO",
+    url: "/plo",
+    icon: HocPhanIcon,
+  },
+  {
+    title: "Nối Học Phần - PLO",
+    url: "/maphocphanplo",
+    icon: HocPhanIcon,
+  },
+  {
     title: "Giảng viên",
     url: "/giangvien",
     icon: GiangVienIcon,
@@ -139,11 +149,6 @@ const adminItem = [
     title: "Sinh viên",
     url: "/sinhvien",
     icon: SinhVienIcon,
-  },
-  {
-    title: "PLO",
-    url: "/plo",
-    icon: HocPhanIcon,
   },
   // {
   //   title: "Chương trình đào tạo",

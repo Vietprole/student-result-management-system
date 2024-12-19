@@ -15,8 +15,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { addHocPhan, updateHocPhan } from "@/api/api-hocphan";
 import { getAllKhoas } from "@/api/api-khoa";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearchParams } from "react-router-dom";
@@ -39,7 +50,12 @@ const formSchema = z.object({
   }),
 });
 
-export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen }) {
+export function HocPhanForm({
+  hocphan,
+  handleAdd,
+  handleEdit,
+  setIsDialogOpen,
+}) {
   const [searchParams] = useSearchParams();
   const khoaIdParam = searchParams.get("khoaId");
   const [comboBoxItems, setComboBoxItems] = useState([]);
@@ -47,7 +63,10 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
   useEffect(() => {
     const fetchData = async () => {
       const comboBoxItems = await getAllKhoas();
-      const mappedComboBoxItems = comboBoxItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      const mappedComboBoxItems = comboBoxItems.map((khoa) => ({
+        label: khoa.ten,
+        value: khoa.id,
+      }));
       setComboBoxItems(mappedComboBoxItems);
     };
     fetchData();
@@ -141,9 +160,7 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Là Cốt Lõi
-                </FormLabel>
+                <FormLabel>Là Cốt Lõi</FormLabel>
                 <FormDescription>
                   Học phần này có phải là cốt lõi không?
                 </FormDescription>
@@ -151,71 +168,70 @@ export function HocPhanForm({ hocphan, handleAdd, handleEdit, setIsDialogOpen })
             </FormItem>
           )}
         />
-        {khoaIdParam == null && (
-          <FormField
-            control={form.control}
-            name="khoaId"
-            render={({ field }) => (
-              <FormItem className=" flex flex-col">
-                <FormLabel>Chọn Khoa</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value
-                          ? comboBoxItems.find(
-                              (item) => item.value === field.value
-                            )?.label
-                          : "Select Khoa..."}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search khoa..." />
-                      <CommandList>
-                        <CommandEmpty>No khoa found.</CommandEmpty>
-                        <CommandGroup>
-                          {comboBoxItems.map((item) => (
-                            <CommandItem
-                              value={item.label}
-                              key={item.value}
-                              onSelect={() => {
-                                form.setValue("khoaId", item.value)
-                              }}
-                            >
-                              {item.label}
-                              <Check
-                                className={cn(
-                                  "ml-auto",
-                                  item.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormDescription>
-                  Select the Khoa this HocPhan belongs to.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="khoaId"
+          render={({ field }) => (
+            <FormItem className=" flex flex-col">
+              <FormLabel>Chọn Khoa</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      disabled={!!hocphan}
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? comboBoxItems.find(
+                            (item) => item.value === field.value
+                          )?.label
+                        : "Select Khoa..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search khoa..." />
+                    <CommandList>
+                      <CommandEmpty>No khoa found.</CommandEmpty>
+                      <CommandGroup>
+                        {comboBoxItems.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("khoaId", item.value);
+                            }}
+                          >
+                            {item.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                Select the Khoa this HocPhan belongs to.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>

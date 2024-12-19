@@ -28,7 +28,9 @@ import { GiangVienForm } from "@/components/GiangVienForm";
 import { getAllKhoas } from "@/api/api-khoa";
 import { ComboBox } from "@/components/ComboBox";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { getAllLopHocPhans } from "@/api/api-lophocphan";
+import { createSearchURL } from "@/utils/string";
 
 const createGiangVienColumns = (handleEdit, handleDelete) => [
   {
@@ -155,28 +157,53 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
 ];
 
 export default function GiangVienPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const lopHocPhanIdParam = searchParams.get("lopHocPhanId");
   const khoaIdParam = searchParams.get("khoaId");
   const [data, setData] = useState([]);
   const [khoaItems, setKhoaItems] = useState([]);
+  const [lopHocPhanItems, setLopHocPhanItems] = useState([]);
   const [khoaId, setKhoaId] = useState(khoaIdParam);
+  const [lopHocPhanId, setLopHocPhanId] = useState(lopHocPhanIdParam);
+  const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
+  const [comboBoxLopHocPhanId, setComboBoxLopHocPhanId] = useState(lopHocPhanIdParam);
+  const baseUrl = "/giangvien";
 
   useEffect(() => {
     const fetchData = async () => {
       const dataKhoa = await getAllKhoas();
-      const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      setKhoaItems(mappedComboBoxItems);
-      const data = await getGiangViens(khoaId);
+      const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      setKhoaItems(mappedKhoaItems);
+
+      const dataLopHocPhan = await getAllLopHocPhans();
+      const mappedLopHocPhanItems = dataLopHocPhan.map(lhp => ({ label: lhp.ten, value: lhp.id }));
+      setLopHocPhanItems(mappedLopHocPhanItems);
+
+      const data = await getGiangViens(khoaId, lopHocPhanId);
       setData(data);
-    }
+    };
     fetchData();
-  }, [khoaId]);
+  }, [khoaId, lopHocPhanId]);
+
+  const handleGoClick = () => {
+    setKhoaId(comboBoxKhoaId);
+    setLopHocPhanId(comboBoxLopHocPhanId);
+    const url = createSearchURL(baseUrl, { 
+      khoaId: comboBoxKhoaId, 
+      lopHocPhanId: comboBoxLopHocPhanId 
+    });
+    navigate(url);
+  };
 
   return (
     <Layout>
       <div className="w-full">
-        <ComboBox items={khoaItems} setItemId={setKhoaId} initialItemId={khoaId}/>
-        {console.log("Khoa ID: ", khoaId)}
+        <div className="flex">
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
+          <ComboBox items={lopHocPhanItems} setItemId={setComboBoxLopHocPhanId} initialItemId={lopHocPhanId}/>
+          <Button onClick={handleGoClick}>Go</Button>
+        </div>
         <DataTable
           entity="Giang Vien"
           createColumns={createGiangVienColumns}

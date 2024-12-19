@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addPLO, updatePLO } from "@/api/api-plo";
-import { getAllCTDTs } from "@/api/api-ctdt";
+import { getAllNganhs } from "@/api/api-nganh";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Check, ChevronsUpDown} from "lucide-react";
 import { cn } from "@/lib/utils";
-// import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const formSchema = z.object({
   ten: z.string().min(2, {
@@ -28,18 +28,20 @@ const formSchema = z.object({
   moTa: z.string().min(2, {
     message: "MoTa must be at least 2 characters.",
   }),
-  ctdtId: z.number({
-    required_error: "Please select a CTDT.",
+  nganhId: z.number({
+    required_error: "Please select a Nganh.",
   }),
 });
 
 export function PLOForm({ pLO, handleAdd, handleEdit, setIsDialogOpen }) {
+  const [searchParams] = useSearchParams();
+  const nganhIdParam = searchParams.get("nganhId");
   const [comboBoxItems, setComboBoxItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const comboBoxItems = await getAllCTDTs();
-      const mappedComboBoxItems = comboBoxItems.map(ctdt => ({ label: ctdt.ten, value: ctdt.id }));
+      const comboBoxItems = await getAllNganhs();
+      const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
       console.log("mapped", mappedComboBoxItems);
       setComboBoxItems(mappedComboBoxItems);
     };
@@ -52,7 +54,7 @@ export function PLOForm({ pLO, handleAdd, handleEdit, setIsDialogOpen }) {
     defaultValues: pLO || {
       ten: "",
       moTa:"",
-      // ctdtId:"",
+      nganhId: nganhIdParam ? parseInt(nganhIdParam) : null,
     },
   });
 
@@ -123,28 +125,12 @@ export function PLOForm({ pLO, handleAdd, handleEdit, setIsDialogOpen }) {
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name="cTDTId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>CTDT Id</FormLabel>
-              <FormControl>
-                <Input placeholder="1" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
-          name="ctdtId"
+          name="nganhId"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Chọn CTDT</FormLabel>
+              <FormLabel>Chọn Nganh</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -176,7 +162,7 @@ export function PLOForm({ pLO, handleAdd, handleEdit, setIsDialogOpen }) {
                             value={item.label}
                             key={item.value}
                             onSelect={() => {
-                              form.setValue("ctdtId", item.value)
+                              form.setValue("nganhId", item.value)
                             }}
                           >
                             {item.label}

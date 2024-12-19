@@ -2,7 +2,8 @@ import Layout from "./Layout";
 import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getAllHocPhans, deleteHocPhan } from "@/api/api-hocphan";
+import { deleteHocPhan } from "@/api/api-hocphan";
+import { addHocPhansToNganh } from "@/api/api-nganh";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,14 +26,13 @@ import { HocPhanForm } from "@/components/HocPhanForm";
 import { useRef, useState, useEffect, useCallback } from "react";
 import AddPLOToHocPhanForm from "@/components/AddPLOToHocPhanForm";
 import ManagePLOInHocPhanForm from "@/components/ManagePLOInHocPhanForm";
-import { getAllNganhs } from "@/api/api-nganh";
+import { getAllNganhs, removeHocPhanFromNganh } from "@/api/api-nganh";
 import { getHocPhans } from "@/api/api-hocphan";
 import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getAllKhoas } from "@/api/api-khoa";
 import { createSearchURL } from "@/utils/string";
 import { Checkbox } from "@/components/ui/checkbox";
-import React from "react";
 
 export default function HocPhanPage() {
   const navigate = useNavigate();
@@ -71,6 +71,11 @@ export default function HocPhanPage() {
     const url = createSearchURL(baseUrl, { nganhId: comboBoxNganhId, khoaId: comboBoxKhoaId });
     navigate(url);
   };
+
+  const handleRemoveHocPhanFromNganh = (nganhId, itemId) => {
+    removeHocPhanFromNganh(nganhId, itemId);
+    fetchData();
+  }
 
   const createHocPhanColumns = (handleEdit, handleDelete) => [
   {
@@ -221,6 +226,12 @@ export default function HocPhanPage() {
                 <HocPhanForm hocphan={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
+            {console.log("nganhId: ", nganhId)}
+            {nganhIdParam && (
+              <DropdownMenuItem onSelect={() => handleRemoveHocPhanFromNganh(nganhId, item.id)}>
+                Bỏ Học Phần khỏi Ngành
+              </DropdownMenuItem>
+            )}
             <Dialog>
               <DialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
@@ -322,7 +333,7 @@ export default function HocPhanPage() {
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable
-          entity="HocPhan"
+          entity="Học phần"
           createColumns={createHocPhanColumns}
           data={data}
           fetchData={fetchData}
@@ -330,6 +341,10 @@ export default function HocPhanPage() {
           columnToBeFiltered={"ten"}
           ItemForm={HocPhanForm}
           hasCheckBox={true}
+          hasAddButton={!nganhId}
+          parentEntity="Ngành"
+          comboBoxItems={nganhItems}
+          addItemsToParent={addHocPhansToNganh}
         />
       </div>
     </Layout>

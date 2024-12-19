@@ -14,6 +14,7 @@ public static class PLOMapper
             Ten = pLOModel.Ten,
             MoTa = pLOModel.MoTa,
             NganhId = pLOModel.NganhId,
+            TenNganh = pLOModel.Nganh.Ten,
         };
     }
 
