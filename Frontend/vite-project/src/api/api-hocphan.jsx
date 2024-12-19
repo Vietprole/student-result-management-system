@@ -81,7 +81,7 @@ export const deleteHocPhan = async (hocphanId) => {
 
 export const getPLOsByHocPhanId = async (hocPhanId) => {
   try {
-    const response = await axios.get(`${API_HOCPHAN}/${hocPhanId}/view-plos`, {
+    const response = await axios.get(`${API_HOCPHAN}/${hocPhanId}/plo`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -92,7 +92,7 @@ export const getPLOsByHocPhanId = async (hocPhanId) => {
 
 export const addPLOsToHocPhan = async (hocPhanId, pLOIdsList) => {
   try {
-    const response = await axios.post(`${API_HOCPHAN}/${hocPhanId}/add-plos`, pLOIdsList, {
+    const response = await axios.post(`${API_HOCPHAN}/${hocPhanId}/plo`, pLOIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -103,7 +103,7 @@ export const addPLOsToHocPhan = async (hocPhanId, pLOIdsList) => {
 
 export const removePLOFromHocPhan = async (hocPhanId, pLOId) => {
   try {
-    const response = await axios.delete(`${API_HOCPHAN}/${hocPhanId}/remove-plo/${pLOId}`, {
+    const response = await axios.delete(`${API_HOCPHAN}/${hocPhanId}/plo/${pLOId}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

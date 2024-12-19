@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CLO;
+using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.PLO;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
@@ -98,6 +99,24 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             var cloList = pLO.CLOs.Select(c => c.ToCLODTO()).ToList();
             return cloList;
+        }
+        
+        public async Task<List<HocPhanDTO>> UpdateHocPhansOfPLOAsync(int id, int[] hocPhanIds)
+        {
+            var pLO = await _context.PLOs
+                .Include(ch => ch.HocPhans)
+                .ThenInclude(hp => hp.Khoa)
+                .FirstOrDefaultAsync(ch => ch.Id == id) ?? throw new BusinessLogicException($"PLO with id {id} not found");
+            pLO.HocPhans.Clear();
+            foreach (var hocPhanId in hocPhanIds)
+            {
+                var hocPhan = await _context.HocPhans.FindAsync(hocPhanId) ?? throw new BusinessLogicException($"HocPhan with id {hocPhanId} not found");
+                pLO.HocPhans.Add(hocPhan);
+            }
+
+            await _context.SaveChangesAsync();
+            var hocPhanList = pLO.HocPhans.Select(c => c.ToHocPhanDTO()).ToList();
+            return hocPhanList;
         }
     }
 }

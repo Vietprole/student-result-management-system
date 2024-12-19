@@ -11,9 +11,15 @@ public static class LopHocPhanMapper
         return new LopHocPhanDTO
         {
             Id = lopHocPhanModel.Id,
+            MaLopHocPhan = lopHocPhanModel.MaLopHocPhan,
             Ten = lopHocPhanModel.Ten,
             HocPhanId = lopHocPhanModel.HocPhanId,
-            HocKyId = lopHocPhanModel.HocKyId
+            HocKyId = lopHocPhanModel.HocKyId,
+            TenHocPhan = lopHocPhanModel.HocPhan.Ten,
+            TenHocKy = lopHocPhanModel.HocKy.Ten,
+            HanDeXuatCongThucDiem = lopHocPhanModel.HanDeXuatCongThucDiem,
+            GiangVienId = lopHocPhanModel.GiangVienId??0,
+            TenGiangVien = lopHocPhanModel.GiangVien?.TaiKhoan?.Ten ?? string.Empty,
         };
     }
 
@@ -23,7 +29,9 @@ public static class LopHocPhanMapper
         {
             Ten = createLopHocPhanDTO.Ten,
             HocPhanId = createLopHocPhanDTO.HocPhanId,
-            HocKyId = createLopHocPhanDTO.HocKyId
+            HocKyId = createLopHocPhanDTO.HocKyId,
+            HanDeXuatCongThucDiem = createLopHocPhanDTO.HanDeXuatCongThucDiem,
+            GiangVienId = createLopHocPhanDTO.GiangVienId,
         };
     }
 
@@ -32,6 +40,8 @@ public static class LopHocPhanMapper
         existingLopHocPhan.Ten = updateLopHocPhanDTO.Ten ?? existingLopHocPhan.Ten;
         existingLopHocPhan.HocPhanId = updateLopHocPhanDTO.HocPhanId ?? existingLopHocPhan.HocPhanId;
         existingLopHocPhan.HocKyId = updateLopHocPhanDTO.HocKyId ?? existingLopHocPhan.HocKyId;
+        existingLopHocPhan.HanDeXuatCongThucDiem = updateLopHocPhanDTO.HanDeXuatCongThucDiem ?? existingLopHocPhan.HanDeXuatCongThucDiem;
+        existingLopHocPhan.GiangVienId = updateLopHocPhanDTO.GiangVienId ?? existingLopHocPhan.GiangVienId;
         
         return existingLopHocPhan;
     }

@@ -20,6 +20,9 @@ import {
 export function ComboBox({ items, setItemId, initialItemId }) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState(initialItemId)
+  console.log("comboBox items: ", items);
+  console.log("setItemId: ", setItemId);
+  console.log("initialItemId: ", initialItemId);
 
   return (
     <div className="flex">

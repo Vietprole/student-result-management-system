@@ -24,8 +24,6 @@ import {
 } from "@/components/ui/dialog";
 import { HocPhanForm } from "@/components/HocPhanForm";
 import { useRef, useState, useEffect, useCallback } from "react";
-import AddPLOToHocPhanForm from "@/components/AddPLOToHocPhanForm";
-import ManagePLOInHocPhanForm from "@/components/ManagePLOInHocPhanForm";
 import { getAllNganhs, removeHocPhanFromNganh } from "@/api/api-nganh";
 import { getHocPhans } from "@/api/api-hocphan";
 import { ComboBox } from "@/components/ComboBox";
@@ -254,69 +252,6 @@ export default function HocPhanPage() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Dialog>
-              <DialogTrigger asChild>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Thêm PLO
-                </DropdownMenuItem>
-              </DialogTrigger>
-              <DialogContent className="w-auto max-w-none">
-                <DialogHeader>
-                  <DialogTitle>
-                    Thêm PLO có sẵn vào Học Phần
-                  </DialogTitle>
-                </DialogHeader>
-                {console.log("item.id", item.id)}
-                <AddPLOToHocPhanForm
-                  ref={addPLOFormRef}
-                  hocPhanId={item.id}
-                />
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button
-                      type="button"
-                      variant="default"
-                      onClick={() =>
-                        addPLOFormRef.current.handleAddPLO()
-                      }
-                    >
-                      Thêm
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            <Dialog>
-              <DialogTrigger asChild>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Quản lý PLO
-                </DropdownMenuItem>
-              </DialogTrigger>
-              <DialogContent className="w-auto max-w-none">
-                <DialogHeader>
-                  <DialogTitle>
-                    Xem và xóa PLO khỏi Học Phần
-                  </DialogTitle>
-                </DialogHeader>
-                <ManagePLOInHocPhanForm
-                  ref={managePLOFormRef}
-                  hocPhanId={item.id}
-                />
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button
-                      type="button"
-                      variant="default"
-                      onClick={() =>
-                        managePLOFormRef.current.handleRemovePLO()
-                      }
-                    >
-                      Xóa
-                    </Button>
-                  </DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -341,7 +276,7 @@ export default function HocPhanPage() {
           columnToBeFiltered={"ten"}
           ItemForm={HocPhanForm}
           hasCheckBox={true}
-          hasAddButton={!nganhId}
+          hasAddButton={true}
           parentEntity="Ngành"
           comboBoxItems={nganhItems}
           addItemsToParent={addHocPhansToNganh}

@@ -4,11 +4,11 @@ import KhoaPage from "@/pages/KhoaPage";
 import NganhPage from "@/pages/NganhPage";
 import SinhVienPage from "@/pages/SinhVienPage";
 import GiangVienPage from "@/pages/GiangVienPage";
-import CTDTPage from "@/pages/CTDTPage";
 import HocPhanPage from "@/pages/HocPhanPage";
 import PLOPage from "@/pages/PLOPage";
 import MapHocPhanPLOPage from "@/pages/MapHocPhanPLOPage";
 import LopHocPhanPage from "@/pages/LopHocPhanPage";
+import NhapDiemPage from "@/pages/NhapDiemPage";
 import KetQuaPage from "@/pages/KetQuaPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
 import HoSoCaNhanPage from "@/pages/HoSoCaNhanPage";
@@ -50,10 +50,6 @@ const lophocphans = [
     element: <SinhVienPage />,
   },
   {
-    path: "/ctdt",
-    element: <CTDTPage />,
-  },
-  {
     path: "/hocphan",
     element: <HocPhanPage />,
   },
@@ -68,6 +64,10 @@ const lophocphans = [
   {
     path: "/lophocphan",
     element: <LopHocPhanPage />,
+  },
+  {
+    path: "/nhapdiem",
+    element: <NhapDiemPage />,
     children: [
       { path: ":lopHocPhanId/cong-thuc-diem", element: <CongThucDiem /> },
       { path: ":lopHocPhanId/bang-diem", element: <BangDiem /> },

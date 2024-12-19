@@ -13,10 +13,12 @@ namespace Student_Result_Management_System.Controllers
     {
         private readonly IPLOService _ploService;
         private readonly ICLOService _cLOService;
-        public PLOController(IPLOService ploService, ICLOService cLOService)
+        private readonly IHocPhanService _hocPhanService;
+        public PLOController(IPLOService ploService, ICLOService cLOService, IHocPhanService hocPhanService)
         {
             _ploService = ploService;
             _cLOService = cLOService;
+            _hocPhanService = hocPhanService;
         }
 
         [HttpGet]
@@ -85,6 +87,17 @@ namespace Student_Result_Management_System.Controllers
             return Ok(cLODTOs);
         }
 
+        [HttpGet("{id}/hocphan")]
+        public async Task<IActionResult> GetHocPhans([FromRoute] int id)
+        {
+            var pLO = await _ploService.GetPLOByIdAsync(id);
+            if (pLO == null)
+                return NotFound("PLO not found");
+
+            var hocPhanDTOs = await _hocPhanService.GetHocPhansByPLOIdAsync(id);
+            return Ok(hocPhanDTOs);
+        }
+
         // [HttpPost("{id}/add-clos")]
         // public async Task<IActionResult> AddCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
         // {
@@ -105,6 +118,27 @@ namespace Student_Result_Management_System.Controllers
             try {
                 var updatedCLOs = await _ploService.UpdateCLOsOfPLOAsync(id, cLOIds);
                 return Ok(updatedCLOs);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred");
+            }
+        }
+
+        [HttpPut("{id}/hocphan")]
+        public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
+        {
+            var pLO = await _ploService.GetPLOByIdAsync(id);
+            if (pLO == null)
+                return NotFound("PLO not found");
+
+            try {
+                var updatedHocPhans = await _ploService.UpdateHocPhansOfPLOAsync(id, hocPhanIds);
+                return Ok(updatedHocPhans);
             }
             catch (BusinessLogicException ex)
             {

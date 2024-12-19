@@ -11,7 +11,7 @@ public class LopHocPhan
     public int HocPhanId { get; set; }
     public HocPhan HocPhan { get; set; } = null!;
     public int HocKyId { get; set; }
-    public HocKy HocKy { get; set; } = new HocKy();
+    public HocKy HocKy { get; set; } = null!;
     public DateTime HanDeXuatCongThucDiem { get; set; }
     public int? NguoiDeXuatCongThucDiemId { get; set; }
     public int? NguoiChapNhanCongThucDiemId { get; set; }

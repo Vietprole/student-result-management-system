@@ -11,4 +11,8 @@ public class CreateLopHocPhanDTO
     public int HocPhanId { get; set; }
     [Required]
     public int HocKyId { get; set; }
+    [Required]
+    public DateTime HanDeXuatCongThucDiem { get; set; }
+    [Required]
+    public int GiangVienId { get; set; }
 }

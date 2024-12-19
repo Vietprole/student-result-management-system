@@ -24,13 +24,13 @@ import { Label } from "@/components/ui/label"
 import { calculateDiemPLO } from "@/api/api-ketqua"
 // import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
 // import { useParams } from "react-router-dom"
-import { getAllPLOs, getPLOsByCTDTId } from "@/api/api-plo"
+import { getAllPLOs, getPLOsByNganhId } from "@/api/api-plo"
 import Layout from "./Layout"
 import { getAllSinhViens } from "@/api/api-sinhvien"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Check, ChevronsUpDown} from "lucide-react"
-import { getAllCTDTs } from "@/api/api-ctdt"
+import { getAllNganhs } from "@/api/api-nganh"
 import { cn } from "@/lib/utils"
 
 // const PLOs = [
@@ -147,18 +147,18 @@ export default function XetChuanDauRaPage() {
   const [open, setOpen] = React.useState(false) // Use for combobox
   const [value, setValue] = React.useState(null) // Use for combobox
   const [comboBoxItems, setComboBoxItems] = React.useState([])
-  const [ctdtId, setCtdtId] = React.useState(null)
+  const [nganhId, setNganhId] = React.useState(null)
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const comboBoxItems = await getAllCTDTs();
-      const mappedComboBoxItems = comboBoxItems.map(ctdt => ({ label: ctdt.ten, value: ctdt.id }));
+      const comboBoxItems = await getAllNganhs();
+      const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
       console.log("mapped", mappedComboBoxItems);
       setComboBoxItems(mappedComboBoxItems);
 
       const [sinhViens, PLOs] = await Promise.all([
         getAllSinhViens(),
-        getPLOsByCTDTId(ctdtId),
+        getPLOsByNganhId(nganhId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
@@ -179,7 +179,7 @@ export default function XetChuanDauRaPage() {
       // setListDiemPLOMax(listDiemPkMax)
     }
     fetchData()
-  }, [ctdtId])
+  }, [nganhId])
 
   // const columns = createColumns(PLOs, listDiemPLOMax, isBase10, diemDat);
   const columns = createColumns(PLOs, diemDat);
@@ -200,7 +200,7 @@ export default function XetChuanDauRaPage() {
 
   return (
     <Layout>
-      <h1>Tính điểm đạt chuẩn đầu ra của CTDT của Sinh Viên</h1>
+      <h1>Tính điểm đạt chuẩn đầu ra của Nganh của Sinh Viên</h1>
       <div className="flex">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -245,7 +245,7 @@ export default function XetChuanDauRaPage() {
             </Command>
           </PopoverContent>
         </Popover>
-        <Button onClick={() => setCtdtId(value)}>Go</Button>
+        <Button onClick={() => setNganhId(value)}>Go</Button>
       </div>
       <div>
         <div className="flex items-center py-4">

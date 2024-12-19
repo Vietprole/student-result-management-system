@@ -61,7 +61,7 @@ export const deleteLopHocPhan = async (id) => {
 
 export const getSinhViensByLopHocPhanId = async (lopHocPhanId) => {
   try {
-    const response = await axios.get(`${API_LOPHOCPHAN}/${lopHocPhanId}/view-sinhviens`, {
+    const response = await axios.get(`${API_LOPHOCPHAN}/${lopHocPhanId}/sinhvien`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -72,7 +72,7 @@ export const getSinhViensByLopHocPhanId = async (lopHocPhanId) => {
 
 export const addSinhViensToLopHocPhan = async (lopHocPhanId, sinhVienIdsList) => {
   try {
-    const response = await axios.post(`${API_LOPHOCPHAN}/${lopHocPhanId}/add-sinhviens`, sinhVienIdsList, {
+    const response = await axios.post(`${API_LOPHOCPHAN}/${lopHocPhanId}/sinhvien`, sinhVienIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -83,7 +83,7 @@ export const addSinhViensToLopHocPhan = async (lopHocPhanId, sinhVienIdsList) =>
 
 export const removeSinhVienFromLopHocPhan = async (lopHocPhanId, sinhVienId) => {
   try {
-    const response = await axios.delete(`${API_LOPHOCPHAN}/${lopHocPhanId}/remove-sinhvien/${sinhVienId}`, {
+    const response = await axios.delete(`${API_LOPHOCPHAN}/${lopHocPhanId}/sinhvien/${sinhVienId}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

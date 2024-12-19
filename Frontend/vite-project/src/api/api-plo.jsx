@@ -15,9 +15,9 @@ export const getPLOsByLopHocPhanId = async (lopHocPhanId) => {
   }
 };
 
-export const getPLOsByCTDTId = async (ctdtId) => {
+export const getPLOsByNganhId = async (nganhId) => {
   try {
-    const response = await axios.get(`${API_PLO}?cTDTId=${ctdtId}`, {
+    const response = await axios.get(`${API_PLO}?nganhId=${nganhId}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -96,7 +96,7 @@ export const deletePLO = async (id) => {
 
 export const getCLOsByPLOId = async (ploId) => {
   try {
-    const response = await axios.get(`${API_PLO}/${ploId}/view-clos`, {
+    const response = await axios.get(`${API_PLO}/${ploId}/clo`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -107,7 +107,7 @@ export const getCLOsByPLOId = async (ploId) => {
 
 export const addCLOsToPLO = async (ploId, cloIdsList) => {
   try {
-    const response = await axios.post(`${API_PLO}/${ploId}/add-clos`, cloIdsList, {
+    const response = await axios.post(`${API_PLO}/${ploId}/clo`, cloIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -118,7 +118,7 @@ export const addCLOsToPLO = async (ploId, cloIdsList) => {
 
 export const updateCLOsToPLO = async (ploId, cloIdsList) => {
   try {
-    const response = await axios.put(`${API_PLO}/${ploId}/update-clos`, cloIdsList, {
+    const response = await axios.put(`${API_PLO}/${ploId}/clo`, cloIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -129,7 +129,29 @@ export const updateCLOsToPLO = async (ploId, cloIdsList) => {
 
 export const removeCLOsFromPLO = async (ploId, cloId) => {
   try {
-    const response = await axios.delete(`${API_PLO}/${ploId}/remove-clo/${cloId}`, {
+    const response = await axios.delete(`${API_PLO}/${ploId}/clo/${cloId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const getHocPhansByPLOId = async (ploId) => {
+  try {
+    const response = await axios.get(`${API_PLO}/${ploId}/hocphan`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const updateHocPhansToPLO = async (ploId, hocPhanIdsList) => {
+  try {
+    const response = await axios.put(`${API_PLO}/${ploId}/hocphan`, hocPhanIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

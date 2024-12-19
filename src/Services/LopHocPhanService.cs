@@ -25,13 +25,22 @@ namespace Student_Result_Management_System.Services
 
         public async Task<List<LopHocPhan>> GetAllLopHocPhansAsync()
         {
-            var lopHocPhans =await _context.LopHocPhans.ToListAsync();
+            var lopHocPhans = await _context.LopHocPhans
+                .Include(lhp => lhp.HocPhan)
+                .Include(lhp => lhp.HocKy)
+                .Include(lhp => lhp.GiangVien)
+                .ThenInclude(gv => gv.TaiKhoan)
+                .ToListAsync();
             return lopHocPhans;
         }
 
         public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId)
         {
-            IQueryable<LopHocPhan> query = _context.LopHocPhans;
+            IQueryable<LopHocPhan> query = _context.LopHocPhans
+                .Include(lhp => lhp.HocPhan)
+                .Include(lhp => lhp.HocKy)
+                .Include(lhp => lhp.GiangVien)
+                .ThenInclude(gv => gv.TaiKhoan);
 
             if (hocPhanId.HasValue)
             {
@@ -48,7 +57,12 @@ namespace Student_Result_Management_System.Services
 
         public async Task<LopHocPhan?> GetLopHocPhanByIdAsync(int id)
         {
-            var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.HocPhan)
+                .Include(lhp => lhp.HocKy)
+                .Include(lhp => lhp.GiangVien)
+                .ThenInclude(gv => gv.TaiKhoan)
+                .FirstOrDefaultAsync(s => s.Id == id);
             return lopHocPhan;
         }
 
@@ -65,10 +79,10 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            int soluong = await _context.LopHocPhans.Where(x=>x.HocPhanId==lopHocPhanDTO.HocPhanId).CountAsync()+1;
-            while(true)
+            int soluong = await _context.LopHocPhans.Where(x => x.HocPhanId == lopHocPhanDTO.HocPhanId).CountAsync() + 1;
+            while (true)
             {
-                if(await _context.LopHocPhans.AnyAsync(lhp => lhp.MaLopHocPhan == hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3")))
+                if (await _context.LopHocPhans.AnyAsync(lhp => lhp.MaLopHocPhan == hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3")))
                 {
                     soluong++;
                 }
@@ -80,21 +94,22 @@ namespace Student_Result_Management_System.Services
             lopHocPhan.MaLopHocPhan = hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3");
             await _context.LopHocPhans.AddAsync(lopHocPhan);
             await _context.SaveChangesAsync();
-            return lopHocPhan;
+            return GetLopHocPhanByIdAsync(lopHocPhan.Id).Result;
         }
 
         public async Task<LopHocPhan?> UpdateLopHocPhanAsync(int id, UpdateLopHocPhanDTO lopHocPhanDTO)
         {
-            var lopHocPhan = await _context.LopHocPhans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+            var lopHocPhan = await _context.LopHocPhans.Include(lhp => lhp.HocPhan).Include(lhp => lhp.HocKy).FirstOrDefaultAsync(lhp => lhp.Id == id) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
             lopHocPhanDTO.ToLopHocPhanFromUpdateDTO(lopHocPhan);
             await _context.SaveChangesAsync();
-            return lopHocPhan;
+            return GetLopHocPhanByIdAsync(lopHocPhan.Id).Result;
         }
 
         public async Task<bool> DeleteLopHocPhanAsync(int id)
         {
             var lopHocPhan = await _context.LopHocPhans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
-            try {
+            try
+            {
                 _context.LopHocPhans.Remove(lopHocPhan);
                 await _context.SaveChangesAsync();
             }
@@ -118,7 +133,7 @@ namespace Student_Result_Management_System.Services
                 .Include(lhp => lhp.SinhViens)
                 .ThenInclude(t => t.TaiKhoan)
                 .FirstOrDefaultAsync(lhp => lhp.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
-            
+
             foreach (var sinhVienId in sinhVienIds)
             {
                 var sinhVien = await _context.SinhViens.FindAsync(sinhVienId);
@@ -139,7 +154,7 @@ namespace Student_Result_Management_System.Services
                 .Include(p => p.SinhViens)
                 .ThenInclude(t => t.TaiKhoan)
                 .FirstOrDefaultAsync(p => p.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
-            
+
             var sinhVienSet = new HashSet<int>(sinhVienIds);
             var sinhViens = await _context.SinhViens
                 .Where(sv => sinhVienSet.Contains(sv.Id))
@@ -158,7 +173,7 @@ namespace Student_Result_Management_System.Services
             var lopHocPhan = await _context.LopHocPhans
                 .Include(lhp => lhp.SinhViens)
                 .FirstOrDefaultAsync(lhp => lhp.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
-            
+
             var sinhVien = await _context.SinhViens.FindAsync(sinhVienId) ?? throw new NotFoundException($"Không tìm thấy sinh viên có id: {sinhVienId}");
             if (!lopHocPhan.SinhViens.Contains(sinhVien)) throw new BusinessLogicException($"Sinh viên có id: {sinhVienId} không học trong lớp học phần này");
 
@@ -169,17 +184,17 @@ namespace Student_Result_Management_System.Services
 
         public Task<string> CheckCongThucDiem(List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
         {
-            bool ck = createBaiKiemTraDTOs.GroupBy(x=>x.Loai).Any(g=>g.Count()>1);
-            if(ck)
+            bool ck = createBaiKiemTraDTOs.GroupBy(x => x.Loai).Any(g => g.Count() > 1);
+            if (ck)
             {
                 return Task.FromResult("Loại bài kiểm tra không được trùng nhau");
             }
             decimal sum = 0;
-            foreach(CreateBaiKiemTraDTO i in createBaiKiemTraDTOs)
+            foreach (CreateBaiKiemTraDTO i in createBaiKiemTraDTOs)
             {
                 sum += i.TrongSo ?? 0;
             }
-            if(sum!=1)
+            if (sum != 1)
             {
                 return Task.FromResult("Tổng trọng số phải bằng 1");
             }

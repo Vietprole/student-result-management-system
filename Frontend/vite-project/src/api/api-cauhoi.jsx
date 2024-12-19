@@ -62,7 +62,7 @@ export const deleteCauHoi = async (id) => {
 
 export const getCLOsByCauHoiId = async (cauHoiId) => {
   try {
-    const response = await axios.get(`${API_CAUHOI}/${cauHoiId}/view-clos`, {
+    const response = await axios.get(`${API_CAUHOI}/${cauHoiId}/clo`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -73,7 +73,7 @@ export const getCLOsByCauHoiId = async (cauHoiId) => {
 
 export const addCLOsToCauHoi = async (cauHoiId, cloIdsList) => {
   try {
-    const response = await axios.post(`${API_CAUHOI}/${cauHoiId}/add-clos`, cloIdsList, {
+    const response = await axios.post(`${API_CAUHOI}/${cauHoiId}/clo`, cloIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -84,7 +84,7 @@ export const addCLOsToCauHoi = async (cauHoiId, cloIdsList) => {
 
 export const updateCLOsToCauHoi = async (cauHoiId, cloIdsList) => {
   try {
-    const response = await axios.put(`${API_CAUHOI}/${cauHoiId}/update-clos`, cloIdsList, {
+    const response = await axios.put(`${API_CAUHOI}/${cauHoiId}/clo`, cloIdsList, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -95,7 +95,7 @@ export const updateCLOsToCauHoi = async (cauHoiId, cloIdsList) => {
 
 export const removeCLOsFromCauHoi = async (cauHoiId, cloId) => {
   try {
-    const response = await axios.delete(`${API_CAUHOI}/${cauHoiId}/remove-clo/${cloId}`, {
+    const response = await axios.delete(`${API_CAUHOI}/${cauHoiId}/clo/${cloId}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

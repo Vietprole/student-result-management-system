@@ -16,7 +16,6 @@ import "@/utils/storage"
 import KhoaIcon from "@/assets/icons/khoa-icon.png";
 import GiangVienIcon from "@/assets/icons/giang-vien-icon.png";
 import SinhVienIcon from "@/assets/icons/sinh-vien-icon.png";
-import CTDTIcon from "@/assets/icons/ctdt-icon.png";
 import HocPhanIcon from "@/assets/icons/hoc-phan-icon.png";
 import LopHocPhanIcon from "@/assets/icons/lop-hoc-phan-icon.png";
 import KetQuaIcon from "@/assets/icons/ket-qua-hoc-tap-icon.png";
@@ -88,11 +87,6 @@ const giangvienitem = [
 
 const sinhVienItem = [
   {
-    title: "Khung chương trình đào tạo",
-    url: "/kctdtsv",
-    icon: CTDTIcon,
-  },
-  {
     title: "Kết quả học tập",
     url: "/ketquahoctap",
     icon: KetQuaIcon,
@@ -150,14 +144,14 @@ const adminItem = [
     url: "/sinhvien",
     icon: SinhVienIcon,
   },
-  // {
-  //   title: "Chương trình đào tạo",
-  //   url: "/ctdt",
-  //   icon: CTDTIcon,
-  // },
   {
     title: "Lớp học phần",
     url: "/lophocphan",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Nhập điểm",
+    url: "/nhapdiem",
     icon: LopHocPhanIcon,
   },
   {

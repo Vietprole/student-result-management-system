@@ -1,5 +1,7 @@
 using Student_Result_Management_System.DTOs.CLO;
+using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.PLO;
+using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Interfaces
@@ -15,5 +17,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<PLODTO?> UpdatePLOAsync(int id, UpdatePLODTO updatePLODTO);
         public Task<bool> DeletePLOAsync(int id);
         public Task<List<CLODTO>> UpdateCLOsOfPLOAsync(int ploId, int[] cLOIds);
+        public Task<List<HocPhanDTO>> UpdateHocPhansOfPLOAsync(int ploId, int[] hocPhanIds);
     }
 }

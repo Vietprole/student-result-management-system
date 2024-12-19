@@ -33,6 +33,12 @@ namespace Student_Result_Management_System.Services
             return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
         }
 
+        public async Task<List<HocPhanDTO>> GetHocPhansByPLOIdAsync(int pLOId)
+        {
+            var hocPhans = await _context.HocPhans.Include(hp => hp.Khoa).Include(hp => hp.PLOs).Where(hocPhan => hocPhan.PLOs.Any(plo => plo.Id == pLOId)).ToListAsync();
+            return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
+        }
+
         public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId)
         {
             IQueryable<HocPhan> query = _context.HocPhans.Include(hp => hp.Khoa) // Include the Khoa navigation property

@@ -63,7 +63,7 @@ namespace Student_Result_Management_System.Controllers
             var hocKyDTO = await _hocKyService.AddHocKyDTO(newHocKyDTO);
             if (hocKyDTO == null)
             {
-                return BadRequest("Không thế tạo học kỳ mới");
+                return BadRequest("Không thể tạo học kỳ mới");
             }
             return Ok(hocKyDTO);
         }
