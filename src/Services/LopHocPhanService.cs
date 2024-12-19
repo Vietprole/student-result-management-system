@@ -65,7 +65,7 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            int soluong = await _context.LopHocPhans.CountAsync()+1;
+            int soluong = await _context.LopHocPhans.Where(x=>x.HocPhanId==lopHocPhanDTO.HocPhanId).CountAsync()+1;
             while(true)
             {
                 if(await _context.LopHocPhans.AnyAsync(lhp => lhp.MaLopHocPhan == hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3")))
