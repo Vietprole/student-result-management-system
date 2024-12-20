@@ -15,6 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { addBaiKiemTra, updateBaiKiemTra } from "@/api/api-baikiemtra";
 // import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   loai: z.string().min(2, {
@@ -53,11 +58,11 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (baiKiemTra) {
-      const data = await updateBaiKiemTra(baiKiemTra.id, values);
-      handleEdit(data);
+      // const data = await updateBaiKiemTra(baiKiemTra.id, values);
+      handleEdit(values);
     } else {
-      const data = await addBaiKiemTra(values);
-      handleAdd(data);
+      // const data = await addBaiKiemTra(values);
+      handleAdd(values);
       setIsDialogOpen(false);
     }
   }
@@ -85,7 +90,7 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
           control={form.control}
           name="trongSo"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="!mt-2">
               <FormLabel>Trọng Số</FormLabel>
               <FormControl>
                 <Input placeholder="0.3" {...field} />
@@ -97,7 +102,7 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="trongSoDeXuat"
           render={({ field }) => (
@@ -112,12 +117,12 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="ngayMoNhapDiem"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className="!mt-2 flex flex-col">
               <FormLabel>Ngày Mở Nhập Điểm</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -143,9 +148,6 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
                     initialFocus
                   />
                 </PopoverContent>
@@ -161,7 +163,7 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
           control={form.control}
           name="hanNhapDiem"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className="!mt-2 flex flex-col">
               <FormLabel>Hạn Nhập Điểm</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -187,9 +189,6 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
                     initialFocus
                   />
                 </PopoverContent>
@@ -205,7 +204,7 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
           control={form.control}
           name="hanDinhChinh"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className="!mt-2 flex flex-col">
               <FormLabel>Hạn Đính Chính</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -231,9 +230,6 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
                     initialFocus
                   />
                 </PopoverContent>

@@ -9,6 +9,7 @@ using Student_Result_Management_System.DTOs.LopHocPhan;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
@@ -85,38 +86,38 @@ namespace Student_Result_Management_System.Services
             return baiKiemTra != null;
         }
 
-        public async Task<CongThucDiemDTO?> CreateCongThucDiem(int lopHocPhanId, List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
+        public async Task<List<BaiKiemTraDTO>?> UpdateCongThucDiem(int lopHocPhanId, List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
         {
-            List<BaiKiemTra> baiKiemTras= new List<BaiKiemTra>();
-            var lhp = await _context.LopHocPhans.FindAsync(lopHocPhanId);
-            if(lhp==null)
-            {
-                return null;
-            }
-            string congThucDiem = string.Empty;
-            for(int i=0;i<createBaiKiemTraDTOs.Count;i++)
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(l => l.BaiKiemTras)
+                .FirstOrDefaultAsync(l => l.Id == lopHocPhanId);
+
+            if (lopHocPhan == null)
+                throw new NotFoundException($"Không tìm thấy lớp học phần với id {lopHocPhanId}");
+
+            // Remove existing BaiKiemTras
+            _context.BaiKiemTras.RemoveRange(lopHocPhan.BaiKiemTras);
+
+            // Create new BaiKiemTras
+            var newBaiKiemTras = new List<BaiKiemTra>();
+            var congThucDiem = string.Empty;
+
+            for (int i = 0; i < createBaiKiemTraDTOs.Count; i++)
             {
                 var baiKiemTra = createBaiKiemTraDTOs[i].ToBaiKiemTraFromCreateDTO();
                 baiKiemTra.LopHocPhanId = lopHocPhanId;
-                baiKiemTra.LopHocPhan = lhp;
-                baiKiemTras.Add(baiKiemTra);
-                if(i==createBaiKiemTraDTOs.Count-1)
-                {
-                    congThucDiem += baiKiemTra.Loai+"*"+baiKiemTra.TrongSo.ToString();
-                }
-                else
-                {
-                    congThucDiem += baiKiemTra.Loai+"*"+baiKiemTra.TrongSo.ToString()+ "+";
-                }
+                newBaiKiemTras.Add(baiKiemTra);
+
+                congThucDiem += baiKiemTra.Loai + "*" + baiKiemTra.TrongSo.ToString();
+                if (i < createBaiKiemTraDTOs.Count - 1)
+                    congThucDiem += "+";
             }
-            await _context.BaiKiemTras.AddRangeAsync(baiKiemTras);
+
+            // Add new BaiKiemTras
+            await _context.BaiKiemTras.AddRangeAsync(newBaiKiemTras);
             await _context.SaveChangesAsync();
-            return new CongThucDiemDTO
-            {
-                TenLopHocPhan = lhp.Ten,
-                CongThucDiem = congThucDiem
-            };
-            
+
+            return newBaiKiemTras.Select(b => b.ToBaiKiemTraDTO()).ToList();
         }
     }
 }

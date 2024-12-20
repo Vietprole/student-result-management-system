@@ -18,6 +18,7 @@ public class LopHocPhan
     public DateTime? NgayChapNhanCongThucDiem { get; set; }
     public List<SinhVien> SinhViens { get; set; } = [];
     public List<CLO> CLOs { get; set; } = [];
+    public List<BaiKiemTra> BaiKiemTras { get; set; } = [];
     public int? GiangVienId { get; set; }
     public GiangVien? GiangVien { get; set; }
 }

@@ -1,12 +1,10 @@
 import Layout from "./Layout";
-import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getAllLopHocPhans } from "@/api/api-lophocphan";
 import {
   getBaiKiemTrasByLopHocPhanId,
   // getAllBaiKiemTras,
-  deleteBaiKiemTra,
 } from "@/api/api-baikiemtra";
 import {
   DropdownMenu,
@@ -29,24 +27,51 @@ import { useState, useEffect, useCallback } from "react";
 import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { useReactTable } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
+import { ChevronDown } from "lucide-react";
+import { getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel } from "@tanstack/react-table";
+import { DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
+import { getAllBaiKiemTras } from "@/api/api-baikiemtra";
 
 export default function BaiKiemTraPage() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchParams] = useSearchParams();
-  const lophocphanIdParam = searchParams.get("lophocphanId");
+  const lopHocPhanIdParam = searchParams.get("lopHocPhanId");
   const [data, setData] = useState([]);
   const [lophocphanItems, setLopHocPhanItems] = useState([]);
-  const [lophocphanId, setLopHocPhanId] = useState(lophocphanIdParam);
-  const [comboBoxLopHocPhanId, setComboBoxLopHocPhanId] = useState(lophocphanIdParam);
+  const [lopHocPhanId, setLopHocPhanId] = useState(lopHocPhanIdParam);
+  const [comboBoxLopHocPhanId, setComboBoxLopHocPhanId] = useState(lopHocPhanIdParam);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [comboBoxItemId, setComboBoxItemId] = useState(null);
+  const columnToBeFiltered = "loai";
+  const entity = "BaiKiemTra";
+  const ItemForm = BaiKiemTraForm;
 
   const fetchData = useCallback(async () => {
     const dataLopHocPhan = await getAllLopHocPhans();
     // Map lophocphan items to be used in ComboBox
-    const mappedComboBoxItems = dataLopHocPhan.map(lophocphan => ({ label: lophocphan.ten, value: lophocphan.id }));
+    const mappedComboBoxItems = dataLopHocPhan.map((lophocphan) => ({
+      label: lophocphan.ten,
+      value: lophocphan.id,
+    }));
     setLopHocPhanItems(mappedComboBoxItems);
-    const data = await getBaiKiemTrasByLopHocPhanId(lophocphanId);
+    let data = [];
+    if (lopHocPhanId === null) {
+      data = await getAllBaiKiemTras();
+    } else {
+      data = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
+    }
     setData(data);
-  }, [lophocphanId]);
+  }, [lopHocPhanId]);
 
   useEffect(() => {
     fetchData();
@@ -55,10 +80,10 @@ export default function BaiKiemTraPage() {
   const handleGoClick = () => {
     setLopHocPhanId(comboBoxLopHocPhanId);
     if (comboBoxLopHocPhanId === null) {
-      navigate(`/baikiemtra`);
+      navigate(`/congthucdiem`);
       return;
     }
-    navigate(`/baikiemtra?lophocphanId=${comboBoxLopHocPhanId}`);
+    navigate(`/congthucdiem?lopHocPhanId=${comboBoxLopHocPhanId}`);
   };
 
   const createBaiKiemTraColumns = (handleEdit, handleDelete) => [
@@ -90,7 +115,9 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("loai")}</div>,
+      cell: ({ row }) => (
+        <div className="px-4 py-2">{row.getValue("loai")}</div>
+      ),
     },
     {
       accessorKey: "trongSo",
@@ -105,7 +132,9 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("trongSo")}</div>,
+      cell: ({ row }) => (
+        <div className="px-4 py-2">{row.getValue("trongSo")}</div>
+      ),
     },
     {
       accessorKey: "trongSoDeXuat",
@@ -120,7 +149,9 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("trongSoDeXuat")}</div>,
+      cell: ({ row }) => (
+        <div className="px-4 py-2">{row.getValue("trongSoDeXuat")}</div>
+      ),
     },
     {
       accessorKey: "ngayMoNhapDiem",
@@ -135,7 +166,16 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ngayMoNhapDiem")}</div>,
+      cell: ({ row }) => {
+        const date = row.getValue("ngayMoNhapDiem");
+        const formattedDate = date ? 
+          new Date(date).toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }) : '';
+        return <div className="px-4 py-2">{formattedDate}</div>;
+      },
     },
     {
       accessorKey: "hanNhapDiem",
@@ -150,7 +190,16 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("hanNhapDiem")}</div>,
+      cell: ({ row }) => {
+        const date = row.getValue("hanNhapDiem");
+        const formattedDate = date ? 
+          new Date(date).toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }) : '';
+        return <div className="px-4 py-2">{formattedDate}</div>;
+      },
     },
     {
       accessorKey: "hanDinhChinh",
@@ -165,7 +214,16 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("hanDinhChinh")}</div>,
+      cell: ({ row }) => {
+        const date = row.getValue("hanDinhChinh");
+        const formattedDate = date ? 
+          new Date(date).toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }) : '';
+        return <div className="px-4 py-2">{formattedDate}</div>;
+      },
     },
     {
       accessorKey: "ngayXacNhan",
@@ -180,14 +238,23 @@ export default function BaiKiemTraPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ngayXacNhan")}</div>,
+      cell: ({ row }) => {
+        const date = row.getValue("ngayXacNhan");
+        const formattedDate = date ? 
+          new Date(date).toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }) : '';
+        return <div className="px-4 py-2">{formattedDate}</div>;
+      },
     },
     {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
         const item = row.original;
-  
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -229,10 +296,7 @@ export default function BaiKiemTraPage() {
                   </DialogHeader>
                   <p>Are you sure you want to delete this BaiKiemTra?</p>
                   <DialogFooter>
-                    <Button
-                      type="submit"
-                      onClick={() => handleDelete(item.id)}
-                    >
+                    <Button type="submit" onClick={() => handleDelete(item.id)}>
                       Delete
                     </Button>
                   </DialogFooter>
@@ -244,24 +308,199 @@ export default function BaiKiemTraPage() {
       },
     },
   ];
+  
+  const handleAdd = (newItem) => {
+    setData([...data, newItem]);
+  };
+  
+  const handleEdit = (editedItem) => {
+    setData(
+      data.map((item) => (item.id === editedItem.id ? editedItem : item))
+    );
+  };
+  
+  async function handleDelete(itemId) {
+    setData(data.filter((item) => item.id !== itemId));
+  }
+
+  const handleSave = () => {
+    let sum = 0;
+    data.forEach(async (item) => {
+      sum += item.trongSo;
+    });
+    if (sum !== 1){
+      toast.error("Tổng trọng số phải bằng 1");
+    }
+  };
+  
+  const columns = createBaiKiemTraColumns(handleEdit, handleDelete);
+  
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
 
   return (
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={lophocphanItems} setItemId={setComboBoxLopHocPhanId} initialItemId={comboBoxLopHocPhanId}/>
+          <ComboBox
+            items={lophocphanItems}
+            setItemId={setComboBoxLopHocPhanId}
+            initialItemId={comboBoxLopHocPhanId}
+          />
           <Button onClick={handleGoClick}>Go</Button>
         </div>
-        <DataTable
-          entity="BaiKiemTra"
-          createColumns={createBaiKiemTraColumns}
-          data={data}
-          setData={setData}
-          fetchData={fetchData}
-          deleteItem={deleteBaiKiemTra}
-          columnToBeFiltered={"ten"}
-          ItemForm={BaiKiemTraForm}
-        />
+        <>
+          {/* <h1>This is {entity} Page</h1> */}
+          <div className="w-full">
+            <div className="flex items-center py-4">
+              <Input
+                placeholder={`Filter ${columnToBeFiltered}s...`}
+                value={
+                  table.getColumn(`${columnToBeFiltered}`)?.getFilterValue() ??
+                  ""
+                }
+                onChange={(event) =>
+                  table
+                    .getColumn(`${columnToBeFiltered}`)
+                    ?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="ml-auto">
+                    Hiện cột <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => {
+                      return (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) =>
+                            column.toggleVisibility(!!value)
+                          }
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      );
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="ml-2" disabled={!lopHocPhanId}>
+                    Tạo {entity}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Add {entity}</DialogTitle>
+                    <DialogDescription>
+                      Add a new {entity} to the list.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <ItemForm
+                    handleAdd={handleAdd}
+                    setIsDialogOpen={setIsDialogOpen}
+                  />
+                </DialogContent>
+              </Dialog>
+              <Button onClick={handleSave}>Lưu Công thức điểm</Button>
+            </div>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead className="px-2" key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell className="px-2 py-4" key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        </>
       </div>
     </Layout>
   );
