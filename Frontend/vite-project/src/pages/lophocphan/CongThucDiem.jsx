@@ -220,15 +220,17 @@ function createCauHoiColumns(handleEdit, handleDelete){
 
 const CongThucDiem = () => {
   const { lopHocPhanId } = useParams();
+  console.log("lopHocPhanId: ", lopHocPhanId);
   const [baiKiemTras, setBaiKiemTras] = useState([]);
   const [cauHois, setCauHois] = useState([]);
   const [selectedBaiKiemTra, setSelectedBaiKiemTra] = useState(null);
 
+  async function fetchData(){
+    const baiKiemTrasData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
+    setBaiKiemTras(baiKiemTrasData);
+  }
+
   useEffect(() => {
-    const fetchData = async () => {
-      const baiKiemTrasData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
-      setBaiKiemTras(baiKiemTrasData);
-    };
     fetchData();
   }, [lopHocPhanId]);
 
@@ -240,6 +242,7 @@ const CongThucDiem = () => {
           <DataTable
             entity="Bai Kiem Tra"
             createColumns={createBaiKiemTraColumns}
+            data={baiKiemTras}
             getAllItems={() => getBaiKiemTrasByLopHocPhanId(lopHocPhanId)}
             deleteItem={deleteBaiKiemTra}
             columnToBeFiltered={"loai"}

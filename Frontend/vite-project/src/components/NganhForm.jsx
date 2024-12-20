@@ -86,24 +86,6 @@ export function NganhForm({ nganh, handleAdd, handleEdit, setIsDialogOpen }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {nganh && (
-          <FormField
-            control={form.control}
-            name="id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Id</FormLabel>
-                <FormControl>
-                  <Input {...field} readOnly />
-                </FormControl>
-                <FormDescription>
-                  This is your unique identifier.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
           name="ten"

@@ -118,7 +118,6 @@ namespace Student_Result_Management_System.Services
             List<GiangVien> giangViens = await _context.GiangViens.Include(c=>c.TaiKhoan).Include(gv=>gv.Khoa).ToListAsync();
             return giangViens;
         }
-        
 
         public async Task<GiangVien?> GetById(int id)
         {

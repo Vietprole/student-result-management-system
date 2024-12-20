@@ -9,11 +9,11 @@ const ToggleCell = ({ rowItemId, columnItemId, isEditable, table, getRowItemsByC
   useEffect(() => {
     const checkToggleStatus = async () => {
       try {
-        // const ploData = await getCLOsBycolumnItemId(columnItemId);
-        const ploData = await getRowItemsByColumnItemId(columnItemId);
-        setToggled(ploData.some(clo => clo.id === rowItemId));
+        // const rowData = await getCLOsBycolumnItemId(columnItemId);
+        const rowData = await getRowItemsByColumnItemId(columnItemId);
+        setToggled(rowData.some(rowItem => rowItem.id === rowItemId));
       } catch (error) {
-        console.error("Error fetching CLOs by PLO ID:", error);
+        console.error("Error fetching Row Items by Column Item ID:", error);
       }
     };
     checkToggleStatus();
@@ -73,7 +73,7 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
   const columns = [
     {
       accessorKey: "ten",
-      header: "CLO - PLO",
+      header: "",
     },
     ...listColumnItem.map(columnItem => ({
       accessorKey: columnItem.id.toString(),

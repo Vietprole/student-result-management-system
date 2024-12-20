@@ -1,119 +1,244 @@
-import { useEffect, useState } from "react";
-import { useOutlet, useNavigate } from "react-router-dom";
-import Layout from "./Layout";
-import { getAllLopHocPhans } from "../api/api-lophocphan";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import DataTable from "@/components/DataTable";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
-import DefaultComponent from "../pages/lophocphan/DefaultComponent";
+import {
+  getAllLopHocPhans,
+  deleteLopHocPhan,
+} from "@/api/api-lophocphan";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger, DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { LopHocPhanForm } from "@/components/LopHocPhanForm";
+import Layout from "@/pages/Layout";
+import { useCallback, useEffect, useState } from "react";
+// import { format, parseISO } from 'date-fns';
 
 export default function LopHocPhanPage() {
-  const [lopHocPhans, setLopHocPhans] = useState([]);
-  const [selectedLopHocPhan, setSelectedLopHocPhan] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const navigate = useNavigate();
-  const outlet = useOutlet();
 
-  useEffect(() => {
-    const fetchLopHocPhans = async () => {
+    // const navigate = useNavigate();
+    // const [searchParams] = useSearchParams();
+    // const khoaIdParam = searchParams.get("khoaId");
+    const [data, setData] = useState([]);
+    // const [khoaItems, setKhoaItems] = useState([]);
+    // const [khoaId, setKhoaId] = useState(khoaIdParam);
+    // const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
+  
+    const fetchData = useCallback(async () => {
+      // const dataKhoa = await getAllKhoas();
+      // // Map khoa items to be used in ComboBox
+      // const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      // setKhoaItems(mappedComboBoxItems);
+      // const data = await getNganhs(khoaId);
       const data = await getAllLopHocPhans();
-      setLopHocPhans(data);
-    };
+      setData(data);
+    }, []);
+  
+    useEffect(() => {
+      fetchData();
+    }, [fetchData]);
+  
+    // const handleGoClick = () => {
+    //   setKhoaId(comboBoxKhoaId);
+    //   if (comboBoxKhoaId === null) {
+    //     navigate(`/nganh`);
+    //     return;
+    //   }
+    //   navigate(`/nganh?khoaId=${comboBoxKhoaId}`);
+    // };
 
-    fetchLopHocPhans();
-  }, []);
-
-  const handleRoute = () => {
-    let selectedRoute = null;
-    switch (selectedItem) {
-      case "Công Thức Điểm":
-        selectedRoute = "cong-thuc-diem";
-      break;
-      case "Bảng Điểm":
-        selectedRoute = "bang-diem";
-      break;
-      case "Tạo CLO":
-        selectedRoute = "tao-clo";
-      break;
-      case "Nối PLO - CLO":
-        selectedRoute = "noi-plo-clo";
-      break;
-      case "Nối Câu Hỏi - CLO":
-        selectedRoute = "noi-cau-hoi-clo";
-      break;
-      case "Điểm CLO":
-        selectedRoute = "diem-clo";
-      break;
-      case "Điểm Pk":
-        selectedRoute = "diem-pk";
-      break;
-      case "Tổng Kết CLO":
-        selectedRoute = "tong-ket-clo";
-      break;
-      case "Báo Cáo CLO":
-        selectedRoute = "bao-cao-clo";
-      break;
-    }
-    if (selectedLopHocPhan && selectedItem) {
-      navigate(`/lophocphan/${selectedLopHocPhan.id}/${selectedRoute}`);
-    }
-  };
-
-  return (
-    <Layout>
-      <h1>This is LopHocPhanPage</h1>
-      <div className="flex space-x-4">
-        <div>
-          <h2>Chọn lớp học phần: </h2>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                {selectedLopHocPhan ? selectedLopHocPhan.ten : "Select Lop Hoc Phan"}
-                <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {lopHocPhans.map((lopHocPhan) => (
-                <DropdownMenuItem
-                  key={lopHocPhan.id}
-                  onSelect={() => setSelectedLopHocPhan(lopHocPhan)}
-                >
-                  {lopHocPhan.ten}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div>
-          <h2>Chọn item: </h2>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                {selectedItem ? `${selectedItem}` : "Select Item"}
-                <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Công Thức Điểm")}>Công Thức Điểm</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Bảng Điểm")}>Bảng Điểm</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Tạo CLO")}>Tạo CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Nối PLO - CLO")}>Nối PLO - CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Nối Câu Hỏi - CLO")}>Nối Câu Hỏi - CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Điểm CLO")}>Điểm CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Điểm Pk")}>Điểm Pk</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Tổng Kết CLO")}>Tổng Kết CLO</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Báo Cáo CLO")}>Báo Cáo CLO</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="flex items-end">
-          <Button onClick={handleRoute} disabled={!selectedItem}>
-            Go
+  const createLopHocPhanColumns = (handleEdit, handleDelete, ) => [
+    {
+      accessorKey: "id",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Id
+            <ArrowUpDown />
           </Button>
-        </div>
-      </div>
-      {outlet || <DefaultComponent />}
-    </Layout>
+        );
+      },
+      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
+    },
+    {
+      accessorKey: "maLopHocPhan",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Mã Lớp Học Phần
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maLopHocPhan")}</div>,
+    },
+    {
+      accessorKey: "ten",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Tên
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
+    },
+    {
+      accessorKey: "tenHocPhan",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Học Phần
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenHocPhan")}</div>,
+    },
+    {
+      accessorKey: "tenGiangVien",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Giảng Viên
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenGiangVien")}</div>,
+    },
+    {
+      accessorKey: "hanDeXuatCongThucDiem",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Hạn Đề Xuất Công Thức Điểm
+            <ArrowUpDown />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const date = row.getValue("hanDeXuatCongThucDiem");
+        const formattedDate = date ? 
+          new Date(date).toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }) : '';
+        return <div className="px-4 py-2">{formattedDate}</div>;
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const item = row.original;
+  
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Sửa Lớp Học Phần
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit Lop Hoc Phan</DialogTitle>
+                    <DialogDescription>
+                      Edit the current item.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <LopHocPhanForm lopHocPhan={item} handleEdit={handleEdit} />
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Xóa Lớp Học Phần
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DropdownMenuSeparator />
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Delete Lop Hoc Phan</DialogTitle>
+                    <DialogDescription>
+                      Delete the current item.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <p>Are you sure you want to delete this Lop Hoc Phan?</p>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                Quản lý Sinh Viên
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+  return (
+    <div className="w-full">
+      <Layout>
+        <DataTable
+          entity="Lop Hoc Phan"
+          createColumns={createLopHocPhanColumns}
+          data={data}
+          setData={setData}
+          fetchData={fetchData}
+          deleteItem={deleteLopHocPhan}
+          columnToBeFiltered={"ten"}
+          ItemForm={LopHocPhanForm}
+        />
+      </Layout>
+    </div>
   );
 }
-

@@ -60,24 +60,6 @@ export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {khoa && (
-          <FormField
-            control={form.control}
-            name="id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Id</FormLabel>
-                <FormControl>
-                  <Input {...field} readOnly/>
-                </FormControl>
-                <FormDescription>
-                  This is your unique identifier.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
           name="ten"

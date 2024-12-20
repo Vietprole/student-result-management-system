@@ -75,12 +75,7 @@ namespace Student_Result_Management_System.Services
         public async Task<List<HocKyDTO>> GetAllHocKyDTO()
         {
             var hocKies = await _context.HocKies.ToListAsync();
-            return hocKies.Select(hocKy => new HocKyDTO
-            {
-                Id = hocKy.Id,
-                Ten = hocKy.Ten,
-                NamHoc = hocKy.NamHoc
-            }).ToList();
+            return hocKies.Select(hocKy => hocKy.ToHocKyDTO()).ToList();
         }
 
         public async Task<HocKyDTO?> GetHocKyDTO(int id)
@@ -106,8 +101,6 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             return hocKy.ToHocKyDTO();
         }
-
-      
 
         public async Task<bool> UpdateHanSuaDiem(int id, DateTime hanSuaDiem)
         {

@@ -17,7 +17,8 @@ namespace Student_Result_Management_System.Mappers
                 Id = hocKy.Id,
                 Ten = hocKy.Ten,
                 NamHoc = hocKy.NamHoc,
-                MaHocKy = hocKy.MaHocKy
+                MaHocKy = hocKy.MaHocKy,
+                TenHienThi = $"{hocKy.Ten} - {hocKy.NamHoc}"
             };
         }
 

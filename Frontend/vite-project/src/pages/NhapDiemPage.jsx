@@ -55,7 +55,7 @@ export default function NhapDiemPage() {
       break;
     }
     if (selectedLopHocPhan && selectedItem) {
-      navigate(`/lophocphan/${selectedLopHocPhan.id}/${selectedRoute}`);
+      navigate(`/nhapdiem/${selectedLopHocPhan.id}/${selectedRoute}`);
     }
   };
 
@@ -112,7 +112,7 @@ export default function NhapDiemPage() {
           </Button>
         </div>
       </div>
-      {outlet || <DefaultComponent />}
+      {outlet}
     </Layout>
   );
 }

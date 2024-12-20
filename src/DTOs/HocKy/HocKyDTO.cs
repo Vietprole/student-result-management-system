@@ -11,5 +11,6 @@ namespace Student_Result_Management_System.DTOs.HocKy
         public string Ten { get; set; } = string.Empty;
         public int NamHoc { get; set; }
         public string MaHocKy { get; set; } = string.Empty;
+        public string TenHienThi { get; set; } = string.Empty;
     }
 }

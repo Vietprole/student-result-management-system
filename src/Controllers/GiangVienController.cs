@@ -32,7 +32,7 @@ namespace Student_Result_Management_System.Controllers
         {
            var giangViens = await _giangVienService.GetAllGiangVien();
            var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
-           return Ok();
+           return Ok(giangVienDTOs);
         }
 
         [HttpGet("{id}")]
