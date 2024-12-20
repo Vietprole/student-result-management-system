@@ -181,7 +181,7 @@ export default function DataTable({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead className="px-2" key={header.id}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(

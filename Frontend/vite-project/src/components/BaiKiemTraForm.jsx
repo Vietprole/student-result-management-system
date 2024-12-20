@@ -65,24 +65,6 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {baiKiemTra && (
-          <FormField
-            control={form.control}
-            name="id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Id</FormLabel>
-                <FormControl>
-                  <Input {...field} readOnly/>
-                </FormControl>
-                <FormDescription>
-                  This is your unique identifier.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
         <FormField
           control={form.control}
           name="loai"
@@ -115,14 +97,14 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
             </FormItem>
           )}
         />
-        {/* <FormField
+        <FormField
           control={form.control}
-          name="lopHocPhanId"
+          name="trongSoDeXuat"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ID Lớp Học Phần</FormLabel>
+              <FormLabel>Trọng Số Đề Xuất</FormLabel>
               <FormControl>
-                <Input placeholder="1" {...field} />
+                <Input placeholder="0.3" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -130,7 +112,139 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
+        <FormField
+          control={form.control}
+          name="ngayMoNhapDiem"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Ngày Mở Nhập Điểm</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Chọn ngày</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                Chọn ngày mở nhập điểm
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="hanNhapDiem"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Hạn Nhập Điểm</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Chọn ngày</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                Chọn hạn nhập điểm
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="hanDinhChinh"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Hạn Đính Chính</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Chọn ngày</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                Chọn hạn đính chính điểm
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>

@@ -150,6 +150,11 @@ const adminItem = [
     icon: LopHocPhanIcon,
   },
   {
+    title: "Công thức điểm",
+    url: "/congthucdiem",
+    icon: LopHocPhanIcon,
+  },
+  {
     title: "Nhập điểm",
     url: "/nhapdiem",
     icon: LopHocPhanIcon,

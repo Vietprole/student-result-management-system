@@ -8,6 +8,7 @@ import HocPhanPage from "@/pages/HocPhanPage";
 import PLOPage from "@/pages/PLOPage";
 import MapHocPhanPLOPage from "@/pages/MapHocPhanPLOPage";
 import LopHocPhanPage from "@/pages/LopHocPhanPage";
+import CongThucDiemPage from "@/pages/CongThucDiemPage";
 import NhapDiemPage from "@/pages/NhapDiemPage";
 import KetQuaPage from "@/pages/KetQuaPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
@@ -64,6 +65,10 @@ const lophocphans = [
   {
     path: "/lophocphan",
     element: <LopHocPhanPage />,
+  },
+  {
+    path: "/congthucdiem",
+    element: <CongThucDiemPage />,
   },
   {
     path: "/nhapdiem",

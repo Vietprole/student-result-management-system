@@ -14,10 +14,10 @@ public static class BaiKiemTraMapper
             Loai = baiKiemTra.Loai,
             TrongSo = baiKiemTra.TrongSo,
             TrongSoDeXuat = baiKiemTra.TrongSoDeXuat,
-            NgayMoNhapDiem = baiKiemTra.NgayMoNhapDiem,
-            HanNhapDiem = baiKiemTra.HanNhapDiem,
-            HanDinhChinh = baiKiemTra.HanDinhChinh,
-            NgayXacNhan = baiKiemTra.NgayXacNhan,
+            NgayMoNhapDiem = baiKiemTra.NgayMoNhapDiem.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.NgayMoNhapDiem.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            HanNhapDiem = baiKiemTra.HanNhapDiem.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.HanNhapDiem.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            HanDinhChinh = baiKiemTra.HanDinhChinh.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.HanDinhChinh.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            NgayXacNhan = baiKiemTra.NgayXacNhan.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.NgayXacNhan.Value, TimeZoneInfo.Local) : (DateTime?)null,
             LopHocPhanId = baiKiemTra.LopHocPhanId,
         };
     }
@@ -27,7 +27,12 @@ public static class BaiKiemTraMapper
         return new BaiKiemTra
         {
             Loai = createBaiKiemTraDTO.Loai,
-            TrongSo = createBaiKiemTraDTO.TrongSo
+            TrongSo = createBaiKiemTraDTO.TrongSo,
+            TrongSoDeXuat = createBaiKiemTraDTO.TrongSoDeXuat,
+            NgayMoNhapDiem = createBaiKiemTraDTO.NgayMoNhapDiem,
+            HanNhapDiem = createBaiKiemTraDTO.HanNhapDiem,
+            HanDinhChinh = createBaiKiemTraDTO.HanDinhChinh,
+            LopHocPhanId = createBaiKiemTraDTO.LopHocPhanId,
         };
     }
 

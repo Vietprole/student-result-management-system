@@ -6,6 +6,8 @@ namespace Student_Result_Management_System.Mappers;
 
 public static class LopHocPhanMapper
 {
+    private static readonly TimeZoneInfo VietnamZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
     public static LopHocPhanDTO ToLopHocPhanDTO(this LopHocPhan lopHocPhanModel)
     {
         return new LopHocPhanDTO
@@ -17,7 +19,7 @@ public static class LopHocPhanMapper
             HocKyId = lopHocPhanModel.HocKyId,
             TenHocPhan = lopHocPhanModel.HocPhan.Ten,
             TenHocKy = lopHocPhanModel.HocKy.Ten,
-            HanDeXuatCongThucDiem = lopHocPhanModel.HanDeXuatCongThucDiem,
+            HanDeXuatCongThucDiem = TimeZoneInfo.ConvertTimeFromUtc(lopHocPhanModel.HanDeXuatCongThucDiem, TimeZoneInfo.Local),
             GiangVienId = lopHocPhanModel.GiangVienId??0,
             TenGiangVien = lopHocPhanModel.GiangVien?.TaiKhoan?.Ten ?? string.Empty,
         };
