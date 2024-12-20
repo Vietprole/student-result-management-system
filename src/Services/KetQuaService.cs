@@ -61,6 +61,36 @@ namespace Student_Result_Management_System.Services
             return ketQuaToUpdate.ToKetQuaDTO();
         }
 
+        public async Task<KetQuaDTO> UpsertKetQuaAsync(UpdateKetQuaDTO ketQuaDTO)
+        {
+            var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k => 
+                k.SinhVienId == ketQuaDTO.SinhVienId && 
+                k.CauHoiId == ketQuaDTO.CauHoiId);
+
+            if (existingKetQua != null)
+            {
+                // Update
+                existingKetQua = ketQuaDTO.ToKetQuaFromUpdateDTO(existingKetQua);
+            }
+            else
+            {
+                // Create
+                var newKetQua = new KetQua
+                {
+                    SinhVienId = ketQuaDTO.SinhVienId ?? throw new BusinessLogicException("SinhVienId is required"),
+                    CauHoiId = ketQuaDTO.CauHoiId ?? throw new BusinessLogicException("CauHoiId is required"),
+                    DiemTam = ketQuaDTO.DiemTam ?? 0,
+                    DiemChinhThuc = ketQuaDTO.DiemChinhThuc,
+                    DaCongBo = false
+                };
+                await _context.KetQuas.AddAsync(newKetQua);
+                existingKetQua = newKetQua;
+            }
+
+            await _context.SaveChangesAsync();
+            return existingKetQua.ToKetQuaDTO();
+        }
+
         public async Task<bool> DeleteKetQuaAsync(int id)
         {
             var ketQua = await _context.KetQuas.FindAsync(id);

@@ -60,6 +60,17 @@ export const updateKetQua = async (updatedData) => {
   }
 };
 
+export const upsertKetQua = async (ketquaData) => {
+  try {
+    const response = await axios.put(`${API_KETQUA}/upsert`, ketquaData, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
 // Function to delete a ketqua
 export const deleteKetQua = async (ketquaId) => {
   try {

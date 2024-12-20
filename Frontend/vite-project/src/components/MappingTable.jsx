@@ -37,8 +37,19 @@ const ToggleCell = ({ rowItemId, columnItemId, isEditable, table, getRowItemsByC
 };
 
 export default function MappingTable({listRowItem, listColumnItem, extraHeaders, toggledDataFromParent, updateRowItemsToColumnItem, getRowItemsByColumnItemId}) {
+  console.log("toggleDataFromParent", toggledDataFromParent);
   const [isEditable, setIsEditable] = useState(false);
   const [toggledData, setToggledData] = useState(toggledDataFromParent);
+
+  // Add effect to update toggledData when prop changes
+  useEffect(() => {
+    setToggledData(toggledDataFromParent);
+    console.log("toggledDataFromParent changed:", toggledDataFromParent);
+  }, [toggledDataFromParent]);
+  
+  useEffect(() => {
+    console.log("toggledData updated:", toggledData);
+  }, [toggledData]);
 
   const handleSaveChanges = async () => {
     try {
@@ -53,8 +64,10 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
   };
 
   const updateData = (rowItemId, columnItemId, toggled) => {
+    console.log("toggleData 58", toggledData);
     setToggledData(prev => {
       const updated = { ...prev };
+      console.log("updated 58", updated);
       if (toggled) {
         if (!updated[columnItemId]) {
           updated[columnItemId] = [];
@@ -63,9 +76,12 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
           updated[columnItemId].push(rowItemId);
         }
       } else {
+        // if (!updated[columnItemId]) {
+        //   updated[columnItemId] = [];
+        // }
         updated[columnItemId] = updated[columnItemId].filter(id => id !== rowItemId);
       }
-      console.log("updated", updated);
+      console.log("updated 72", updated);
       return updated;
     });
   };

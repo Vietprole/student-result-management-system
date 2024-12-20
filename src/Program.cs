@@ -60,6 +60,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 
+builder.Services.AddScoped<ICLOService, CLOService>();
 
 builder.Services.AddScoped<IChucVuService, ChucVuService>();
 builder.Services.AddScoped<IKhoaService, KhoaService>();
@@ -72,7 +73,6 @@ builder.Services.AddScoped<IGiangVienService, GiangVienService>();
 builder.Services.AddScoped<INganhService, NganhService>();
 builder.Services.AddScoped<IBaiKiemTraService, BaiKiemTraService>();
 builder.Services.AddScoped<ICauHoiService, CauHoiService>();
-builder.Services.AddScoped<ICLOService, CLOService>();
 builder.Services.AddScoped<IHocKyService, HocKyService>();
 builder.Services.AddScoped<IHocPhanService, HocPhanService>();
 builder.Services.AddScoped<IKetQuaService, KetQuaService>();

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { updateKetQua } from "@/api/api-ketqua"
+import { upsertKetQua } from "@/api/api-ketqua"
 
 export function GradeTable({
   data,
@@ -77,9 +77,10 @@ export function GradeTable({
                   const modifiedRecord = {
                     sinhVienId: newData[rowIndex].id,
                     cauHoiId: parseInt(questionId),
-                    diem: value,
+                    diemTam: value,
                   }
-                  updateKetQua(modifiedRecord);
+                  console.log("modifiedRecord", modifiedRecord);
+                  upsertKetQua(modifiedRecord);
                   setModifiedRecords([...modifiedRecords, modifiedRecord]);
 
                   setTableData(newData)
@@ -154,7 +155,8 @@ export function GradeTable({
                 ...(questions[component.id.toString()] || []).map((question) => (
                   <TableHead key={`${component.loai}_${question.id}`} className="text-center px-1 border">
                     <div>{question.ten}</div>
-                    <div>{question.trongSo * 10}</div>
+                    <div>{question.trongSo}</div>
+                    <div>{question.thangDiem}</div>
                   </TableHead>
                 )),
                 <TableHead key={`${component.loai}_total`} className="text-center px-1 border">Tổng</TableHead>

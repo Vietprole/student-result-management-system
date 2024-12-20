@@ -54,6 +54,20 @@ namespace ketQua_Result_Management_System.Controllers
             return Ok(updatedKetQuaDTO);
         }
 
+        [HttpPut("upsert")]
+        public async Task<IActionResult> Upsert([FromBody] UpdateKetQuaDTO ketQuaDTO)
+        {
+            try 
+            {
+                var result = await _ketQuaService.UpsertKetQuaAsync(ketQuaDTO);
+                return Ok(result);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

@@ -14,15 +14,15 @@ import KetQuaPage from "@/pages/KetQuaPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
 import HoSoCaNhanPage from "@/pages/HoSoCaNhanPage";
 import CaiDatPage from "@/pages/CaiDatPage";
-import CongThucDiem from "@/pages/lophocphan/CongThucDiem";
-import BangDiem from "@/pages/lophocphan/BangDiem";
-import TaoCLO from "@/pages/lophocphan/TaoCLO";
-import NoiCLOPLO from "@/pages/lophocphan/NoiCLOPLO";
-import NoiCauHoiCLO from "@/pages/lophocphan/NoiCauHoiCLO";
-import DiemCLO from "@/pages/lophocphan/DiemCLO";
-import DiemPk from "@/pages/lophocphan/DiemPk";
-import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
-import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
+import QuanLyCauHoi from "@/pages/nhapdiem/QuanLyCauHoi";
+import BangDiem from "@/pages/nhapdiem/BangDiem";
+import TaoCLO from "@/pages/nhapdiem/TaoCLO";
+import NoiCLOPLO from "@/pages/nhapdiem/NoiCLOPLO";
+import NoiCauHoiCLO from "@/pages/nhapdiem/NoiCauHoiCLO";
+import DiemCLO from "@/pages/nhapdiem/DiemCLO";
+import DiemPk from "@/pages/nhapdiem/DiemPk";
+import TongKetCLO from "@/pages/nhapdiem/TongKetCLO";
+import BaoCaoCLO from "@/pages/nhapdiem/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
 
 const lophocphans = [
@@ -74,7 +74,7 @@ const lophocphans = [
     path: "/nhapdiem",
     element: <NhapDiemPage />,
     children: [
-      { path: ":lopHocPhanId/cong-thuc-diem", element: <CongThucDiem /> },
+      { path: ":lopHocPhanId/quan-ly-cau-hoi", element: <QuanLyCauHoi /> },
       { path: ":lopHocPhanId/bang-diem", element: <BangDiem /> },
       { path: ":lopHocPhanId/tao-clo", element: <TaoCLO /> },
       { path: ":lopHocPhanId/noi-plo-clo", element: <NoiCLOPLO /> },

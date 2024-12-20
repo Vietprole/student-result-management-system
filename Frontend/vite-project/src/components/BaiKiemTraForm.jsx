@@ -22,31 +22,42 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
+  id: z.number(),
   loai: z.string().min(2, {
     message: "Loai must be at least 2 characters.",
   }),
-  trongSo: z.string()
+  trongSo: z.coerce.number()
   .refine((val) => !isNaN(parseFloat(val)), {
     message: "Trong so must be a number",
   })
   .refine((val) => parseFloat(val) > 0 && parseFloat(val) < 1, {
     message: "Trong so must be between 0 and 1",
   }),
-  lopHocPhanId: z.coerce.number(
-    {
-      message: "Lop Hoc Phan Id must be a number",
-    }
-  ).min(1, {
-    message: "Lop Hoc Phan Id must be at least 1 characters.",
+  ngayMoNhapDiem: z.date({
+    required_error: "Please select a date.",
+  }),
+  hanNhapDiem: z.date({
+    required_error: "Please select a date.",
+  }),
+  hanDinhChinh: z.date({
+    required_error: "Please select a date.",
   }),
 });
 
-export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen }) {
+export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen, maxId }) {
   const { lopHocPhanId } = useParams();
+  console.log("baiKiemTra", baiKiemTra);
+  console.log("maxId", maxId);
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: baiKiemTra ||{
+    defaultValues: baiKiemTra ? {
+      ...baiKiemTra,
+      ngayMoNhapDiem: new Date(baiKiemTra.ngayMoNhapDiem),
+      hanNhapDiem: new Date(baiKiemTra.hanNhapDiem),
+      hanDinhChinh: new Date(baiKiemTra.hanDinhChinh),
+    } : {
+      id: maxId + 1,
       loai: "",
       trongSo: "",
       lopHocPhanId: lopHocPhanId,
@@ -58,10 +69,12 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (baiKiemTra) {
+      console.log("values", values);
       // const data = await updateBaiKiemTra(baiKiemTra.id, values);
       handleEdit(values);
     } else {
       // const data = await addBaiKiemTra(values);
+      console.log("add values", values);
       handleAdd(values);
       setIsDialogOpen(false);
     }

@@ -1,7 +1,7 @@
 import Layout from "./Layout";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getAllLopHocPhans } from "@/api/api-lophocphan";
+import { getAllLopHocPhans, updateCongThucDiem } from "@/api/api-lophocphan";
 import {
   getBaiKiemTrasByLopHocPhanId,
   // getAllBaiKiemTras,
@@ -55,6 +55,7 @@ export default function BaiKiemTraPage() {
   const columnToBeFiltered = "loai";
   const entity = "BaiKiemTra";
   const ItemForm = BaiKiemTraForm;
+  const [maxId, setMaxId] = useState(0);
 
   const fetchData = useCallback(async () => {
     const dataLopHocPhan = await getAllLopHocPhans();
@@ -70,7 +71,11 @@ export default function BaiKiemTraPage() {
     } else {
       data = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
     }
+    const maxId = data.length > 0 
+    ? Math.max(...data.map(item => item.id))
+    : 0;
     setData(data);
+    setMaxId(maxId);
   }, [lopHocPhanId]);
 
   useEffect(() => {
@@ -268,7 +273,7 @@ export default function BaiKiemTraPage() {
               <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Sửa Ngành
+                    Sửa Bài Kiểm Tra
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -278,13 +283,13 @@ export default function BaiKiemTraPage() {
                       Edit the current item.
                     </DialogDescription>
                   </DialogHeader>
-                  <BaiKiemTraForm baikiemtra={item} handleEdit={handleEdit} />
+                  <BaiKiemTraForm baiKiemTra={item} handleEdit={handleEdit}/>
                 </DialogContent>
               </Dialog>
               <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Xóa Ngành
+                    Xóa Bài Kiểm Tra
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -310,10 +315,13 @@ export default function BaiKiemTraPage() {
   ];
   
   const handleAdd = (newItem) => {
+    console.log("add newItem", newItem);
+    setMaxId(maxId + 1);
     setData([...data, newItem]);
   };
   
   const handleEdit = (editedItem) => {
+    console.log("editedItem", editedItem);
     setData(
       data.map((item) => (item.id === editedItem.id ? editedItem : item))
     );
@@ -323,14 +331,39 @@ export default function BaiKiemTraPage() {
     setData(data.filter((item) => item.id !== itemId));
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    const loais = data.map(item => item.loai);
+    const uniqueLoais = new Set(loais);
+    if (loais.length !== uniqueLoais.size) {
+      toast({
+        variant: "destructive",
+        title: "Đã xảy ra lỗi",
+        description: "Không được trùng loại bài kiểm tra",
+      });
+      return;
+    }
+
     let sum = 0;
     data.forEach(async (item) => {
       sum += item.trongSo;
     });
+
     if (sum !== 1){
-      toast.error("Tổng trọng số phải bằng 1");
+      console.log("toast here")
+      toast({
+        variant: "destructive",
+        title: "Đã xảy ra lỗi",
+        description: "Tổng trọng số phải bằng 1",
+      });
+      return;
     }
+
+    await updateCongThucDiem(lopHocPhanId, data);
+    toast({
+      title: "Lưu thành công",
+      description: "Công thức điểm đã được lưu",
+    })
+    await fetchData();
   };
   
   const columns = createBaiKiemTraColumns(handleEdit, handleDelete);
@@ -424,6 +457,7 @@ export default function BaiKiemTraPage() {
                   <ItemForm
                     handleAdd={handleAdd}
                     setIsDialogOpen={setIsDialogOpen}
+                    maxId={maxId}
                   />
                 </DialogContent>
               </Dialog>

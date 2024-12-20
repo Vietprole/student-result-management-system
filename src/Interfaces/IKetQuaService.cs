@@ -10,6 +10,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<KetQuaDTO?> GetKetQuaByIdAsync(int id);
         public Task<KetQuaDTO> CreateKetQuaAsync(CreateKetQuaDTO createKetQuaDTO);
         public Task<KetQuaDTO?> UpdateKetQuaAsync(int id, UpdateKetQuaDTO updateKetQuaDTO);
+        public Task<KetQuaDTO> UpsertKetQuaAsync(UpdateKetQuaDTO ketQuaDTO);
         public Task<bool> DeleteKetQuaAsync(int id);
         public Task<decimal> CalculateDiemCLO(int sinhVienId, int cLOId);
         public Task<decimal> CalculateDiemCLOMax(int cLOId);

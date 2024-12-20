@@ -26,6 +26,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CLOForm } from "@/components/CLOForm";
+import { useState, useEffect } from "react";
 
 const createCLOColumns = (handleEdit, handleDelete) => [
   {
@@ -153,13 +154,28 @@ const createCLOColumns = (handleEdit, handleDelete) => [
 
 export default function CLOPage() {
   const { lopHocPhanId } = useParams();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const clos = await getCLOsByLopHocPhanId(lopHocPhanId);
+      setData(clos);
+    };
+    fetchData();
+  }, [lopHocPhanId]);
+
+  const fetchData = async () => {
+    const clos = await getCLOsByLopHocPhanId(lopHocPhanId);
+    setData(clos);
+  };
 
   return (
       <div className="w-full">
         <DataTable
           entity="CLO"
           createColumns={createCLOColumns}
-          getAllItems={() => getCLOsByLopHocPhanId(lopHocPhanId)}
+          data={data}
+          fetchData={fetchData}
           deleteItem={deleteCLO}
           columnToBeFiltered={"ten"}
           ItemForm={CLOForm}

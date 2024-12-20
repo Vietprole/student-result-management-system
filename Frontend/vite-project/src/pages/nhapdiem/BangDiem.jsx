@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // import { getStudents, getGradeComponents, getQuestions, getGrades } from "@/lib/api"
 import { GradeTable } from "@/components/GradeTable";
 // import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"
-import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan";
+import { getSinhViens } from "@/api/api-sinhvien";
 import { useParams } from "react-router-dom";
 import { getBaiKiemTrasByLopHocPhanId } from "@/api/api-baikiemtra";
 import { getAllKetQuas } from "@/api/api-ketqua";
@@ -19,7 +19,7 @@ export default function GradesPage() {
       // Fetch all required data
       const [students, components, allGrades] = await Promise.all([
         // getStudents(),
-        getSinhViensByLopHocPhanId(lopHocPhanId),
+        getSinhViens(null, lopHocPhanId),
         // getGradeComponents(),
         getBaiKiemTrasByLopHocPhanId(lopHocPhanId),
         // getGrades(),
@@ -57,7 +57,7 @@ export default function GradesPage() {
                     g.sinhVienId === student.id && g.cauHoiId === question.id
                 );
                 // return [question.id.toString(), grade?.diem || 0];
-                return [question.id, grade?.diem || 0];
+                return [question.id, grade?.diemTam || 0];
               })
             ),
           ])

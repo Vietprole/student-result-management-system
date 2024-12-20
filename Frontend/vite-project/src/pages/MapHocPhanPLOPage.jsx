@@ -78,13 +78,15 @@ export default function MapHocPhanPLOPage() {
           <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId}/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
-        <MappingTable
-          listRowItem={hocPhans}
-          listColumnItem={pLOs}
-          toggledDataFromParent={toggledData}
-          updateRowItemsToColumnItem={updateHocPhansToPLO}
-          getRowItemsByColumnItemId={getHocPhansByPLOId}
-        />
+        {toggledData && hocPhans?.length > 0 && pLOs?.length > 0 && (
+          <MappingTable
+            listRowItem={hocPhans}
+            listColumnItem={pLOs}
+            toggledDataFromParent={toggledData}
+            updateRowItemsToColumnItem={updateHocPhansToPLO}
+            getRowItemsByColumnItemId={getHocPhansByPLOId}
+          />
+        )}
       </div>
     </Layout>
   );

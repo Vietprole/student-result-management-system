@@ -1,6 +1,7 @@
 import API_BASE_URL from "./base-url";
 import axios from 'axios';
 import { getAccessToken } from "../utils/storage";
+import { createSearchURL } from "../utils/string";
 
 const API_SINHVIEN = `${API_BASE_URL}/api/sinhvien`;
 
@@ -15,9 +16,12 @@ export const getAllSinhViens = async () => {
   }
 };
 
-export const getSinhViens = async (khoaId) => {
+export const getSinhViens = async (khoaId, lopHocPhanId) => {
   try {
-    const url = khoaId ? `${API_SINHVIEN}?khoaId=${khoaId}` : API_SINHVIEN;
+    const paramsObj = { khoaId, lopHocPhanId };
+    const url = createSearchURL(API_SINHVIEN, paramsObj);
+    console.log("url: ", url);
+
     const response = await axios.get(url, {
       headers: { Authorization: getAccessToken() }
     });

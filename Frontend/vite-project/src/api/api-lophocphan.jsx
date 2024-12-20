@@ -124,3 +124,14 @@ export const removeGiangVienFromLopHocPhan = async (lopHocPhanId, giangVienId) =
     console.log("error message: ", error.message);
   }
 }
+
+export const updateCongThucDiem = async (lopHocPhanId, baiKiemTras) => {
+  try {
+    const response = await axios.put(`${API_LOPHOCPHAN}/${lopHocPhanId}/congthucdiem`, baiKiemTras, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}

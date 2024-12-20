@@ -5,7 +5,7 @@ import { getAllLopHocPhans } from "../api/api-lophocphan";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import DefaultComponent from "../pages/lophocphan/DefaultComponent";
+import DefaultComponent from "./nhapdiem/DefaultComponent";
 
 export default function NhapDiemPage() {
   const [lopHocPhans, setLopHocPhans] = useState([]);
@@ -26,8 +26,8 @@ export default function NhapDiemPage() {
   const handleRoute = () => {
     let selectedRoute = null;
     switch (selectedItem) {
-      case "Công Thức Điểm":
-        selectedRoute = "cong-thuc-diem";
+      case "Quản lý Câu hỏi":
+        selectedRoute = "quan-ly-cau-hoi";
       break;
       case "Bảng Điểm":
         selectedRoute = "bang-diem";
@@ -94,7 +94,7 @@ export default function NhapDiemPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onSelect={() => setSelectedItem("Công Thức Điểm")}>Công Thức Điểm</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setSelectedItem("Quản lý Câu hỏi")}>Quản lý Câu hỏi</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Bảng Điểm")}>Bảng Điểm</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Tạo CLO")}>Tạo CLO</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setSelectedItem("Nối PLO - CLO")}>Nối PLO - CLO</DropdownMenuItem>
