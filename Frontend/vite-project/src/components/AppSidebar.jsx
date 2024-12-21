@@ -246,40 +246,43 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader>
-        <a href="/khoa">
-          <div className="flex items-center">
-            <img src={LogoDUT} alt="Logo DUT" className="w-20 h-20 mr-2" />
-            <span className="font-extrabold text-3xl text-blue-500">SRMS</span>
-          </div>
-        </a>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {Array.isArray(items) && items.length > 0 ? (
-                items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <img
-                          src={item.icon}
-                          alt={`${item.title} icon`}
-                          className="w-6 h-6 mr-2"
-                        />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))
-              ) : (
-                <p>Không có mục menu cho vai trò này.</p>
-              )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+  <SidebarHeader>
+    <a href="/khoa">
+      <div className="flex items-center">
+        <img src={LogoDUT} alt="Logo DUT" className="w-20 h-20 mr-2" />
+        <span className="font-extrabold text-3xl text-blue-500">SRMS</span>
+      </div>
+    </a>
+  </SidebarHeader>
+  <SidebarContent>
+    <SidebarGroup>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <a
+                  href={item.url}
+                  className={`flex items-center p-2 rounded-lg ${
+                    window.location.pathname === item.url
+                      ? "bg-blue-100 text-blue-600" // Highlight màu xanh nhạt
+                      : "hover:bg-gray-100" // Hiệu ứng khi hover
+                  }`}
+                >
+                  <img
+                    src={item.icon}
+                    alt={`${item.title} icon`}
+                    className="w-6 h-6 mr-2"
+                  />
+                  <span>{item.title}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  </SidebarContent>
+</Sidebar>
   );
 }
