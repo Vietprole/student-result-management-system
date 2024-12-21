@@ -174,10 +174,11 @@ export default function BaiKiemTraPage() {
       cell: ({ row }) => {
         const date = row.getValue("ngayMoNhapDiem");
         const formattedDate = date ? 
-          new Date(date).toLocaleDateString('vi-VN', {
+          new Date(date).toLocaleString('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
           }) : '';
         return <div className="px-4 py-2">{formattedDate}</div>;
       },
@@ -198,10 +199,11 @@ export default function BaiKiemTraPage() {
       cell: ({ row }) => {
         const date = row.getValue("hanNhapDiem");
         const formattedDate = date ? 
-          new Date(date).toLocaleDateString('vi-VN', {
+          new Date(date).toLocaleString('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
           }) : '';
         return <div className="px-4 py-2">{formattedDate}</div>;
       },
@@ -222,10 +224,11 @@ export default function BaiKiemTraPage() {
       cell: ({ row }) => {
         const date = row.getValue("hanDinhChinh");
         const formattedDate = date ? 
-          new Date(date).toLocaleDateString('vi-VN', {
+          new Date(date).toLocaleString('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
           }) : '';
         return <div className="px-4 py-2">{formattedDate}</div>;
       },
@@ -246,10 +249,11 @@ export default function BaiKiemTraPage() {
       cell: ({ row }) => {
         const date = row.getValue("ngayXacNhan");
         const formattedDate = date ? 
-          new Date(date).toLocaleDateString('vi-VN', {
+          new Date(date).toLocaleString('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
           }) : '';
         return <div className="px-4 py-2">{formattedDate}</div>;
       },
@@ -358,6 +362,7 @@ export default function BaiKiemTraPage() {
       return;
     }
 
+    console.log("bai kiem tra data", data);
     await updateCongThucDiem(lopHocPhanId, data);
     toast({
       title: "Lưu thành công",
@@ -461,7 +466,7 @@ export default function BaiKiemTraPage() {
                   />
                 </DialogContent>
               </Dialog>
-              <Button onClick={handleSave}>Lưu Công thức điểm</Button>
+              <Button disabled={!lopHocPhanId} onClick={handleSave}>Lưu Công thức điểm</Button>
             </div>
             <div className="rounded-md border">
               <Table>

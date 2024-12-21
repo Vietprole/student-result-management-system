@@ -14,10 +14,22 @@ public static class BaiKiemTraMapper
             Loai = baiKiemTra.Loai,
             TrongSo = baiKiemTra.TrongSo,
             TrongSoDeXuat = baiKiemTra.TrongSoDeXuat,
-            NgayMoNhapDiem = baiKiemTra.NgayMoNhapDiem.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.NgayMoNhapDiem.Value, TimeZoneInfo.Local) : (DateTime?)null,
-            HanNhapDiem = baiKiemTra.HanNhapDiem.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.HanNhapDiem.Value, TimeZoneInfo.Local) : (DateTime?)null,
-            HanDinhChinh = baiKiemTra.HanDinhChinh.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.HanDinhChinh.Value, TimeZoneInfo.Local) : (DateTime?)null,
-            NgayXacNhan = baiKiemTra.NgayXacNhan.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.NgayXacNhan.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            // NgayMoNhapDiem = baiKiemTra.NgayMoNhapDiem.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.NgayMoNhapDiem.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            // HanNhapDiem = baiKiemTra.HanNhapDiem.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.HanNhapDiem.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            // HanDinhChinh = baiKiemTra.HanDinhChinh.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.HanDinhChinh.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            // NgayXacNhan = baiKiemTra.NgayXacNhan.HasValue ? TimeZoneInfo.ConvertTimeFromUtc(baiKiemTra.NgayXacNhan.Value, TimeZoneInfo.Local) : (DateTime?)null,
+            // NgayMoNhapDiem = baiKiemTra.NgayMoNhapDiem,
+            // HanNhapDiem = baiKiemTra.HanNhapDiem,
+            // HanDinhChinh = baiKiemTra.HanDinhChinh,
+            // NgayXacNhan = baiKiemTra.NgayXacNhan,
+            NgayMoNhapDiem = baiKiemTra.NgayMoNhapDiem.HasValue ?
+            DateTime.SpecifyKind(baiKiemTra.NgayMoNhapDiem.Value, DateTimeKind.Utc) : null,
+            HanNhapDiem = baiKiemTra.HanNhapDiem.HasValue ?
+            DateTime.SpecifyKind(baiKiemTra.HanNhapDiem.Value, DateTimeKind.Utc) : null,
+            HanDinhChinh = baiKiemTra.HanDinhChinh.HasValue ?
+            DateTime.SpecifyKind(baiKiemTra.HanDinhChinh.Value, DateTimeKind.Utc) : null,
+            NgayXacNhan = baiKiemTra.NgayXacNhan.HasValue ?
+            DateTime.SpecifyKind(baiKiemTra.NgayXacNhan.Value, DateTimeKind.Utc) : null,
             LopHocPhanId = baiKiemTra.LopHocPhanId,
         };
     }

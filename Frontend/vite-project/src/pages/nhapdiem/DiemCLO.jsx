@@ -21,7 +21,7 @@ import { Switch } from "@/components/ui/switch"
 import { ArrowUpDown } from 'lucide-react'
 import { Label } from "@/components/ui/label"
 import { calculateDiemCLO, calculateDiemCLOMax } from "@/api/api-ketqua"
-import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
+import { getSinhViens } from "@/api/api-sinhvien"
 import { useParams } from "react-router-dom"
 import { getCLOsByLopHocPhanId } from "@/api/api-clo"
 import { set } from "react-hook-form"
@@ -139,13 +139,14 @@ export default function DiemCLO() {
   React.useEffect(() => {
     const fetchData = async () => {
       const [sinhViens, CLOs] = await Promise.all([
-        getSinhViensByLopHocPhanId(lopHocPhanId),
+        getSinhViens(null, lopHocPhanId),
         getCLOsByLopHocPhanId(lopHocPhanId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
         const cloScores = await Promise.all(CLOs.map(async (clo) => {
           const score = await calculateDiemCLO(sv.id, clo.id)
+          console.log("sv.id, clo.id, score: ", sv.id, clo.id, score)
           return { [`clo_${clo.id}`]: score }
         }))
         return { ...sv, ...Object.assign({}, ...cloScores) }

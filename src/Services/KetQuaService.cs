@@ -15,9 +15,11 @@ namespace Student_Result_Management_System.Services
     public class KetQuaService : IKetQuaService
     {
         private readonly ApplicationDBContext _context;
-        public KetQuaService(ApplicationDBContext context, ICauHoiService ICauHoiService)
+        private readonly ILogger<KetQuaService> _logger;
+        public KetQuaService(ApplicationDBContext context, ICauHoiService ICauHoiService, ILogger<KetQuaService> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<KetQuaDTO> CreateKetQuaAsync(CreateKetQuaDTO createKetQuaDTO)
         {
@@ -118,19 +120,34 @@ namespace Student_Result_Management_System.Services
                 .Where(kq => kq.SinhVienId == sinhVienId && cauHoiIds.Contains(kq.CauHoiId))
                 .ToListAsync();
 
-            // Check if any DiemChinhThuc is null
-            if (ketQuas.Any(kq => kq.DiemChinhThuc == null))
-            {
-                throw new BusinessLogicException("Một số điểm chưa phải là chính thức");
-            }
-
             decimal totalScore = 0;
+            // Check if any DiemChinhThuc is null
+            var useTemporaryScores = ketQuas.Any(kq => kq.DiemChinhThuc == null);
+
             foreach (var ketQua in ketQuas)
             {
                 var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
-                var diem = ketQua.DiemChinhThuc ?? 0;
-                totalScore += ketQua.DiemChinhThuc ?? 0 * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                decimal diem = useTemporaryScores ? ketQua.DiemTam : (ketQua.DiemChinhThuc ?? 0m);
+                decimal trongSoCauHoi = cauHoi.TrongSo;
+                decimal trongSoBaiKiemTra = cauHoi.BaiKiemTra?.TrongSo ?? 0m;
+                decimal thangDiem = cauHoi.ThangDiem;
+
+                var score = (diem / thangDiem) * trongSoCauHoi * trongSoBaiKiemTra;
+                totalScore += score;
+                _logger.LogInformation(
+                    "CauHoi {CauHoiId}: Diem={Diem}, ThangDiem={ThangDiem}, TrongSoCH={TrongSoCH}, TrongSoBKT={TrongSoBKT}, Score={Score}", 
+                    cauHoi.Id, 
+                    diem, 
+                    thangDiem, 
+                    trongSoCauHoi,
+                    trongSoBaiKiemTra,
+                    score
+                );
             }
+            _logger.LogInformation("Final Score for SinhVien {SinhVienId}, CLO {CLOId}: {Score}", 
+                sinhVienId, 
+                cLOId, 
+                totalScore);
 
             return decimal.Round(totalScore, 2, MidpointRounding.AwayFromZero);
         }
@@ -155,7 +172,7 @@ namespace Student_Result_Management_System.Services
             decimal maxScore = 0;
             foreach (var cauHoi in clo.CauHois)
             {
-                maxScore += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                maxScore += cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0 / cauHoi.ThangDiem;
             }
             return decimal.Round(maxScore, 2, MidpointRounding.AwayFromZero);
         }
@@ -194,12 +211,13 @@ namespace Student_Result_Management_System.Services
                 totalDiemCLO += await CalculateDiemCLO(sinhVienId, clo.Id);
 
                 // Calculate diem-clo-max
-                decimal maxDiemClo = 0;
-                foreach (var cauHoi in clo.CauHois)
-                {
-                    maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
-                }
-                totalMaxDiemCLO += maxDiemClo;
+                // decimal maxDiemClo = 0;
+                // foreach (var cauHoi in clo.CauHois)
+                // {
+                //     maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                // }
+                // totalMaxDiemCLO += maxDiemClo;
+                totalMaxDiemCLO += await CalculateDiemCLOMax(clo.Id);
             }
 
             decimal finalRatio = 10m * totalDiemCLO / totalMaxDiemCLO;

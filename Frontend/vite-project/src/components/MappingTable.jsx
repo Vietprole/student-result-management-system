@@ -141,7 +141,7 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
           )}
           <tr>
             {columns.map((column) => (
-              <th key={column.accessorKey} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5 border">
+              <th key={column.accessorKey} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border">
                 {column.header}
               </th>
             ))}
@@ -151,7 +151,7 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
           {listRowItem.map((rowItem) => (
             <tr key={rowItem.id}>
               {columns.map((column) => (
-                <td key={column.accessorKey} className="px-6 py-4 whitespace-nowrap w-1/5 border">
+                <td key={column.accessorKey} className="px-6 py-4 whitespace-nowrap border">
                   {column.cell ? column.cell({ row: { original: rowItem } }) : rowItem[column.accessorKey]}
                 </td>
               ))}
