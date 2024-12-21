@@ -107,7 +107,7 @@ export function NganhForm({ nganh, handleAdd, handleEdit, setIsDialogOpen }) {
           name="khoaId"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Chọn Khoa Id</FormLabel>
+              <FormLabel>Chọn Khoa </FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>

@@ -263,8 +263,8 @@ export default function HocPhanPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
-          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId}/>
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId} placeholder="Chọn Khoa"/>
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId} placeholder="Chọn Ngành"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable

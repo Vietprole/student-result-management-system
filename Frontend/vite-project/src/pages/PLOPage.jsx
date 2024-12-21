@@ -187,7 +187,7 @@ export default function PLOPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={comboBoxNganhId}/>
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={comboBoxNganhId} placeholder="Chọn Ngành"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable

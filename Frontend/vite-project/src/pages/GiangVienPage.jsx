@@ -4,7 +4,6 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   getGiangViens,
-  // updateGiangVien,
   deleteGiangVien,
 } from "@/api/api-giangvien";
 import {
@@ -63,21 +62,6 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
-  // {
-  //   accessorKey: "khoaId",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Khoa Id
-  //         <ArrowUpDown />
-  //       </Button>
-  //     );
-  //   },
-  //   cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
-  // },
   {
     accessorKey: "tenKhoa",
     header: ({ column }) => {
@@ -199,9 +183,19 @@ export default function GiangVienPage() {
   return (
     <Layout>
       <div className="w-full">
-        <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
-          <ComboBox items={lopHocPhanItems} setItemId={setComboBoxLopHocPhanId} initialItemId={lopHocPhanId}/>
+        <div className="flex space-x-4">
+          <ComboBox 
+            items={khoaItems} 
+            setItemId={setComboBoxKhoaId} 
+            initialItemId={khoaId} 
+            placeholder="Chọn Khoa" 
+          />
+          <ComboBox 
+            items={lopHocPhanItems} 
+            setItemId={setComboBoxLopHocPhanId} 
+            initialItemId={lopHocPhanId} 
+            placeholder="Chọn Lớp Học Phần" 
+          />
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable

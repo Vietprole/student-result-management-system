@@ -195,7 +195,7 @@ export default function NganhPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId}/>
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId} placeholder="Chọn Khoa"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable

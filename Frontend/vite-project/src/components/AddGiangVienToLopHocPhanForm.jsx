@@ -170,7 +170,7 @@ const AddGiangVienToLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter tens..."
+          placeholder="Tìm theo tên..."
           value={(table.getColumn("ten")?.getFilterValue()) ?? ""}
           onChange={(event) =>
             table.getColumn("ten")?.setFilterValue(event.target.value)
