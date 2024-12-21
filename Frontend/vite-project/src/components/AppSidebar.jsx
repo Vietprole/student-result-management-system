@@ -48,7 +48,7 @@ const truongKhoaItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   }
 ]
@@ -56,6 +56,11 @@ const giangVienItem = [
   {
     title: "Lớp học phần",
     url: "/lophocphan",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Nhập điểm",
+    url: "/nhapdiem",
     icon: LopHocPhanIcon,
   },
   {
@@ -80,7 +85,7 @@ const giangVienItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   },
 ]
@@ -88,7 +93,7 @@ const giangVienItem = [
 const sinhVienItem = [
   {
     title: "Kết quả học tập",
-    url: "/ketquahoctap",
+    url: "/ketqua",
     icon: KetQuaIcon,
   },
   {
@@ -103,7 +108,7 @@ const sinhVienItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   }
 ]
@@ -213,7 +218,7 @@ const phongDaoTaoItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   },
 
@@ -242,7 +247,7 @@ export function AppSidebar() {
       console.warn('Vai trò không hợp lệ hoặc chưa được xác định.');
       break;
   }
-  items = adminItem;
+  // items = adminItem;
 
   return (
     <Sidebar>

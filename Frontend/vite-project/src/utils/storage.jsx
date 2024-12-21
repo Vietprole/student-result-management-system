@@ -25,3 +25,10 @@ export const getRole = () => {
   console.log(">>Role:", role);
   return role;
 }
+
+export const getGiangVienId = () => {
+  const result = sessionStorage.getItem('accessToken')
+  const decodedToken = jwtDecode(result);
+  const giangVienId = decodedToken.giangVienId;
+  return parseInt(giangVienId);
+}

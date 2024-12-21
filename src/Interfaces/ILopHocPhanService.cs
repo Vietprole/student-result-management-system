@@ -9,7 +9,7 @@ namespace Student_Result_Management_System.Interfaces
     public interface ILopHocPhanService
     {
         public Task<List<LopHocPhan>> GetAllLopHocPhansAsync();
-        public Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId);
+        public Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId);
         public Task<LopHocPhan?> GetLopHocPhanByIdAsync(int id);
         public Task<LopHocPhan?> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO);
         public Task<LopHocPhan?> UpdateLopHocPhanAsync(int id,UpdateLopHocPhanDTO lopHocPhanDTO);

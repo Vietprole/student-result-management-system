@@ -1,6 +1,7 @@
 import API_BASE_URL from "./base-url";
 import axios from 'axios';
 import { getAccessToken } from "../utils/storage";
+import { createSearchURL } from "../utils/string";
 
 const API_LOPHOCPHAN = `${API_BASE_URL}/api/lophocphan`;
 
@@ -14,6 +15,21 @@ export const getAllLopHocPhans = async () => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getLopHocPhans = async (hocPhanId, hocKyId, giangVienId) => {
+  try {
+    const paramsObj = { hocPhanId, hocKyId, giangVienId };
+    const url = createSearchURL(API_LOPHOCPHAN, paramsObj);
+    console.log("url: ", url);
+
+    const response = await axios.get(url, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
 
 export const getLopHocPhanById = async (id) => {
   try {

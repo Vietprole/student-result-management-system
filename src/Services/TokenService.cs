@@ -6,7 +6,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Student_Result_Management_System.Data;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 
@@ -16,7 +18,8 @@ namespace Student_Result_Management_System.Services
     {
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration config)
+        private readonly ApplicationDBContext _context;
+        public TokenService(IConfiguration config, ApplicationDBContext context)
         {
             _config = config;
             var signingKey = _config["JWT:SigningKey"];
@@ -25,16 +28,18 @@ namespace Student_Result_Management_System.Services
                 throw new ArgumentNullException("JWT:SigningKey", "Signing key cannot be null or empty.");
             }
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
+            _context = context;
 
         }
         public async Task<string> CreateToken(TaiKhoan user)
         {
-            
+            var giangVienId = await _context.GiangViens.Where(gv => gv.TaiKhoanId == user.Id).Select(gv => gv.Id).FirstOrDefaultAsync();
              var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim("fullname",user.Ten),
                 new Claim(ClaimTypes.Role,user.ChucVu.TenChucVu),
+                new Claim("giangVienId", giangVienId.ToString() ?? "")
             };
             var creds = new SigningCredentials(_key,SecurityAlgorithms.HmacSha512Signature);
 

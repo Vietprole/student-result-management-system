@@ -24,8 +24,15 @@ import DiemPk from "@/pages/nhapdiem/DiemPk";
 import TongKetCLO from "@/pages/nhapdiem/TongKetCLO";
 import BaoCaoCLO from "@/pages/nhapdiem/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
+import { getRole } from "@/utils/storage";
+import BangDiemGiangVienPage from "@/pages/nhapdiem/BangDiemGiangVienPage";
 
-const lophocphans = [
+const role = getRole();
+const RoleBasedRoute = ({ giangVienElement, defaultElement }) => {
+  return role === "GiangVien" ? giangVienElement : defaultElement;
+};
+
+const routes = [
   {
     path: "/",
     element: <DangNhap />,
@@ -75,7 +82,7 @@ const lophocphans = [
     element: <NhapDiemPage />,
     children: [
       { path: ":lopHocPhanId/quan-ly-cau-hoi", element: <QuanLyCauHoi /> },
-      { path: ":lopHocPhanId/bang-diem", element: <BangDiem /> },
+      { path: ":lopHocPhanId/bang-diem", element: <RoleBasedRoute giangVienElement={<BangDiemGiangVienPage />} defaultElement={<BangDiem/>} /> },
       { path: ":lopHocPhanId/tao-clo", element: <TaoCLO /> },
       { path: ":lopHocPhanId/noi-plo-clo", element: <NoiCLOPLO /> },
       { path: ":lopHocPhanId/noi-cau-hoi-clo", element: <NoiCauHoiCLO /> },
@@ -102,7 +109,7 @@ const lophocphans = [
     element: <CaiDatPage />,
   }
 ]
-const router = createBrowserRouter(lophocphans, {
+const router = createBrowserRouter(routes, {
   future: {
     v7_fetcherPersist: true,
     v7_normalizeFormMethod: true,

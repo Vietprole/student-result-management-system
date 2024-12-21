@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useOutlet, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
-import { getAllLopHocPhans } from "../api/api-lophocphan";
+import { getAllLopHocPhans, getLopHocPhans } from "../api/api-lophocphan";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import DefaultComponent from "./nhapdiem/DefaultComponent";
+// import DefaultComponent from "./nhapdiem/DefaultComponent";
+import { getRole, getGiangVienId } from "@/utils/storage";
 
 export default function NhapDiemPage() {
   const [lopHocPhans, setLopHocPhans] = useState([]);
@@ -13,15 +14,22 @@ export default function NhapDiemPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
   const outlet = useOutlet();
+  const role = getRole();
+  const giangVienId = getGiangVienId();
 
   useEffect(() => {
     const fetchLopHocPhans = async () => {
+      if (role === "GiangVien" && giangVienId != 0) {
+        const data = await getLopHocPhans(null, null, giangVienId);
+        setLopHocPhans(data);
+        return;
+      }
       const data = await getAllLopHocPhans();
       setLopHocPhans(data);
     };
 
     fetchLopHocPhans();
-  }, []);
+  }, [giangVienId, role]);
 
   const handleRoute = () => {
     let selectedRoute = null;

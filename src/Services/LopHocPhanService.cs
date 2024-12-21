@@ -34,7 +34,7 @@ namespace Student_Result_Management_System.Services
             return lopHocPhans;
         }
 
-        public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId)
+        public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId)
         {
             IQueryable<LopHocPhan> query = _context.LopHocPhans
                 .Include(lhp => lhp.HocPhan)
@@ -50,6 +50,11 @@ namespace Student_Result_Management_System.Services
             if (hocKyId.HasValue)
             {
                 query = query.Where(lhp => lhp.HocKyId == hocKyId.Value);
+            }
+
+            if (giangVienId.HasValue)
+            {
+                query = query.Where(lhp => lhp.GiangVienId == giangVienId.Value);
             }
 
             return await query.ToListAsync();

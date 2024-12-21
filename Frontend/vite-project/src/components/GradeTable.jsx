@@ -24,6 +24,11 @@ export function GradeTable({
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
   const [modifiedRecords, setModifiedRecords] = React.useState([])
+
+  React.useEffect(() => {
+    setTableData(data)
+  }, [data])
+
   const columns = React.useMemo(() => {
     const cols = [
       {
@@ -80,7 +85,7 @@ export function GradeTable({
                     diemTam: value,
                   }
                   console.log("modifiedRecord", modifiedRecord);
-                  upsertKetQua(modifiedRecord);
+                  // upsertKetQua(modifiedRecord);
                   setModifiedRecords([...modifiedRecords, modifiedRecord]);
 
                   setTableData(newData)
@@ -112,16 +117,15 @@ export function GradeTable({
   })
 
   const handleSaveChanges = async () => {
-    for (const [key, record] of Object.entries(modifiedRecords)) {
-      const { id, ...rest } = record;
+    setIsEditing(false)
+    for (let i = 0; i < modifiedRecords.length; i++) {
       try {
-        // await updateKetQua(sinhVienId, rest);
+        console.log("modifiedRecords[i]", modifiedRecords[i]);
+        await upsertKetQua(modifiedRecords[i]);
       } catch (error) {
-        console.error(`Error updating record for sinhVienId ${sinhVienId}:`, error);
+        console.error(`Error updating record for sinhVienId ${modifiedRecords[i].sinhVienId}:`, error);
       }
     }
-    setIsEditing(false)
-    // Here you would typically send the updatedGrades to your API
   }
 
   return (
