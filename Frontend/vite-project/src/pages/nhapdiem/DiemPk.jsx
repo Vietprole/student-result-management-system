@@ -17,12 +17,12 @@ import {
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
+// import { Switch } from "@/components/ui/switch"
 import { ArrowUpDown } from 'lucide-react'
 import { Label } from "@/components/ui/label"
 // import { calculateDiemPk, calculateDiemPkMax } from "@/api/api-ketqua"
 import { calculateDiemPk } from "@/api/api-ketqua"
-import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
+import { getSinhViens } from "@/api/api-sinhvien"
 import { useParams } from "react-router-dom"
 import { getPLOsByLopHocPhanId } from "@/api/api-plo"
 
@@ -142,7 +142,7 @@ export default function DiemPk() {
   React.useEffect(() => {
     const fetchData = async () => {
       const [sinhViens, PLOs] = await Promise.all([
-        getSinhViensByLopHocPhanId(lopHocPhanId),
+        getSinhViens(null, lopHocPhanId),
         getPLOsByLopHocPhanId(lopHocPhanId),
       ]);
       

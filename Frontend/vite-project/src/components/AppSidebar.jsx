@@ -52,7 +52,7 @@ const truongKhoaItem = [
     icon: DangXuatIcon,
   }
 ]
-const giangvienitem = [
+const giangVienItem = [
   {
     title: "Lớp học phần",
     url: "/lophocphan",
@@ -219,29 +219,29 @@ const phongDaoTaoItem = [
 
 ]
 export function AppSidebar() {
-  // const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
+  const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
   let items = [];
 
-  // switch (role) {
-  //   case 'TruongKhoa':
-  //     items = truongKhoaItem;
-  //     break;
-  //   case 'GiangVien':
-  //     items = giangvienitem;
-  //     break;
-  //   case 'SinhVien':
-  //     items = sinhVienItem;
-  //     break;
-  //   case 'Admin':
-  //     items = adminItem;
-  //     break;
-  //   case 'PhongDaoTao':
-  //     items = phongDaoTaoItem;
-  //     break;
-  //   default:
-  //     console.warn('Vai trò không hợp lệ hoặc chưa được xác định.');
-  //     break;
-  // }
+  switch (role) {
+    case 'TruongKhoa':
+      items = truongKhoaItem;
+      break;
+    case 'GiangVien':
+      items = giangVienItem;
+      break;
+    case 'SinhVien':
+      items = sinhVienItem;
+      break;
+    case 'Admin':
+      items = adminItem;
+      break;
+    case 'PhongDaoTao':
+      items = phongDaoTaoItem;
+      break;
+    default:
+      console.warn('Vai trò không hợp lệ hoặc chưa được xác định.');
+      break;
+  }
   items = adminItem;
 
   return (

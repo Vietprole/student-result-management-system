@@ -22,5 +22,6 @@ export const getRole = () => {
   const result = sessionStorage.getItem('accessToken')
   const decodedToken = jwtDecode(result);
   const role = decodedToken.role;
+  console.log(">>Role:", role);
   return role;
 }
