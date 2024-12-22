@@ -49,9 +49,7 @@ export default function BangDiemGiangVienPage() {
       }));
 
       const questionsData = await Promise.all(questionsPromises);
-      // console.log("baiKiemTraId", baiKiemTraId);
       // const questionsData = await getCauHoisByBaiKiemTraId(baiKiemTraId);
-      console.log("questionsData", questionsData);
       const questions = Object.fromEntries(
         questionsData.map(({ componentId, questions }) => [
           // componentId.toString(),
@@ -61,8 +59,7 @@ export default function BangDiemGiangVienPage() {
       );
       setQuestions(questions);
       
-      console.log("students: ", students);
-      console.log("allGrades: ", allGrades);
+
       // Transform data into the required format
       const tableData = students.map((student) => ({
         ...student,
@@ -76,15 +73,28 @@ export default function BangDiemGiangVienPage() {
                   (g) =>
                     g.sinhVienId === student.id && g.cauHoiId === question.id
                 );
-                console.log("grade: ", grade);
                 // return [question.id.toString(), grade?.diem || 0];
                 return [question.id, grade?.diemTam || 0];
               })
             ),
           ])
         ),
+        ketQuas: Object.fromEntries(
+          components.map((component) => [
+            component.loai,
+            Object.fromEntries(
+              (questions[component.id.toString()] || []).map((question) => {
+                const grade = allGrades.find(
+                  (g) =>
+                    g.sinhVienId === student.id && g.cauHoiId === question.id
+                );
+                // return [question.id.toString(), grade?.diem || 0];
+                return [question.id, grade?.id || 0];
+              })
+            ),
+          ])
+        ),
       }));
-      console.log("tableData 86: ", tableData);
       setTableData(tableData);
     };
     fetchData();
@@ -99,7 +109,6 @@ export default function BangDiemGiangVienPage() {
     navigate(`.?baiKiemTraId=${comboBoxBaiKiemTraId}`);
   };
   const component = components[0] || {};
-  console.log("component", component);
   const formatDate = (date) => {
     return date ? new Date(date).toLocaleDateString('vi-VN', {
       timeZone: 'Asia/Ho_Chi_Minh',

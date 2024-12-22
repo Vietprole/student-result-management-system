@@ -161,8 +161,6 @@ const ManageSinhVienInLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
   useImperativeHandle(ref, () => ({
     handleRemoveSinhVien: async () => {
       const selectedSinhViens = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
-      console.log("selectedSinhViens: ", selectedSinhViens);
-    
       try {
         for (const sinhVienId of selectedSinhViens) {
           await removeSinhVienFromLopHocPhan(lopHocPhanId, sinhVienId);

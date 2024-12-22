@@ -72,7 +72,6 @@ export function CauHoiForm({ cauHoi, handleAdd, handleEdit, setIsDialogOpen }) {
     };
     fetchData();
   }, [lopHocPhanId]);
-  console.log("cauHoi", cauHoi);
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),

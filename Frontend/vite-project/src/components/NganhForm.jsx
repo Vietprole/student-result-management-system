@@ -54,7 +54,6 @@ export function NganhForm({ nganh, handleAdd, handleEdit, setIsDialogOpen }) {
         label: khoa.ten,
         value: khoa.id,
       }));
-      console.log("mapped", mappedComboBoxItems);
       setComboBoxItems(mappedComboBoxItems);
     };
     fetchData();

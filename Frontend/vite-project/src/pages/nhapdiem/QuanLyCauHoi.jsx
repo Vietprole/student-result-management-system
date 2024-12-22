@@ -45,7 +45,6 @@ export default function QuanLyCauHoi() {
     // Map baiKiemTra items to be used in ComboBox
     const mappedComboBoxItems = dataBaiKiemTra.map(baiKiemTra => ({ label: baiKiemTra.loai, value: baiKiemTra.id }));
     setBaiKiemTraItems(mappedComboBoxItems);
-    console.log("baiKiemTraItems", mappedComboBoxItems);
     const data = await getCauHoisByBaiKiemTraId(baiKiemTraId);
     setData(data);
   }, [baiKiemTraId, lopHocPhanId]);
@@ -54,7 +53,6 @@ export default function QuanLyCauHoi() {
     fetchData();
   }, [fetchData]);
 
-  console.log('baiKiemTraItems', baiKiemTraItems);
 
   const handleGoClick = () => {
     setBaiKiemTraId(comboBoxBaiKiemTraId);

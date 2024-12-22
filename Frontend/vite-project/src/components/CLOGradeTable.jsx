@@ -33,7 +33,6 @@
 //   const [tableData, setTableData] = React.useState(data)
 //   const [isEditing, setIsEditing] = React.useState(false)
 //   const [modifiedRecords, setModifiedRecords] = React.useState([])
-//   console.log("tableData: ", tableData);
 //   const columns = React.useMemo(() => {
 //     const cols = [
 //       {
@@ -84,13 +83,11 @@
 //                   }
                   
 //                   newData[rowIndex].grades[componentId][questionId] = value
-//                   // console.log("newData: ", rowIndex, newData[rowIndex].id);
 //                   const modifiedRecord = {
 //                     sinhVienId: newData[rowIndex].id,
 //                     cauHoiId: parseInt(questionId),
 //                     diem: value,
 //                   }
-//                   console.log("modifiedRecord: ", modifiedRecord);
 //                   updateKetQua(modifiedRecord);
 //                   setModifiedRecords([...modifiedRecords, modifiedRecord]);
 
@@ -123,11 +120,9 @@
 //   })
 
 //   const handleSaveChanges = async () => {
-//     console.log("Modified records:", modifiedRecords)
 //     for (const [key, record] of Object.entries(modifiedRecords)) {
 //       const { id, ...rest } = record;
 //       try {
-//         console.log("SinhVienId, rest: ", record, id, rest);
 //         // await updateKetQua(sinhVienId, rest);
 //       } catch (error) {
 //         console.error(`Error updating record for sinhVienId ${sinhVienId}:`, error);

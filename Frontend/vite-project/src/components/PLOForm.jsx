@@ -42,7 +42,6 @@ export function PLOForm({ pLO, handleAdd, handleEdit, setIsDialogOpen }) {
     const fetchData = async () => {
       const comboBoxItems = await getAllNganhs();
       const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
-      console.log("mapped", mappedComboBoxItems);
       setComboBoxItems(mappedComboBoxItems);
     };
     fetchData();

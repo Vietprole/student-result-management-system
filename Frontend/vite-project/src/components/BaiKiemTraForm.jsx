@@ -46,8 +46,6 @@ const formSchema = z.object({
 
 export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen, maxId }) {
   const { lopHocPhanId } = useParams();
-  console.log("baiKiemTra", baiKiemTra);
-  console.log("maxId", maxId);
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -69,12 +67,10 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (baiKiemTra) {
-      console.log("values", values);
       // const data = await updateBaiKiemTra(baiKiemTra.id, values);
       handleEdit(values);
     } else {
       // const data = await addBaiKiemTra(values);
-      console.log("add values", values);
       handleAdd(values);
       setIsDialogOpen(false);
     }
@@ -254,7 +250,6 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                     initialFocus
                   />
                 </PopoverContent>
-                {console.log("field.value and typeof", field.value, typeof(field.value))}
               </Popover>
               <FormDescription>
                 Chọn hạn đính chính điểm

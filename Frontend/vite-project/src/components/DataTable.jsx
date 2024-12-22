@@ -97,7 +97,6 @@ export default function DataTable({
 
   const handleAddItemsToParent = async (parentId) => {
     const selectedItemIds = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
-    console.log("selectedItemIds: ", selectedItemIds);
     addItemsToParent(parentId, selectedItemIds);
     fetchData();
   }

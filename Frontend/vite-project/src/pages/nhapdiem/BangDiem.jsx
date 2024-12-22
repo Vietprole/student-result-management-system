@@ -71,7 +71,6 @@ export default function GradesPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Bảng điểm học phần</h1>
-      {console.log("tableData 74: ", tableData)}
       {tableData.length > 0 && (
         <GradeTable
           data={tableData}

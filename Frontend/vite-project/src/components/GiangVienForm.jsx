@@ -37,7 +37,6 @@ export function GiangVienForm({ giangVien, handleAdd, handleEdit, setIsDialogOpe
     const fetchData = async () => {
       const comboBoxItems = await getAllKhoas();
       const mappedComboBoxItems = comboBoxItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      console.log("mapped", mappedComboBoxItems);
       setComboBoxItems(mappedComboBoxItems);
     };
     fetchData();
@@ -60,7 +59,6 @@ export function GiangVienForm({ giangVien, handleAdd, handleEdit, setIsDialogOpe
       const data = await updateGiangVien(giangVien.id, values);
       handleEdit(data);
     } else {
-      console.log("values", values);
       const data = await addGiangVien(values);
       handleAdd(data);
       setIsDialogOpen(false);

@@ -64,10 +64,8 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
   };
 
   const updateData = (rowItemId, columnItemId, toggled) => {
-    console.log("toggleData 58", toggledData);
     setToggledData(prev => {
       const updated = { ...prev };
-      console.log("updated 58", updated);
       if (toggled) {
         if (!updated[columnItemId]) {
           updated[columnItemId] = [];
@@ -81,7 +79,6 @@ export default function MappingTable({listRowItem, listColumnItem, extraHeaders,
         // }
         updated[columnItemId] = updated[columnItemId].filter(id => id !== rowItemId);
       }
-      console.log("updated 72", updated);
       return updated;
     });
   };

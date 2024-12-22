@@ -319,13 +319,11 @@ export default function BaiKiemTraPage() {
   ];
   
   const handleAdd = (newItem) => {
-    console.log("add newItem", newItem);
     setMaxId(maxId + 1);
     setData([...data, newItem]);
   };
   
   const handleEdit = (editedItem) => {
-    console.log("editedItem", editedItem);
     setData(
       data.map((item) => (item.id === editedItem.id ? editedItem : item))
     );
@@ -362,7 +360,6 @@ export default function BaiKiemTraPage() {
       return;
     }
 
-    console.log("bai kiem tra data", data);
     await updateCongThucDiem(lopHocPhanId, data);
     toast({
       title: "Lưu thành công",

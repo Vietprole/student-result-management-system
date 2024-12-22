@@ -43,14 +43,10 @@ export function KhoaForm({ khoa, handleAdd, handleEdit, setIsDialogOpen }) {
   async function onSubmit(values) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log("values 43: ", values);
-    console.log("khoa: ", khoa);
     if (khoa) {
-      console.log("values", values);
       const data = await updateKhoa(khoa.id, values);
       handleEdit(data);
     } else {
-      console.log("values", values);
       const data = await addKhoa(values);
       handleAdd(data);
       setIsDialogOpen(false);

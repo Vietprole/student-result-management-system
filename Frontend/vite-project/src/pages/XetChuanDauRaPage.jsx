@@ -153,7 +153,6 @@ export default function XetChuanDauRaPage() {
     const fetchData = async () => {
       const comboBoxItems = await getAllNganhs();
       const mappedComboBoxItems = comboBoxItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
-      console.log("mapped", mappedComboBoxItems);
       setComboBoxItems(mappedComboBoxItems);
 
       const [sinhViens, PLOs] = await Promise.all([

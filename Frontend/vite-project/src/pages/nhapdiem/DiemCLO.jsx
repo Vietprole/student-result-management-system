@@ -146,7 +146,6 @@ export default function DiemCLO() {
       const newData = await Promise.all(sinhViens.map(async (sv) => {
         const cloScores = await Promise.all(CLOs.map(async (clo) => {
           const score = await calculateDiemCLO(sv.id, clo.id)
-          console.log("sv.id, clo.id, score: ", sv.id, clo.id, score)
           return { [`clo_${clo.id}`]: score }
         }))
         return { ...sv, ...Object.assign({}, ...cloScores) }

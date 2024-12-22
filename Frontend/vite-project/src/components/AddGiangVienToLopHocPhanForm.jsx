@@ -161,7 +161,6 @@ const AddGiangVienToLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
   useImperativeHandle(ref, () => ({
     handleAddGiangVien: () => {
       const selectedGiangViens = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
-      console.log("selectedGiangViens: ", selectedGiangViens);
       addGiangViensToLopHocPhan(lopHocPhanId, selectedGiangViens);
     }
   }));

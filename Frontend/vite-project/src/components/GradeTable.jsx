@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { upsertKetQua } from "@/api/api-ketqua"
+import { upsertDiemDinhChinh } from "@/api/api-diemdinhchinh"
 
 export function GradeTable({
   data,
@@ -25,6 +26,7 @@ export function GradeTable({
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
   const [modifiedRecords, setModifiedRecords] = React.useState([])
+  const [modifiedDiemDinhChinhRecords, setModifiedDiemDinhChinhRecords] = React.useState([])
 
   React.useEffect(() => {
     setTableData(data)
@@ -80,14 +82,23 @@ export function GradeTable({
                   }
                   
                   newData[rowIndex].grades[componentId][questionId] = value
+                  const ketQuaId = newData[rowIndex].ketQuas[componentId][questionId];
                   const modifiedRecord = {
                     sinhVienId: newData[rowIndex].id,
                     cauHoiId: parseInt(questionId),
                     diemTam: value,
                   }
+
+                  const modifiedDiemDinhChinhRecord = {
+                    ketQuaId: ketQuaId,
+                    diemMoi: value,
+                  }
                   console.log("modifiedRecord", modifiedRecord);
+                  console.log("modifiedDiemDinhChinhRecord", modifiedDiemDinhChinhRecord);
                   // upsertKetQua(modifiedRecord);
+
                   setModifiedRecords([...modifiedRecords, modifiedRecord]);
+                  setModifiedDiemDinhChinhRecords([...modifiedDiemDinhChinhRecords, modifiedDiemDinhChinhRecord]);
 
                   setTableData(newData)
                 }}
@@ -109,7 +120,7 @@ export function GradeTable({
     })
 
     return cols
-  }, [components, questions, isEditing, tableData, modifiedRecords])
+  }, [components, questions, isEditing, tableData, modifiedRecords, modifiedDiemDinhChinhRecords])
 
   const table = useReactTable({
     data: tableData,
@@ -125,6 +136,18 @@ export function GradeTable({
         await upsertKetQua(modifiedRecords[i]);
       } catch (error) {
         console.error(`Error updating record for sinhVienId ${modifiedRecords[i].sinhVienId}:`, error);
+      }
+    }
+  }
+
+  const handleSaveDinhChinh = async () => {
+    setIsEditing(false)
+    for (let i = 0; i < modifiedDiemDinhChinhRecords.length; i++) {
+      try {
+        console.log("modifiedDiemDinhChinhRecords[i]", modifiedDiemDinhChinhRecords[i]);
+        await upsertDiemDinhChinh(modifiedDiemDinhChinhRecords[i]);
+      } catch (error) {
+        console.error(`Error updating Diem Dinh Chinh record for ketQuaId ${modifiedDiemDinhChinhRecords[i].ketQuaId}:`, error);
       }
     }
   }
@@ -151,7 +174,7 @@ export function GradeTable({
       )}
       {canDinhChinhDiem && (
         <Button
-          onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
+          onClick={() => isEditing ? handleSaveDinhChinh() : setIsEditing(true)}
         >
           {isEditing ? "Lưu Đính Chính" : "Đính Chính Điểm"}
         </Button>
