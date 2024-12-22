@@ -80,6 +80,12 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
     }
   }
 
+  const setEndOfDay = (date) => {
+    const newDate = new Date(date);
+    newDate.setHours(23, 59, 59);
+    return newDate;
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -201,7 +207,8 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
+                    onSelect={(date) => field.onChange(setEndOfDay(date))}
                     initialFocus
                   />
                 </PopoverContent>
@@ -242,10 +249,12 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
+                    onSelect={(date) => field.onChange(setEndOfDay(date))}
                     initialFocus
                   />
                 </PopoverContent>
+                {console.log("field.value and typeof", field.value, typeof(field.value))}
               </Popover>
               <FormDescription>
                 Chọn hạn đính chính điểm

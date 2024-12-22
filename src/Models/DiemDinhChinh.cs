@@ -14,4 +14,5 @@ public class DiemDinhChinh
 	public DateTime? ThoiDiemDuyet { get; set; }
 	public bool DuocDuyet { get; set; }
 	public int? NguoiDuyetId { get; set; }
+	public TaiKhoan? NguoiDuyet { get; set; } = null!;
 }

@@ -9,4 +9,5 @@ public class DiemDinhChinhDTO
 	public DateTime? ThoiDiemDuyet { get; set; }
 	public bool DuocDuyet { get; set; }
 	public int? NguoiDuyetId { get; set; }
+    public string? TenNguoiDuyet { get; set; }
 }

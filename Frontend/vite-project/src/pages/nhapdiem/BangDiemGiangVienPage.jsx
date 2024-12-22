@@ -98,6 +98,19 @@ export default function BangDiemGiangVienPage() {
     }
     navigate(`.?baiKiemTraId=${comboBoxBaiKiemTraId}`);
   };
+  const component = components[0] || {};
+  console.log("component", component);
+  const formatDate = (date) => {
+    return date ? new Date(date).toLocaleDateString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }) : '';
+  }
+  const ngayMoNhapDiem = formatDate(component.ngayMoNhapDiem);
+  const hanNhapDiem = formatDate(component.hanNhapDiem);
+  const hanDinhChinh = formatDate(component.hanDinhChinh);    
 
   return (
     <div>
@@ -106,12 +119,16 @@ export default function BangDiemGiangVienPage() {
         <ComboBox items={baiKiemTraItems} setItemId={setComboBoxBaiKiemTraId} initialItemId={comboBoxBaiKiemTraId}/>
         <Button onClick={handleGoClick}>Go</Button>
       </div>
+      <p>Mở nhập điểm bắt đầu từ ngày: {ngayMoNhapDiem}</p>
+      <p>Hạn nhập điểm đến hết ngày: {hanNhapDiem}</p>
+      <p>Hạn đính chính đến hết ngày: {hanDinhChinh}</p>
       {console.log("tableData, components, questions", tableData, components, questions)}
       {tableData.length > 0 && (
         <GradeTable
           data={tableData}
           components={components}
           questions={questions}
+          isGiangVienMode={true}
         />
       )}
     </div>

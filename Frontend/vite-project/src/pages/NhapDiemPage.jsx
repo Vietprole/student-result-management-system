@@ -69,7 +69,6 @@ export default function NhapDiemPage() {
 
   return (
     <Layout>
-      <h1>This is NhapDiemPage</h1>
       <div className="flex space-x-4">
         <div>
           <h2>Chọn lớp học phần: </h2>

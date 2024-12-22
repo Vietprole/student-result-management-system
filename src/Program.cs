@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Services;
+using StudentResultManagementSystem.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +79,7 @@ builder.Services.AddScoped<IHocPhanService, HocPhanService>();
 builder.Services.AddScoped<IKetQuaService, KetQuaService>();
 builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
 builder.Services.AddScoped<IPLOService, PLOService>();
+builder.Services.AddScoped<IDiemDinhChinhService, DiemDinhChinhService>();
 
 
 builder.Services.AddAuthentication(options => {

@@ -20,6 +20,7 @@ export function GradeTable({
   data,
   components,
   questions,
+  isGiangVienMode,
 }) {
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
@@ -108,7 +109,7 @@ export function GradeTable({
     })
 
     return cols
-  }, [components, questions, tableData, isEditing])
+  }, [components, questions, isEditing, tableData, modifiedRecords])
 
   const table = useReactTable({
     data: tableData,
@@ -128,14 +129,33 @@ export function GradeTable({
     }
   }
 
+  // function that compare date to today and return the result
+  const isDatePassed = (dateString) => {
+    const today = new Date();
+    const date = new Date(dateString);
+    return date.getTime() < today.getTime();
+  }
+
+  const canEditDiem = !isGiangVienMode || (isGiangVienMode && isDatePassed(components[0].ngayMoNhapDiem) && !isDatePassed(components[0].hanNhapDiem));
+  const canDinhChinhDiem = isGiangVienMode && isDatePassed(components[0].hanNhapDiem) && !isDatePassed(components[0].hanDinhChinh);
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
+      {canEditDiem && (
         <Button
           onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
         >
-          {isEditing ? "Save Changes" : "Enable Editing"}
+          {isEditing ? "Lưu" : "Sửa Điểm"}
         </Button>
+      )}
+      {canDinhChinhDiem && (
+        <Button
+          onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
+        >
+          {isEditing ? "Lưu Đính Chính" : "Đính Chính Điểm"}
+        </Button>
+      )}
       </div>
       <div className="rounded-md border">
         <Table>

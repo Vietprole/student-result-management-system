@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Student_Result_Management_System.DTOs.DiemDinhChinh;
 using Student_Result_Management_System.DTOs.KetQua;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Utils;
