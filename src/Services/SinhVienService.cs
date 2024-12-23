@@ -117,9 +117,31 @@ namespace Student_Result_Management_System.Services
             return sinhViens;
         }
 
-        public async Task<List<SinhVien>> GetAllSinhVien()
+        public async Task<List<SinhVien>> GetAllSinhViens()
         {
             List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv => sv.Khoa).ToListAsync();
+            return sinhViens;
+        }
+
+        public async Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? lopHocPhanId)        
+        {
+            IQueryable<SinhVien> query = _context.SinhViens
+                .Include(sv => sv.Khoa)
+                .Include(sv => sv.TaiKhoan)
+                .Include(sv => sv.LopHocPhans);
+
+            if (khoaId.HasValue)
+            {
+                query = query.Where(sv => sv.KhoaId == khoaId.Value);
+            }
+
+            if (lopHocPhanId.HasValue)
+            {
+                query = query.Where(sv => sv.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId.Value));
+            }
+
+            var sinhViens = await query.ToListAsync();
+
             return sinhViens;
         }
 

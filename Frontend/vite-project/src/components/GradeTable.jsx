@@ -191,7 +191,7 @@ export function GradeTable({
                 <TableHead
                   key={component.id}
                   colSpan={questions[component.id.toString()]?.length + 1}
-                  className="text-center"
+                  className="text-center border"
                 >
                   {component.loai} ({component.trongSo * 100}%)
                 </TableHead>

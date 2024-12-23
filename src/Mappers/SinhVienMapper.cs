@@ -11,6 +11,7 @@ public static class SinhVienMapper
         return new SinhVienDTO
         {
             Id = sinhVienModel.Id,
+            MaSinhVien = sinhVienModel.MaSinhVien,
             Ten = sinhVienModel.TaiKhoan?.Ten ?? string.Empty,
             KhoaId = sinhVienModel.KhoaId, //Để đây hồi tin sửa
             TenKhoa = sinhVienModel.Khoa?.Ten ?? string.Empty,

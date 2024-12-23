@@ -29,7 +29,7 @@ const formSchema = z.object({
   khoaId: z.number({
     required_error: "Please select a Khoa.",
   }),
-  namBatDau: z.coerce.number(
+  namNhapHoc: z.coerce.number(
     {
       message: "Nam Bat Dau must be a number",
     }
@@ -59,7 +59,7 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
     defaultValues: sinhVien || {
       ten: "",
       // khoaId: "",
-      namBatDau: "",
+      namNhapHoc: "",
     },
   });
 
@@ -195,10 +195,10 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
         />
         <FormField
           control={form.control}
-          name="namBatDau"
+          name="namNhapHoc"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Năm Bắt Đầu</FormLabel>
+              <FormLabel>Năm Nhập Học</FormLabel>
               <FormControl>
                 <Input placeholder="2024" {...field} />
               </FormControl>
