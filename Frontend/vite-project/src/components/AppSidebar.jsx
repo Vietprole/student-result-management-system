@@ -8,9 +8,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "@/utils/storage"
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { useLocation } from "react-router-dom";
 
 // Import PNG icons
 import KhoaIcon from "@/assets/icons/khoa-icon.png";
@@ -54,7 +60,7 @@ const truongKhoaItem = [
 ]
 const giangvienitem = [
   {
-    title: "Lớp học phần",
+    title: "L���p học phần",
     url: "/lophocphan",
     icon: LopHocPhanIcon,
   },
@@ -123,6 +129,16 @@ const adminItem = [
     title: "Học phần",
     url: "/hocphan",
     icon: HocPhanIcon,
+    subItems: [
+      {
+        title: "Thêm Học Phần vào Ngành",
+        url: "/hocphan/them",
+      },
+      {
+        title: "Xem Học Phần",
+        url: "/hocphan/",
+      },
+    ],
   },
   {
     title: "PLO",
@@ -219,7 +235,22 @@ const phongDaoTaoItem = [
 
 ]
 export function AppSidebar() {
-  // const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
+  const location = useLocation();
+  const [openItem, setOpenItem] = useState(null);
+
+  useEffect(() => {
+    // Mở submenu nếu URL hiện tại khớp với một trong các subItems
+    items.forEach(item => {
+      if (item.subItems) {
+        item.subItems.forEach(subItem => {
+          if (location.pathname.startsWith(subItem.url)) {
+            setOpenItem(item.title);
+          }
+        });
+      }
+    });
+  }, [location.pathname]);
+
   let items = [];
 
   // switch (role) {
@@ -244,45 +275,80 @@ export function AppSidebar() {
   // }
   items = adminItem;
 
+  const toggleItem = (title, event) => {
+    if (event) event.preventDefault();
+    setOpenItem(openItem === title ? null : title);
+  };
+
+  const handleSubItemClick = (event) => {
+    event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
+  };
+
   return (
     <Sidebar>
-  <SidebarHeader>
-    <a href="/khoa">
-      <div className="flex items-center">
-        <img src={LogoDUT} alt="Logo DUT" className="w-20 h-20 mr-2" />
-        <span className="font-extrabold text-3xl text-blue-500">SRMS</span>
-      </div>
-    </a>
-  </SidebarHeader>
-  <SidebarContent>
-    <SidebarGroup>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <a
-                  href={item.url}
-                  className={`flex items-center p-2 rounded-lg ${
-                    window.location.pathname === item.url
-                      ? "bg-blue-100 text-blue-600" // Highlight màu xanh nhạt
-                      : "hover:bg-gray-100" // Hiệu ứng khi hover
-                  }`}
-                >
-                  <img
-                    src={item.icon}
-                    alt={`${item.title} icon`}
-                    className="w-6 h-6 mr-2"
-                  />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
-  </SidebarContent>
-</Sidebar>
+      <SidebarHeader>
+        <a href="/khoa">
+          <div className="flex items-center">
+            <img src={LogoDUT} alt="Logo DUT" className="w-20 h-20 mr-2" />
+            <span className="font-extrabold text-3xl text-blue-500">SRMS</span>
+          </div>
+        </a>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <Collapsible key={item.title} open={openItem === item.title} className="group/collapsible">
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton asChild>
+                        <a
+                          href={item.url}
+                          onClick={(e) => item.subItems && toggleItem(item.title, e)}
+                          className={`flex items-center p-2 rounded-lg ${
+                            window.location.pathname === item.url
+                              ? "bg-blue-100 text-blue-600"
+                              : "hover:bg-gray-100"
+                          }`}
+                        >
+                          <img
+                            src={item.icon}
+                            alt={`${item.title} icon`}
+                            className="w-6 h-6 mr-2"
+                          />
+                          <span>{item.title}</span>
+                          {item.subItems && (
+                            <span className="ml-auto">
+                              {openItem === item.title ? <FiChevronUp /> : <FiChevronDown />}
+                            </span>
+                          )}
+                        </a>
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    {item.subItems && (
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.subItems.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                href={subItem.url}
+                                onClick={handleSubItemClick} // Ngăn chặn sự kiện click lan ra ngoài
+                              >
+                                {subItem.title}
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    )}
+                  </SidebarMenuItem>
+                </Collapsible>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }
