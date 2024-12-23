@@ -11,7 +11,8 @@ public static class DiemDinhChinhMapper
         return new DiemDinhChinhDTO
         {
             Id = ddc.Id,
-            KetQuaId = ddc.KetQuaId,
+            SinhVienId = ddc.SinhVienId,
+            CauHoiId = ddc.CauHoiId,
             DiemMoi = ddc.DiemMoi,
             ThoiDiemMo = DateTime.SpecifyKind(ddc.ThoiDiemMo, DateTimeKind.Utc),
             ThoiDiemDuyet = ddc.ThoiDiemDuyet.HasValue ? DateTime.SpecifyKind(ddc.ThoiDiemDuyet.Value, DateTimeKind.Utc) : null,
@@ -25,7 +26,8 @@ public static class DiemDinhChinhMapper
     {
         return new DiemDinhChinh
         {
-            KetQuaId = createDTO.KetQuaId,
+            SinhVienId = createDTO.SinhVienId,
+            CauHoiId = createDTO.CauHoiId,
             DiemMoi = createDTO.DiemMoi,
             ThoiDiemMo = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
             DuocDuyet = false
@@ -34,7 +36,8 @@ public static class DiemDinhChinhMapper
 
     public static DiemDinhChinh ToDiemDinhChinhFromUpdateDTO(this UpdateDiemDinhChinhDTO updateDTO, DiemDinhChinh ddc)
     {
-        ddc.KetQuaId = updateDTO.KetQuaId;
+        ddc.SinhVienId = updateDTO.SinhVienId;
+        ddc.CauHoiId = updateDTO.CauHoiId;
         ddc.DiemMoi = updateDTO.DiemMoi ?? ddc.DiemMoi;
         ddc.ThoiDiemMo = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
         ddc.DuocDuyet = updateDTO.DuocDuyet ?? ddc.DuocDuyet;

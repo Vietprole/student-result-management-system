@@ -52,7 +52,10 @@ namespace Student_Result_Management_System.Services
 
         public async Task<DiemDinhChinhDTO> UpsertDiemDinhChinhAsync(UpdateDiemDinhChinhDTO updateDTO)
         {
-            var existingDiemDinhChinh = await _context.DiemDinhChinhs.FirstOrDefaultAsync(d => d.KetQuaId == updateDTO.KetQuaId);
+            var existingDiemDinhChinh = await _context.DiemDinhChinhs
+                .FirstOrDefaultAsync(d => 
+                    d.SinhVienId == updateDTO.SinhVienId && 
+                    d.CauHoiId == updateDTO.CauHoiId);
 
             if (existingDiemDinhChinh != null)
             {
@@ -62,7 +65,8 @@ namespace Student_Result_Management_System.Services
             {
                 var newDiemDinhChinh = new DiemDinhChinh
                 {
-                    KetQuaId = updateDTO.KetQuaId,
+                    SinhVienId = updateDTO.SinhVienId,
+                    CauHoiId = updateDTO.CauHoiId,
                     DiemMoi = updateDTO.DiemMoi ?? 0,
                     ThoiDiemMo = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
                     DuocDuyet = false
