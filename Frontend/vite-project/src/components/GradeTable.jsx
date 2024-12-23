@@ -60,7 +60,7 @@ export function GradeTable({
         columns: [
           ...componentQuestions.map((question) => ({
             accessorFn: (row) =>
-              row.grades[component.loai]?.[question.id.toString()] ?? 0,
+              row.grades[component.loai]?.[question.id.toString()] ?? "",
             id: `${component.loai}_${question.id}`,
             header: () => (
               <div>
@@ -74,6 +74,7 @@ export function GradeTable({
                 value={row.getValue(column.id)}
                 onChange={(value) => {
                   const newData = [...tableData]
+                  console.log("newData", newData);
                   const rowIndex = row.index
                   const [componentId, questionId] = column.id.split("_")
                   
@@ -96,10 +97,13 @@ export function GradeTable({
                   console.log("modifiedRecord", modifiedRecord);
                   console.log("modifiedDiemDinhChinhRecord", modifiedDiemDinhChinhRecord);
                   // upsertKetQua(modifiedRecord);
+                  if (modifiedRecord.diemTam !== null) {
+                    setModifiedRecords([...modifiedRecords, modifiedRecord]);
+                  }
 
-                  setModifiedRecords([...modifiedRecords, modifiedRecord]);
-                  setModifiedDiemDinhChinhRecords([...modifiedDiemDinhChinhRecords, modifiedDiemDinhChinhRecord]);
-
+                  if (modifiedDiemDinhChinhRecord.diemMoi !== null) {
+                    setModifiedDiemDinhChinhRecords([...modifiedDiemDinhChinhRecords, modifiedDiemDinhChinhRecord]);
+                  }
                   setTableData(newData)
                 }}
                 isEditing={isEditing}
@@ -249,10 +253,18 @@ function EditableCell({ value, onChange, isEditing }) {
       type="number"
       value={editValue}
       onChange={(e) => {
-        const newValue = e.target.value
-        setEditValue(newValue)
-        const numValue = parseFloat(newValue) || 0
-        onChange(numValue)
+        const newValue = e.target.value;
+        // Allow empty, numbers, and single decimal point
+        if (newValue === '' || /^\d*\.?\d*$/.test(newValue)) {
+          setEditValue(newValue);
+          const numValue = parseFloat(newValue);
+          if (isNaN(numValue)) {
+            onChange(null)
+          }
+          else {
+            onChange(numValue)
+          }
+        }
       }}
       className="h-8 w-16 text-center"
       min={0}
