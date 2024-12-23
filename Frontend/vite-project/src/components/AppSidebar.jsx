@@ -60,7 +60,7 @@ const truongKhoaItem = [
 ]
 const giangvienitem = [
   {
-    title: "L���p học phần",
+    title: "Lớp học phần",
     url: "/lophocphan",
     icon: LopHocPhanIcon,
   },
@@ -333,7 +333,11 @@ export function AppSidebar() {
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton
                                 href={subItem.url}
-                                onClick={handleSubItemClick} // Ngăn chặn sự kiện click lan ra ngoài
+                                className={`flex items-center p-2 rounded-lg ${
+                                  location.pathname === subItem.url
+                                    ? "bg-blue-100 text-blue-600"
+                                    : "hover:bg-gray-100"
+                                }`}
                               >
                                 {subItem.title}
                               </SidebarMenuSubButton>
