@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Student_Result_Management_System.DTOs.DiemDinhChinh;
@@ -18,9 +19,9 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId)
         {
-            var diemDinhChinhs = await _diemDinhChinhService.GetDiemDinhChinhsAsync();
+            var diemDinhChinhs = await _diemDinhChinhService.GetDiemDinhChinhsAsync(lopHocPhanId);
             return Ok(diemDinhChinhs);
         }
 
@@ -70,6 +71,18 @@ namespace Student_Result_Management_System.Controllers
             if (!isDeleted)
                 return NotFound();
             return NoContent();
+        }
+
+        [Authorize(Roles = "Admin,PhongDaoTao")]
+        [HttpPost("accept/{id}")]
+        public async Task<IActionResult> Accept([FromRoute] int id)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+            var userIdInt = int.Parse(userId?? "0");
+            var result = await _diemDinhChinhService.AcceptDiemDinhChinhAsync(id, userIdInt);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
     }
 }

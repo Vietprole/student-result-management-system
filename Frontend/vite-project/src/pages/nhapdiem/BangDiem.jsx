@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 // import { getStudents, getGradeComponents, getQuestions, getGrades } from "@/lib/api"
 import { GradeTable } from "@/components/GradeTable";
 // import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"
@@ -14,76 +14,78 @@ export default function GradesPage() {
   const [components, setComponents] = useState([]);
   const [questions, setQuestions] = useState([]);
   const { lopHocPhanId } = useParams();
-  useEffect(() => {
-    const fetchData = async () => {
-      // Fetch all required data
-      const [students, components, allGrades] = await Promise.all([
-        // getStudents(),
-        getSinhViens(null, lopHocPhanId),
-        // getGradeComponents(),
-        getBaiKiemTrasByLopHocPhanId(lopHocPhanId),
-        // getGrades(),
-        getAllKetQuas(),
-      ]);
-      setComponents(components);
 
-      // Fetch questions for each component
-      const questionsPromises = components.map(async (component) => ({
-        componentId: component.id,
-        // questions: await getQuestions(component.id),
-        questions: await getCauHoisByBaiKiemTraId(component.id),
-      }));
-      const questionsData = await Promise.all(questionsPromises);
-      const questions = Object.fromEntries(
-        questionsData.map(({ componentId, questions }) => [
-          // componentId.toString(),
-          componentId,
-          questions,
+  const fetchData = useCallback(async () => {
+    // Fetch all required data
+    const [students, components, allGrades] = await Promise.all([
+      // getStudents(),
+      getSinhViens(null, lopHocPhanId),
+      // getGradeComponents(),
+      getBaiKiemTrasByLopHocPhanId(lopHocPhanId),
+      // getGrades(),
+      getAllKetQuas(),
+    ]);
+    setComponents(components);
+
+    // Fetch questions for each component
+    const questionsPromises = components.map(async (component) => ({
+      componentId: component.id,
+      // questions: await getQuestions(component.id),
+      questions: await getCauHoisByBaiKiemTraId(component.id),
+    }));
+    const questionsData = await Promise.all(questionsPromises);
+    const questions = Object.fromEntries(
+      questionsData.map(({ componentId, questions }) => [
+        // componentId.toString(),
+        componentId,
+        questions,
+      ])
+    );
+    setQuestions(questions);
+
+    // Transform data into the required format
+    const tableData = students.map((student) => ({
+      ...student,
+      // tt: index + 1, // Add tt (ordinal number) to each student
+      grades: Object.fromEntries(
+        components.map((component) => [
+          component.loai,
+          Object.fromEntries(
+            (questions[component.id.toString()] || []).map((question) => {
+              const grade = allGrades.find(
+                (g) =>
+                  g.sinhVienId === student.id && g.cauHoiId === question.id
+              );
+              console.log("grade", grade);
+              // return [question.id.toString(), grade?.diem || 0];
+              // return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
+              return [question.id, grade?.diemTam || 0];
+            })
+          ),
         ])
-      );
-      setQuestions(questions);
-
-      // Transform data into the required format
-      const tableData = students.map((student) => ({
-        ...student,
-        // tt: index + 1, // Add tt (ordinal number) to each student
-        grades: Object.fromEntries(
-          components.map((component) => [
-            component.loai,
-            Object.fromEntries(
-              (questions[component.id.toString()] || []).map((question) => {
-                const grade = allGrades.find(
-                  (g) =>
-                    g.sinhVienId === student.id && g.cauHoiId === question.id
-                );
-                console.log("grade", grade);
-                // return [question.id.toString(), grade?.diem || 0];
-                // return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
-                return [question.id, grade?.diemTam || 0];
-              })
-            ),
-          ])
-        ),
-        ketQuas: Object.fromEntries(
-          components.map((component) => [
-            component.loai,
-            Object.fromEntries(
-              (questions[component.id.toString()] || []).map((question) => {
-                const grade = allGrades.find(
-                  (g) =>
-                    g.sinhVienId === student.id && g.cauHoiId === question.id
-                );
-                // return [question.id.toString(), grade?.diem || 0];
-                return [question.id, grade?.id || 0];
-              })
-            ),
-          ])
-        ),
-      }));
-      setTableData(tableData);
-    };
-    fetchData();
+      ),
+      ketQuas: Object.fromEntries(
+        components.map((component) => [
+          component.loai,
+          Object.fromEntries(
+            (questions[component.id.toString()] || []).map((question) => {
+              const grade = allGrades.find(
+                (g) =>
+                  g.sinhVienId === student.id && g.cauHoiId === question.id
+              );
+              // return [question.id.toString(), grade?.diem || 0];
+              return [question.id, grade?.id || 0];
+            })
+          ),
+        ])
+      ),
+    }));
+    setTableData(tableData);
   }, [lopHocPhanId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div>
@@ -92,6 +94,7 @@ export default function GradesPage() {
       {tableData.length > 0 && (
         <GradeTable
           data={tableData}
+          fetchData={fetchData}
           components={components}
           questions={questions}
         />

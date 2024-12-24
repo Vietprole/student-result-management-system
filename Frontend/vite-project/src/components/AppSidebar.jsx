@@ -64,6 +64,11 @@ const giangVienItem = [
     icon: LopHocPhanIcon,
   },
   {
+    title: "Điểm Đính Chính",
+    url: "/diemdinhchinh",
+    icon: LopHocPhanIcon,
+  },
+  {
     title: "Kết quả học tập",
     url: "/ketqua",
     icon: KetQuaIcon,
@@ -162,6 +167,11 @@ const adminItem = [
   {
     title: "Nhập điểm",
     url: "/nhapdiem",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Điểm Đính Chính",
+    url: "/diemdinhchinh",
     icon: LopHocPhanIcon,
   },
   {

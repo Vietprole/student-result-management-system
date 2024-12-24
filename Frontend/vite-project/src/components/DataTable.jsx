@@ -52,6 +52,7 @@ export default function DataTable({
   parentEntity,
   comboBoxItems,
   addItemsToParent,
+  hasCreateButton = true,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -155,9 +156,11 @@ export default function DataTable({
           </DropdownMenu>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="ml-2">
-                Tạo {entity}
-              </Button>
+              {hasCreateButton && (
+                <Button variant="outline" className="ml-2">
+                  Tạo {entity}
+                </Button>
+              )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>

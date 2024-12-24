@@ -26,6 +26,7 @@ import BaoCaoCLO from "@/pages/nhapdiem/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
 import { getRole } from "@/utils/storage";
 import BangDiemGiangVienPage from "@/pages/nhapdiem/BangDiemGiangVienPage";
+import DiemDinhChinhPage from "@/pages/DiemDinhChinhPage";
 
 const role = getRole();
 const RoleBasedRoute = ({ giangVienElement, defaultElement }) => {
@@ -91,6 +92,10 @@ const routes = [
       { path: ":lopHocPhanId/tong-ket-clo", element: <TongKetCLO /> },
       { path: ":lopHocPhanId/bao-cao-clo", element: <BaoCaoCLO /> },
     ],
+  },
+  {
+    path: "/diemdinhchinh",
+    element: <DiemDinhChinhPage />,
   },
   {
     path: "/ketqua",

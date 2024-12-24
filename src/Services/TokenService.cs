@@ -37,6 +37,7 @@ namespace Student_Result_Management_System.Services
              var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim("userId",user.Id.ToString()),
                 new Claim("fullname",user.Ten),
                 new Claim(ClaimTypes.Role,user.ChucVu.TenChucVu),
                 new Claim("giangVienId", giangVienId.ToString() ?? "")

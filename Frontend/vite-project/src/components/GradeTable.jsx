@@ -16,9 +16,12 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { upsertKetQua } from "@/api/api-ketqua"
 import { upsertDiemDinhChinh } from "@/api/api-diemdinhchinh"
+import { useToast } from "@/hooks/use-toast";
+import { Description } from "@radix-ui/react-dialog"
 
 export function GradeTable({
   data,
+  fetchData,
   components,
   questions,
   isGiangVienMode,
@@ -27,6 +30,7 @@ export function GradeTable({
   const [isEditing, setIsEditing] = React.useState(false)
   const [modifiedRecords, setModifiedRecords] = React.useState([])
   const [modifiedDiemDinhChinhRecords, setModifiedDiemDinhChinhRecords] = React.useState([])
+  const { toast } = useToast();
 
   React.useEffect(() => {
     setTableData(data)
@@ -83,7 +87,7 @@ export function GradeTable({
                   }
                   
                   newData[rowIndex].grades[componentId][questionId] = value
-                  const ketQuaId = newData[rowIndex].ketQuas[componentId][questionId];
+                  // const ketQuaId = newData[rowIndex].ketQuas[componentId][questionId];
                   const modifiedRecord = {
                     sinhVienId: newData[rowIndex].id,
                     cauHoiId: parseInt(questionId),
@@ -91,7 +95,8 @@ export function GradeTable({
                   }
 
                   const modifiedDiemDinhChinhRecord = {
-                    ketQuaId: ketQuaId,
+                    sinhVienId: newData[rowIndex].id,
+                    cauHoiId: parseInt(questionId),
                     diemMoi: value,
                   }
                   console.log("modifiedRecord", modifiedRecord);
@@ -138,6 +143,7 @@ export function GradeTable({
       try {
         console.log("modifiedRecords[i]", modifiedRecords[i]);
         await upsertKetQua(modifiedRecords[i]);
+        fetchData();
       } catch (error) {
         console.error(`Error updating record for sinhVienId ${modifiedRecords[i].sinhVienId}:`, error);
       }
@@ -150,10 +156,16 @@ export function GradeTable({
       try {
         console.log("modifiedDiemDinhChinhRecords[i]", modifiedDiemDinhChinhRecords[i]);
         await upsertDiemDinhChinh(modifiedDiemDinhChinhRecords[i]);
+        fetchData();
       } catch (error) {
         console.error(`Error updating Diem Dinh Chinh record for ketQuaId ${modifiedDiemDinhChinhRecords[i].ketQuaId}:`, error);
       }
     }
+    toast({
+      title: "Đã cập nhật điểm đính chính",
+      description: "Xem điểm đính chính đã tạo ở mục Điểm Đính Chính",
+      variant: "success",
+    });
   }
 
   // function that compare date to today and return the result

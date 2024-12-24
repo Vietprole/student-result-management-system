@@ -4,9 +4,29 @@ import { getAccessToken } from "../utils/storage";
 
 const API_DIEMDINHCHINH = `${API_BASE_URL}/api/diemdinhchinh`;
 
-export const upsertDiemDinhChinh = async (diemDinhChinhData) => {
+// export const getDiemDinhChinhsByLopHocPhanId = async (lopHocPhanId) => {
+//   try {
+//     const response = await axios.get(`${API_DIEMDINHCHINH}?lopHocPhanId=${lopHocPhanId}`);
+//     return response.data;
+//   } catch (error) {
+//     console.log("error message: ", error.message);
+//   }
+// };
+
+export const getAllDiemDinhChinhs = async () => {
   try {
-    const response = await axios.put(`${API_DIEMDINHCHINH}/upsert`, diemDinhChinhData, {
+    const response = await axios.get(API_DIEMDINHCHINH, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+export const getDiemDinhChinhs = async (lopHocPhanId) => {
+  try {
+    const response = await axios.get(`${API_DIEMDINHCHINH}?lopHocPhanId=${lopHocPhanId}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -14,3 +34,62 @@ export const upsertDiemDinhChinh = async (diemDinhChinhData) => {
     console.log("error message: ", error.message);
   }
 }
+
+// Function to get a single diemdinhchinh by ID
+export const getDiemDinhChinhById = async (diemdinhchinhId) => {
+  try {
+    const response = await axios.get(`${API_DIEMDINHCHINH}/${diemdinhchinhId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+// Function to add a new diemdinhchinh
+export const addDiemDinhChinh = async (diemdinhchinhData) => {
+  try {
+    const response = await axios.post(API_DIEMDINHCHINH, diemdinhchinhData, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+// Function to update an existing diemdinhchinh
+export const updateDiemDinhChinh = async (diemDinhChinhId, updatedData) => {
+  try {
+    const response = await axios.put(`${API_DIEMDINHCHINH}/${diemDinhChinhId}`, updatedData, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};
+
+export const upsertDiemDinhChinh = async (diemdinhchinhData) => {
+  try {
+    const response = await axios.put(`${API_DIEMDINHCHINH}/upsert`, diemdinhchinhData, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+// Function to delete a diemdinhchinh
+export const deleteDiemDinhChinh = async (diemdinhchinhId) => {
+  try {
+    const response = await axios.delete(`${API_DIEMDINHCHINH}/${diemdinhchinhId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};

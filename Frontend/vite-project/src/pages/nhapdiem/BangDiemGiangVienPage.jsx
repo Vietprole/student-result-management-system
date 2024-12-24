@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 // import { getStudents, getGradeComponents, getQuestions, getGrades } from "@/lib/api"
 import { GradeTable } from "@/components/GradeTable";
 // import { StudentGrades, GradeComponent, Question, Grade } from "@/types/grades"
@@ -23,82 +23,84 @@ export default function BangDiemGiangVienPage() {
   const [baiKiemTraItems, setBaiKiemTraItems] = useState([]);
   const [baiKiemTraId, setBaiKiemTraId] = useState(baiKiemTraIdParam);
   const [comboBoxBaiKiemTraId, setComboBoxBaiKiemTraId] = useState(baiKiemTraIdParam);
-  useEffect(() => {
-    const fetchData = async () => {
-      // Fetch all required data
-      const [students, component, allGrades] = await Promise.all([
-        // getStudents(),
-        getSinhViens(null, lopHocPhanId),
-        // getGradeComponents(),
-        getBaiKiemTraById(baiKiemTraId),
-        // getGrades(),
-        getAllKetQuas(),
-      ]);
-      // Map khoa items to be used in ComboBox
-      const components = [component];
-      setComponents(components);
-      const baiKiemTraData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
-      const mappedComboBoxItems = baiKiemTraData.map(baiKiemTra => ({ label: baiKiemTra.loai, value: baiKiemTra.id }));
-      setBaiKiemTraItems(mappedComboBoxItems);
 
-      // Fetch questions for each component
-      const questionsPromises = components.map(async (component) => ({
-        componentId: component.id,
-        // questions: await getQuestions(component.id),
-        questions: await getCauHoisByBaiKiemTraId(baiKiemTraId),
-      }));
+  const fetchData = useCallback(async () => {
+    // Fetch all required data
+    const [students, component, allGrades] = await Promise.all([
+      // getStudents(),
+      getSinhViens(null, lopHocPhanId),
+      // getGradeComponents(),
+      getBaiKiemTraById(baiKiemTraId),
+      // getGrades(),
+      getAllKetQuas(),
+    ]);
+    // Map khoa items to be used in ComboBox
+    const components = [component];
+    setComponents(components);
+    const baiKiemTraData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
+    const mappedComboBoxItems = baiKiemTraData.map(baiKiemTra => ({ label: baiKiemTra.loai, value: baiKiemTra.id }));
+    setBaiKiemTraItems(mappedComboBoxItems);
 
-      const questionsData = await Promise.all(questionsPromises);
-      // const questionsData = await getCauHoisByBaiKiemTraId(baiKiemTraId);
-      const questions = Object.fromEntries(
-        questionsData.map(({ componentId, questions }) => [
-          // componentId.toString(),
-          componentId,
-          questions,
+    // Fetch questions for each component
+    const questionsPromises = components.map(async (component) => ({
+      componentId: component.id,
+      // questions: await getQuestions(component.id),
+      questions: await getCauHoisByBaiKiemTraId(baiKiemTraId),
+    }));
+
+    const questionsData = await Promise.all(questionsPromises);
+    // const questionsData = await getCauHoisByBaiKiemTraId(baiKiemTraId);
+    const questions = Object.fromEntries(
+      questionsData.map(({ componentId, questions }) => [
+        // componentId.toString(),
+        componentId,
+        questions,
+      ])
+    );
+    setQuestions(questions);
+    
+
+    // Transform data into the required format
+    const tableData = students.map((student) => ({
+      ...student,
+      // tt: index + 1, // Add tt (ordinal number) to each student
+      grades: Object.fromEntries(
+        components.map((component) => [
+          component.loai,
+          Object.fromEntries(
+            (questions[component.id.toString()] || []).map((question) => {
+              const grade = allGrades.find(
+                (g) =>
+                  g.sinhVienId === student.id && g.cauHoiId === question.id
+              );
+              // return [question.id.toString(), grade?.diem || 0];
+              return [question.id, grade?.diemTam || 0];
+            })
+          ),
         ])
-      );
-      setQuestions(questions);
-      
+      ),
+      ketQuas: Object.fromEntries(
+        components.map((component) => [
+          component.loai,
+          Object.fromEntries(
+            (questions[component.id.toString()] || []).map((question) => {
+              const grade = allGrades.find(
+                (g) =>
+                  g.sinhVienId === student.id && g.cauHoiId === question.id
+              );
+              // return [question.id.toString(), grade?.diem || 0];
+              return [question.id, grade?.id || 0];
+            })
+          ),
+        ])
+      ),
+    }));
+    setTableData(tableData);
+  },[baiKiemTraId, lopHocPhanId]);
 
-      // Transform data into the required format
-      const tableData = students.map((student) => ({
-        ...student,
-        // tt: index + 1, // Add tt (ordinal number) to each student
-        grades: Object.fromEntries(
-          components.map((component) => [
-            component.loai,
-            Object.fromEntries(
-              (questions[component.id.toString()] || []).map((question) => {
-                const grade = allGrades.find(
-                  (g) =>
-                    g.sinhVienId === student.id && g.cauHoiId === question.id
-                );
-                // return [question.id.toString(), grade?.diem || 0];
-                return [question.id, grade?.diemTam || 0];
-              })
-            ),
-          ])
-        ),
-        ketQuas: Object.fromEntries(
-          components.map((component) => [
-            component.loai,
-            Object.fromEntries(
-              (questions[component.id.toString()] || []).map((question) => {
-                const grade = allGrades.find(
-                  (g) =>
-                    g.sinhVienId === student.id && g.cauHoiId === question.id
-                );
-                // return [question.id.toString(), grade?.diem || 0];
-                return [question.id, grade?.id || 0];
-              })
-            ),
-          ])
-        ),
-      }));
-      setTableData(tableData);
-    };
+  useEffect(() => {
     fetchData();
-  }, [lopHocPhanId, baiKiemTraId]);
+  }, [fetchData]);
 
   const handleGoClick = () => {
     setBaiKiemTraId(comboBoxBaiKiemTraId);
@@ -135,6 +137,7 @@ export default function BangDiemGiangVienPage() {
       {tableData.length > 0 && (
         <GradeTable
           data={tableData}
+          fetchData={fetchData}
           components={components}
           questions={questions}
           isGiangVienMode={true}

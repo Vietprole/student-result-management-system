@@ -12,22 +12,58 @@ namespace Student_Result_Management_System.Services
     public class DiemDinhChinhService : IDiemDinhChinhService
     {
         private readonly ApplicationDBContext _context;
+        private readonly ILogger<KetQuaService> _logger;
 
-        public DiemDinhChinhService(ApplicationDBContext context)
+        public DiemDinhChinhService(ApplicationDBContext context, ILogger<KetQuaService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync()
+        public async Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId)
         {
-            var diemDinhChinhs = await _context.DiemDinhChinhs.Include(ddc => ddc.NguoiDuyet).ToListAsync();
-            return diemDinhChinhs.Select(ddc => ddc.ToDiemDinhChinhDTO()).ToList();
+            var query = _context.DiemDinhChinhs
+                .Include(ddc => ddc.NguoiDuyet)
+                .Include(ddc => ddc.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                .Include(ddc => ddc.SinhVien)
+                    .ThenInclude(sv => sv.TaiKhoan)
+                .AsQueryable();
+
+            if (lopHocPhanId.HasValue)
+            {
+                query = query.Where(ddc => ddc.CauHoi.BaiKiemTra.LopHocPhanId == lopHocPhanId);
+            }
+
+            var diemDinhChinhs = await query.ToListAsync();
+            var ketQuas = await _context.KetQuas
+                .Where(k => diemDinhChinhs.Select(d => d.SinhVienId).Contains(k.SinhVienId) 
+                    && diemDinhChinhs.Select(d => d.CauHoiId).Contains(k.CauHoiId))
+                .ToDictionaryAsync(k => (k.SinhVienId, k.CauHoiId), k => k.DiemTam);
+
+            return diemDinhChinhs.Select(ddc => ddc.ToDiemDinhChinhDTO(
+                ketQuas.TryGetValue((ddc.SinhVienId, ddc.CauHoiId), out var diemTam) ? diemTam : null
+            )).ToList();
         }
 
         public async Task<DiemDinhChinhDTO?> GetDiemDinhChinhByIdAsync(int id)
         {
-            var diemDinhChinh = await _context.DiemDinhChinhs.Include(ddc => ddc.NguoiDuyet).FirstOrDefaultAsync(x => x.Id == id);
-            return diemDinhChinh?.ToDiemDinhChinhDTO();
+            var diemDinhChinh = await _context.DiemDinhChinhs
+                .Include(ddc => ddc.NguoiDuyet)
+                .Include(ddc => ddc.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                .Include(ddc => ddc.SinhVien)
+                    .ThenInclude(sv => sv.TaiKhoan).FirstOrDefaultAsync(x => x.Id == id);
+
+            if (diemDinhChinh == null)
+                return null;
+
+            var ketQua = await _context.KetQuas
+                .FirstOrDefaultAsync(k => 
+                    k.SinhVienId == diemDinhChinh.SinhVienId && 
+                    k.CauHoiId == diemDinhChinh.CauHoiId);
+
+            return diemDinhChinh.ToDiemDinhChinhDTO(ketQua?.DiemTam);
         }
 
         public async Task<DiemDinhChinhDTO> CreateDiemDinhChinhAsync(CreateDiemDinhChinhDTO createDTO)
@@ -45,9 +81,16 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
+            // log the diemDinhChinh
+            _logger.LogInformation("DiemDinhChinh Id: {id}", id);
+            _logger.LogInformation("DiemDinhChinh before update: {diemDinhChinh}", diemDinhChinh);
+
             diemDinhChinh = updateDTO.ToDiemDinhChinhFromUpdateDTO(diemDinhChinh);
+            // log the updated diemDinhChinh
+            _logger.LogInformation("DiemDinhChinh after update: {diemDinhChinh}", diemDinhChinh);
             await _context.SaveChangesAsync();
-            return diemDinhChinh.ToDiemDinhChinhDTO();
+
+            return await GetDiemDinhChinhByIdAsync(id) ?? throw new Exception("Failed to update DiemDinhChinh");
         }
 
         public async Task<DiemDinhChinhDTO> UpsertDiemDinhChinhAsync(UpdateDiemDinhChinhDTO updateDTO)
@@ -65,8 +108,8 @@ namespace Student_Result_Management_System.Services
             {
                 var newDiemDinhChinh = new DiemDinhChinh
                 {
-                    SinhVienId = updateDTO.SinhVienId,
-                    CauHoiId = updateDTO.CauHoiId,
+                    SinhVienId = updateDTO.SinhVienId ?? throw new Exception("SinhVienId is required"),
+                    CauHoiId = updateDTO.CauHoiId ?? throw new Exception("CauHoiId is required"),
                     DiemMoi = updateDTO.DiemMoi ?? 0,
                     ThoiDiemMo = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
                     DuocDuyet = false
@@ -76,7 +119,7 @@ namespace Student_Result_Management_System.Services
             }
 
             await _context.SaveChangesAsync();
-            return existingDiemDinhChinh.ToDiemDinhChinhDTO();
+            return await GetDiemDinhChinhByIdAsync(existingDiemDinhChinh.Id) ?? throw new Exception("Failed to upsert DiemDinhChinh");
         }
 
         public async Task<bool> DeleteDiemDinhChinhAsync(int id)
@@ -89,6 +132,16 @@ namespace Student_Result_Management_System.Services
             _context.DiemDinhChinhs.Remove(diemDinhChinh);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<DiemDinhChinhDTO?> AcceptDiemDinhChinhAsync(int diemDinhChinhId, int nguoiDuyetId)
+        {
+            var diemDinhChinh = await _context.DiemDinhChinhs.FindAsync(diemDinhChinhId) ?? throw new NotFoundException("Không tìm thấy Điểm Đính Chính");
+            diemDinhChinh.DuocDuyet = true;
+            diemDinhChinh.ThoiDiemDuyet = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+            diemDinhChinh.NguoiDuyetId = nguoiDuyetId;
+            await _context.SaveChangesAsync();
+            return await GetDiemDinhChinhByIdAsync(diemDinhChinhId) ?? throw new Exception("Không thể duyệt Điểm Đính Chính");
         }
     }
 }
