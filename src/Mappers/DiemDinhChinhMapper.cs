@@ -23,6 +23,7 @@ public static class DiemDinhChinhMapper
             TrongSo = ddc.CauHoi.TrongSo,
             ThangDiem = ddc.CauHoi.ThangDiem,
             ThoiDiemMo = DateTime.SpecifyKind(ddc.ThoiDiemMo, DateTimeKind.Utc),
+            TenGiangVien = ddc.CauHoi.BaiKiemTra.LopHocPhan.GiangVien?.TaiKhoan?.Ten ?? "Lỗi tài khoản",
             ThoiDiemDuyet = ddc.ThoiDiemDuyet.HasValue ? DateTime.SpecifyKind(ddc.ThoiDiemDuyet.Value, DateTimeKind.Utc) : null,
             DuocDuyet = ddc.DuocDuyet,
             NguoiDuyetId = ddc.NguoiDuyetId,

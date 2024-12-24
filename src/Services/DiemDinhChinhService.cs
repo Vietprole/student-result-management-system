@@ -26,6 +26,9 @@ namespace Student_Result_Management_System.Services
                 .Include(ddc => ddc.NguoiDuyet)
                 .Include(ddc => ddc.CauHoi)
                     .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                    .ThenInclude(lhp => lhp.GiangVien)
+                    .ThenInclude(gv => gv!.TaiKhoan)
                 .Include(ddc => ddc.SinhVien)
                     .ThenInclude(sv => sv.TaiKhoan)
                 .AsQueryable();
@@ -52,6 +55,9 @@ namespace Student_Result_Management_System.Services
                 .Include(ddc => ddc.NguoiDuyet)
                 .Include(ddc => ddc.CauHoi)
                     .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                    .ThenInclude(lhp => lhp.GiangVien)
+                    .ThenInclude(gv => gv!.TaiKhoan)
                 .Include(ddc => ddc.SinhVien)
                     .ThenInclude(sv => sv.TaiKhoan).FirstOrDefaultAsync(x => x.Id == id);
 
@@ -137,9 +143,35 @@ namespace Student_Result_Management_System.Services
         public async Task<DiemDinhChinhDTO?> AcceptDiemDinhChinhAsync(int diemDinhChinhId, int nguoiDuyetId)
         {
             var diemDinhChinh = await _context.DiemDinhChinhs.FindAsync(diemDinhChinhId) ?? throw new NotFoundException("Không tìm thấy Điểm Đính Chính");
+            // Find or create KetQua
+            var ketQua = await _context.KetQuas
+                .FirstOrDefaultAsync(k => 
+                    k.SinhVienId == diemDinhChinh.SinhVienId && 
+                    k.CauHoiId == diemDinhChinh.CauHoiId);
+
+            if (ketQua == null)
+            {
+                ketQua = new KetQua
+                {
+                    SinhVienId = diemDinhChinh.SinhVienId,
+                    CauHoiId = diemDinhChinh.CauHoiId,
+                    DiemTam = -1,
+                    DiemChinhThuc = diemDinhChinh.DiemMoi,
+                    DaCongBo = false,
+                    DaXacNhan = false
+                };
+                await _context.KetQuas.AddAsync(ketQua);
+            }
+            else
+            {
+                ketQua.DiemChinhThuc = diemDinhChinh.DiemMoi;
+            }
+
+            // Update DiemDinhChinh
             diemDinhChinh.DuocDuyet = true;
-            diemDinhChinh.ThoiDiemDuyet = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
             diemDinhChinh.NguoiDuyetId = nguoiDuyetId;
+            diemDinhChinh.ThoiDiemDuyet = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+
             await _context.SaveChangesAsync();
             return await GetDiemDinhChinhByIdAsync(diemDinhChinhId) ?? throw new Exception("Không thể duyệt Điểm Đính Chính");
         }

@@ -74,15 +74,19 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [Authorize(Roles = "Admin,PhongDaoTao")]
-        [HttpPost("accept/{id}")]
+        [HttpPost("{id}/accept")]
         public async Task<IActionResult> Accept([FromRoute] int id)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
             var userIdInt = int.Parse(userId?? "0");
-            var result = await _diemDinhChinhService.AcceptDiemDinhChinhAsync(id, userIdInt);
-            if (result == null)
-                return NotFound();
-            return Ok(result);
+            try {
+                var result = await _diemDinhChinhService.AcceptDiemDinhChinhAsync(id, userIdInt);
+                return Ok(result);
+            } catch (BusinessLogicException ex) {
+                return BadRequest(ex.Message);
+            } catch (NotFoundException ex) {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

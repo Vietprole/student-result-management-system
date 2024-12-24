@@ -7,6 +7,7 @@ import {
   getDiemDinhChinhs,
   // getAllDiemDinhChinhs,
   deleteDiemDinhChinh,
+  acceptDiemDinhChinh,
 } from "@/api/api-diemdinhchinh";
 import {
   DropdownMenu,
@@ -70,6 +71,23 @@ export default function DiemDinhChinhPage() {
     }
     navigate(`/diemdinhchinh?lophocphanId=${comboBoxLopHocPhanId}`);
   };
+
+  const handleAccept = async (id) => {
+    await acceptDiemDinhChinh(id);
+    fetchData();
+  }
+  
+  const formatDate = (date) => {
+    return date ? new Date(date).toLocaleDateString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }) : '';
+  }
 
   // function that compare date to today and return the result
   const isDatePassed = (dateString) => {
@@ -178,7 +196,7 @@ export default function DiemDinhChinhPage() {
           );
         },
         cell: ({ row }) => {
-          if (row.getValue("diemCu") === null) {
+          if (row.getValue("diemCu") === null || row.getValue("diemCu") === -1) {
             return <div className="px-4 py-2">Chưa nhập</div>;
           }
           return <div className="px-4 py-2">{row.getValue("diemCu")}</div>;
@@ -288,8 +306,28 @@ export default function DiemDinhChinhPage() {
             </Button>
           );
         },
+        cell: ({ row }) => {
+          const date = formatDate(row.getValue("thoiDiemMo"));
+          return <div className="px-4 py-2">{date}</div>;
+        },
+      },
+      {
+        accessorKey: "tenGiangVien",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              Giảng Viên Mở
+              <ArrowUpDown />
+            </Button>
+          );
+        },
         cell: ({ row }) => (
-          <div className="px-4 py-2">{row.getValue("thoiDiemMo")}</div>
+          <div className="px-4 py-2">{row.getValue("tenGiangVien")}</div>
         ),
       },
       {
@@ -307,9 +345,10 @@ export default function DiemDinhChinhPage() {
             </Button>
           );
         },
-        cell: ({ row }) => (
-          <div className="px-4 py-2">{row.getValue("thoiDiemDuyet")}</div>
-        ),
+        cell: ({ row }) => {
+          const date = formatDate(row.getValue("thoiDiemDuyet"));
+          return <div className="px-4 py-2">{date}</div>;
+        },
       },
       {
         accessorKey: "tenNguoiDuyet",

@@ -15,6 +15,7 @@ public class DiemDinhChinhDTO
 	public decimal TrongSo { get; set; }
 	public decimal ThangDiem { get; set; }
 	public DateTime ThoiDiemMo { get; set; }
+	public string TenGiangVien { get; set; } = string.Empty;
 	public DateTime? ThoiDiemDuyet { get; set; }
 	public bool DuocDuyet { get; set; }
 	public int? NguoiDuyetId { get; set; }

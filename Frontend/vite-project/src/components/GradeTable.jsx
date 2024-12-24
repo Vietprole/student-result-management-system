@@ -188,6 +188,13 @@ export function GradeTable({
           {isEditing ? "Lưu" : "Sửa Điểm"}
         </Button>
       )}
+      {isGiangVienMode && (
+        <Button
+          onClick={() => isEditing ? handleSaveDinhChinh() : setIsEditing(true)}
+        >
+          Xác nhận
+        </Button>
+      )}
       {canDinhChinhDiem && (
         <Button
           onClick={() => isEditing ? handleSaveDinhChinh() : setIsEditing(true)}

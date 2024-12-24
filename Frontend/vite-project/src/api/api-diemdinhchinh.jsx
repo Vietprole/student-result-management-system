@@ -93,3 +93,15 @@ export const deleteDiemDinhChinh = async (diemdinhchinhId) => {
     console.log("error message: ", error.message);
   }
 };
+
+export const acceptDiemDinhChinh = async (diemdinhchinhId) => {
+  try {
+    console.log(getAccessToken());
+    const response = await axios.post(`${API_DIEMDINHCHINH}/${diemdinhchinhId}/accept`, {}, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
