@@ -155,7 +155,7 @@ namespace Student_Result_Management_System.Services
                 {
                     SinhVienId = diemDinhChinh.SinhVienId,
                     CauHoiId = diemDinhChinh.CauHoiId,
-                    DiemTam = -1,
+                    DiemTam = null,
                     DiemChinhThuc = diemDinhChinh.DiemMoi,
                     DaCongBo = false,
                     DaXacNhan = false

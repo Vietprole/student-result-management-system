@@ -58,27 +58,12 @@ export default function GradesPage() {
               );
               console.log("grade", grade);
               // return [question.id.toString(), grade?.diem || 0];
-              // return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
-              return [question.id, grade?.diemTam || 0];
+              return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
+              // return [question.id, grade?.diemTam || 0];
             })
           ),
         ])
-      ),
-      ketQuas: Object.fromEntries(
-        components.map((component) => [
-          component.loai,
-          Object.fromEntries(
-            (questions[component.id.toString()] || []).map((question) => {
-              const grade = allGrades.find(
-                (g) =>
-                  g.sinhVienId === student.id && g.cauHoiId === question.id
-              );
-              // return [question.id.toString(), grade?.diem || 0];
-              return [question.id, grade?.id || 0];
-            })
-          ),
-        ])
-      ),
+      )
     }));
     setTableData(tableData);
   }, [lopHocPhanId]);

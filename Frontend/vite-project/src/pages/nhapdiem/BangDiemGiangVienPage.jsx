@@ -5,7 +5,7 @@ import { GradeTable } from "@/components/GradeTable";
 import { getSinhViens } from "@/api/api-sinhvien";
 import { useParams } from "react-router-dom";
 import { getBaiKiemTraById, getBaiKiemTrasByLopHocPhanId } from "@/api/api-baikiemtra";
-import { getAllKetQuas } from "@/api/api-ketqua";
+import { getKetQuas } from "@/api/api-ketqua";
 import { getCauHoisByBaiKiemTraId } from "@/api/api-cauhoi";
 import { ComboBox } from "@/components/ComboBox";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ export default function BangDiemGiangVienPage() {
   const [baiKiemTraItems, setBaiKiemTraItems] = useState([]);
   const [baiKiemTraId, setBaiKiemTraId] = useState(baiKiemTraIdParam);
   const [comboBoxBaiKiemTraId, setComboBoxBaiKiemTraId] = useState(baiKiemTraIdParam);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const fetchData = useCallback(async () => {
     // Fetch all required data
@@ -32,7 +33,7 @@ export default function BangDiemGiangVienPage() {
       // getGradeComponents(),
       getBaiKiemTraById(baiKiemTraId),
       // getGrades(),
-      getAllKetQuas(),
+      getKetQuas(baiKiemTraId),
     ]);
     // Map khoa items to be used in ComboBox
     const components = [component];
@@ -40,6 +41,9 @@ export default function BangDiemGiangVienPage() {
     const baiKiemTraData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
     const mappedComboBoxItems = baiKiemTraData.map(baiKiemTra => ({ label: baiKiemTra.loai, value: baiKiemTra.id }));
     setBaiKiemTraItems(mappedComboBoxItems);
+
+    const isConfirmed = allGrades.every(grade => grade.daXacNhan);
+    setIsConfirmed(isConfirmed);
 
     // Fetch questions for each component
     const questionsPromises = components.map(async (component) => ({
@@ -74,26 +78,13 @@ export default function BangDiemGiangVienPage() {
                   g.sinhVienId === student.id && g.cauHoiId === question.id
               );
               // return [question.id.toString(), grade?.diem || 0];
-              return [question.id, grade?.diemTam || 0];
+              return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
+              // return [question.id, grade?.diemTam || 0];
             })
           ),
         ])
       ),
-      ketQuas: Object.fromEntries(
-        components.map((component) => [
-          component.loai,
-          Object.fromEntries(
-            (questions[component.id.toString()] || []).map((question) => {
-              const grade = allGrades.find(
-                (g) =>
-                  g.sinhVienId === student.id && g.cauHoiId === question.id
-              );
-              // return [question.id.toString(), grade?.diem || 0];
-              return [question.id, grade?.id || 0];
-            })
-          ),
-        ])
-      ),
+      cauHois: questions[component.id.toString()].map(q => q.id),
     }));
     setTableData(tableData);
   },[baiKiemTraId, lopHocPhanId]);
@@ -121,7 +112,7 @@ export default function BangDiemGiangVienPage() {
   }
   const ngayMoNhapDiem = formatDate(component.ngayMoNhapDiem);
   const hanNhapDiem = formatDate(component.hanNhapDiem);
-  const hanDinhChinh = formatDate(component.hanDinhChinh);    
+  const hanDinhChinh = formatDate(component.hanDinhChinh);
 
   return (
     <div>
@@ -141,6 +132,7 @@ export default function BangDiemGiangVienPage() {
           components={components}
           questions={questions}
           isGiangVienMode={true}
+          isConfirmed={isConfirmed}
         />
       )}
     </div>

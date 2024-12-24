@@ -24,9 +24,9 @@ namespace ketQua_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId) // async go with Task<> to make function asynchronous
         {
-            var ketQuaDTOs = await _ketQuaService.GetAllKetQuasAsync();
+            var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId);
             return Ok(ketQuaDTOs);
         }
 
@@ -76,6 +76,24 @@ namespace ketQua_Result_Management_System.Controllers
             if (!isDeleted)
                 return NotFound();
             return NoContent();
+        }
+
+        [Authorize(Roles = "Admin, GiangVien")]
+        [HttpPost("confirm")]
+        public async Task<IActionResult> Confirm([FromBody] ConfirmKetQuaDTO confirmKetQuaDTO)
+        {
+            try {
+                var ketQuaDTO = await _ketQuaService.ConfirmKetQuaAsync(confirmKetQuaDTO);
+                return Ok(ketQuaDTO);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("calculate-diem-clo")]

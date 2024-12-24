@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { upsertKetQua } from "@/api/api-ketqua"
+import { upsertKetQua, confirmKetQua } from "@/api/api-ketqua"
 import { upsertDiemDinhChinh } from "@/api/api-diemdinhchinh"
 import { useToast } from "@/hooks/use-toast";
-import { Description } from "@radix-ui/react-dialog"
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+import { DialogClose } from "@radix-ui/react-dialog"
 
 export function GradeTable({
   data,
@@ -25,11 +26,13 @@ export function GradeTable({
   components,
   questions,
   isGiangVienMode,
+  isConfirmed,
 }) {
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
   const [modifiedRecords, setModifiedRecords] = React.useState([])
   const [modifiedDiemDinhChinhRecords, setModifiedDiemDinhChinhRecords] = React.useState([])
+  console.log("isConfirmed", isConfirmed);
   const { toast } = useToast();
 
   React.useEffect(() => {
@@ -167,6 +170,54 @@ export function GradeTable({
       variant: "success",
     });
   }
+  console.log("components, questions", components, questions);
+
+  const handleConfirm = async () => {
+    try {
+      const hasNullGrades = tableData.some(record => 
+        Object.values(record.grades) // Get all grade objects
+          .flatMap(gradeObj => Object.values(gradeObj)) // Flatten values into single array
+          .some(grade => grade === null) // Check for null
+      );
+      if (hasNullGrades) {
+        toast({
+          title: "Chưa nhập đủ điểm",
+          description: "Vui lòng nhập đủ điểm cho tất cả sinh viên trước khi xác nhận",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const confirmKetQuaDTOs = tableData.flatMap(record => 
+        record.cauHois.map(cauHoiId => ({
+          sinhVienId: record.id,
+          cauHoiId: cauHoiId
+        }))
+      );
+
+      confirmKetQuaDTOs.forEach(async (confirmKetQuaDTO) => {
+        await confirmKetQua(confirmKetQuaDTO);
+        console.log(confirmKetQuaDTO);
+      });
+
+    } catch (error) {
+      console.error("Error confirming records:", error);
+      toast({
+        title: "Lỗi xác nhận điểm",
+        description: "Đã có lỗi xảy ra khi xác nhận điểm",
+        variant: "destructive",
+      });
+    }
+
+    toast({
+      title: "Đã xác nhận điểm",
+      description: "Điểm đã được xác nhận và không thể chỉnh sửa",
+      variant: "success",
+    });
+
+    fetchData();
+  }
+
 
   // function that compare date to today and return the result
   const isDatePassed = (dateString) => {
@@ -176,27 +227,48 @@ export function GradeTable({
   }
 
   const canEditDiem = !isGiangVienMode || (isGiangVienMode && isDatePassed(components[0].ngayMoNhapDiem) && !isDatePassed(components[0].hanNhapDiem));
-  const canDinhChinhDiem = isGiangVienMode && isDatePassed(components[0].hanNhapDiem) && !isDatePassed(components[0].hanDinhChinh);
+  const canDinhChinhDiem = isGiangVienMode && !isDatePassed(components[0].hanDinhChinh) && isConfirmed;
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-      {canEditDiem && (
-        <Button
-          onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
-        >
-          {isEditing ? "Lưu" : "Sửa Điểm"}
-        </Button>
-      )}
+      <div className="flex justify-end gap-1">
+      <Button
+        disabled={isConfirmed || !canEditDiem}
+        onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
+      >
+        {isEditing ? "Lưu" : "Sửa Điểm"}
+      </Button>
+      <Dialog>
+        <DialogTrigger asChild>
+        {isGiangVienMode && (
+          <Button
+            disabled={isConfirmed}
+            // onClick={handleConfirm}
+          >
+            {isConfirmed ? "Đã Xác Nhận" : "Xác Nhận"}
+          </Button>
+        )}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Xác nhận điểm</DialogTitle>
+            <DialogDescription>
+              Xác nhận điểm của sinh viên
+            </DialogDescription>
+          </DialogHeader>
+            <p>Điểm đã xác nhận thì không thể chỉnh sửa, bạn có muốn xác nhận?</p>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="submit" onClick={() => handleConfirm()}>
+                Xác nhận
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {isGiangVienMode && (
         <Button
-          onClick={() => isEditing ? handleSaveDinhChinh() : setIsEditing(true)}
-        >
-          Xác nhận
-        </Button>
-      )}
-      {canDinhChinhDiem && (
-        <Button
+          disabled={!canDinhChinhDiem}
           onClick={() => isEditing ? handleSaveDinhChinh() : setIsEditing(true)}
         >
           {isEditing ? "Lưu Đính Chính" : "Đính Chính Điểm"}
