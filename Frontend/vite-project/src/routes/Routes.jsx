@@ -10,7 +10,7 @@ import MapHocPhanPLOPage from "@/pages/MapHocPhanPLOPage";
 import LopHocPhanPage from "@/pages/LopHocPhanPage";
 import CongThucDiemPage from "@/pages/CongThucDiemPage";
 import NhapDiemPage from "@/pages/NhapDiemPage";
-import KetQuaPage from "@/pages/KetQuaPage";
+import KetQuaPage from "@/pages/KetQuaHocTapPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
 import HoSoCaNhanPage from "@/pages/HoSoCaNhanPage";
 import CaiDatPage from "@/pages/CaiDatPage";

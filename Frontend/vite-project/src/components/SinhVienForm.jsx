@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronsUpDown } from "lucide-react";
 import { addSinhVien, updateSinhVien } from "@/api/api-sinhvien";
 import { getAllKhoas } from "@/api/api-khoa";
+import { getAllNganhs } from "@/api/api-nganh";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Check } from "lucide-react";
@@ -29,6 +30,9 @@ const formSchema = z.object({
   khoaId: z.number({
     required_error: "Please select a Khoa.",
   }),
+  nganhId: z.number({
+    required_error: "Please select a Khoa.",
+  }),
   namNhapHoc: z.coerce.number(
     {
       message: "Nam Bat Dau must be a number",
@@ -36,19 +40,23 @@ const formSchema = z.object({
   ).min(4, {
     message: "Nam bat dau must be at least 4 characters.",
   })
-  .refine((val) => val > 2010 && val < 2024, {
-    message: "Trong so must be between 2010 and 2024",
+  .refine((val) => val >= 2000 && val <= 9999, {
+    message: "Trong so must be between 2000 and 9999",
   }),
 });
 
 export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen }) {
-  const [comboBoxItems, setComboBoxItems] = useState([]);
+  const [comboBoxKhoaItems, setComboBoxKhoaItems] = useState([]);
+  const [comboBoxNganhItems, setComboBoxNganhItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const comboBoxItems = await getAllKhoas();
-      const mappedComboBoxItems = comboBoxItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      setComboBoxItems(mappedComboBoxItems);
+      const comboBoxKhoaItems = await getAllKhoas();
+      const mappedComboBoxKhoaItems = comboBoxKhoaItems.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+      setComboBoxKhoaItems(mappedComboBoxKhoaItems);
+      const comboBoxNganhItems = await getAllNganhs();
+      const mappedComboBoxNganhItems = comboBoxNganhItems.map(nganh => ({ label: nganh.ten, value: nganh.id }));
+      setComboBoxNganhItems(mappedComboBoxNganhItems);
     };
     fetchData();
   }, []);
@@ -80,7 +88,7 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {sinhVien && (
+        {/* {sinhVien && (
           <FormField
             control={form.control}
             name="id"
@@ -97,7 +105,7 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
               </FormItem>
             )}
           />
-        )}
+        )} */}
         <FormField
           control={form.control}
           name="ten"
@@ -148,7 +156,7 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
                       )}
                     >
                       {field.value
-                        ? comboBoxItems.find(
+                        ? comboBoxKhoaItems.find(
                             (item) => item.value === field.value
                           )?.label
                         : "Select Khoa..."}
@@ -162,12 +170,75 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
                     <CommandList>
                       <CommandEmpty>No item found.</CommandEmpty>
                       <CommandGroup>
-                        {comboBoxItems.map((item) => (
+                        {comboBoxKhoaItems.map((item) => (
                           <CommandItem
                             value={item.label}
                             key={item.value}
                             onSelect={() => {
                               form.setValue("khoaId", item.value)
+                            }}
+                          >
+                            {item.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                item.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                This is the item that will be used in the dashboard.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="nganhId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Chọn Ngành Id</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? comboBoxNganhItems.find(
+                            (item) => item.value === field.value
+                          )?.label
+                        : "Select Nganh..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search item..." />
+                    <CommandList>
+                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandGroup>
+                        {comboBoxNganhItems.map((item) => (
+                          <CommandItem
+                            value={item.label}
+                            key={item.value}
+                            onSelect={() => {
+                              form.setValue("nganhId", item.value)
                             }}
                           >
                             {item.label}

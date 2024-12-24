@@ -53,6 +53,7 @@ namespace Student_Result_Management_System.Services
                 TaiKhoanId = taiKhoan.Id,
                 TaiKhoan =await _taiKhoanService.GetTaiKhoanById(taiKhoan.Id),
                 KhoaId = createSinhVienDTO.KhoaId,
+                NganhId = createSinhVienDTO.NganhId,
                 NamNhapHoc = createSinhVienDTO.NamNhapHoc,
                 MaSinhVien = taiKhoan.Username
             };
@@ -119,20 +120,26 @@ namespace Student_Result_Management_System.Services
 
         public async Task<List<SinhVien>> GetAllSinhViens()
         {
-            List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv => sv.Khoa).ToListAsync();
+            List<SinhVien> sinhViens = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv => sv.Khoa).Include(sv => sv.Nganh).ToListAsync();
             return sinhViens;
         }
 
-        public async Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? lopHocPhanId)        
+        public async Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? nganhId, int? lopHocPhanId)        
         {
             IQueryable<SinhVien> query = _context.SinhViens
                 .Include(sv => sv.Khoa)
+                .Include(sv => sv.Nganh)
                 .Include(sv => sv.TaiKhoan)
                 .Include(sv => sv.LopHocPhans);
 
             if (khoaId.HasValue)
             {
                 query = query.Where(sv => sv.KhoaId == khoaId.Value);
+            }
+
+            if (nganhId.HasValue)
+            {
+                query = query.Where(sv => sv.NganhId == nganhId.Value);
             }
 
             if (lopHocPhanId.HasValue)
@@ -147,7 +154,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<SinhVien?> GetById(int id)
         {
-            var sinhVien = await _context.SinhViens.Include(c => c.TaiKhoan).Include(sv=>sv.Khoa).FirstOrDefaultAsync(x => x.Id == id);
+            var sinhVien = await _context.SinhViens.Include(c => c.TaiKhoan).Include(sv=>sv.Khoa).Include(sv => sv.Nganh).FirstOrDefaultAsync(x => x.Id == id);
             return sinhVien;
         }
 
@@ -172,10 +179,11 @@ namespace Student_Result_Management_System.Services
                 }
             }
             exitsSV.KhoaId= (int)updateSinhVienDTO.KhoaId;
+            exitsSV.NganhId= (int)updateSinhVienDTO.NganhId;
             exitsSV.NamNhapHoc= (int)updateSinhVienDTO.NamNhapHoc;
             await _context.SaveChangesAsync();
 
-            exitsSV = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv=>sv.Khoa).FirstOrDefaultAsync(x=>x.Id==id);
+            exitsSV = await _context.SinhViens.Include(c=>c.TaiKhoan).Include(sv=>sv.Khoa).Include(sv => sv.Nganh).FirstOrDefaultAsync(x=>x.Id==id);
             return exitsSV;
         }
     }

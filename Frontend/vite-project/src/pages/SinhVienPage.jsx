@@ -92,6 +92,21 @@ const createSinhVienColumns = (handleEdit, handleDelete) => [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
   },
   {
+    accessorKey: "tenNganh",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tên Ngành
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenNganh")}</div>,
+  },
+  {
     accessorKey: "namNhapHoc",
     header: ({ column }) => {
       return (
