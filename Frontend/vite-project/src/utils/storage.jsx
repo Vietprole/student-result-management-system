@@ -37,3 +37,10 @@ export const getGiangVienId = () => {
   const giangVienId = decodedToken.giangVienId;
   return parseInt(giangVienId);
 }
+
+export const getSinhVienId = async () => {
+  const result = sessionStorage.getItem('accessToken')
+  const decodedToken = jwtDecode(result);
+  const sinhVienId = decodedToken.sinhVienId;
+  return parseInt(sinhVienId);
+}

@@ -34,13 +34,15 @@ namespace Student_Result_Management_System.Services
         public async Task<string> CreateToken(TaiKhoan user)
         {
             var giangVienId = await _context.GiangViens.Where(gv => gv.TaiKhoanId == user.Id).Select(gv => gv.Id).FirstOrDefaultAsync();
+            var sinhVienId = await _context.SinhViens.Where(sv => sv.TaiKhoanId == user.Id).Select(sv => sv.Id).FirstOrDefaultAsync();
              var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim("userId",user.Id.ToString()),
                 new Claim("fullname",user.Ten),
                 new Claim(ClaimTypes.Role,user.ChucVu.TenChucVu),
-                new Claim("giangVienId", giangVienId.ToString() ?? "")
+                new Claim("giangVienId", giangVienId.ToString() ?? ""),
+                new Claim("sinhVienId", sinhVienId.ToString() ?? "")
             };
             var creds = new SigningCredentials(_key,SecurityAlgorithms.HmacSha512Signature);
 

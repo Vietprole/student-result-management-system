@@ -24,9 +24,9 @@ namespace ketQua_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId, [FromQuery] int? sinhVienId) // async go with Task<> to make function asynchronous
         {
-            var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId);
+            var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId, sinhVienId);
             return Ok(ketQuaDTOs);
         }
 

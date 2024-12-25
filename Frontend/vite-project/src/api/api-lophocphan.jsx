@@ -16,9 +16,9 @@ export const getAllLopHocPhans = async () => {
   }
 };
 
-export const getLopHocPhans = async (hocPhanId, hocKyId, giangVienId) => {
+export const getLopHocPhans = async (hocPhanId, hocKyId, giangVienId, sinhVienId) => {
   try {
-    const paramsObj = { hocPhanId, hocKyId, giangVienId };
+    const paramsObj = { hocPhanId, hocKyId, giangVienId, sinhVienId };
     const url = createSearchURL(API_LOPHOCPHAN, paramsObj);
     console.log("url: ", url);
 

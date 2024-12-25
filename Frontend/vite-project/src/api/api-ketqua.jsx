@@ -25,9 +25,9 @@ export const getAllKetQuas = async () => {
   }
 };
 
-export const getKetQuas = async (baiKiemTraId) => {
+export const getKetQuas = async (baiKiemTraId, sinhVienId) => {
   try {
-    const paramsObj = { baiKiemTraId };
+    const paramsObj = { baiKiemTraId, sinhVienId };
     const url = createSearchURL(API_KETQUA, paramsObj);
     console.log("url kq: ", url);
 

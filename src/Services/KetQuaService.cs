@@ -35,13 +35,21 @@ namespace Student_Result_Management_System.Services
             return ketQuas.Select(ketQua => ketQua.ToKetQuaDTO()).ToList();
         }
 
-        public async Task<List<KetQuaDTO>> GetFilteredKetQuasAsync(int? baiKiemTraId)
+        public async Task<List<KetQuaDTO>> GetFilteredKetQuasAsync(int? baiKiemTraId, int? sinhVienId)
         {
-            IQueryable<KetQua> query = _context.KetQuas.Include(kq => kq.CauHoi).ThenInclude(ch => ch.BaiKiemTra);
+            IQueryable<KetQua> query = _context.KetQuas
+                .Include(kq => kq.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                .Include(kq => kq.SinhVien);
 
             if (baiKiemTraId.HasValue)
             {
                 query = query.Where(kq => kq.CauHoi.BaiKiemTraId == baiKiemTraId.Value);
+            }
+
+            if (sinhVienId.HasValue)
+            {
+                query = query.Where(kq => kq.SinhVienId == sinhVienId.Value);
             }
 
             var ketQuas = await query.ToListAsync();
