@@ -185,6 +185,11 @@ const adminItem = [
     icon: XetChuanDauRaIcon,
   },
   {
+    title: "Quản lý tài khoản",
+    url: "/quanlytaikhoan",
+    icon: HoSoCaNhanIcon,
+  },
+  {
     title: "Hồ sơ cá nhân",
     url: "/hosocanhan",
     icon: HoSoCaNhanIcon,

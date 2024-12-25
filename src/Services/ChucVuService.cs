@@ -23,10 +23,9 @@ namespace Student_Result_Management_System.Services
             return chucVu;
         }
 
-        public async Task<List<string>> GetListChucVu()
+        public async Task<List<ChucVu>> GetListChucVu()
         {
-            List<string> chucVus = new List<string>();
-            chucVus = await _context.ChucVus.Select(x => x.TenChucVu).ToListAsync();
+            var chucVus = await _context.ChucVus.ToListAsync();
             return chucVus;
         }
     }

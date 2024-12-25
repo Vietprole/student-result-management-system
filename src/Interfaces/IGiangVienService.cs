@@ -14,7 +14,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<TaiKhoanDTO?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO);
         public Task<GiangVienDTO?> CreateGiangVien(CreateGiangVienDTO createGiangVienDTO);
         public Task<GiangVien?> CheckGiangVien(CreateGiangVienDTO giangVienDTO);
-        public Task<int> GetCountGiangVien(int khoaId);
+        public Task<int> GetCountGiangVien();
         public Task<GiangVien?> UpdateGV(int id,UpdateGiangVienDTO updateGiangVienDTO);
         //public Task<GiangVien?> DeleteGV(int id);
     }

@@ -27,6 +27,7 @@ import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
 import { getRole } from "@/utils/storage";
 import BangDiemGiangVienPage from "@/pages/nhapdiem/BangDiemGiangVienPage";
 import DiemDinhChinhPage from "@/pages/DiemDinhChinhPage";
+import QuanLyTaiKhoanPage from "@/pages/QuanLyTaiKhoanPage";
 
 const role = getRole();
 const RoleBasedRoute = ({ giangVienElement, defaultElement }) => {
@@ -108,6 +109,10 @@ const routes = [
   {
     path: "/hosocanhan",
     element: <HoSoCaNhanPage />,
+  },
+  {
+    path: "/quanlytaikhoan",
+    element: <QuanLyTaiKhoanPage />,
   },
   {
     path: "/caidat",

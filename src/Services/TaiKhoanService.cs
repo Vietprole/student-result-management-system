@@ -4,6 +4,7 @@ using Student_Result_Management_System.DTOs.TaiKhoan;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 using System.Text.RegularExpressions;
 
 namespace Student_Result_Management_System.Services
@@ -40,14 +41,21 @@ namespace Student_Result_Management_System.Services
         }
         private static bool IsValidPassword(string password) //Kiểm tra password có hợp lệ không
         {
+            // password phải có ít nhất 6 ký tự, 1 ký tự viết hoa, 1 ký tự đặc biệt và không chứa khoảng trắng
             string pattern = @"^(?=.*[A-Z])(?=.*[\W_])(?=.*\S).{6,}$";
             return Regex.IsMatch(password, pattern);
         }
         private static bool IsValidUsername(string username) //Kiểm tra username có hợp lệ không
         {
-            // username phải có ít nhất 6 ký tự và không chứa ký tự đặc biệt
-            string pattern = @"^[a-zA-Z0-9]{6,}$";
+            // username phải có ít nhất 5 ký tự, max 100 ký tự, cho phép "_", không chứa ký tự đặc biệt và không chứa khoảng trắng
+            string pattern = @"^[a-zA-Z0-9_]{5,100}$";
             return Regex.IsMatch(username, pattern);
+        }
+
+        public async Task<List<TaiKhoanDTO>> GetFilteredTaiKhoans(int? chucVuId)
+        {
+            var taiKhoans = await _context.TaiKhoans.Include(c => c.ChucVu).Where(x => chucVuId == null || x.ChucVuId == chucVuId).ToListAsync();
+            return taiKhoans.Select(x => x.ToTaiKhoanDTO()).ToList();
         }
 
         public async Task<NewTaiKhoanDTO?> CreateTaiKhoan(CreateTaiKhoanDTO username)
@@ -79,7 +87,29 @@ namespace Student_Result_Management_System.Services
                 Username = taiKhoan.Username,
                 Token = token
             };
+        }
 
+        public async Task<TaiKhoanDTO?> UpdateTaiKhoan(int id, UpdateTaiKhoanDTO updateTaiKhoanDTO){
+            var taiKhoan = await _context.TaiKhoans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy tài khoản");
+            if (!string.IsNullOrEmpty(updateTaiKhoanDTO.Username))
+            {
+                if (!IsValidUsername(updateTaiKhoanDTO.Username))
+                {
+                    throw new BusinessLogicException("Username không hợp lệ");
+                }
+            }
+            taiKhoan = updateTaiKhoanDTO.ToTaiKhoanFromUpdateDTO(taiKhoan);
+            if (!string.IsNullOrEmpty(updateTaiKhoanDTO.Password))
+            {
+                if (!IsValidPassword(updateTaiKhoanDTO.Password))
+                {
+                    throw new BusinessLogicException("Password không hợp lệ");
+                }
+                taiKhoan.Password = _passwordHashService.HashPassword(updateTaiKhoanDTO.Password);  
+            }
+            await _context.SaveChangesAsync();
+            taiKhoan = await GetTaiKhoanById(id) ?? throw new NotFoundException("Không tìm thấy tài khoản");
+            return taiKhoan.ToTaiKhoanDTO();
         }
 
         public string CheckPassword(string password)
@@ -144,7 +174,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<TaiKhoan?> GetTaiKhoanById(int id)
         {
-            return await _context.TaiKhoans.FindAsync(id);
+            return await _context.TaiKhoans.Include(tk => tk.ChucVu).FirstOrDefaultAsync(tk => tk.Id == id);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Student_Result_Management_System.Controllers
         {
             _chucVuService = chucVuService;
         }
-        [HttpGet("getlistchucvu")]
+        [HttpGet]
         public async Task<IActionResult> GetListChucVu()
         {
             try

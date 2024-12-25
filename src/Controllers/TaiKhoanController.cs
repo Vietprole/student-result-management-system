@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Student_Result_Management_System.DTOs.TaiKhoan;
 using Student_Result_Management_System.Interfaces;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -17,6 +18,14 @@ namespace Student_Result_Management_System.Controllers
         {
             _taiKhoanService = taiKhoanService;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int? chucVuId)
+        {
+            var result = await _taiKhoanService.GetFilteredTaiKhoans(chucVuId);
+            return Ok(result);
+        }
+
         [HttpPost("createTaiKhoan")]
         public async Task<IActionResult> CreateTaiKhoan([FromBody] CreateTaiKhoanDTO createTaiKhoanDTO)
         {
@@ -37,6 +46,24 @@ namespace Student_Result_Management_System.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTaiKhoanDTO updateTaiKhoanDTO)
+        {
+            try {
+                var result = await _taiKhoanService.UpdateTaiKhoan(id, updateTaiKhoanDTO);
+                return Ok(result);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] TaiKhoanLoginDTO taiKhoanLoginDTO)
         {

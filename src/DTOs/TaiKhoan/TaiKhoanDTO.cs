@@ -10,6 +10,7 @@ namespace Student_Result_Management_System.DTOs.TaiKhoan
         public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
         public string Ten {  get; set; } = string.Empty;
+        public int ChucVuId { get; set; }
         public string TenChucVu { get; set; } = string.Empty;
     }
 }
