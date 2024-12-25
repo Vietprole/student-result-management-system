@@ -142,6 +142,22 @@ namespace Student_Result_Management_System.Services
             return existingKetQua.ToKetQuaDTO();
         }
 
+        public async Task<KetQuaDTO?> AcceptKetQuaAsync(AcceptKetQuaDTO acceptKetQuaDTO)
+        {
+            var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k =>
+                k.SinhVienId == acceptKetQuaDTO.SinhVienId &&
+                k.CauHoiId == acceptKetQuaDTO.CauHoiId) ?? throw new NotFoundException(
+                    $"Không tìm thấy kết quả với SinhVienId={acceptKetQuaDTO.SinhVienId} và CauHoiId={acceptKetQuaDTO.CauHoiId}");
+
+            if (existingKetQua.DiemChinhThuc != null)
+            {
+                throw new BusinessLogicException("Điểm này đã được duyệt");
+            }
+            existingKetQua.DiemChinhThuc = existingKetQua.DiemTam;
+            await _context.SaveChangesAsync();
+            return existingKetQua.ToKetQuaDTO();
+        }
+
         public async Task<decimal> CalculateDiemCLO(int sinhVienId, int cLOId)
         {
             var clo = await _context.CLOs

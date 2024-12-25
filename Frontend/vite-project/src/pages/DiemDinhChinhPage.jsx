@@ -45,9 +45,9 @@ export default function DiemDinhChinhPage() {
   const giangVienId = getGiangVienId();
 
   const fetchData = useCallback(async () => {
-    let dataLopHocPhan = await getLopHocPhans(null, null, null);
+    let dataLopHocPhan = await getLopHocPhans(null, null, null, null);
     if (giangVienId) {
-      dataLopHocPhan = await getLopHocPhans(null, null, giangVienId);
+      dataLopHocPhan = await getLopHocPhans(null, null, giangVienId, null);
     }
     // Map lophocphan items to be used in ComboBox
     const mappedComboBoxItems = dataLopHocPhan.map((lophocphan) => ({

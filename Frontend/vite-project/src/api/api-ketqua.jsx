@@ -110,6 +110,18 @@ export const confirmKetQua = async (confirmKetQuaDTO) => {
   }
 }
 
+export const acceptKetQua = async (acceptKetQuaDTO) => {
+  try {
+    const response = await axios.post(`${API_KETQUA}/accept`, acceptKetQuaDTO, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+    throw error;
+  }
+}
+
 export const calculateDiemCLO = async (sinhVienId, CLOId) => {
   try {
     const response = await axios.get(`${API_KETQUA}/calculate-diem-clo?sinhVienId=${sinhVienId}&CLOId=${CLOId}`, {

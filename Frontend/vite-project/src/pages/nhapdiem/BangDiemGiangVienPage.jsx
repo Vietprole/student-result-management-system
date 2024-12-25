@@ -33,7 +33,7 @@ export default function BangDiemGiangVienPage() {
       // getGradeComponents(),
       getBaiKiemTraById(baiKiemTraId),
       // getGrades(),
-      getKetQuas(baiKiemTraId),
+      getKetQuas(baiKiemTraId, null),
     ]);
     // Map khoa items to be used in ComboBox
     const components = [component];
@@ -79,6 +79,23 @@ export default function BangDiemGiangVienPage() {
               );
               // return [question.id.toString(), grade?.diem || 0];
               return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
+              // return [question.id, grade?.diemTam || 0];
+            })
+          ),
+        ])
+      ),
+      diemChinhThucs: Object.fromEntries(
+        components.map((component) => [
+          component.loai,
+          Object.fromEntries(
+            (questions[component.id.toString()] || []).map((question) => {
+              const grade = allGrades.find(
+                (g) =>
+                  g.sinhVienId === student.id && g.cauHoiId === question.id
+              );
+              console.log("grade", grade);
+              // return [question.id.toString(), grade?.diem || 0];
+              return [question.id, grade?.diemChinhThuc === 0 ? 0 : grade?.diemChinhThuc || null];
               // return [question.id, grade?.diemTam || 0];
             })
           ),

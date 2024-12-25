@@ -38,7 +38,7 @@ export const getGiangVienId = () => {
   return parseInt(giangVienId);
 }
 
-export const getSinhVienId = async () => {
+export const getSinhVienId = () => {
   const result = sessionStorage.getItem('accessToken')
   const decodedToken = jwtDecode(result);
   const sinhVienId = decodedToken.sinhVienId;

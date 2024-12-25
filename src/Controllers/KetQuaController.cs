@@ -96,6 +96,24 @@ namespace ketQua_Result_Management_System.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, PhongDaoTao")]
+        [HttpPost("accept")]
+        public async Task<IActionResult> Accept([FromBody] AcceptKetQuaDTO acceptKetQuaDTO)
+        {
+            try {
+                var ketQuaDTO = await _ketQuaService.AcceptKetQuaAsync(acceptKetQuaDTO);
+                return Ok(ketQuaDTO);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("calculate-diem-clo")]
         public async Task<IActionResult> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int cLOId)
         {

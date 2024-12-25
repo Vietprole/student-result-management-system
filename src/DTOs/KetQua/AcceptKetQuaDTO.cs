@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Student_Result_Management_System.DTOs.KetQua;
 
-public class ConfirmKetQuaDTO
+public class AcceptKetQuaDTO
 {
     [Required(ErrorMessage = "Mã sinh viên không được để trống")]
     public int SinhVienId { get; set; }

@@ -14,6 +14,7 @@ namespace Student_Result_Management_System.Interfaces
         public Task<KetQuaDTO> UpsertKetQuaAsync(UpdateKetQuaDTO ketQuaDTO);
         public Task<bool> DeleteKetQuaAsync(int id);
         public Task<KetQuaDTO?> ConfirmKetQuaAsync(ConfirmKetQuaDTO confirmKetQuaDTO);
+        public Task<KetQuaDTO?> AcceptKetQuaAsync(AcceptKetQuaDTO acceptKetQuaDTO);
         public Task<decimal> CalculateDiemCLO(int sinhVienId, int cLOId);
         public Task<decimal> CalculateDiemCLOMax(int cLOId);
         public Task<decimal> CalculateDiemPk(int lopHocPhanId, int sinhVienId, int ploId);

@@ -10,62 +10,64 @@ import { Label } from "@/components/ui/label";
 import Layout from "@/pages/Layout";
 import { getLopHocPhans } from "@/api/api-lophocphan";
 import { getSinhVienId } from "@/utils/storage";
+import { getRole } from "@/utils/storage";
 
-const lopHocPhans = [
-  { "id": 1, "ten": "PBL6 - Vẽ kỹ thuật cơ khí" },
-  { "id": 2, "ten": "PBL5 - CNPM" },
-  { "id": 3, "ten": "PBL4 - CNPM" },
-];
+// const lopHocPhans = [
+//   { "id": 1, "ten": "PBL6 - Vẽ kỹ thuật cơ khí" },
+//   { "id": 2, "ten": "PBL5 - CNPM" },
+//   { "id": 3, "ten": "PBL4 - CNPM" },
+// ];
 
-const baiKiemTras = [
-  { "id": 5, "loai": "GK", "lopHocPhanId": 1 },
-  { "id": 6, "loai": "CK", "lopHocPhanId": 1 },
-  { "id": 7, "loai": "GK", "lopHocPhanId": 2 },
-  { "id": 8, "loai": "CK", "lopHocPhanId": 2 },
-  { "id": 9, "loai": "BT", "lopHocPhanId": 3 },
-  { "id": 10, "loai": "BT", "lopHocPhanId": 1 },
-];
+// const baiKiemTras = [
+//   { "id": 5, "loai": "GK", "lopHocPhanId": 1 },
+//   { "id": 6, "loai": "CK", "lopHocPhanId": 1 },
+//   { "id": 7, "loai": "GK", "lopHocPhanId": 2 },
+//   { "id": 8, "loai": "CK", "lopHocPhanId": 2 },
+//   { "id": 9, "loai": "BT", "lopHocPhanId": 3 },
+//   { "id": 10, "loai": "BT", "lopHocPhanId": 1 },
+// ];
 
-const cauHois = [
-  { "id": 1, "ten": "Câu 1", "baiKiemTraId": 5, "thangDiem": 3.5 },
-  { "id": 2, "ten": "Câu 2", "baiKiemTraId": 5, "thangDiem": 2.5 },
-  { "id": 3, "ten": "Câu 3", "baiKiemTraId": 5, "thangDiem": 2.5 },
-  { "id": 4, "ten": "Diem Danh", "baiKiemTraId": 6, "thangDiem": 2.5 },
-  { "id": 5, "ten": "Dinh Ky", "baiKiemTraId": 6, "thangDiem": 2.5 },
-  { "id": 6, "ten": "Câu 1", "baiKiemTraId": 7, "thangDiem": 2.5 },
-  { "id": 7, "ten": "Câu 2", "baiKiemTraId": 7, "thangDiem": 2.5 },
-  { "id": 8, "ten": "Câu 1", "baiKiemTraId": 8, "thangDiem": 5.0 },
-  { "id": 9, "ten": "Câu 2", "baiKiemTraId": 8, "thangDiem": 5.0 },
-  { "id": 10, "ten": "Câu 2", "baiKiemTraId": 9, "thangDiem": 5.0 },
-  { "id": 11, "ten": "Câu 2x", "baiKiemTraId": 10, "thangDiem": 5.0 },
-];
+// const cauHois = [
+//   { "id": 1, "ten": "Câu 1", "baiKiemTraId": 5, "thangDiem": 3.5 },
+//   { "id": 2, "ten": "Câu 2", "baiKiemTraId": 5, "thangDiem": 2.5 },
+//   { "id": 3, "ten": "Câu 3", "baiKiemTraId": 5, "thangDiem": 2.5 },
+//   { "id": 4, "ten": "Diem Danh", "baiKiemTraId": 6, "thangDiem": 2.5 },
+//   { "id": 5, "ten": "Dinh Ky", "baiKiemTraId": 6, "thangDiem": 2.5 },
+//   { "id": 6, "ten": "Câu 1", "baiKiemTraId": 7, "thangDiem": 2.5 },
+//   { "id": 7, "ten": "Câu 2", "baiKiemTraId": 7, "thangDiem": 2.5 },
+//   { "id": 8, "ten": "Câu 1", "baiKiemTraId": 8, "thangDiem": 5.0 },
+//   { "id": 9, "ten": "Câu 2", "baiKiemTraId": 8, "thangDiem": 5.0 },
+//   { "id": 10, "ten": "Câu 2", "baiKiemTraId": 9, "thangDiem": 5.0 },
+//   { "id": 11, "ten": "Câu 2x", "baiKiemTraId": 10, "thangDiem": 5.0 },
+// ];
 
-const ketQuas = [
-  { "id": 1, "diemTam": 3.0, "diemChinhThuc": 3.2, "cauHoiId": 1, "sinhVienId": 1 },
-  { "id": 2, "diemTam": 2.0, "diemChinhThuc": 2.2, "cauHoiId": 2, "sinhVienId": 1 },
-  { "id": 3, "diemTam": 2.0, "diemChinhThuc": 2.1, "cauHoiId": 3, "sinhVienId": 1 },
-  { "id": 4, "diemTam": 2.0, "diemChinhThuc": null, "cauHoiId": 4, "sinhVienId": 1 },
-  { "id": 5, "diemTam": 2.2, "diemChinhThuc": null, "cauHoiId": 5, "sinhVienId": 1 },
-  { "id": 6, "diemTam": 2.0, "diemChinhThuc": 2.2, "cauHoiId": 6, "sinhVienId": 1 },
-  { "id": 7, "diemTam": 2.3, "diemChinhThuc": 2.4, "cauHoiId": 7, "sinhVienId": 1 },
-  { "id": 8, "diemTam": 4.5, "diemChinhThuc": null, "cauHoiId": 8, "sinhVienId": 1 },
-  { "id": 9, "diemTam": 4.8, "diemChinhThuc": null, "cauHoiId": 9, "sinhVienId": 1 },
-  { "id": 10, "diemTam": 4.81, "diemChinhThuc": null, "cauHoiId": 10, "sinhVienId": 1 },
-  { "id": 11, "diemTam": 4.81, "diemChinhThuc": null, "cauHoiId": 11, "sinhVienId": 1 },
-  { "id": 12, "diemTam": 4.85, "diemChinhThuc": null, "cauHoiId": 11, "sinhVienId": 2 },
-];
+// const ketQuas = [
+//   { "id": 1, "diemTam": 3.0, "diemChinhThuc": 3.2, "cauHoiId": 1, "sinhVienId": 1 },
+//   { "id": 2, "diemTam": 2.0, "diemChinhThuc": 2.2, "cauHoiId": 2, "sinhVienId": 1 },
+//   { "id": 3, "diemTam": 2.0, "diemChinhThuc": 2.1, "cauHoiId": 3, "sinhVienId": 1 },
+//   { "id": 4, "diemTam": 2.0, "diemChinhThuc": null, "cauHoiId": 4, "sinhVienId": 1 },
+//   { "id": 5, "diemTam": 2.2, "diemChinhThuc": null, "cauHoiId": 5, "sinhVienId": 1 },
+//   { "id": 6, "diemTam": 2.0, "diemChinhThuc": 2.2, "cauHoiId": 6, "sinhVienId": 1 },
+//   { "id": 7, "diemTam": 2.3, "diemChinhThuc": 2.4, "cauHoiId": 7, "sinhVienId": 1 },
+//   { "id": 8, "diemTam": 4.5, "diemChinhThuc": null, "cauHoiId": 8, "sinhVienId": 1 },
+//   { "id": 9, "diemTam": 4.8, "diemChinhThuc": null, "cauHoiId": 9, "sinhVienId": 1 },
+//   { "id": 10, "diemTam": 4.81, "diemChinhThuc": null, "cauHoiId": 10, "sinhVienId": 1 },
+//   { "id": 11, "diemTam": 4.81, "diemChinhThuc": null, "cauHoiId": 11, "sinhVienId": 1 },
+//   { "id": 12, "diemTam": 4.85, "diemChinhThuc": null, "cauHoiId": 11, "sinhVienId": 2 },
+// ];
 
 export default function KetQuaHocTapPage() {
+  const [sinhVienId, setSinhVienId] = useState(getSinhVienId());
   const [data, setData] = useState({
-    lopHocPhans: lopHocPhans,
-    baiKiemTras: baiKiemTras,
-    cauHois: cauHois,
-    ketQuas: ketQuas,
+    lopHocPhans: [],
+    baiKiemTras: [],
+    cauHois: [],
+    ketQuas: [],
   });
+  const role = getRole();
 
   useEffect(() => {
     const fetchData = async () => {
-      const sinhVienId = await getSinhVienId();
       const lopHocPhans = await getLopHocPhans(null, null, null, sinhVienId);
       const allBaiKiemTras = [];
       const allCauHois = [];
@@ -89,7 +91,7 @@ export default function KetQuaHocTapPage() {
       });
     };
     fetchData();
-  }, []);
+  }, [sinhVienId]);
 
   const [isDiemTam, setIsDiemTam] = useState(true);
 

@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { upsertKetQua, confirmKetQua } from "@/api/api-ketqua"
+import { upsertKetQua, confirmKetQua, acceptKetQua } from "@/api/api-ketqua"
 import { upsertDiemDinhChinh } from "@/api/api-diemdinhchinh"
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { DialogClose } from "@radix-ui/react-dialog"
+import { getRole } from "@/utils/storage"
 
 export function GradeTable({
   data,
@@ -28,16 +29,27 @@ export function GradeTable({
   isGiangVienMode,
   isConfirmed,
 }) {
+  const role = getRole();
   const [tableData, setTableData] = React.useState(data)
   const [isEditing, setIsEditing] = React.useState(false)
   const [modifiedRecords, setModifiedRecords] = React.useState([])
   const [modifiedDiemDinhChinhRecords, setModifiedDiemDinhChinhRecords] = React.useState([])
-  console.log("isConfirmed", isConfirmed);
+  const [isAccepted, setIsAccepted] = React.useState(false)
+  const [confirmationStatus, setConfirmationStatus] = React.useState(isConfirmed)
   const { toast } = useToast();
-
+  const doAcceptAllowed = role === "Admin"|| role === "PhongDaoTao"
+  console.log("doAcceptAllowed", doAcceptAllowed);
   React.useEffect(() => {
     setTableData(data)
-  }, [data])
+
+    const hasNullChinhThucGrades = tableData.some(record => 
+      Object.values(record.diemChinhThucs) // Get all grade objects
+        .flatMap(gradeObj => Object.values(gradeObj)) // Flatten values into single array
+        .some(grade => grade === null) // Check for null
+    );
+    setConfirmationStatus(isConfirmed);
+    setIsAccepted(!hasNullChinhThucGrades);
+  }, [data, tableData, isConfirmed])
 
   const columns = React.useMemo(() => {
     const cols = [
@@ -66,7 +78,7 @@ export function GradeTable({
         header: `${component.loai} (${component.trongSo * 100}%)`,
         columns: [
           ...componentQuestions.map((question) => ({
-            accessorFn: (row) =>
+            accessorFn: (row) => 
               row.grades[component.loai]?.[question.id.toString()] ?? "",
             id: `${component.loai}_${question.id}`,
             header: () => (
@@ -179,6 +191,7 @@ export function GradeTable({
           .flatMap(gradeObj => Object.values(gradeObj)) // Flatten values into single array
           .some(grade => grade === null) // Check for null
       );
+
       if (hasNullGrades) {
         toast({
           title: "Chưa nhập đủ điểm",
@@ -218,6 +231,69 @@ export function GradeTable({
     fetchData();
   }
 
+  const handleAccept = async () => {
+    try {
+      const latestHanDinhChinh = new Date(Math.max(
+        ...components.map(component => new Date(component.hanDinhChinh))
+      ))
+
+      if (!isDatePassed(latestHanDinhChinh)) {
+        toast({
+          title: "Chưa hết hạn đính chính điểm",
+          description: "Hãy duyệt sau khi hết hạn đính chính điểm",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!isAccepted) {
+        const hasNullGrades = tableData.some(record => 
+          Object.values(record.grades) // Get all grade objects
+            .flatMap(gradeObj => Object.values(gradeObj)) // Flatten values into single array
+            .some(grade => grade === null) // Check for null
+        );
+  
+        if (hasNullGrades) {
+          toast({
+            title: "Điểm chưa đầy đủ",
+            description: "Vui lòng đảm bảo điểm đã có cho tất cả sinh viên trước khi duyệt",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        console.log("tableData 252", tableData);
+
+        const acceptKetQuaDTOs = tableData.flatMap(record => 
+          record.cauHois.map(cauHoiId => ({
+            sinhVienId: record.id,
+            cauHoiId: cauHoiId
+          }))
+        );
+  
+        acceptKetQuaDTOs.forEach(async (acceptKetQuaDTO) => {
+          await acceptKetQua(acceptKetQuaDTO);
+          console.log(acceptKetQuaDTO);
+        });
+
+        toast({
+          title: "Duyệt điểm thành công",
+          variant: "success",
+        });
+      }
+    }
+    catch (error) {
+      console.error("Error accepting records:", error);
+      toast({
+        title: "Lỗi xác nhận điểm",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+    fetchData();
+  }
+
+
 
   // function that compare date to today and return the result
   const isDatePassed = (dateString) => {
@@ -227,25 +303,33 @@ export function GradeTable({
   }
 
   const canEditDiem = !isGiangVienMode || (isGiangVienMode && isDatePassed(components[0].ngayMoNhapDiem) && !isDatePassed(components[0].hanNhapDiem));
-  const canDinhChinhDiem = isGiangVienMode && !isDatePassed(components[0].hanDinhChinh) && isConfirmed;
+  const canDinhChinhDiem = isGiangVienMode && !isDatePassed(components[0].hanDinhChinh) && confirmationStatus;
 
   return (
     <div className="space-y-4">
       <div className="flex justify-end gap-1">
       <Button
-        disabled={isConfirmed || !canEditDiem}
+        disabled={confirmationStatus || !canEditDiem}
         onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
       >
         {isEditing ? "Lưu" : "Sửa Điểm"}
       </Button>
+      {doAcceptAllowed && (
+        <Button
+          disabled={isEditing || isAccepted || !confirmationStatus}
+          onClick={handleAccept}
+        >
+          {!isAccepted ? "Duyệt" : "Đã Duyệt"}
+        </Button>
+      )}
       <Dialog>
         <DialogTrigger asChild>
         {isGiangVienMode && (
           <Button
-            disabled={isConfirmed}
+            disabled={confirmationStatus}
             // onClick={handleConfirm}
           >
-            {isConfirmed ? "Đã Xác Nhận" : "Xác Nhận"}
+            {confirmationStatus ? "Đã Xác Nhận" : "Xác Nhận"}
           </Button>
         )}
         </DialogTrigger>

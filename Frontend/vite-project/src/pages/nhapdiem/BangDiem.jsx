@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { getBaiKiemTrasByLopHocPhanId } from "@/api/api-baikiemtra";
 import { getAllKetQuas } from "@/api/api-ketqua";
 import { getCauHoisByBaiKiemTraId } from "@/api/api-cauhoi";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 // import { set } from "react-hook-form";
 
 export default function GradesPage() {
@@ -14,6 +16,8 @@ export default function GradesPage() {
   const [components, setComponents] = useState([]);
   const [questions, setQuestions] = useState([]);
   const { lopHocPhanId } = useParams();
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isDiemTam, setIsDiemTam] = useState(true);
 
   const fetchData = useCallback(async () => {
     // Fetch all required data
@@ -43,6 +47,9 @@ export default function GradesPage() {
     );
     setQuestions(questions);
 
+    const isConfirmed = allGrades.every(grade => grade.daXacNhan);
+    setIsConfirmed(isConfirmed);
+
     // Transform data into the required format
     const tableData = students.map((student) => ({
       ...student,
@@ -58,23 +65,75 @@ export default function GradesPage() {
               );
               console.log("grade", grade);
               // return [question.id.toString(), grade?.diem || 0];
-              return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
+              if (isDiemTam) {
+                return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
+              } else {
+                return [question.id, grade?.diemChinhThuc === 0 ? 0 : grade?.diemChinhThuc || null];
+              }
+              // return [question.id, grade?.diemTam === 0 ? 0 : grade?.diemTam || null];
               // return [question.id, grade?.diemTam || 0];
             })
           ),
         ])
-      )
+      ),
+      diemChinhThucs: Object.fromEntries(
+        components.map((component) => [
+          component.loai,
+          Object.fromEntries(
+            (questions[component.id.toString()] || []).map((question) => {
+              const grade = allGrades.find(
+                (g) =>
+                  g.sinhVienId === student.id && g.cauHoiId === question.id
+              );
+              console.log("grade", grade);
+              // return [question.id.toString(), grade?.diem || 0];
+              return [question.id, grade?.diemChinhThuc === 0 ? 0 : grade?.diemChinhThuc || null];
+              // return [question.id, grade?.diemTam || 0];
+            })
+          ),
+        ])
+      ),
+      cauHois: components.flatMap(component => 
+        questions[component.id.toString()]?.map(q => q.id) || []
+      ),
     }));
     setTableData(tableData);
-  }, [lopHocPhanId]);
+  }, [lopHocPhanId, isDiemTam]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  const formatDate = (date) => {
+    return date ? new Date(date).toLocaleDateString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }) : '';
+  }
+
+  console.log("tableData", tableData);
+  const latestHanDinhChinh = new Date(Math.max(
+    ...components.map(component => new Date(component.hanDinhChinh))
+  )).toLocaleDateString('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  })
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Bảng điểm học phần</h1>
+      <p>Hạn cuối đính chính: {latestHanDinhChinh}</p>
+      <div className="flex items-center space-x-2">
+        <Label htmlFor="diem-mode">Điểm tạm</Label>
+        <Switch id="diem-mode"
+          onCheckedChange={(check) => {setIsDiemTam(!check)}}
+        />
+        <Label htmlFor="diem-mode">Điểm chính thức</Label>
+      </div>
       {console.log("tableData", tableData)}
       {tableData.length > 0 && (
         <GradeTable
@@ -82,6 +141,7 @@ export default function GradesPage() {
           fetchData={fetchData}
           components={components}
           questions={questions}
+          isConfirmed={isConfirmed}
         />
       )}
     </div>
