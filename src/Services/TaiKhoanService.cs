@@ -16,13 +16,15 @@ namespace Student_Result_Management_System.Services
         private readonly IKhoaService _khoaService;
         private readonly ITokenService _tokenService;
         private readonly IPasswordHashService _passwordHashService;
-        public TaiKhoanService(ApplicationDBContext context, IChucVuService chucVuService, IKhoaService khoaService, ITokenService tokenService,IPasswordHashService passwordHashService)
+        private readonly ILogger<TaiKhoanService> _logger;
+        public TaiKhoanService(ApplicationDBContext context, IChucVuService chucVuService, IKhoaService khoaService, ITokenService tokenService,IPasswordHashService passwordHashService, ILogger<TaiKhoanService> logger)
         {
             _context = context;
             _chucVuService = chucVuService;
             _khoaService = khoaService;
             _tokenService = tokenService;
             _passwordHashService = passwordHashService;
+            _logger = logger;
         }
 
         public async Task<string> CheckUsername(string username)
@@ -42,7 +44,7 @@ namespace Student_Result_Management_System.Services
         private static bool IsValidPassword(string password) //Kiểm tra password có hợp lệ không
         {
             // password phải có ít nhất 6 ký tự, 1 ký tự viết hoa, 1 ký tự đặc biệt và không chứa khoảng trắng
-            string pattern = @"^(?=.*[A-Z])(?=.*[\W_])(?=.*\S).{6,}$";
+            string pattern = @"^(?=.*[A-Z])(?=.*[\W_])[^\s]{6,}$";
             return Regex.IsMatch(password, pattern);
         }
         private static bool IsValidUsername(string username) //Kiểm tra username có hợp lệ không
@@ -175,6 +177,50 @@ namespace Student_Result_Management_System.Services
         public async Task<TaiKhoan?> GetTaiKhoanById(int id)
         {
             return await _context.TaiKhoans.Include(tk => tk.ChucVu).FirstOrDefaultAsync(tk => tk.Id == id);
+        }
+
+        public async Task<bool> ChangePassword(int id, ChangePasswordDTO changePasswordDTO)
+        {
+            var taiKhoan = await _context.TaiKhoans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy tài khoản");
+            if (!_passwordHashService.VerifyPassword(changePasswordDTO.OldPassword, taiKhoan.Password))
+            {
+                throw new BusinessLogicException("Mật khẩu cũ không đúng");
+            }
+            taiKhoan.Password = _passwordHashService.HashPassword(changePasswordDTO.NewPassword);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ResetPassword(int id)
+        {
+            var taiKhoan = await _context.TaiKhoans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy tài khoản");
+            if (taiKhoan.ChucVuId == 2){//GiangVien
+                taiKhoan.Password = _passwordHashService.HashPassword("Gv@" + taiKhoan.Username);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            
+            if (taiKhoan.ChucVuId == 3){//SinhVien
+                taiKhoan.Password = _passwordHashService.HashPassword("Sv@" + taiKhoan.Username);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Resetting password for SinhVien {Username} to {Password}", 
+                taiKhoan.Username, 
+                "Sv@" + taiKhoan.Username);
+                return true;
+            }
+            
+            taiKhoan.Password = _passwordHashService.HashPassword("Password@123456");
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ResetPasswordForSinhVienGiangVien(int id){
+            var taiKhoan = await _context.TaiKhoans.FindAsync(id) ?? throw new NotFoundException("Không tìm thấy tài khoản");
+            if (taiKhoan.ChucVuId != 2 && taiKhoan.ChucVuId != 3){
+                throw new BusinessLogicException("Tài khoản không phải là sinh viên hoặc giảng viên");
+            }
+            await ResetPassword(id);
+            return true;
         }
     }
 }

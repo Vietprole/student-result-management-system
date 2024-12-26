@@ -27,18 +27,35 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Check } from "lucide-react";
-import { getAllKhoas } from "@/api/api-khoa";
+import { getAllChucVus } from "@/api/api-chucvu";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 const formSchema = z.object({
-  ten: z.string().min(2, {
-    message: "Ten must be at least 2 characters.",
+  hovaTen: z.string().min(2, {
+    message: "hovaTen must be at least 2 characters.",
   }),
-  chucVuId: z.number({
-    required_error: "Please select a Khoa.",
+  username: z.string()
+  .min(5, { message: "Username phải có tối thiểu 2 ký tự" })
+  .max(100, { message: "Username không được vượt quá 100 ký tự" })
+  .regex(/^[a-zA-Z0-9_]+$/, {
+    message: "Username chỉ cho phép chứa ký tự chữ cái, số và dấu gạch dưới",
+  }),
+  password: z.string()
+    .min(6, { message: "Mật khẩu phải có ít nhất 6 ký tự" })
+    .regex(/^(?=.*[A-Z])/, { 
+      message: "Mật khẩu phải có ít nhất 1 ký tự viết hoa" 
+    })
+    .regex(/^(?=.*[!@#$%^&*])/, {
+      message: "Mật khẩu phải có ít nhất 1 ký tự đặc biệt !@#$%^&*"
+    })
+    .regex(/^\S*$/, {
+      message: "Mật khẩu không được chứa khoảng trắng"
+    }),
+  tenChucVu: z.string().min(1, {
+    message: "Vui lòng chọn chức vụ",
   }),
 });
 
@@ -46,13 +63,15 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
   const [searchParams] = useSearchParams();
   const chucVuIdParam = searchParams.get("chucVuId");
   const [comboBoxItems, setComboBoxItems] = useState([]);
+  const [chucVus, setChucVus] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const comboBoxItems = await getAllKhoas();
+      const comboBoxItems = await getAllChucVus();
+      setChucVus(comboBoxItems);
       const mappedComboBoxItems = comboBoxItems.map((khoa) => ({
-        label: khoa.ten,
-        value: khoa.id,
+        label: khoa.tenChucVu,
+        value: khoa.tenChucVu,
       }));
       setComboBoxItems(mappedComboBoxItems);
     };
@@ -65,8 +84,10 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
     defaultValues: taiKhoan || {
       username: "",
       password: "",
-      ten: "",
-      chucVuId: chucVuIdParam ? parseInt(chucVuIdParam) : null,
+      hovaTen: "",
+      tenChucVu: chucVuIdParam ? 
+        chucVus.find(cv => cv.id === parseInt(chucVuIdParam))?.tenChucVu 
+        : "",
     },
   });
 
@@ -79,6 +100,7 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
       handleEdit(data);
     } else {
       const data = await addTaiKhoan(values);
+      console.log(values);
       handleAdd(data);
       setIsDialogOpen(false);
     }
@@ -89,7 +111,7 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="ten"
+          name="hovaTen"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tên</FormLabel>
@@ -105,28 +127,12 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
         />
         <FormField
           control={form.control}
-          name="ten"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên</FormLabel>
-              <FormControl>
-                <Input placeholder="Nguyễn Văn A" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <Input placeholder="your_name123" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
@@ -137,10 +143,26 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
         />
         <FormField
           control={form.control}
-          name="chucVuId"
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input placeholder="PW@12345" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="tenChucVu"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Chọn Khoa Id</FormLabel>
+              <FormLabel>Chọn Chức vụ</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -172,7 +194,7 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
                             value={item.label}
                             key={item.value}
                             onSelect={() => {
-                              form.setValue("chucVuId", item.value);
+                              form.setValue("tenChucVu", item.value);
                             }}
                           >
                             {item.label}

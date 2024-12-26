@@ -29,6 +29,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { getRole } from "@/utils/storage";
 
 export default function QuanLyTaiKhoanPage() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export default function QuanLyTaiKhoanPage() {
   const [chucVuItems, setchucVuItems] = useState([]);
   const [chucVuId, setchucVuId] = useState(chucVuIdParam);
   const [comboBoxChucVuId, setComboBoxChucVuId] = useState(chucVuIdParam);
+  const role = getRole();
 
   const fetchData = useCallback(async () => {
     const dataChucVu = await getAllChucVus();
@@ -127,9 +129,10 @@ export default function QuanLyTaiKhoanPage() {
       enableHiding: false,
       cell: ({ row }) => {
         const item = row.original;
-  
-        return (
-          <DropdownMenu>
+
+        if (role === "PhongDaoTao") {
+          return (
+            <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -141,7 +144,7 @@ export default function QuanLyTaiKhoanPage() {
               <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Sửa Ngành
+                    Sửa Tài Khoản
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -157,7 +160,7 @@ export default function QuanLyTaiKhoanPage() {
               <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Xóa Ngành
+                    Xóa Tài Khoản
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -174,6 +177,85 @@ export default function QuanLyTaiKhoanPage() {
                       onClick={() => handleDelete(item.id)}
                     >
                       Delete
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          )
+        }
+  
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Sửa Tài Khoản
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit TaiKhoan</DialogTitle>
+                    <DialogDescription>
+                      Edit the current item.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <TaiKhoanForm taiKhoan={item} handleEdit={handleEdit} />
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Xóa Tài Khoản
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Delete TaiKhoan</DialogTitle>
+                    <DialogDescription>
+                      Delete the current item.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <p>Are you sure you want to delete this TaiKhoan?</p>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      Delete
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    Đặt lại Mật Khẩu
+                  </DropdownMenuItem>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Đặt lại mật khẩu</DialogTitle>
+                    <DialogDescription>
+                      Đặc lại mật khẩu thành mặc định
+                    </DialogDescription>
+                  </DialogHeader>
+                  <p>Đặt mật khẩu của tài khoản này thành {item.chucVuId === 2 ? `Gv@${item.username}`:`Sv@${item.username}`}</p>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      onClick={() => handleReset(item.id)}
+                    >
+                      Đặt lại
                     </Button>
                   </DialogFooter>
                 </DialogContent>

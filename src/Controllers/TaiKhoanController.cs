@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Student_Result_Management_System.DTOs.TaiKhoan;
 using Student_Result_Management_System.Interfaces;
@@ -79,7 +81,8 @@ namespace Student_Result_Management_System.Controllers
             }
             return Ok(result);
         }
-        [HttpDelete("deleteTaiKhoan/{id}")]
+
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaiKhoan([FromRoute]int id)
         {
             var result = await _taiKhoanService.DeleteTaiKhoan(id);
@@ -88,6 +91,40 @@ namespace Student_Result_Management_System.Controllers
                 return BadRequest("Delete failed");
             }
             return Ok("Delete successfully");
+        }
+
+        [Authorize]
+        [HttpPatch("password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
+        {
+            try {
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+                var userIdInt = int.Parse(userId?? throw new NotFoundException("Không tìm thấy tài khoản này"));
+                var result = await _taiKhoanService.ChangePassword(userIdInt, changePasswordDTO);
+                return Ok("Đổi mật khẩu thành công");
+            } catch(BusinessLogicException ex){
+                return BadRequest(ex.Message);
+            } catch(NotFoundException ex){
+                return NotFound(ex.Message);
+            }
+        }
+
+        [Authorize(Roles="Admin, PhongDaoTao")]
+        [HttpPatch("{id}/resetPassword")]
+        public async Task<IActionResult> ResetPassword([FromRoute] int id)
+        {
+            try {
+                if (User.IsInRole("PhongDaoTao")){
+                    await _taiKhoanService.ResetPasswordForSinhVienGiangVien(id);
+                    return Ok("Đặt lại mật khẩu thành công");
+                }
+                await _taiKhoanService.ResetPassword(id);
+                return Ok("Đặt lại mật khẩu thành công");
+            } catch(BusinessLogicException ex){
+                return BadRequest(ex.Message);
+            } catch(NotFoundException ex){
+                return NotFound(ex.Message);
+            }
         }
     }
 }

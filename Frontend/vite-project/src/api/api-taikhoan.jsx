@@ -57,7 +57,7 @@ export const getTaiKhoans = async (chucVuId) => {
 
 export const addTaiKhoan = async (data) => {
   try {
-    const response = await axios.post(API_TAIKHOAN, data, {
+    const response = await axios.post(`${API_TAIKHOAN}/createTaiKhoan`, data, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

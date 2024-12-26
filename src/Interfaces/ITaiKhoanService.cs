@@ -18,6 +18,8 @@ namespace Student_Result_Management_System.Interfaces
         public string CheckPassword(string password);
         public Task<NewTaiKhoanDTO?> Login(TaiKhoanLoginDTO taiKhoanLoginDTO);
         public Task<bool> DeleteTaiKhoan(int id);
-
+        public Task<bool> ChangePassword(int id, ChangePasswordDTO changePasswordDTO);
+        public Task<bool> ResetPassword(int id);
+        public Task<bool> ResetPasswordForSinhVienGiangVien(int id);
     }
 }
