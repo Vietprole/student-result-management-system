@@ -10,22 +10,31 @@ import MapHocPhanPLOPage from "@/pages/MapHocPhanPLOPage";
 import LopHocPhanPage from "@/pages/LopHocPhanPage";
 import CongThucDiemPage from "@/pages/CongThucDiemPage";
 import NhapDiemPage from "@/pages/NhapDiemPage";
-import KetQuaPage from "@/pages/KetQuaPage";
+import KetQuaPage from "@/pages/KetQuaHocTapPage";
 import XetChuanDauRaPage from "@/pages/XetChuanDauRaPage";
 import HoSoCaNhanPage from "@/pages/HoSoCaNhanPage";
 import CaiDatPage from "@/pages/CaiDatPage";
-import CongThucDiem from "@/pages/lophocphan/CongThucDiem";
-import BangDiem from "@/pages/lophocphan/BangDiem";
-import TaoCLO from "@/pages/lophocphan/TaoCLO";
-import NoiCLOPLO from "@/pages/lophocphan/NoiCLOPLO";
-import NoiCauHoiCLO from "@/pages/lophocphan/NoiCauHoiCLO";
-import DiemCLO from "@/pages/lophocphan/DiemCLO";
-import DiemPk from "@/pages/lophocphan/DiemPk";
-import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
-import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
+import QuanLyCauHoi from "@/pages/nhapdiem/QuanLyCauHoi";
+import BangDiem from "@/pages/nhapdiem/BangDiem";
+import TaoCLO from "@/pages/nhapdiem/TaoCLO";
+import NoiCLOPLO from "@/pages/nhapdiem/NoiCLOPLO";
+import NoiCauHoiCLO from "@/pages/nhapdiem/NoiCauHoiCLO";
+import DiemCLO from "@/pages/nhapdiem/DiemCLO";
+import DiemPk from "@/pages/nhapdiem/DiemPk";
+import TongKetCLO from "@/pages/nhapdiem/TongKetCLO";
+import BaoCaoCLO from "@/pages/nhapdiem/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
+import { getRole } from "@/utils/storage";
+import BangDiemGiangVienPage from "@/pages/nhapdiem/BangDiemGiangVienPage";
+import DiemDinhChinhPage from "@/pages/DiemDinhChinhPage";
+import QuanLyTaiKhoanPage from "@/pages/QuanLyTaiKhoanPage";
 
-const lophocphans = [
+const role = getRole();
+const RoleBasedRoute = ({ giangVienElement, defaultElement }) => {
+  return role === "GiangVien" ? giangVienElement : defaultElement;
+};
+
+const routes = [
   {
     path: "/",
     element: <DangNhap />,
@@ -74,8 +83,8 @@ const lophocphans = [
     path: "/nhapdiem",
     element: <NhapDiemPage />,
     children: [
-      { path: ":lopHocPhanId/cong-thuc-diem", element: <CongThucDiem /> },
-      { path: ":lopHocPhanId/bang-diem", element: <BangDiem /> },
+      { path: ":lopHocPhanId/quan-ly-cau-hoi", element: <QuanLyCauHoi /> },
+      { path: ":lopHocPhanId/bang-diem", element: <RoleBasedRoute giangVienElement={<BangDiemGiangVienPage />} defaultElement={<BangDiem/>} /> },
       { path: ":lopHocPhanId/tao-clo", element: <TaoCLO /> },
       { path: ":lopHocPhanId/noi-plo-clo", element: <NoiCLOPLO /> },
       { path: ":lopHocPhanId/noi-cau-hoi-clo", element: <NoiCauHoiCLO /> },
@@ -84,6 +93,10 @@ const lophocphans = [
       { path: ":lopHocPhanId/tong-ket-clo", element: <TongKetCLO /> },
       { path: ":lopHocPhanId/bao-cao-clo", element: <BaoCaoCLO /> },
     ],
+  },
+  {
+    path: "/diemdinhchinh",
+    element: <DiemDinhChinhPage />,
   },
   {
     path: "/ketqua",
@@ -98,11 +111,15 @@ const lophocphans = [
     element: <HoSoCaNhanPage />,
   },
   {
+    path: "/quanlytaikhoan",
+    element: <QuanLyTaiKhoanPage />,
+  },
+  {
     path: "/caidat",
     element: <CaiDatPage />,
   }
 ]
-const router = createBrowserRouter(lophocphans, {
+const router = createBrowserRouter(routes, {
   future: {
     v7_fetcherPersist: true,
     v7_normalizeFormMethod: true,

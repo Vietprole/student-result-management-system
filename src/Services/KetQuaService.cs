@@ -15,9 +15,11 @@ namespace Student_Result_Management_System.Services
     public class KetQuaService : IKetQuaService
     {
         private readonly ApplicationDBContext _context;
-        public KetQuaService(ApplicationDBContext context, ICauHoiService ICauHoiService)
+        private readonly ILogger<KetQuaService> _logger;
+        public KetQuaService(ApplicationDBContext context, ICauHoiService ICauHoiService, ILogger<KetQuaService> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<KetQuaDTO> CreateKetQuaAsync(CreateKetQuaDTO createKetQuaDTO)
         {
@@ -31,6 +33,27 @@ namespace Student_Result_Management_System.Services
         {
             var ketQuas = await _context.KetQuas.ToListAsync();
             return ketQuas.Select(ketQua => ketQua.ToKetQuaDTO()).ToList();
+        }
+
+        public async Task<List<KetQuaDTO>> GetFilteredKetQuasAsync(int? baiKiemTraId, int? sinhVienId)
+        {
+            IQueryable<KetQua> query = _context.KetQuas
+                .Include(kq => kq.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                .Include(kq => kq.SinhVien);
+
+            if (baiKiemTraId.HasValue)
+            {
+                query = query.Where(kq => kq.CauHoi.BaiKiemTraId == baiKiemTraId.Value);
+            }
+
+            if (sinhVienId.HasValue)
+            {
+                query = query.Where(kq => kq.SinhVienId == sinhVienId.Value);
+            }
+
+            var ketQuas = await query.ToListAsync();
+            return ketQuas.Select(hp => hp.ToKetQuaDTO()).ToList();
         }
 
         // public async Task<List<KetQuaDTO>> GetKetQuasByLopHocPhanIdAsync(int lopHocPhanId)
@@ -61,6 +84,36 @@ namespace Student_Result_Management_System.Services
             return ketQuaToUpdate.ToKetQuaDTO();
         }
 
+        public async Task<KetQuaDTO> UpsertKetQuaAsync(UpdateKetQuaDTO ketQuaDTO)
+        {
+            var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k =>
+                k.SinhVienId == ketQuaDTO.SinhVienId &&
+                k.CauHoiId == ketQuaDTO.CauHoiId);
+
+            if (existingKetQua != null)
+            {
+                // Update
+                existingKetQua = ketQuaDTO.ToKetQuaFromUpdateDTO(existingKetQua);
+            }
+            else
+            {
+                // Create
+                var newKetQua = new KetQua
+                {
+                    SinhVienId = ketQuaDTO.SinhVienId ?? throw new BusinessLogicException("SinhVienId is required"),
+                    CauHoiId = ketQuaDTO.CauHoiId ?? throw new BusinessLogicException("CauHoiId is required"),
+                    DiemTam = ketQuaDTO.DiemTam,
+                    DiemChinhThuc = ketQuaDTO.DiemChinhThuc,
+                    DaCongBo = false
+                };
+                await _context.KetQuas.AddAsync(newKetQua);
+                existingKetQua = newKetQua;
+            }
+
+            await _context.SaveChangesAsync();
+            return existingKetQua.ToKetQuaDTO();
+        }
+
         public async Task<bool> DeleteKetQuaAsync(int id)
         {
             var ketQua = await _context.KetQuas.FindAsync(id);
@@ -71,6 +124,38 @@ namespace Student_Result_Management_System.Services
             _context.KetQuas.Remove(ketQua);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<KetQuaDTO?> ConfirmKetQuaAsync(ConfirmKetQuaDTO confirmKetQuaDTO)
+        {
+            var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k =>
+                k.SinhVienId == confirmKetQuaDTO.SinhVienId &&
+                k.CauHoiId == confirmKetQuaDTO.CauHoiId) ?? throw new NotFoundException(
+                    $"Không tìm thấy kết quả với SinhVienId={confirmKetQuaDTO.SinhVienId} và CauHoiId={confirmKetQuaDTO.CauHoiId}");
+            
+            if (existingKetQua.DiemTam == null)
+            {
+                throw new BusinessLogicException("Chưa nhập điểm");
+            }
+            existingKetQua.DaXacNhan = true;
+            await _context.SaveChangesAsync();
+            return existingKetQua.ToKetQuaDTO();
+        }
+
+        public async Task<KetQuaDTO?> AcceptKetQuaAsync(AcceptKetQuaDTO acceptKetQuaDTO)
+        {
+            var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k =>
+                k.SinhVienId == acceptKetQuaDTO.SinhVienId &&
+                k.CauHoiId == acceptKetQuaDTO.CauHoiId) ?? throw new NotFoundException(
+                    $"Không tìm thấy kết quả với SinhVienId={acceptKetQuaDTO.SinhVienId} và CauHoiId={acceptKetQuaDTO.CauHoiId}");
+
+            if (existingKetQua.DiemChinhThuc != null)
+            {
+                throw new BusinessLogicException("Điểm này đã được duyệt");
+            }
+            existingKetQua.DiemChinhThuc = existingKetQua.DiemTam;
+            await _context.SaveChangesAsync();
+            return existingKetQua.ToKetQuaDTO();
         }
 
         public async Task<decimal> CalculateDiemCLO(int sinhVienId, int cLOId)
@@ -88,19 +173,34 @@ namespace Student_Result_Management_System.Services
                 .Where(kq => kq.SinhVienId == sinhVienId && cauHoiIds.Contains(kq.CauHoiId))
                 .ToListAsync();
 
-            // Check if any DiemChinhThuc is null
-            if (ketQuas.Any(kq => kq.DiemChinhThuc == null))
-            {
-                throw new BusinessLogicException("Một số điểm chưa phải là chính thức");
-            }
-
             decimal totalScore = 0;
+            // Check if any DiemChinhThuc is null
+            var useTemporaryScores = ketQuas.Any(kq => kq.DiemChinhThuc == null);
+
             foreach (var ketQua in ketQuas)
             {
                 var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
-                var diem = ketQua.DiemChinhThuc ?? 0;
-                totalScore += ketQua.DiemChinhThuc ?? 0 * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                decimal diem = useTemporaryScores ? (ketQua.DiemTam ?? 0m) : (ketQua.DiemChinhThuc ?? 0m);
+                decimal trongSoCauHoi = cauHoi.TrongSo;
+                decimal trongSoBaiKiemTra = cauHoi.BaiKiemTra?.TrongSo ?? 0m;
+                decimal thangDiem = cauHoi.ThangDiem;
+
+                var score = (diem / thangDiem) * trongSoCauHoi * trongSoBaiKiemTra;
+                totalScore += score;
+                _logger.LogInformation(
+                    "CauHoi {CauHoiId}: Diem={Diem}, ThangDiem={ThangDiem}, TrongSoCH={TrongSoCH}, TrongSoBKT={TrongSoBKT}, Score={Score}",
+                    cauHoi.Id,
+                    diem,
+                    thangDiem,
+                    trongSoCauHoi,
+                    trongSoBaiKiemTra,
+                    score
+                );
             }
+            _logger.LogInformation("Final Score for SinhVien {SinhVienId}, CLO {CLOId}: {Score}",
+                sinhVienId,
+                cLOId,
+                totalScore);
 
             return decimal.Round(totalScore, 2, MidpointRounding.AwayFromZero);
         }
@@ -125,7 +225,7 @@ namespace Student_Result_Management_System.Services
             decimal maxScore = 0;
             foreach (var cauHoi in clo.CauHois)
             {
-                maxScore += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                maxScore += cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0 / cauHoi.ThangDiem;
             }
             return decimal.Round(maxScore, 2, MidpointRounding.AwayFromZero);
         }
@@ -164,12 +264,13 @@ namespace Student_Result_Management_System.Services
                 totalDiemCLO += await CalculateDiemCLO(sinhVienId, clo.Id);
 
                 // Calculate diem-clo-max
-                decimal maxDiemClo = 0;
-                foreach (var cauHoi in clo.CauHois)
-                {
-                    maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
-                }
-                totalMaxDiemCLO += maxDiemClo;
+                // decimal maxDiemClo = 0;
+                // foreach (var cauHoi in clo.CauHois)
+                // {
+                //     maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                // }
+                // totalMaxDiemCLO += maxDiemClo;
+                totalMaxDiemCLO += await CalculateDiemCLOMax(clo.Id);
             }
 
             decimal finalRatio = 10m * totalDiemCLO / totalMaxDiemCLO;
@@ -188,7 +289,7 @@ namespace Student_Result_Management_System.Services
                     .ThenInclude(c => c.CauHois)
                         .ThenInclude(ch => ch.BaiKiemTra)
                 .FirstOrDefaultAsync(p => p.Id == ploId) ?? throw new BusinessLogicException("Không tìm thấy PLO");
-            
+
             decimal totalPkMulSoTinChi = 0;
             decimal totalSoTinChi = 0;
 

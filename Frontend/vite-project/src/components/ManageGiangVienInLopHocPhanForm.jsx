@@ -161,13 +161,11 @@ const ManageGiangVienInLopHocPhanForm = forwardRef(({ lopHocPhanId }, ref) => {
   useImperativeHandle(ref, () => ({
     handleRemoveGiangVien: async () => {
       const selectedGiangViens = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
-      console.log("selectedGiangViens: ", selectedGiangViens);
     
       try {
         for (const giangVienId of selectedGiangViens) {
           await removeGiangVienFromLopHocPhan(lopHocPhanId, giangVienId);
         }
-        console.log("Selected Sinh Viens removed successfully");
         // Optionally, refresh the table data here
       } catch (error) {
         console.error("Error removing selected Sinh Viens:", error);

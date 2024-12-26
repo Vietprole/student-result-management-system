@@ -19,7 +19,8 @@ public static class LopHocPhanMapper
             HocKyId = lopHocPhanModel.HocKyId,
             TenHocPhan = lopHocPhanModel.HocPhan.Ten,
             TenHocKy = lopHocPhanModel.HocKy.Ten,
-            HanDeXuatCongThucDiem = TimeZoneInfo.ConvertTimeFromUtc(lopHocPhanModel.HanDeXuatCongThucDiem, TimeZoneInfo.Local),
+            // HanDeXuatCongThucDiem = TimeZoneInfo.ConvertTimeFromUtc(lopHocPhanModel.HanDeXuatCongThucDiem, TimeZoneInfo.Local),
+            HanDeXuatCongThucDiem = DateTime.SpecifyKind(lopHocPhanModel.HanDeXuatCongThucDiem, DateTimeKind.Utc),
             GiangVienId = lopHocPhanModel.GiangVienId??0,
             TenGiangVien = lopHocPhanModel.GiangVien?.TaiKhoan?.Ten ?? string.Empty,
         };

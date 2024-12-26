@@ -29,9 +29,9 @@ namespace lopHocPhan_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? hocPhanId, [FromQuery] int? hocKyId)
+        public async Task<IActionResult> GetAll([FromQuery] int? hocPhanId, [FromQuery] int? hocKyId, [FromQuery] int? giangVienId, [FromQuery] int? sinhVienId)
         {
-            var lopHocPhans = await _lopHocPhanService.GetFilteredLopHocPhansAsync(hocPhanId, hocKyId);
+            var lopHocPhans = await _lopHocPhanService.GetFilteredLopHocPhansAsync(hocPhanId, hocKyId, giangVienId, sinhVienId);
             var lopHocPhanDTOs = lopHocPhans.Select(lhp => lhp.ToLopHocPhanDTO()).ToList();
             return Ok(lopHocPhanDTOs);
         }
@@ -94,7 +94,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         {
             try {
                 var sinhViens = await _lopHocPhanService.GetSinhViensInLopHocPhanAsync(id);
-                return Ok(sinhViens);
+                return Ok(sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
             catch (BusinessLogicException ex){
                 return BadRequest(ex.Message);
@@ -109,7 +109,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         {
             try {
                 var result = await _lopHocPhanService.AddSinhViensToLopHocPhanAsync(id, sinhVienIds);
-                return CreatedAtAction(nameof(GetSinhViens), new { id }, result);
+                return CreatedAtAction(nameof(GetSinhViens), new { id }, result.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
             catch (BusinessLogicException ex){
                 return BadRequest(ex.Message);
@@ -124,7 +124,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         {
             try {
                 var result = await _lopHocPhanService.UpdateSinhViensInLopHocPhanAsync(id, sinhVienIds);
-                return Ok(result);
+                return Ok(result.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
             catch (BusinessLogicException ex){
                 return BadRequest(ex.Message);
@@ -139,7 +139,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         {
             try {
                 var result = await _lopHocPhanService.RemoveSinhVienFromLopHocPhanAsync(id, sinhVienId);
-                return Ok(result);
+                return Ok(result.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
             catch (BusinessLogicException ex){
                 return BadRequest(ex.Message);

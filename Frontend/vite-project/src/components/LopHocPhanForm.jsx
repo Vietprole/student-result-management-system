@@ -48,22 +48,18 @@ export function LopHocPhanForm({ lopHocPhan, handleAdd, handleEdit, setIsDialogO
   const [comboBoxHocPhans, setComboBoxHocPhans] = useState([]);
   const [comboBoxHocKys, setComboBoxHocKys] = useState([]);
   const [comboBoxGiangViens, setComboBoxGiangViens] = useState([]);
-  console.log("lopHocPhan: ", lopHocPhan);
   useEffect(() => {
     const fetchData = async () => {
       const comboBoxHocPhans = await getAllHocPhans();
       const mappedComboBoxHocPhans = comboBoxHocPhans.map(hocphan => ({ label: hocphan.ten, value: hocphan.id }));
-      console.log("mapped", mappedComboBoxHocPhans);
       setComboBoxHocPhans(mappedComboBoxHocPhans);
 
       const comboBoxHocKys = await getAllHocKys();
       const mappedComboBoxHocKys = comboBoxHocKys.map(hocky => ({ label: hocky.tenHienThi, value: hocky.id }));
-      console.log("mapped", mappedComboBoxHocKys);
       setComboBoxHocKys(mappedComboBoxHocKys);
 
       const comboBoxGiangViens = await getAllGiangViens();
       const mappedComboBoxGiangViens = comboBoxGiangViens.map(giangvien => ({ label: giangvien.ten, value: giangvien.id }));
-      console.log("mapped", mappedComboBoxGiangViens);
       setComboBoxGiangViens(mappedComboBoxGiangViens);
     };
     fetchData();

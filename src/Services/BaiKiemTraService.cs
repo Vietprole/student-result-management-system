@@ -90,34 +90,57 @@ namespace Student_Result_Management_System.Services
         {
             var lopHocPhan = await _context.LopHocPhans
                 .Include(l => l.BaiKiemTras)
-                .FirstOrDefaultAsync(l => l.Id == lopHocPhanId);
+                .FirstOrDefaultAsync(l => l.Id == lopHocPhanId)
+                ?? throw new NotFoundException($"Không tìm thấy lớp học phần với id {lopHocPhanId}");
 
-            if (lopHocPhan == null)
-                throw new NotFoundException($"Không tìm thấy lớp học phần với id {lopHocPhanId}");
-
-            // Remove existing BaiKiemTras
-            _context.BaiKiemTras.RemoveRange(lopHocPhan.BaiKiemTras);
-
-            // Create new BaiKiemTras
-            var newBaiKiemTras = new List<BaiKiemTra>();
-            var congThucDiem = string.Empty;
-
-            for (int i = 0; i < createBaiKiemTraDTOs.Count; i++)
+            var existingLoais = lopHocPhan.BaiKiemTras.ToDictionary(b => b.Loai, b => b);
+            var newLoais = createBaiKiemTraDTOs.Select(dto => dto.Loai).ToHashSet();
+            
+            // Update or Add BaiKiemTras
+            foreach (var createDTO in createBaiKiemTraDTOs)
             {
-                var baiKiemTra = createBaiKiemTraDTOs[i].ToBaiKiemTraFromCreateDTO();
-                baiKiemTra.LopHocPhanId = lopHocPhanId;
-                newBaiKiemTras.Add(baiKiemTra);
-
-                congThucDiem += baiKiemTra.Loai + "*" + baiKiemTra.TrongSo.ToString();
-                if (i < createBaiKiemTraDTOs.Count - 1)
-                    congThucDiem += "+";
+                // Convert DateTimes to UTC
+                // var ngayMoNhapDiem = createDTO.NgayMoNhapDiem.HasValue ? DateTime.SpecifyKind(createDTO.NgayMoNhapDiem.Value, DateTimeKind.Utc) : (DateTime?)null;
+                // var hanNhapDiem = createDTO.HanNhapDiem.HasValue ? DateTime.SpecifyKind(createDTO.HanNhapDiem.Value, DateTimeKind.Utc) : (DateTime?)null;
+                // var hanDinhChinh = createDTO.HanDinhChinh.HasValue ? DateTime.SpecifyKind(createDTO.HanDinhChinh.Value, DateTimeKind.Utc) : (DateTime?)null;
+                if (existingLoais.TryGetValue(createDTO.Loai, out var existingBaiKiemTra))
+                {
+                    // Update existing
+                    existingBaiKiemTra.TrongSo = createDTO.TrongSo;
+                    existingBaiKiemTra.TrongSoDeXuat = createDTO.TrongSoDeXuat;
+                    existingBaiKiemTra.NgayMoNhapDiem = createDTO.NgayMoNhapDiem;
+                    existingBaiKiemTra.HanNhapDiem = createDTO.HanNhapDiem;
+                    existingBaiKiemTra.HanDinhChinh = createDTO.HanDinhChinh;
+                }
+                else
+                {
+                    // Add new
+                    var newBaiKiemTra = createDTO.ToBaiKiemTraFromCreateDTO();
+                    newBaiKiemTra.LopHocPhanId = lopHocPhanId;
+                    lopHocPhan.BaiKiemTras.Add(newBaiKiemTra);
+                }
             }
 
-            // Add new BaiKiemTras
-            await _context.BaiKiemTras.AddRangeAsync(newBaiKiemTras);
-            await _context.SaveChangesAsync();
+            // Remove BaiKiemTras not in input list
+            var baiKiemTrasToRemove = lopHocPhan.BaiKiemTras
+                .Where(b => !newLoais.Contains(b.Loai))
+                .ToList();
+            
+            foreach (var baiKiemTra in baiKiemTrasToRemove)
+            {
+                try {
+                    _context.BaiKiemTras.Remove(baiKiemTra);
+                } catch (Exception) {
+                    throw new BusinessLogicException($"Không thể xóa bài kiểm tra {baiKiemTra.Loai} trong lớp học phần {lopHocPhanId} vì đã có đối tượng con liên quan.");
+                }
+            }
 
-            return newBaiKiemTras.Select(b => b.ToBaiKiemTraDTO()).ToList();
+            // Update CongThucDiem
+            // var congThucDiem = string.Join("+", 
+            //     lopHocPhan.BaiKiemTras.Select(b => $"{b.Loai}*{b.TrongSo}"));
+
+            await _context.SaveChangesAsync();
+            return lopHocPhan.BaiKiemTras.Select(b => b.ToBaiKiemTraDTO()).ToList();
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.CLO;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Services;
@@ -15,8 +16,8 @@ namespace Student_Result_Management_System.Controllers
     // [Authorize]
     public class CLOController : ControllerBase
     {
-        private readonly CLOService _cloService;
-        public CLOController(CLOService cloService)
+        private readonly ICLOService _cloService;
+        public CLOController(ICLOService cloService)
         {
             _cloService = cloService;
         }

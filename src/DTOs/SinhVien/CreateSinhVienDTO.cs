@@ -10,4 +10,5 @@ public class CreateSinhVienDTO
     [Required(ErrorMessage = "Năm nhập học không được để trống")]
     public int NamNhapHoc { get; set; }
     public int KhoaId { get; set; }
+    public int? NganhId { get; set; }
 }

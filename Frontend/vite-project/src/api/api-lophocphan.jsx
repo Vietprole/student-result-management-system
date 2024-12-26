@@ -1,6 +1,7 @@
 import API_BASE_URL from "./base-url";
 import axios from 'axios';
 import { getAccessToken } from "../utils/storage";
+import { createSearchURL } from "../utils/string";
 
 const API_LOPHOCPHAN = `${API_BASE_URL}/api/lophocphan`;
 
@@ -14,6 +15,21 @@ export const getAllLopHocPhans = async () => {
     console.log("error message: ", error.message);
   }
 };
+
+export const getLopHocPhans = async (hocPhanId, hocKyId, giangVienId, sinhVienId) => {
+  try {
+    const paramsObj = { hocPhanId, hocKyId, giangVienId, sinhVienId };
+    const url = createSearchURL(API_LOPHOCPHAN, paramsObj);
+    console.log("url: ", url);
+
+    const response = await axios.get(url, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
 
 export const getLopHocPhanById = async (id) => {
   try {
@@ -117,6 +133,17 @@ export const addGiangViensToLopHocPhan = async (lopHocPhanId, giangVienIdsList) 
 export const removeGiangVienFromLopHocPhan = async (lopHocPhanId, giangVienId) => {
   try {
     const response = await axios.delete(`${API_LOPHOCPHAN}/${lopHocPhanId}/remove-giangvien/${giangVienId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+}
+
+export const updateCongThucDiem = async (lopHocPhanId, baiKiemTras) => {
+  try {
+    const response = await axios.put(`${API_LOPHOCPHAN}/${lopHocPhanId}/congthucdiem`, baiKiemTras, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

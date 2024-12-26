@@ -60,27 +60,11 @@ namespace Student_Result_Management_System.Services
 
         public async Task<TaiKhoanDTO?> CreateTaiKhoanGiangVien(CreateGiangVienDTO createGiangVienDTO)
         {
-           string? MaKhoa = await  _khoaService.GetMaKhoa(createGiangVienDTO.KhoaId);
-           if (MaKhoa == null)
-           {
-               return null;
-           }
-           int soluong = await GetCountGiangVien(createGiangVienDTO.KhoaId)+1;
-           while(true)
-           {
-               if(await _context.GiangViens.AnyAsync(gv => gv.MaGiangVien == MaKhoa + (soluong + 1).ToString("D7")))
-               {
-                   soluong++;
-               }
-               else
-               {
-                   break;
-               }
-           }
-           string Magiangvien = MaKhoa+(soluong + 1).ToString("D7");
+           int soluong = await GetCountGiangVien();
+           string Magiangvien = (soluong + 1).ToString("D5");
            CreateTaiKhoanDTO createTaiKhoanDTO = new CreateTaiKhoanDTO
            {
-               Username = "gv"+Magiangvien,
+               Username = Magiangvien,
                Password = "Gv@"+Magiangvien,
                TenChucVu = "GiangVien",
                HovaTen = createGiangVienDTO.Ten
@@ -124,9 +108,9 @@ namespace Student_Result_Management_System.Services
             return await _context.GiangViens.Include(x=>x.TaiKhoan).Include(gv=>gv.Khoa).FirstOrDefaultAsync(c=>c.Id==id);
         }
 
-        public async Task<int> GetCountGiangVien(int khoaId)
+        public async Task<int> GetCountGiangVien()
         {
-            int count = await _context.GiangViens.CountAsync(x => x.KhoaId == khoaId);
+            int count = await _context.GiangViens.CountAsync();
             return count;
         }
 

@@ -224,7 +224,6 @@ export default function HocPhanPage() {
                 <HocPhanForm hocphan={item} handleEdit={handleEdit} />
               </DialogContent>
             </Dialog>
-            {console.log("nganhId: ", nganhId)}
             {nganhIdParam && (
               <DropdownMenuItem onSelect={() => handleRemoveHocPhanFromNganh(nganhId, item.id)}>
                 Bỏ Học Phần khỏi Ngành

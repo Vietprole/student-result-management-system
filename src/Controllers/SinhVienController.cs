@@ -27,9 +27,9 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId, [FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
-            List<SinhVien> sinhViens = await _sinhVienService.GetAllSinhVien();
+            List<SinhVien> sinhViens = await _sinhVienService.GetFilteredSinhViensAsync(khoaId, nganhId, lopHocPhanId);
             List<SinhVienDTO> result = new List<SinhVienDTO>();
             foreach (SinhVien sv in sinhViens)
             {

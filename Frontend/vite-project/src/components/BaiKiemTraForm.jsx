@@ -22,31 +22,40 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
+  id: z.number(),
   loai: z.string().min(2, {
     message: "Loai must be at least 2 characters.",
   }),
-  trongSo: z.string()
+  trongSo: z.coerce.number()
   .refine((val) => !isNaN(parseFloat(val)), {
     message: "Trong so must be a number",
   })
   .refine((val) => parseFloat(val) > 0 && parseFloat(val) < 1, {
     message: "Trong so must be between 0 and 1",
   }),
-  lopHocPhanId: z.coerce.number(
-    {
-      message: "Lop Hoc Phan Id must be a number",
-    }
-  ).min(1, {
-    message: "Lop Hoc Phan Id must be at least 1 characters.",
+  ngayMoNhapDiem: z.date({
+    required_error: "Please select a date.",
+  }),
+  hanNhapDiem: z.date({
+    required_error: "Please select a date.",
+  }),
+  hanDinhChinh: z.date({
+    required_error: "Please select a date.",
   }),
 });
 
-export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen }) {
+export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen, maxId }) {
   const { lopHocPhanId } = useParams();
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: baiKiemTra ||{
+    defaultValues: baiKiemTra ? {
+      ...baiKiemTra,
+      ngayMoNhapDiem: new Date(baiKiemTra.ngayMoNhapDiem),
+      hanNhapDiem: new Date(baiKiemTra.hanNhapDiem),
+      hanDinhChinh: new Date(baiKiemTra.hanDinhChinh),
+    } : {
+      id: maxId + 1,
       loai: "",
       trongSo: "",
       lopHocPhanId: lopHocPhanId,
@@ -66,6 +75,12 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
       setIsDialogOpen(false);
     }
   }
+
+  const setEndOfDay = (date) => {
+    const newDate = new Date(date);
+    newDate.setHours(23, 59, 59);
+    return newDate;
+  };
 
   return (
     <Form {...form}>
@@ -188,7 +203,8 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
+                    onSelect={(date) => field.onChange(setEndOfDay(date))}
                     initialFocus
                   />
                 </PopoverContent>
@@ -229,7 +245,8 @@ export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogO
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    // onSelect={field.onChange}
+                    onSelect={(date) => field.onChange(setEndOfDay(date))}
                     initialFocus
                   />
                 </PopoverContent>

@@ -25,26 +25,26 @@ import {
 import { SinhVienForm } from "@/components/SinhVienForm";
 import { getAllKhoas } from "@/api/api-khoa";
 import { ComboBox } from "@/components/ComboBox";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getAllLopHocPhans } from "@/api/api-lophocphan";
 import { createSearchURL } from "@/utils/string";
 
 const createSinhVienColumns = (handleEdit, handleDelete) => [
   {
-    accessorKey: "id",
+    accessorKey: "maSinhVien",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Id
+          Mã Sinh Viên
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maSinhVien")}</div>,
   },
   {
     accessorKey: "ten",
@@ -92,19 +92,34 @@ const createSinhVienColumns = (handleEdit, handleDelete) => [
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
   },
   {
-    accessorKey: "namBatDau",
+    accessorKey: "tenNganh",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Năm Bắt Đầu
+          Tên Ngành
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("namBatDau")}</div>,
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenNganh")}</div>,
+  },
+  {
+    accessorKey: "namNhapHoc",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Năm Nhập Học
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="px-4 py-2">{row.getValue("namNhapHoc")}</div>,
   },
   {
     id: "actions",
@@ -183,21 +198,22 @@ export default function SinhVienPage() {
   const [comboBoxLopHocPhanId, setComboBoxLopHocPhanId] = useState(lopHocPhanIdParam);
   const baseUrl = "/sinhvien";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const dataKhoa = await getAllKhoas();
-      const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      setKhoaItems(mappedKhoaItems);
+  const fetchData = useCallback(async () => {
+    const dataKhoa = await getAllKhoas();
+    const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+    setKhoaItems(mappedKhoaItems);
 
-      const dataLopHocPhan = await getAllLopHocPhans();
-      const mappedLopHocPhanItems = dataLopHocPhan.map(lhp => ({ label: lhp.ten, value: lhp.id }));
-      setLopHocPhanItems(mappedLopHocPhanItems);
+    const dataLopHocPhan = await getAllLopHocPhans();
+    const mappedLopHocPhanItems = dataLopHocPhan.map(lhp => ({ label: lhp.ten, value: lhp.id }));
+    setLopHocPhanItems(mappedLopHocPhanItems);
 
-      const data = await getSinhViens(khoaId, lopHocPhanId);
-      setData(data);
-    };
-    fetchData();
+    const data = await getSinhViens(khoaId, lopHocPhanId);
+    setData(data);
   }, [khoaId, lopHocPhanId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleGoClick = () => {
     setKhoaId(comboBoxKhoaId);
@@ -221,7 +237,7 @@ export default function SinhVienPage() {
           entity="Sinh Vien"
           createColumns={createSinhVienColumns}
           data={data}
-          setData={setData}
+          fetchData={fetchData}
           deleteItem={deleteSinhVien}
           columnToBeFiltered={"ten"}
           ItemForm={SinhVienForm}

@@ -54,14 +54,24 @@ const truongKhoaItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   }
 ]
-const giangvienitem = [
+const giangVienItem = [
   {
     title: "Lớp học phần",
     url: "/lophocphan",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Nhập điểm",
+    url: "/nhapdiem",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Điểm Đính Chính",
+    url: "/diemdinhchinh",
     icon: LopHocPhanIcon,
   },
   {
@@ -86,7 +96,7 @@ const giangvienitem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   },
 ]
@@ -94,7 +104,7 @@ const giangvienitem = [
 const sinhVienItem = [
   {
     title: "Kết quả học tập",
-    url: "/ketquahoctap",
+    url: "/ketqua",
     icon: KetQuaIcon,
   },
   {
@@ -109,7 +119,7 @@ const sinhVienItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   }
 ]
@@ -186,6 +196,11 @@ const adminItem = [
     icon: LopHocPhanIcon,
   },
   {
+    title: "Điểm Đính Chính",
+    url: "/diemdinhchinh",
+    icon: LopHocPhanIcon,
+  },
+  {
     title: "Kết quả học tập",
     url: "/ketqua",
     icon: KetQuaIcon,
@@ -194,6 +209,11 @@ const adminItem = [
     title: "Xét chuẩn đầu ra",
     url: "/xetchuandaura",
     icon: XetChuanDauRaIcon,
+  },
+  {
+    title: "Quản lý tài khoản",
+    url: "/quanlytaikhoan",
+    icon: HoSoCaNhanIcon,
   },
   {
     title: "Hồ sơ cá nhân",
@@ -239,28 +259,13 @@ const phongDaoTaoItem = [
   },
   {
     title: "Đăng xuất",
-    url: "/dangxuat",
+    url: "/",
     icon: DangXuatIcon,
   },
 
 ]
 export function AppSidebar() {
-  const location = useLocation();
-  const [openItem, setOpenItem] = useState(null);
-
-  useEffect(() => {
-    // Mở submenu nếu URL hiện tại khớp với một trong các subItems
-    items.forEach(item => {
-      if (item.subItems) {
-        item.subItems.forEach(subItem => {
-          if (location.pathname.startsWith(subItem.url)) {
-            setOpenItem(item.title);
-          }
-        });
-      }
-    });
-  }, [location.pathname]);
-
+  // const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
   let items = [];
 
   // switch (role) {
@@ -284,15 +289,6 @@ export function AppSidebar() {
   //     break;
   // }
   items = adminItem;
-
-  const toggleItem = (title, event) => {
-    if (event) event.preventDefault();
-    setOpenItem(openItem === title ? null : title);
-  };
-
-  const handleSubItemClick = (event) => {
-    event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
-  };
 
   return (
     <Sidebar>

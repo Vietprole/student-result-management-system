@@ -35,6 +35,8 @@ public static class KetQuaMapper
 
     public static KetQua ToKetQuaFromUpdateDTO(this UpdateKetQuaDTO updateKetQuaDTO, KetQua existingKetQua)
     {
+        existingKetQua.SinhVienId = updateKetQuaDTO.SinhVienId ?? existingKetQua.SinhVienId;
+        existingKetQua.CauHoiId = updateKetQuaDTO.CauHoiId ?? existingKetQua.CauHoiId;
         existingKetQua.DiemTam = updateKetQuaDTO.DiemTam ?? existingKetQua.DiemTam;
         existingKetQua.DiemChinhThuc = updateKetQuaDTO.DiemChinhThuc ?? existingKetQua.DiemChinhThuc;
         existingKetQua.DaCongBo = updateKetQuaDTO.DaCongBo ?? existingKetQua.DaCongBo;

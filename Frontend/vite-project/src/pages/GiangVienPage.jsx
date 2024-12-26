@@ -26,7 +26,7 @@ import {
 import { GiangVienForm } from "@/components/GiangVienForm";
 import { getAllKhoas } from "@/api/api-khoa";
 import { ComboBox } from "@/components/ComboBox";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getAllLopHocPhans } from "@/api/api-lophocphan";
 import { createSearchURL } from "@/utils/string";
@@ -153,22 +153,23 @@ export default function GiangVienPage() {
   const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
   const [comboBoxLopHocPhanId, setComboBoxLopHocPhanId] = useState(lopHocPhanIdParam);
   const baseUrl = "/giangvien";
+  
+  const fetchData = useCallback(async () => {
+    const dataKhoa = await getAllKhoas();
+    const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
+    setKhoaItems(mappedKhoaItems);
+
+    const dataLopHocPhan = await getAllLopHocPhans();
+    const mappedLopHocPhanItems = dataLopHocPhan.map(lhp => ({ label: lhp.ten, value: lhp.id }));
+    setLopHocPhanItems(mappedLopHocPhanItems);
+
+    const data = await getGiangViens(khoaId, lopHocPhanId);
+    setData(data);
+  }, [khoaId, lopHocPhanId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const dataKhoa = await getAllKhoas();
-      const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
-      setKhoaItems(mappedKhoaItems);
-
-      const dataLopHocPhan = await getAllLopHocPhans();
-      const mappedLopHocPhanItems = dataLopHocPhan.map(lhp => ({ label: lhp.ten, value: lhp.id }));
-      setLopHocPhanItems(mappedLopHocPhanItems);
-
-      const data = await getGiangViens(khoaId, lopHocPhanId);
-      setData(data);
-    };
     fetchData();
-  }, [khoaId, lopHocPhanId]);
+  }, [fetchData]);
 
   const handleGoClick = () => {
     setKhoaId(comboBoxKhoaId);
@@ -202,7 +203,7 @@ export default function GiangVienPage() {
           entity="Giang Vien"
           createColumns={createGiangVienColumns}
           data={data}
-          setData={setData}
+          fetchData={fetchData}
           deleteItem={deleteGiangVien}
           columnToBeFiltered={"ten"}
           ItemForm={GiangVienForm}

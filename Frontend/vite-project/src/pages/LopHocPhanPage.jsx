@@ -152,6 +152,7 @@ export default function LopHocPhanPage() {
         const date = row.getValue("hanDeXuatCongThucDiem");
         const formattedDate = date ? 
           new Date(date).toLocaleDateString('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
             day: '2-digit',
             month: '2-digit',
             year: 'numeric'

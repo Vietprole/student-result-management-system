@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Student_Result_Management_System.DTOs.DiemDinhChinh;
 using Student_Result_Management_System.DTOs.KetQua;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Utils;
@@ -23,9 +24,9 @@ namespace ketQua_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId, [FromQuery] int? sinhVienId) // async go with Task<> to make function asynchronous
         {
-            var ketQuaDTOs = await _ketQuaService.GetAllKetQuasAsync();
+            var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId, sinhVienId);
             return Ok(ketQuaDTOs);
         }
 
@@ -54,6 +55,20 @@ namespace ketQua_Result_Management_System.Controllers
             return Ok(updatedKetQuaDTO);
         }
 
+        [HttpPut("upsert")]
+        public async Task<IActionResult> Upsert([FromBody] UpdateKetQuaDTO ketQuaDTO)
+        {
+            try 
+            {
+                var result = await _ketQuaService.UpsertKetQuaAsync(ketQuaDTO);
+                return Ok(result);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -61,6 +76,42 @@ namespace ketQua_Result_Management_System.Controllers
             if (!isDeleted)
                 return NotFound();
             return NoContent();
+        }
+
+        [Authorize(Roles = "Admin, GiangVien")]
+        [HttpPost("confirm")]
+        public async Task<IActionResult> Confirm([FromBody] ConfirmKetQuaDTO confirmKetQuaDTO)
+        {
+            try {
+                var ketQuaDTO = await _ketQuaService.ConfirmKetQuaAsync(confirmKetQuaDTO);
+                return Ok(ketQuaDTO);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin, PhongDaoTao")]
+        [HttpPost("accept")]
+        public async Task<IActionResult> Accept([FromBody] AcceptKetQuaDTO acceptKetQuaDTO)
+        {
+            try {
+                var ketQuaDTO = await _ketQuaService.AcceptKetQuaAsync(acceptKetQuaDTO);
+                return Ok(ketQuaDTO);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("calculate-diem-clo")]

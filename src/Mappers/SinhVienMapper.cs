@@ -11,9 +11,12 @@ public static class SinhVienMapper
         return new SinhVienDTO
         {
             Id = sinhVienModel.Id,
+            MaSinhVien = sinhVienModel.MaSinhVien,
             Ten = sinhVienModel.TaiKhoan?.Ten ?? string.Empty,
             KhoaId = sinhVienModel.KhoaId, //Để đây hồi tin sửa
             TenKhoa = sinhVienModel.Khoa?.Ten ?? string.Empty,
+            NganhId = sinhVienModel.NganhId,
+            TenNganh = sinhVienModel.Nganh?.Ten ?? string.Empty,
             NamNhapHoc = sinhVienModel.NamNhapHoc
         };
     }
@@ -23,6 +26,7 @@ public static class SinhVienMapper
         return new SinhVien
         {
             KhoaId = createSinhVienDTO.KhoaId,
+            NganhId = createSinhVienDTO.NganhId,
             NamNhapHoc = createSinhVienDTO.NamNhapHoc
         };
     }

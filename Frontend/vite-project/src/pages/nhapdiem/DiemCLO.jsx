@@ -20,28 +20,28 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { ArrowUpDown } from 'lucide-react'
 import { Label } from "@/components/ui/label"
-// import { calculateDiemPk, calculateDiemPkMax } from "@/api/api-ketqua"
-import { calculateDiemPk } from "@/api/api-ketqua"
-import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
+import { calculateDiemCLO, calculateDiemCLOMax } from "@/api/api-ketqua"
+import { getSinhViens } from "@/api/api-sinhvien"
 import { useParams } from "react-router-dom"
-import { getPLOsByLopHocPhanId } from "@/api/api-plo"
+import { getCLOsByLopHocPhanId } from "@/api/api-clo"
+import { set } from "react-hook-form"
 
-// const PLOs = [
+// const CLOs = [
 //   {
 //     "id": 1,
-//     "ten": "PLO 1",
+//     "ten": "CLO 1",
 //     "moTa": "Kỹ Năng Làm Việc Nhóm",
 //     "lopHocPhanId": 1
 //   },
 //   {
 //     "id": 9,
-//     "ten": "PLO 2",
+//     "ten": "CLO 2",
 //     "moTa": "Kỹ Năng Ngoại Ngữ",
 //     "lopHocPhanId": 1
 //   },
 //   {
 //     "id": 10,
-//     "ten": "PLO 3",
+//     "ten": "CLO 3",
 //     "moTa": "Kỹ Năng Giao Tiếp",
 //     "lopHocPhanId": 1
 //   }
@@ -66,8 +66,7 @@ import { getPLOsByLopHocPhanId } from "@/api/api-plo"
 //   }
 // ]
 
-// const createColumns = (PLOs, listDiemPkMax, isBase10, diemDat) => [
-const createColumns = (PLOs, diemDat) => [
+const createColumns = (CLOs, listDiemCLOMax, isBase10, diemDat) => [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -96,29 +95,27 @@ const createColumns = (PLOs, diemDat) => [
       )
     },
   },
-  ...PLOs.map((plo) => ({
-    accessorKey: `plo_${plo.id}`,
+  ...CLOs.map((clo, index) => ({
+    accessorKey: `clo_${clo.id}`,
     header: ({ column }) => {
-      // const diemPLOMax = listDiemPkMax[index];
+      const diemCLOMax = listDiemCLOMax[index];
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           <div>
-            <div>{plo.ten}</div>
-            {/* {isBase10 ? <div>10</div> : <div>{diemPLOMax}</div>} */}
+            <div>{clo.ten}</div>
+            {isBase10 ? <div>10</div> : <div>{diemCLOMax}</div>}
           </div>
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      // const base10Score = (row.original[`plo_${plo.id}`] === 0 ? 0 : row.original[`plo_${plo.id}`] / listDiemPkMax[index] * 10);
-      // const score = isBase10 ? base10Score : row.original[`plo_${plo.id}`];
-      const score = row.original[`plo_${plo.id}`];
-      // const cellClass = base10Score >= diemDat ? "bg-green-500 text-white" : "bg-red-500 text-white";
-      const cellClass = score >= diemDat ? "bg-green-500 text-white" : "bg-red-500 text-white";
+      const base10Score = (row.original[`clo_${clo.id}`] === 0 ? 0 : row.original[`clo_${clo.id}`] / listDiemCLOMax[index] * 10);
+      const score = isBase10 ? base10Score : row.original[`clo_${clo.id}`];
+      const cellClass = base10Score >= diemDat ? "bg-green-500 text-white" : "bg-red-500 text-white";
       return (
         <div className={cellClass}>
           {score}
@@ -128,47 +125,45 @@ const createColumns = (PLOs, diemDat) => [
   }))
 ]
 
-export default function DiemPk() {
+export default function DiemCLO() {
   const [data, setData] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState([])
   const [sorting, setSorting] = React.useState([])
   const { lopHocPhanId } = useParams()
-  const [PLOs, setPLOs] = React.useState([])
-  // const [listDiemPkMax, setListDiemPkMax] = React.useState([])
-  // const [isBase10, setIsBase10] = React.useState(false)
+  const [CLOs, setCLOs] = React.useState([])
+  const [listDiemCLOMax, setListDiemCLOMax] = React.useState([])
+  const [isBase10, setIsBase10] = React.useState(false)
   const [diemDat, setDiemDat] = React.useState(5.0)
   const [inputValue, setInputValue] = React.useState(diemDat);
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const [sinhViens, PLOs] = await Promise.all([
-        getSinhViensByLopHocPhanId(lopHocPhanId),
-        getPLOsByLopHocPhanId(lopHocPhanId),
+      const [sinhViens, CLOs] = await Promise.all([
+        getSinhViens(null, lopHocPhanId),
+        getCLOsByLopHocPhanId(lopHocPhanId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
-        const ploScores = await Promise.all(PLOs.map(async (plo) => {
-          const score = await calculateDiemPk(lopHocPhanId, sv.id, plo.id)
-          console.log("score: ", score)
-          return { [`plo_${plo.id}`]: score }
+        const cloScores = await Promise.all(CLOs.map(async (clo) => {
+          const score = await calculateDiemCLO(sv.id, clo.id)
+          return { [`clo_${clo.id}`]: score }
         }))
-        return { ...sv, ...Object.assign({}, ...ploScores) }
+        return { ...sv, ...Object.assign({}, ...cloScores) }
       }))
 
-      // const listDiemPkMax = await Promise.all(PLOs.map(async (plo) => {
-      //   const maxScore = await calculateDiemPkMax(plo.id);
-      //   return maxScore;
-      // }));
+      const listDiemCLOMax = await Promise.all(CLOs.map(async (clo) => {
+        const maxScore = await calculateDiemCLOMax(clo.id);
+        return maxScore;
+      }));
       
       setData(newData)
-      setPLOs(PLOs)
-      // setListDiemPLOMax(listDiemPkMax)
+      setCLOs(CLOs)
+      setListDiemCLOMax(listDiemCLOMax)
     }
     fetchData()
   }, [lopHocPhanId])
 
-  // const columns = createColumns(PLOs, listDiemPLOMax, isBase10, diemDat);
-  const columns = createColumns(PLOs, diemDat);
+  const columns = createColumns(CLOs, listDiemCLOMax, isBase10, diemDat);
 
   const table = useReactTable({
     data,
@@ -211,12 +206,12 @@ export default function DiemPk() {
         />
         <Button type="button" onClick={() => setDiemDat(inputValue)}>Go</Button>
       </div>
-      {/* <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2">
         <Switch id="diem-mode"
           onCheckedChange={(check) => {setIsBase10(check)}}
         />
         <Label htmlFor="diem-mode">Chuyển sang hệ 10</Label>
-      </div> */}
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>

@@ -34,8 +34,17 @@ namespace Student_Result_Management_System.Mappers
                 Id = taiKhoan.Id,
                 Username = taiKhoan.Username,
                 Ten = taiKhoan.Ten,
+                ChucVuId = taiKhoan.ChucVuId,
                 TenChucVu = taiKhoan.ChucVu.TenChucVu
             };
+        }
+
+        public static TaiKhoan ToTaiKhoanFromUpdateDTO(this UpdateTaiKhoanDTO updateTaiKhoanDTO, TaiKhoan existingTaiKhoan)
+        {
+            existingTaiKhoan.Username = updateTaiKhoanDTO.Username ?? existingTaiKhoan.Username;
+            existingTaiKhoan.Ten = updateTaiKhoanDTO.Ten ?? existingTaiKhoan.Ten;
+            existingTaiKhoan.ChucVuId = updateTaiKhoanDTO.ChucVuId ?? existingTaiKhoan.ChucVuId;
+            return existingTaiKhoan;
         }
 
     }

@@ -52,6 +52,7 @@ export default function DataTable({
   parentEntity,
   comboBoxItems,
   addItemsToParent,
+  hasCreateButton = true,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -97,7 +98,6 @@ export default function DataTable({
 
   const handleAddItemsToParent = async (parentId) => {
     const selectedItemIds = table.getFilteredSelectedRowModel().rows.map(row => parseInt(row.original.id));
-    console.log("selectedItemIds: ", selectedItemIds);
     addItemsToParent(parentId, selectedItemIds);
     fetchData();
   }
@@ -156,9 +156,11 @@ export default function DataTable({
           </DropdownMenu>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="ml-2">
-                Tạo {entity}
-              </Button>
+              {hasCreateButton && (
+                <Button variant="outline" className="ml-2">
+                  Tạo {entity}
+                </Button>
+              )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -181,7 +183,7 @@ export default function DataTable({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead className="px-2" key={header.id}>
+                      <TableHead key={header.id}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(

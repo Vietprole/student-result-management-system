@@ -20,7 +20,27 @@ export const getFullname = () => {
 }
 export const getRole = () => {
   const result = sessionStorage.getItem('accessToken')
-  const decodedToken = jwtDecode(result);
+  let decodedToken;
+  try {
+    decodedToken = jwtDecode(result);
+  } catch {
+    return null;
+  }
   const role = decodedToken.role;
+  console.log(">>Role:", role);
   return role;
+}
+
+export const getGiangVienId = () => {
+  const result = sessionStorage.getItem('accessToken')
+  const decodedToken = jwtDecode(result);
+  const giangVienId = decodedToken.giangVienId;
+  return parseInt(giangVienId);
+}
+
+export const getSinhVienId = () => {
+  const result = sessionStorage.getItem('accessToken')
+  const decodedToken = jwtDecode(result);
+  const sinhVienId = decodedToken.sinhVienId;
+  return parseInt(sinhVienId);
 }

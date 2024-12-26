@@ -7,7 +7,7 @@ public class KetQua
 {
     public int Id { get; set; }
     [Column(TypeName = "decimal(5, 2)")]
-    public decimal DiemTam{ get; set; }
+    public decimal? DiemTam{ get; set; }
     [Column(TypeName = "decimal(5, 2)")]
     public decimal? DiemChinhThuc { get; set; }
     public bool DaCongBo { get; set; }
