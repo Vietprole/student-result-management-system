@@ -120,3 +120,14 @@ export const removeHocPhanFromNganh = async (nganhId, hocPhanId) => {
     console.log("error message: ", error.message);
   }
 }
+export const addNganhWithHocPhan = async (nganhData) => {
+  try {
+    const response = await axios.post(`${API_NGANH}/createwithhocphan`, nganhData, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi tạo ngành: ", error.message);
+  }
+};
+

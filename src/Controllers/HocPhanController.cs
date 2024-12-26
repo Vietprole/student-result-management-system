@@ -121,6 +121,12 @@ namespace Student_Result_Management_System.Controllers
                 return StatusCode(500, "An unexpected error occurred");
             }
         }
+        [HttpGet("notInNganh/{nganhId}")]
+        public async Task<IActionResult> GetAllHocPhanNotInNganhId([FromRoute] int nganhId)
+        {
+            var hocPhanDTOs = await _hocPhanService.GetAllHocPhanNotInNganhId(nganhId);
+            return Ok(hocPhanDTOs);
+        }
 
         // [HttpDelete("{id}/plo/{pLOId}")]
         // public async Task<IActionResult> RemovePLO([FromRoute] int id, [FromRoute] int pLOId)

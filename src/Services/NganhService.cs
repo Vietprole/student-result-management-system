@@ -59,13 +59,12 @@ namespace Student_Result_Management_System.Services
                 .Include(n => n.Khoa)
                 .FirstOrDefaultAsync(n => n.Id == id);
         }
-
         public async Task<Nganh> CreateNganhAsync(Nganh nganh)
         {
             nganh.MaNganh = await GenerateMaNganhAsync(nganh.KhoaId);
             await _context.Nganhs.AddAsync(nganh);
             await _context.SaveChangesAsync();
-            return await GetNganhByIdAsync(nganh.Id);
+            return await GetNganhByIdAsync(nganh.Id) ?? throw new InvalidOperationException("Failed to retrieve the created Nganh.");
         }
 
         public async Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO)
@@ -102,7 +101,13 @@ namespace Student_Result_Management_System.Services
 
             foreach (var hocPhanId in hocPhanIds)
             {
-                var hocPhan = await _context.HocPhans.FindAsync(hocPhanId) ?? throw new NotFoundException($"Không tìm thấy Học Phần với id: {hocPhanId}");
+                var hocPhan = await _context.HocPhans.FindAsync(hocPhanId);
+                if (hocPhan == null)
+                {
+                    // Nếu không tìm thấy học phần, có thể thêm một thông báo lỗi cụ thể
+                    throw new NotFoundException($"Không tìm thấy Học Phần với id: {hocPhanId}");
+                }
+
                 if (!nganh.HocPhans.Contains(hocPhan))
                     nganh.HocPhans.Add(hocPhan);
             }
@@ -110,6 +115,7 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             return nganh.HocPhans.ToList();
         }
+
 
         public async Task<List<HocPhan>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds)
         {

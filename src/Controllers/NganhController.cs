@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -111,7 +111,7 @@ namespace Student_Result_Management_System.Controllers
             try
             {
                 var hocPhans = await _nganhService.AddHocPhansToNganhAsync(id, hocPhanIds);
-                return CreatedAtAction(nameof(GetById), new { id = id }, hocPhans.Select(hp => hp.ToHocPhanDTO()));
+                return Ok("Thêm học phần thành công!");
             }
             catch (BusinessLogicException ex)
             {
