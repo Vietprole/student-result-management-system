@@ -164,6 +164,16 @@ const adminItem = [
     title: "Lớp học phần",
     url: "/lophocphan",
     icon: LopHocPhanIcon,
+    subItems: [
+      {
+        title: "Quản lý sinh viên",
+        url: "/hocphan/them",
+      },
+      {
+        title: "Xem lớp học phần ",
+        url:  "/lophocphan",
+      },
+    ],
   },
   {
     title: "Công thức điểm",
