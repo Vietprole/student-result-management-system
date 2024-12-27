@@ -13,6 +13,7 @@ export const getAllLopHocPhans = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -28,6 +29,7 @@ export const getLopHocPhans = async (hocPhanId, hocKyId, giangVienId, sinhVienId
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -39,6 +41,7 @@ export const getLopHocPhanById = async (id) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -50,6 +53,7 @@ export const addLopHocPhan = async (newData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -61,6 +65,7 @@ export const updateLopHocPhan = async (id, updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -72,6 +77,7 @@ export const deleteLopHocPhan = async (id) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -83,6 +89,7 @@ export const getSinhViensByLopHocPhanId = async (lopHocPhanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -94,6 +101,7 @@ export const addSinhViensToLopHocPhan = async (lopHocPhanId, sinhVienIdsList) =>
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -105,6 +113,7 @@ export const removeSinhVienFromLopHocPhan = async (lopHocPhanId, sinhVienId) => 
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -116,6 +125,7 @@ export const getGiangViensByLopHocPhanId = async (lopHocPhanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -127,6 +137,7 @@ export const addGiangViensToLopHocPhan = async (lopHocPhanId, giangVienIdsList) 
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -138,6 +149,7 @@ export const removeGiangVienFromLopHocPhan = async (lopHocPhanId, giangVienId) =
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -149,5 +161,6 @@ export const updateCongThucDiem = async (lopHocPhanId, baiKiemTras) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }

@@ -12,6 +12,7 @@ export const getAllHocKys = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -24,6 +25,7 @@ export const getHocKyById = async (studentId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -37,6 +39,7 @@ export const addHocKy = async (studentData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -49,6 +52,7 @@ export const updateHocKy = async (studentId, updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -61,5 +65,6 @@ export const deleteHocKy = async (studentId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };

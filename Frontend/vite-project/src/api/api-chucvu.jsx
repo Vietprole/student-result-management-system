@@ -12,5 +12,6 @@ export const getAllChucVus = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };

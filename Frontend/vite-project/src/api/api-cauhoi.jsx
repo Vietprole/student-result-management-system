@@ -13,6 +13,7 @@ export const getCauHoisByBaiKiemTraId = async (baiKiemTraId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -24,6 +25,7 @@ export const getCauHoiById = async (id) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -35,6 +37,7 @@ export const addCauHoi = async (newData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -46,6 +49,7 @@ export const updateCauHoi = async (id, updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -57,6 +61,7 @@ export const deleteCauHoi = async (id) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -68,6 +73,7 @@ export const getCLOsByCauHoiId = async (cauHoiId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -79,6 +85,7 @@ export const addCLOsToCauHoi = async (cauHoiId, cloIdsList) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -90,6 +97,7 @@ export const updateCLOsToCauHoi = async (cauHoiId, cloIdsList) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -101,5 +109,6 @@ export const removeCLOsFromCauHoi = async (cauHoiId, cloId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }

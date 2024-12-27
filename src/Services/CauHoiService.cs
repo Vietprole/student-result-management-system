@@ -115,5 +115,71 @@ namespace Student_Result_Management_System.Services
             var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
             return cloList;
         }
+
+        public async Task<List<CauHoiDTO>> UpdateListCauHoiAsync(int baiKiemTraId, List<CreateCauHoiDTO> createCauHoiDTOs)
+        {
+            // Check for duplicates
+            var duplicates = createCauHoiDTOs
+                .GroupBy(ch => ch.Ten)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicates.Count > 0)
+            {
+                throw new BusinessLogicException($"Tên câu hỏi bị trùng: {string.Join(", ", duplicates)}");
+            }
+            
+            // Validate total TrongSo equals 10
+            const decimal epsilon = 0.001m;
+            var totalTrongSo = createCauHoiDTOs.Sum(ch => ch.TrongSo);
+            if (Math.Abs(totalTrongSo - 10m) > epsilon)
+            {
+                throw new BusinessLogicException($"Tổng trọng số phải bằng 10 (hiện tại là {totalTrongSo:F2})");
+            }
+
+            var baiKiemTra = await _context.BaiKiemTras
+                .Include(b => b.CauHois)
+                .FirstOrDefaultAsync(b => b.Id == baiKiemTraId)
+                ?? throw new NotFoundException($"Không tìm thấy bài kiểm tra với id {baiKiemTraId}");
+
+            var existingCauHois = baiKiemTra.CauHois.ToDictionary(c => c.Ten, c => c);
+            var newNoiDungs = createCauHoiDTOs.Select(dto => dto.Ten).ToHashSet();
+
+            // Update or Add CauHois
+            foreach (var createDTO in createCauHoiDTOs)
+            {
+                if (existingCauHois.TryGetValue(createDTO.Ten, out var existingCauHoi))
+                {
+                    // Update existing
+                    existingCauHoi.TrongSo = createDTO.TrongSo;
+                    existingCauHoi.ThangDiem = createDTO.ThangDiem;
+                }
+                else
+                {
+                    // Add new
+                    var newCauHoi = createDTO.ToCauHoiFromCreateDTO();
+                    newCauHoi.BaiKiemTraId = baiKiemTraId;
+                    baiKiemTra.CauHois.Add(newCauHoi);
+                }
+            }
+
+            // Remove CauHois not in input list
+            var cauHoisToRemove = baiKiemTra.CauHois
+                .Where(c => !newNoiDungs.Contains(c.Ten))
+                .ToList();
+
+            foreach (var cauHoi in cauHoisToRemove)
+            {
+                try {
+                    _context.CauHois.Remove(cauHoi);
+                } catch (Exception) {
+                    throw new BusinessLogicException($"Không thể xóa câu hỏi '{cauHoi.Ten}' vì đã có đối tượng con liên quan.");
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return baiKiemTra.CauHois.Select(c => c.ToCauHoiDTO()).ToList();
+        }
     }
 }

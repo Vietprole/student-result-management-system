@@ -21,6 +21,7 @@ export const getAllDiemDinhChinhs = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -32,6 +33,7 @@ export const getDiemDinhChinhs = async (lopHocPhanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -44,6 +46,7 @@ export const getDiemDinhChinhById = async (diemdinhchinhId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -56,6 +59,7 @@ export const addDiemDinhChinh = async (diemdinhchinhData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -68,6 +72,7 @@ export const updateDiemDinhChinh = async (diemDinhChinhId, updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -79,6 +84,7 @@ export const upsertDiemDinhChinh = async (diemdinhchinhData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -91,6 +97,7 @@ export const deleteDiemDinhChinh = async (diemdinhchinhId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -103,5 +110,6 @@ export const acceptDiemDinhChinh = async (diemdinhchinhId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }

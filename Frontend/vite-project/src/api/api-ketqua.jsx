@@ -22,6 +22,7 @@ export const getAllKetQuas = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -37,6 +38,7 @@ export const getKetQuas = async (baiKiemTraId, sinhVienId, lopHocPhanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -49,6 +51,7 @@ export const getKetQuaById = async (ketquaId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -61,6 +64,7 @@ export const addKetQua = async (ketquaData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -73,6 +77,7 @@ export const updateKetQua = async (updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -84,6 +89,7 @@ export const upsertKetQua = async (ketquaData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -96,6 +102,7 @@ export const deleteKetQua = async (ketquaId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -107,6 +114,7 @@ export const confirmKetQua = async (confirmKetQuaDTO) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -118,7 +126,7 @@ export const acceptKetQua = async (acceptKetQuaDTO) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
-    throw error;
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -130,6 +138,7 @@ export const calculateDiemCLO = async (sinhVienId, CLOId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -141,6 +150,7 @@ export const calculateDiemCLOMax = async (CLOId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -152,6 +162,7 @@ export const calculateDiemPk = async (lopHocPhanId, sinhVienId, ploId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -163,5 +174,6 @@ export const calculateDiemPLO = async (sinhVienId, ploId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }

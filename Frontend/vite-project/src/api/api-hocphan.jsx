@@ -13,6 +13,7 @@ export const getAllHocPhans = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -28,6 +29,7 @@ export const getHocPhans = async (khoaId, nganhId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -40,6 +42,7 @@ export const getHocPhanById = async (hocphanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -52,6 +55,7 @@ export const addHocPhan = async (hocphanData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -64,6 +68,7 @@ export const updateHocPhan = async (hocphanId, updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -76,6 +81,7 @@ export const deleteHocPhan = async (hocphanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -87,6 +93,7 @@ export const getPLOsByHocPhanId = async (hocPhanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -98,6 +105,7 @@ export const addPLOsToHocPhan = async (hocPhanId, pLOIdsList) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -109,5 +117,6 @@ export const removePLOFromHocPhan = async (hocPhanId, pLOId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }

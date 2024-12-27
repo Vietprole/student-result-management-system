@@ -12,6 +12,7 @@ export const getBaiKiemTrasByLopHocPhanId = async (lopHocPhanId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -23,6 +24,7 @@ export const getAllBaiKiemTras = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -35,6 +37,7 @@ export const getBaiKiemTraById = async (baikiemtraId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -47,6 +50,7 @@ export const addBaiKiemTra = async (baikiemtraData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -59,6 +63,7 @@ export const updateBaiKiemTra = async (baikiemtraId, updatedData) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -71,5 +76,18 @@ export const deleteBaiKiemTra = async (baikiemtraId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
+  }
+};
+
+export const updateListCauHoi = async (baikiemtraId, cauHois) => {
+  try {
+    const response = await axios.put(`${API_BAIKIEMTRA}/${baikiemtraId}/listcauhoi`, cauHois, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };

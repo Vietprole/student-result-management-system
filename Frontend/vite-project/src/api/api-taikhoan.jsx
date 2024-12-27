@@ -27,6 +27,7 @@ export const loginApi = async (tenDangNhap, matKhau) => {
       success: false,
       message: 'Có lỗi xảy ra, vui lòng thử lại!'
     };
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 };
 
@@ -38,6 +39,7 @@ export const getAllTaiKhoans = async () => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -52,6 +54,7 @@ export const getTaiKhoans = async (chucVuId) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -63,6 +66,7 @@ export const addTaiKhoan = async (data) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -74,6 +78,7 @@ export const updateTaiKhoan = async (id, data) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 
@@ -85,6 +90,7 @@ export const deleteTaiKhoan = async (id) => {
     return response.data;
   } catch (error) {
     console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
 

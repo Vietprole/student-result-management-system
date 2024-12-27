@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.BaiKiemTra;
+using Student_Result_Management_System.DTOs.CauHoi;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
 {
@@ -16,10 +18,12 @@ namespace Student_Result_Management_System.Controllers
     public class BaiKiemTraController : ControllerBase
     {
         private readonly IBaiKiemTraService _baiKiemTraService;
+        private readonly ICauHoiService _cauHoiService;
         private readonly ITokenService _tokenService;
-        public BaiKiemTraController(IBaiKiemTraService IBaiKiemTraService, ITokenService tokenSerivce)
+        public BaiKiemTraController(IBaiKiemTraService IBaiKiemTraService, ICauHoiService cauHoiService, ITokenService tokenSerivce)
         {
             _baiKiemTraService = IBaiKiemTraService;
+            _cauHoiService = cauHoiService;
             _tokenService = tokenSerivce;
         }
 
@@ -27,13 +31,13 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
             List<BaiKiemTraDTO> baiKiemTraDTOs;
-            if(lopHocPhanId.HasValue)
+            if (lopHocPhanId.HasValue)
             {
                 // return BadRequest("Lớp Học Phần Id phải lớn hơn 0");
                 baiKiemTraDTOs = await _baiKiemTraService.GetBaiKiemTrasByLopHocPhanIdAsync(lopHocPhanId.Value);
                 return Ok(baiKiemTraDTOs);
             }
-            
+
             baiKiemTraDTOs = await _baiKiemTraService.GetAllBaiKiemTrasAsync();
             return Ok(baiKiemTraDTOs);
         }
@@ -52,13 +56,13 @@ namespace Student_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {
-           var checkDuplicate = await _baiKiemTraService.CheckDuplicateBaiKiemTraLoaiInLopHocPhan(createBaiKiemTraDTO.Loai, createBaiKiemTraDTO.LopHocPhanId);
-           if (checkDuplicate)
-           {
-               return BadRequest($"Bài kiểm tra với loại {createBaiKiemTraDTO.Loai} đã tồn tại trong lớp học phần");
-           }
-           var baiKiemTraDTO = await _baiKiemTraService.CreateBaiKiemTraAsync(createBaiKiemTraDTO);
-           return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
+            var checkDuplicate = await _baiKiemTraService.CheckDuplicateBaiKiemTraLoaiInLopHocPhan(createBaiKiemTraDTO.Loai, createBaiKiemTraDTO.LopHocPhanId);
+            if (checkDuplicate)
+            {
+                return BadRequest($"Bài kiểm tra với loại {createBaiKiemTraDTO.Loai} đã tồn tại trong lớp học phần");
+            }
+            var baiKiemTraDTO = await _baiKiemTraService.CreateBaiKiemTraAsync(createBaiKiemTraDTO);
+            return CreatedAtAction(nameof(GetById), new { id = baiKiemTraDTO.Id }, baiKiemTraDTO);
         }
 
         [HttpPut("{id}")]
@@ -93,6 +97,24 @@ namespace Student_Result_Management_System.Controllers
                 return NotFound();
             }
             return Ok();
+        }
+
+        [HttpPut("{id}/listcauhoi")]
+        public async Task<IActionResult> UpdateListCauHoi([FromRoute] int id, [FromBody] List<CreateCauHoiDTO> createCauHoiDTOs)
+        {
+            try
+            {
+                var cauHoiDTOs = await _cauHoiService.UpdateListCauHoiAsync(id, createCauHoiDTOs);
+                return Ok(cauHoiDTOs);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

@@ -26,6 +26,8 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
+  id: z.number(),
+
   ten: z.string().min(2, {
     message: "Ten must be at least 2 characters.",
   }),
@@ -55,11 +57,12 @@ const formSchema = z.object({
   }),
 });
 
-export function CauHoiForm({ cauHoi, handleAdd, handleEdit, setIsDialogOpen }) {
+export function CauHoiForm({ cauHoi, handleAdd, handleEdit, setIsDialogOpen, maxId }) {
   const [searchParams] = useSearchParams();
   const baiKiemTraIdParam = searchParams.get("baiKiemTraId");
   const { lopHocPhanId } = useParams();
   const [comboBoxItems, setComboBoxItems] = useState([]);
+  console.log("maxId 63", maxId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +79,7 @@ export function CauHoiForm({ cauHoi, handleAdd, handleEdit, setIsDialogOpen }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: cauHoi ||{
+      id: maxId + 1,
       ten: "",
       trongSo: "",
       thangDiem: "",
@@ -88,11 +92,13 @@ export function CauHoiForm({ cauHoi, handleAdd, handleEdit, setIsDialogOpen }) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     if (cauHoi) {
-      const data = await updateCauHoi(cauHoi.id, values);
-      handleEdit(data);
+      // const data = await updateCauHoi(cauHoi.id, values);
+      console.log("values", values);
+      handleEdit(values);
     } else {
-      const data = await addCauHoi(values);
-      handleAdd(data);
+      // const data = await addCauHoi(values);
+      console.log("values", values);
+      handleAdd(values);
       setIsDialogOpen(false);
     }
   }

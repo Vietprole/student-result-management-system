@@ -15,10 +15,12 @@ namespace Student_Result_Management_System.Services
     public class KetQuaService : IKetQuaService
     {
         private readonly ApplicationDBContext _context;
+        private readonly ICauHoiService _cauHoiService;
         private readonly ILogger<KetQuaService> _logger;
-        public KetQuaService(ApplicationDBContext context, ICauHoiService ICauHoiService, ILogger<KetQuaService> logger)
+        public KetQuaService(ApplicationDBContext context, ICauHoiService cauHoiService, ILogger<KetQuaService> logger)
         {
             _context = context;
+            _cauHoiService = cauHoiService;
             _logger = logger;
         }
         public async Task<KetQuaDTO> CreateKetQuaAsync(CreateKetQuaDTO createKetQuaDTO)
@@ -143,7 +145,25 @@ namespace Student_Result_Management_System.Services
             {
                 throw new BusinessLogicException("Chưa nhập điểm");
             }
+
+            if (existingKetQua.DaXacNhan == true)
+            {
+                throw new BusinessLogicException("Điểm này đã được xác nhận");
+            }
+            
             existingKetQua.DaXacNhan = true;
+            // Add date of confirmation to baiKiemTra
+            var baiKiemTraId = existingKetQua.CauHoi.BaiKiemTra.Id;
+            var relatedKetQuas = await _context.KetQuas
+                .Where(k => k.CauHoi.BaiKiemTraId == baiKiemTraId)
+                .ToListAsync();
+
+            // Check if all related KetQuas are confirmed
+            if (relatedKetQuas.All(k => k.DaXacNhan))
+            {
+                existingKetQua.CauHoi.BaiKiemTra.NgayXacNhan = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+            }
+            
             await _context.SaveChangesAsync();
             return existingKetQua.ToKetQuaDTO();
         }
