@@ -74,6 +74,7 @@ export function GradeTable({
     // Add columns for each component and its questions
     components.forEach((component) => {
       const componentQuestions = questions[component.id.toString()] || []
+      console.log("componentQuestions", componentQuestions);
       cols.push({
         id: component.loai,
         header: `${component.loai} (${component.trongSo * 100}%)`,
@@ -92,6 +93,7 @@ export function GradeTable({
             cell: ({ row, column }) => (
               <EditableCell
                 value={row.getValue(column.id)}
+                maxValue={question.thangDiem}
                 onChange={(value) => {
                   const newData = [...tableData]
                   console.log("newData", newData);
@@ -413,7 +415,7 @@ export function GradeTable({
 //   isEditing: boolean
 // }
 
-function EditableCell({ value, onChange, isEditing }) {
+function EditableCell({ value, maxValue, onChange, isEditing }) {
   const [editValue, setEditValue] = React.useState(value.toString())
 
   React.useEffect(() => {
@@ -424,29 +426,26 @@ function EditableCell({ value, onChange, isEditing }) {
     return <span>{value}</span>
   }
 
+  console.log("maxValue", maxValue);
+
   return (
     <Input
-      type="number"
+      type="text"
       value={editValue}
       onChange={(e) => {
         const newValue = e.target.value;
-        // Allow empty, numbers, and single decimal point
-        if (newValue === '' || /^\d*\.?\d*$/.test(newValue)) {
+        if (newValue === '' || /^\d*\.?\d{0,2}$/.test(newValue) && parseFloat(newValue) <= maxValue) {
           setEditValue(newValue);
-          const numValue = parseFloat(newValue);
-          if (isNaN(numValue)) {
-            onChange(null)
-          }
-          else {
-            onChange(numValue)
-          }
+        }
+      }}
+      onBlur={() => {
+        const numValue = parseFloat(editValue);
+        if (!isNaN(numValue)) {
+          onChange(numValue);
         }
       }}
       className="h-8 w-16 text-center"
-      min={0}
-      max={10}
-      step={0.25}
     />
-  )
+  );
 }
 

@@ -184,7 +184,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
   //       await addHocPhansToNganh(nganhId, hocPhanIds);
   //       const [nganhs, hocPhan] = await Promise.all([
   //         getAllHocPhanNotNganhId(nganhId),
-  //         getHocPhans(null, nganhId),
+  //         getHocPhans(null, nganhId, null),
   //       ]);
   //       setNganhData(Array.isArray(nganhs) ? nganhs : []);
   //       setHocPhanDaChon(Array.isArray(hocPhan) ? hocPhan : []);
@@ -206,7 +206,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
   //     }
   //     const [nganhs, hocPhan] = await Promise.all([
   //       getAllHocPhanNotNganhId(nganhId),
-  //       getHocPhans(null, nganhId),
+  //       getHocPhans(null, nganhId, null),
   //     ]);
   
   //     setNganhData(Array.isArray(nganhs) ? nganhs : []);

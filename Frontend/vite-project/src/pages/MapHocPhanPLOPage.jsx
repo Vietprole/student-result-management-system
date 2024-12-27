@@ -27,10 +27,11 @@ export default function MapHocPhanPLOPage() {
       const nganhData = await getAllNganhs();
       const mappedNganhItems = nganhData.map(nganh => ({ label: nganh.ten, value: nganh.id }));
       setNganhItems(mappedNganhItems);
+      const laCotLoi = true;
 
       if (nganhId) {
         const [hocPhansData, pLOsData] = await Promise.all([
-          getHocPhans(null, nganhId),
+          getHocPhans(null, nganhId, laCotLoi),
           getPLOsByNganhId(nganhId),
         ]);
         setHocPhans(hocPhansData);

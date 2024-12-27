@@ -47,7 +47,10 @@ export default function QuanLyTaiKhoanPage() {
   const fetchData = useCallback(async () => {
     const dataChucVu = await getAllChucVus();
     // Map chucvu items to be used in ComboBox
-    const mappedComboBoxItems = dataChucVu.map(chucVu => ({ label: chucVu.tenChucVu, value: chucVu.id }));
+    const mappedComboBoxItems = dataChucVu.map((chucVu) => ({
+      label: chucVu.tenChucVu,
+      value: chucVu.id,
+    }));
     setchucVuItems(mappedComboBoxItems);
     const data = await getTaiKhoans(chucVuId);
     setData(data);
@@ -74,15 +77,15 @@ export default function QuanLyTaiKhoanPage() {
         title: "Có lỗi xảy ra",
         description: error.message,
         variant: "destructive",
-      })
+      });
       return;
     }
     toast({
       title: "Thành công",
       description: "Đặt lại mật khẩu thành công",
       variant: "success",
-    })
-  }
+    });
+  };
 
   const createTaiKhoanColumns = (handleEdit, handleDelete) => [
     {
@@ -128,7 +131,9 @@ export default function QuanLyTaiKhoanPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("username")}</div>,
+      cell: ({ row }) => (
+        <div className="px-4 py-2">{row.getValue("username")}</div>
+      ),
     },
     {
       accessorKey: "tenChucVu",
@@ -143,7 +148,9 @@ export default function QuanLyTaiKhoanPage() {
           </Button>
         );
       },
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenChucVu")}</div>,
+      cell: ({ row }) => (
+        <div className="px-4 py-2">{row.getValue("tenChucVu")}</div>
+      ),
     },
     {
       id: "actions",
@@ -154,59 +161,59 @@ export default function QuanLyTaiKhoanPage() {
         if (role === "PhongDaoTao") {
           return (
             <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Sửa Tài Khoản
-                  </DropdownMenuItem>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Edit TaiKhoan</DialogTitle>
-                    <DialogDescription>
-                      Edit the current item.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <TaiKhoanForm taiKhoan={item} handleEdit={handleEdit} />
-                </DialogContent>
-              </Dialog>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    Xóa Tài Khoản
-                  </DropdownMenuItem>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Delete TaiKhoan</DialogTitle>
-                    <DialogDescription>
-                      Delete the current item.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <p>Are you sure you want to delete this TaiKhoan?</p>
-                  <DialogFooter>
-                    <Button
-                      type="submit"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      Delete
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          )
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      Sửa Tài Khoản
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Edit TaiKhoan</DialogTitle>
+                      <DialogDescription>
+                        Edit the current item.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <TaiKhoanForm taiKhoan={item} handleEdit={handleEdit} />
+                  </DialogContent>
+                </Dialog>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      Xóa Tài Khoản
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Delete TaiKhoan</DialogTitle>
+                      <DialogDescription>
+                        Delete the current item.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <p>Are you sure you want to delete this TaiKhoan?</p>
+                    <DialogFooter>
+                      <Button
+                        type="submit"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
         }
-  
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -248,10 +255,7 @@ export default function QuanLyTaiKhoanPage() {
                   </DialogHeader>
                   <p>Are you sure you want to delete this TaiKhoan?</p>
                   <DialogFooter>
-                    <Button
-                      type="submit"
-                      onClick={() => handleDelete(item.id)}
-                    >
+                    <Button type="submit" onClick={() => handleDelete(item.id)}>
                       Delete
                     </Button>
                   </DialogFooter>
@@ -270,12 +274,16 @@ export default function QuanLyTaiKhoanPage() {
                       Đặc lại mật khẩu thành mặc định
                     </DialogDescription>
                   </DialogHeader>
-                  <p>Đặt mật khẩu của tài khoản này thành {item.chucVuId === 2 ? `Gv@${item.username}`:`Sv@${item.username}`}</p>
+                  <p>
+                    Đặt mật khẩu của tài khoản này thành{" "}
+                    {item.chucVuId === 2
+                      ? `Gv@${item.username}`
+                      : item.chucVuId === 3
+                      ? `Sv@${item.username}`
+                      : "Password@123456"}
+                  </p>
                   <DialogFooter>
-                    <Button
-                      type="submit"
-                      onClick={() => handleReset(item.id)}
-                    >
+                    <Button type="submit" onClick={() => handleReset(item.id)}>
                       Đặt lại
                     </Button>
                   </DialogFooter>
@@ -294,7 +302,11 @@ export default function QuanLyTaiKhoanPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={chucVuItems} setItemId={setComboBoxChucVuId} initialItemId={comboBoxChucVuId}/>
+          <ComboBox
+            items={chucVuItems}
+            setItemId={setComboBoxChucVuId}
+            initialItemId={comboBoxChucVuId}
+          />
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <div>

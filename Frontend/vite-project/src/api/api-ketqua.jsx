@@ -130,9 +130,9 @@ export const acceptKetQua = async (acceptKetQuaDTO) => {
   }
 }
 
-export const calculateDiemCLO = async (sinhVienId, CLOId) => {
+export const calculateDiemCLO = async (sinhVienId, CLOId, useDiemTam = false) => {
   try {
-    const response = await axios.get(`${API_KETQUA}/calculate-diem-clo?sinhVienId=${sinhVienId}&CLOId=${CLOId}`, {
+    const response = await axios.get(`${API_KETQUA}/calculate-diem-clo?sinhVienId=${sinhVienId}&CLOId=${CLOId}&useDiemTam=${useDiemTam}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -154,9 +154,9 @@ export const calculateDiemCLOMax = async (CLOId) => {
   }
 }
 
-export const calculateDiemPk = async (lopHocPhanId, sinhVienId, ploId) => {
+export const calculateDiemPk = async (lopHocPhanId, sinhVienId, ploId, useDiemTam = false) => {
   try {
-    const response = await axios.get(`${API_KETQUA}/calculate-diem-pk?lopHocPhanId=${lopHocPhanId}&sinhVienId=${sinhVienId}&ploId=${ploId}`, {
+    const response = await axios.get(`${API_KETQUA}/calculate-diem-pk?lopHocPhanId=${lopHocPhanId}&sinhVienId=${sinhVienId}&ploId=${ploId}&useDiemTam=${useDiemTam}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;
@@ -166,9 +166,9 @@ export const calculateDiemPk = async (lopHocPhanId, sinhVienId, ploId) => {
   }
 }
 
-export const calculateDiemPLO = async (sinhVienId, ploId) => {
+export const calculateDiemPLO = async (sinhVienId, ploId, useDiemTam = false) => {
   try {
-    const response = await axios.get(`${API_KETQUA}/calculate-diem-plo?sinhVienId=${sinhVienId}&ploId=${ploId}`, {
+    const response = await axios.get(`${API_KETQUA}/calculate-diem-plo?sinhVienId=${sinhVienId}&ploId=${ploId}&useDiemTam=${useDiemTam}`, {
       headers: { Authorization: getAccessToken() }
     });
     return response.data;

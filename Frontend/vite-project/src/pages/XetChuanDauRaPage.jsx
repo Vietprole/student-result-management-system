@@ -24,14 +24,15 @@ import { Label } from "@/components/ui/label"
 import { calculateDiemPLO } from "@/api/api-ketqua"
 // import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan"
 // import { useParams } from "react-router-dom"
-import { getAllPLOs, getPLOsByNganhId } from "@/api/api-plo"
+import { getPLOsByNganhId } from "@/api/api-plo"
 import Layout from "./Layout"
-import { getAllSinhViens } from "@/api/api-sinhvien"
+import { getSinhViens } from "@/api/api-sinhvien"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Check, ChevronsUpDown} from "lucide-react"
 import { getAllNganhs } from "@/api/api-nganh"
 import { cn } from "@/lib/utils"
+import { Switch } from "@/components/ui/switch"
 
 // const PLOs = [
 //   {
@@ -148,6 +149,7 @@ export default function XetChuanDauRaPage() {
   const [value, setValue] = React.useState(null) // Use for combobox
   const [comboBoxItems, setComboBoxItems] = React.useState([])
   const [nganhId, setNganhId] = React.useState(null)
+  const [useDiemTam, setUseDiemTam] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -156,14 +158,21 @@ export default function XetChuanDauRaPage() {
       setComboBoxItems(mappedComboBoxItems);
 
       const [sinhViens, PLOs] = await Promise.all([
-        getAllSinhViens(),
+        getSinhViens(null, nganhId, null),
         getPLOsByNganhId(nganhId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
         const ploScores = await Promise.all(PLOs.map(async (plo) => {
-          const score = await calculateDiemPLO(sv.id, plo.id)
-          return { [`plo_${plo.id}`]: score }
+          let score = 0;
+          try {
+            score = await calculateDiemPLO(sv.id, plo.id, useDiemTam)
+          }
+          catch (error) {
+            score = null;
+          }
+          console.log("calculateDiemPLO", sv.id, plo.id, score)
+          return { [`plo_${plo.id}`]: score}
         }))
         return { ...sv, ...Object.assign({}, ...ploScores) }
       }))
@@ -178,7 +187,7 @@ export default function XetChuanDauRaPage() {
       // setListDiemPLOMax(listDiemPkMax)
     }
     fetchData()
-  }, [nganhId])
+  }, [nganhId, useDiemTam])
 
   // const columns = createColumns(PLOs, listDiemPLOMax, isBase10, diemDat);
   const columns = createColumns(PLOs, diemDat);
@@ -272,12 +281,13 @@ export default function XetChuanDauRaPage() {
           />
           <Button type="button" onClick={() => setDiemDat(inputValue)}>Go</Button>
         </div>
-        {/* <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
+          <Label htmlFor="diem-mode">Điểm tạm</Label>
           <Switch id="diem-mode"
-            onCheckedChange={(check) => {setIsBase10(check)}}
+            onCheckedChange={(check) => {setUseDiemTam(!check);}}
           />
-          <Label htmlFor="diem-mode">Chuyển sang hệ 10</Label>
-        </div> */}
+          <Label htmlFor="diem-mode">Điểm chính thức</Label>
+        </div>
         <div className="rounded-md border">
           <Table>
             <TableHeader>

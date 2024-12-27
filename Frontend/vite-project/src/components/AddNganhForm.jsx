@@ -50,7 +50,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
         const [nganhs, nganhInfo,hocPhan] = await Promise.all([
           getAllHocPhanNotNganhId(nganhId),
           getNganhById(nganhId),
-          getHocPhans(null,nganhId),
+          getHocPhans(null,nganhId, null),
         ]);
         setNganh(nganhInfo || {});
         setNganhData(Array.isArray(nganhs) ? nganhs : []);
@@ -176,7 +176,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
         await addHocPhansToNganh(nganhId, hocPhanIds);
         const [nganhs, hocPhan] = await Promise.all([
           getAllHocPhanNotNganhId(nganhId),
-          getHocPhans(null, nganhId),
+          getHocPhans(null, nganhId, null),
         ]);
         setNganhData(Array.isArray(nganhs) ? nganhs : []);
         setHocPhanDaChon(Array.isArray(hocPhan) ? hocPhan : []);
@@ -198,7 +198,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
       }
       const [nganhs, hocPhan] = await Promise.all([
         getAllHocPhanNotNganhId(nganhId),
-        getHocPhans(null, nganhId),
+        getHocPhans(null, nganhId, null),
       ]);
   
       setNganhData(Array.isArray(nganhs) ? nganhs : []);

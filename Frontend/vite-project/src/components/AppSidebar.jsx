@@ -9,7 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import React from "react";
 import "@/utils/storage"
 
 // Import PNG icons
@@ -41,22 +40,28 @@ const truongKhoaItem = [
     url: "/hosocanhan",
     icon: HoSoCaNhanIcon,
   },
-  {
-    title: "Cài đặt",
-    url: "/caidat",
-    icon: CaiDatIcon,
-  },
+  // {
+  //   title: "Cài đặt",
+  //   url: "/caidat",
+  //   icon: CaiDatIcon,
+  // },
   {
     title: "Đăng xuất",
     url: "/",
     icon: DangXuatIcon,
   }
 ]
+
 const giangVienItem = [
   {
     title: "Lớp học phần",
     url: "/lophocphan",
     icon: LopHocPhanIcon,
+  },
+  {
+    title: "Sinh viên",
+    url: "/sinhvien",
+    icon: SinhVienIcon,
   },
   {
     title: "Nhập điểm",
@@ -68,11 +73,11 @@ const giangVienItem = [
     url: "/diemdinhchinh",
     icon: LopHocPhanIcon,
   },
-  {
-    title: "Kết quả học tập",
-    url: "/ketqua",
-    icon: KetQuaIcon,
-  },
+  // {
+  //   title: "Kết quả học tập",
+  //   url: "/ketqua",
+  //   icon: KetQuaIcon,
+  // },
   {
     title: "Xét chuẩn đầu ra",
     url: "/xetchuandaura",
@@ -83,11 +88,11 @@ const giangVienItem = [
     url: "/hosocanhan",
     icon: HoSoCaNhanIcon,
   },
-  {
-    title: "Cài đặt",
-    url: "/caidat",
-    icon: CaiDatIcon,
-  },
+  // {
+  //   title: "Cài đặt",
+  //   url: "/caidat",
+  //   icon: CaiDatIcon,
+  // },
   {
     title: "Đăng xuất",
     url: "/",
@@ -107,17 +112,22 @@ const sinhVienItem = [
     icon: HoSoCaNhanIcon,
   },
   {
-    title: "Cài đặt",
-    url: "/caidat",
-    icon: CaiDatIcon,
+    title: "Xét chuẩn đầu ra",
+    url: "/xetchuandaura",
+    icon: XetChuanDauRaIcon,
   },
+  // {
+  //   title: "Cài đặt",
+  //   url: "/caidat",
+  //   icon: CaiDatIcon,
+  // },
   {
     title: "Đăng xuất",
     url: "/",
     icon: DangXuatIcon,
   }
 ]
-// Menu items.
+
 const adminItem = [
   {
     title: "Khoa",
@@ -174,11 +184,11 @@ const adminItem = [
     url: "/diemdinhchinh",
     icon: LopHocPhanIcon,
   },
-  {
-    title: "Kết quả học tập",
-    url: "/ketqua",
-    icon: KetQuaIcon,
-  },
+  // {
+  //   title: "Kết quả học tập",
+  //   url: "/ketqua",
+  //   icon: KetQuaIcon,
+  // },
   {
     title: "Xét chuẩn đầu ra",
     url: "/xetchuandaura",
@@ -205,21 +215,77 @@ const adminItem = [
     icon: DangXuatIcon,
   },
 ]
+
 const phongDaoTaoItem = [
+  {
+    title: "Khoa",
+    url: "/khoa",
+    icon: KhoaIcon,
+  },
+  {
+    title: "Ngành",
+    url: "/nganh",
+    icon: KhoaIcon, //TODO Change to Nganh icon
+  },
+  {
+    title: "Học phần",
+    url: "/hocphan",
+    icon: HocPhanIcon,
+  },
+  {
+    title: "PLO",
+    url: "/plo",
+    icon: HocPhanIcon,
+  },
+  {
+    title: "Nối Học Phần - PLO",
+    url: "/maphocphanplo",
+    icon: HocPhanIcon,
+  },
+  {
+    title: "Giảng viên",
+    url: "/giangvien",
+    icon: GiangVienIcon,
+  },
+  {
+    title: "Sinh viên",
+    url: "/sinhvien",
+    icon: SinhVienIcon,
+  },
   {
     title: "Lớp học phần",
     url: "/lophocphan",
     icon: LopHocPhanIcon,
   },
   {
-    title: "Kết quả học tập",
-    url: "/ketqua",
-    icon: KetQuaIcon,
+    title: "Công thức điểm",
+    url: "/congthucdiem",
+    icon: LopHocPhanIcon,
   },
   {
-    title: "PLO-CLO",
+    title: "Nhập điểm",
+    url: "/nhapdiem",
+    icon: LopHocPhanIcon,
+  },
+  {
+    title: "Điểm Đính Chính",
+    url: "/diemdinhchinh",
+    icon: LopHocPhanIcon,
+  },
+  // {
+  //   title: "Kết quả học tập",
+  //   url: "/ketqua",
+  //   icon: KetQuaIcon,
+  // },
+  {
+    title: "Xét chuẩn đầu ra",
     url: "/xetchuandaura",
     icon: XetChuanDauRaIcon,
+  },
+  {
+    title: "Quản lý tài khoản",
+    url: "/quanlytaikhoan",
+    icon: HoSoCaNhanIcon,
   },
   {
     title: "Hồ sơ cá nhân",
@@ -236,8 +302,8 @@ const phongDaoTaoItem = [
     url: "/",
     icon: DangXuatIcon,
   },
-
 ]
+
 export function AppSidebar() {
   const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
   let items = [];
