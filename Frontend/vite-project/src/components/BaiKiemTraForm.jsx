@@ -42,6 +42,16 @@ const formSchema = z.object({
   hanDinhChinh: z.date({
     required_error: "Please select a date.",
   }),
+}).refine((data) => {
+  return data.hanNhapDiem > data.ngayMoNhapDiem;
+}, {
+  message: "Hạn nhập điểm phải sau ngày mở nhập điểm",
+  path: ["hanNhapDiem"],
+}).refine((data) => {
+  return data.hanDinhChinh > data.hanNhapDiem;
+}, {
+  message: "Hạn đính chính phải sau hạn nhập điểm",
+  path: ["hanDinhChinh"],
 });
 
 export function BaiKiemTraForm({ baiKiemTra, handleAdd, handleEdit, setIsDialogOpen, maxId }) {

@@ -142,7 +142,7 @@ export function SinhVienForm({ sinhVien, handleAdd, handleEdit, setIsDialogOpen 
           control={form.control}
           name="khoaId"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem className="flex flex-col" disabled={sinhVien}>
               <FormLabel>Chọn Khoa Id</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>

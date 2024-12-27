@@ -136,7 +136,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<KetQuaDTO?> ConfirmKetQuaAsync(ConfirmKetQuaDTO confirmKetQuaDTO)
         {
-            var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k =>
+            var existingKetQua = await _context.KetQuas.Include(k => k.CauHoi).ThenInclude(c => c.BaiKiemTra).FirstOrDefaultAsync(k =>
                 k.SinhVienId == confirmKetQuaDTO.SinhVienId &&
                 k.CauHoiId == confirmKetQuaDTO.CauHoiId) ?? throw new NotFoundException(
                     $"Không tìm thấy kết quả với SinhVienId={confirmKetQuaDTO.SinhVienId} và CauHoiId={confirmKetQuaDTO.CauHoiId}");
@@ -153,7 +153,7 @@ namespace Student_Result_Management_System.Services
             
             existingKetQua.DaXacNhan = true;
             // Add date of confirmation to baiKiemTra
-            var baiKiemTraId = existingKetQua.CauHoi.BaiKiemTra.Id;
+            var baiKiemTraId = existingKetQua.CauHoi.BaiKiemTraId;
             var relatedKetQuas = await _context.KetQuas
                 .Where(k => k.CauHoi.BaiKiemTraId == baiKiemTraId)
                 .ToListAsync();

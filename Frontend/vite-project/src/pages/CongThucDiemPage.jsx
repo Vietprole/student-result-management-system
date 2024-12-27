@@ -364,6 +364,7 @@ export default function BaiKiemTraPage() {
     toast({
       title: "Lưu thành công",
       description: "Công thức điểm đã được lưu",
+      variant: "success",
     })
     await fetchData();
   };

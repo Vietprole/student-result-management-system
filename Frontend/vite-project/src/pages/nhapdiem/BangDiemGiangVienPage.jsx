@@ -45,7 +45,8 @@ export default function BangDiemGiangVienPage() {
     const components = [component];
     setComponents(components);
 
-    const isConfirmed = allGrades.every(grade => grade.daXacNhan);
+    const isConfirmed = allGrades.length > 0 && allGrades.every(grade => grade.daXacNhan);
+    console.log("allGrades", allGrades);
     setIsConfirmed(isConfirmed);
 
     // Fetch questions for each component

@@ -211,27 +211,32 @@ export function GradeTable({
         }))
       );
 
-      confirmKetQuaDTOs.forEach(async (confirmKetQuaDTO) => {
-        await confirmKetQua(confirmKetQuaDTO);
-        console.log(confirmKetQuaDTO);
+      await Promise.all(
+        confirmKetQuaDTOs.map(dto => confirmKetQua(dto))
+      );
+  
+      toast({
+        title: "Đã xác nhận điểm",
+        description: "Điểm đã được xác nhận và không thể chỉnh sửa",
+        variant: "success",
       });
+
+      await fetchData();
 
     } catch (error) {
       console.error("Error confirming records:", error);
       toast({
         title: "Lỗi xác nhận điểm",
-        description: "Đã có lỗi xảy ra khi xác nhận điểm",
+        description: error.message,
         variant: "destructive",
       });
     }
 
-    toast({
-      title: "Đã xác nhận điểm",
-      description: "Điểm đã được xác nhận và không thể chỉnh sửa",
-      variant: "success",
-    });
-
-    fetchData();
+    // toast({
+    //   title: "Đã xác nhận điểm",
+    //   description: "Điểm đã được xác nhận và không thể chỉnh sửa",
+    //   variant: "success",
+    // });
   }
 
   const handleAccept = async () => {

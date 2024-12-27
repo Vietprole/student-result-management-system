@@ -217,6 +217,26 @@ namespace Student_Result_Management_System.Services
             {
                 return Task.FromResult("Tổng trọng số phải bằng 1");
             }
+
+            // Check date order
+            foreach (var dto in createBaiKiemTraDTOs)
+            {
+                if (dto.NgayMoNhapDiem.HasValue && dto.HanNhapDiem.HasValue)
+                {
+                    if (dto.HanNhapDiem <= dto.NgayMoNhapDiem)
+                    {
+                        return Task.FromResult("Hạn nhập điểm phải sau ngày mở nhập điểm");
+                    }
+                }
+
+                if (dto.HanNhapDiem.HasValue && dto.HanDinhChinh.HasValue)
+                {
+                    if (dto.HanDinhChinh <= dto.HanNhapDiem)
+                    {
+                        return Task.FromResult("Hạn định chính phải sau hạn nhập điểm");
+                    }
+                }
+            }
             return Task.FromResult("OK");
         }
 
