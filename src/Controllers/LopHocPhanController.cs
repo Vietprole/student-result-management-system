@@ -62,14 +62,17 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateLopHocPhanDTO updateLopHocPhanDTO)
         {
-            try{
+            try
+            {
                 var lopHocPhan = await _lopHocPhanService.UpdateLopHocPhanAsync(id, updateLopHocPhanDTO);
                 return Ok(lopHocPhan?.ToLopHocPhanDTO());
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException e){
+            catch (NotFoundException e)
+            {
                 return NotFound(e.Message);
             }
         }
@@ -77,13 +80,16 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            try {
+            try
+            {
                 var result = await _lopHocPhanService.DeleteLopHocPhanAsync(id);
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException e){
+            catch (NotFoundException e)
+            {
                 return NotFound(e.Message);
             }
             return NoContent();
@@ -92,14 +98,17 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpGet("{id}/sinhvien")]
         public async Task<IActionResult> GetSinhViens([FromRoute] int id)
         {
-            try {
+            try
+            {
                 var sinhViens = await _lopHocPhanService.GetSinhViensInLopHocPhanAsync(id);
                 return Ok(sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException e){
+            catch (NotFoundException e)
+            {
                 return NotFound(e.Message);
             }
         }
@@ -107,14 +116,17 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpPost("{id}/sinhvien")]
         public async Task<IActionResult> AddSinhViens([FromRoute] int id, [FromBody] int[] sinhVienIds)
         {
-            try {
+            try
+            {
                 var result = await _lopHocPhanService.AddSinhViensToLopHocPhanAsync(id, sinhVienIds);
                 return CreatedAtAction(nameof(GetSinhViens), new { id }, result.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException e){
+            catch (NotFoundException e)
+            {
                 return NotFound(e.Message);
             }
         }
@@ -122,14 +134,17 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpPut("{id}/sinhvien")]
         public async Task<IActionResult> UpdateSinhViens([FromRoute] int id, [FromBody] int[] sinhVienIds)
         {
-            try {
+            try
+            {
                 var result = await _lopHocPhanService.UpdateSinhViensInLopHocPhanAsync(id, sinhVienIds);
                 return Ok(result.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException e){
+            catch (NotFoundException e)
+            {
                 return NotFound(e.Message);
             }
         }
@@ -137,14 +152,17 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpDelete("{id}/sinhvien/{sinhVienId}")]
         public async Task<IActionResult> RemoveSinhVien([FromRoute] int id, [FromRoute] int sinhVienId)
         {
-            try {
+            try
+            {
                 var result = await _lopHocPhanService.RemoveSinhVienFromLopHocPhanAsync(id, sinhVienId);
                 return Ok(result.Select(sv => sv.ToSinhVienDTO()).ToList());
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException e){
+            catch (NotFoundException e)
+            {
                 return NotFound(e.Message);
             }
         }
@@ -169,6 +187,22 @@ namespace lopHocPhan_Result_Management_System.Controllers
                 return BadRequest("Không thể tạo công thức điểm");
             }
             return Ok(baiKiemTraDTOs);
+        }
+        [HttpGet("{lopHocPhanId}/chitiet")]
+        public async Task<IActionResult> GetChiTietLopHocPhan([FromRoute] int lopHocPhanId)
+        {
+            var lopHocPhanChiTietDTO = await _lopHocPhanService.GetChiTietLopHocPhanDTO(lopHocPhanId);
+            if (lopHocPhanChiTietDTO == null)
+            {
+                return NotFound("Không tìm thấy lớp học phần");
+            }
+            return Ok(lopHocPhanChiTietDTO);
+        }
+        [HttpGet("{id}/sinhviennotinlhp")]
+        public async Task<IActionResult> GetSinhViensNotInLopHocPhan([FromRoute] int id)
+        {
+            var sinhViens = await _lopHocPhanService.GetSinhViensNotInLopHocPhanDTO(id);
+            return Ok(sinhViens);
         }
     }
 }

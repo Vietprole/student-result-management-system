@@ -28,12 +28,14 @@ import { getRole } from "@/utils/storage";
 import BangDiemGiangVienPage from "@/pages/nhapdiem/BangDiemGiangVienPage";
 import DiemDinhChinhPage from "@/pages/DiemDinhChinhPage";
 import QuanLyTaiKhoanPage from "@/pages/QuanLyTaiKhoanPage";
+import TestPage from "@/pages/TestPage";
 
 const role = getRole();
 const RoleBasedRoute = ({ giangVienElement, defaultElement }) => {
   return role === "GiangVien" ? giangVienElement : defaultElement;
 };
 
+const lophocphans = []
 const routes = [
   {
     path: "/",
@@ -117,6 +119,10 @@ const routes = [
   {
     path: "/caidat",
     element: <CaiDatPage />,
+  },
+  {
+    path: "/test",
+    element: <TestPage />,
   }
 ]
 const router = createBrowserRouter(routes, {

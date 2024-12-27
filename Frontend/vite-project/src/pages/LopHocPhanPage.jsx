@@ -217,9 +217,10 @@ export default function LopHocPhanPage() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              {/* <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 Quản lý Sinh Viên
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
+              
             </DropdownMenuContent>
           </DropdownMenu>
         );

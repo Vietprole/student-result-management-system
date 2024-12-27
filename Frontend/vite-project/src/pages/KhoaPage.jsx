@@ -160,6 +160,7 @@ export default function KhoaPage() {
           deleteItem={deleteKhoa}
           columnToBeFiltered={"ten"}
           ItemForm={KhoaForm}
+          name={"tên khoa"}
         />
       </div>
     </Layout>

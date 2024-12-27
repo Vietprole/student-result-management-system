@@ -164,5 +164,16 @@ namespace Student_Result_Management_System.Services
             var ploList = hocPhan.PLOs.Select(c => c.ToPLODTO()).ToList();
             return ploList;
         }
+
+        public async Task<List<HocPhan>> GetAllHocPhanNotInNganhId(int nganhId)
+        {
+            // Lấy danh sách các học phần không thuộc ngành có Id là nganhId
+            var hocPhansNotInNganh = await _context.HocPhans
+                .Where(hp => !hp.Nganhs.Any(n => n.Id == nganhId))
+                .ToListAsync();
+
+            return hocPhansNotInNganh;
+        }
+
     }
 }

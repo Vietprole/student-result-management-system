@@ -30,7 +30,7 @@ export function ComboBox({ items, setItemId, initialItemId }) {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className="w-[250px] justify-between"
           >
             {value !== null
               ? items.find((item) => item.value == value)?.label

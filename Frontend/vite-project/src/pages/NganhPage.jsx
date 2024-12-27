@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { getAllKhoas } from "@/api/api-khoa";
 import {
   getNganhs,
-  // getAllNganhs,
   deleteNganh,
 } from "@/api/api-nganh";
 import {
@@ -29,8 +28,10 @@ import { useState, useEffect, useCallback } from "react";
 import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import EditNganhModal from "@/components/AddNganhForm";
 export default function NganhPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedNganhId, setSelectedNganhId] = useState(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const khoaIdParam = searchParams.get("khoaId");
@@ -38,20 +39,16 @@ export default function NganhPage() {
   const [khoaItems, setKhoaItems] = useState([]);
   const [khoaId, setKhoaId] = useState(khoaIdParam);
   const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
-
   const fetchData = useCallback(async () => {
     const dataKhoa = await getAllKhoas();
-    // Map khoa items to be used in ComboBox
     const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
     setKhoaItems(mappedComboBoxItems);
     const data = await getNganhs(khoaId);
     setData(data);
   }, [khoaId]);
-
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
   const handleGoClick = () => {
     setKhoaId(comboBoxKhoaId);
     if (comboBoxKhoaId === null) {
@@ -60,66 +57,57 @@ export default function NganhPage() {
     }
     navigate(`/nganh?khoaId=${comboBoxKhoaId}`);
   };
-
   const createNganhColumns = (handleEdit, handleDelete) => [
     {
       accessorKey: "id",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Id
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Id
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
     },
     {
       accessorKey: "maNganh",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Mã Ngành
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Mã Ngành
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maNganh")}</div>,
     },
     {
       accessorKey: "ten",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Tên
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tên
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
     },
     {
       accessorKey: "tenKhoa",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Khoa
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Khoa
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
     },
     {
@@ -127,7 +115,6 @@ export default function NganhPage() {
       enableHiding: false,
       cell: ({ row }) => {
         const item = row.original;
-  
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -178,7 +165,12 @@ export default function NganhPage() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <DropdownMenuItem onSelect={() => navigate(`/hocphan?nganhId=${item.id}`)}>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  setSelectedNganhId(item.id);
+                  setModalOpen(true);
+                }}
+              >
                 Xem Học Phần
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => navigate(`/plo?nganhId=${item.id}`)}>
@@ -190,7 +182,6 @@ export default function NganhPage() {
       },
     },
   ];
-
   return (
     <Layout>
       <div className="w-full">
@@ -199,7 +190,7 @@ export default function NganhPage() {
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable
-          entity="Nganh"
+          entity="Ngành"
           createColumns={createNganhColumns}
           data={data}
           setData={setData}
@@ -207,7 +198,9 @@ export default function NganhPage() {
           deleteItem={deleteNganh}
           columnToBeFiltered={"ten"}
           ItemForm={NganhForm}
+          name={"tên ngành"}
         />
+        {modalOpen && <EditNganhModal setOpenModal={setModalOpen} nganhId={selectedNganhId} />}
       </div>
     </Layout>
   );

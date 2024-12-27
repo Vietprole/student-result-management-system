@@ -120,3 +120,13 @@ export const removePLOFromHocPhan = async (hocPhanId, pLOId) => {
     throw new Error(error.response?.data || "Lỗi bất định");
   }
 }
+export const getAllHocPhanNotNganhId = async (nganhId) => {
+  try {
+    const response = await axios.get(`${API_HOCPHAN}/notInNganh/${nganhId}`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};

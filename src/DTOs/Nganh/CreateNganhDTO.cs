@@ -9,4 +9,5 @@ public class CreateNganhDTO
     public string Ten { get; set; } = string.Empty;
     [Required]
     public int KhoaId { get; set; }
+    public int[]? HocPhanId { get; set; }
 }

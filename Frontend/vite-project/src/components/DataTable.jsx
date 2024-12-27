@@ -108,7 +108,7 @@ export default function DataTable({
       <div className="w-full">
         <div className="flex items-center py-4">
           <Input
-            placeholder={`Filter ${columnToBeFiltered}s...`}
+            placeholder={`Tìm kiếm theo ${name}...`}
             value={
               table.getColumn(`${columnToBeFiltered}`)?.getFilterValue() ?? ""
             }
@@ -233,7 +233,7 @@ export default function DataTable({
               {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
           )}
-          <div className="space-x-2">
+          {/* <div className="space-x-2">
             <Button
               variant="outline"
               size="sm"
@@ -250,7 +250,7 @@ export default function DataTable({
             >
               Next
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

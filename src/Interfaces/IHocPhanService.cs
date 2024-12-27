@@ -1,5 +1,6 @@
 using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.PLO;
+using Student_Result_Management_System.Models;
 using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Interfaces
@@ -17,5 +18,6 @@ namespace Student_Result_Management_System.Interfaces
         // public Task<List<PLODTO>> AddPLOsToHocPhanAsync(int hocPhanId, int[] pLOIds);
         public Task<List<PLODTO>> UpdatePLOsOfHocPhanAsync(int id, int[] pLOIds);
         // public Task<List<PLODTO>> RemovePLOsFromHocPhanAsync(int id, int[] pLOIds);
+        public Task<List<HocPhan>> GetAllHocPhanNotInNganhId(int nganhId);   
     }
 }

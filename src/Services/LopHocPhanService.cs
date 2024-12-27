@@ -212,6 +212,48 @@ namespace Student_Result_Management_System.Services
             return Task.FromResult("OK");
         }
 
+        public async Task<LopHocPhanChiTietDTO?> GetChiTietLopHocPhanDTO(int lopHocPhanId)
+        {
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(lhp => lhp.HocPhan)
+                .Include(lhp => lhp.HocKy)
+                .Include(lhp => lhp.GiangVien)
+                .ThenInclude(gv => gv.TaiKhoan)
+                .Include(lhp => lhp.SinhViens)
+                .ThenInclude(sv => sv.TaiKhoan)
+                .Include(lhp => lhp.BaiKiemTras)
+                .FirstOrDefaultAsync(lhp => lhp.Id == lopHocPhanId);
+            if (lopHocPhan == null)
+            {
+                return null;
+            }
+            var lopHocPhanChiTietDTO = new LopHocPhanChiTietDTO();
+            lopHocPhanChiTietDTO.MaLopHocPhan = lopHocPhan.MaLopHocPhan;
+            lopHocPhanChiTietDTO.TenLopHocPhan = lopHocPhan.Ten;
+            lopHocPhanChiTietDTO.TenGiangVien = lopHocPhan.GiangVien?.TaiKhoan?.Ten ?? "N/A";
+            lopHocPhanChiTietDTO.SoLuongSinhVien = lopHocPhan.SinhViens.Count;
+            lopHocPhanChiTietDTO.NamHoc = lopHocPhan.HocKy.NamHoc;
+            lopHocPhanChiTietDTO.TenHocKy = lopHocPhan.HocKy.Ten;
+            return lopHocPhanChiTietDTO;
+        }
+
+        public async Task<List<SinhVienDTO>> GetSinhViensNotInLopHocPhanDTO(int lopHocPhanId)
+        {
+            var sinhViensInLopHocPhan = await _context.LopHocPhans
+                .Where(lhp => lhp.Id == lopHocPhanId)
+                .SelectMany(lhp => lhp.SinhViens)
+                .ToListAsync();
+            var sinhViensNotInLopHocPhan = await _context.SinhViens
+                .Include(c=> c.TaiKhoan)
+                .Include(c => c.Khoa)
+                .Where(sv => !sinhViensInLopHocPhan
+                .Select(s => s.Id)
+                .Contains(sv.Id))
+                .ToListAsync();
+            return sinhViensNotInLopHocPhan.Select(sv => sv.ToSinhVienDTO()).ToList();
+
+        }
+
         //public async Task<DateTime?> CapNhatNgayChapNhanCTD(int lopHocPhanId, string tenNguoiChapNhanCTD)
         //{
         //    var lopHocPhan =await _context.LopHocPhans.FirstOrDefaultAsync(s => s.Id == lopHocPhanId);

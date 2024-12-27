@@ -238,12 +238,12 @@ export default function HocPhanPage() {
               <DropdownMenuSeparator />
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Delete HocPhan</DialogTitle>
+                  <DialogTitle>Xóa học phần</DialogTitle>
                   <DialogDescription>
-                    Delete the current item.
+                    Xóa học phần hiện tại.
                   </DialogDescription>
                 </DialogHeader>
-                <p>Are you sure you want to delete this HocPhan?</p>
+                <p>Bạn có muốn xóa học phần này không?</p>
                 <DialogFooter>
                   <Button type="submit" onClick={() => handleDelete(item.id)}>
                     Delete
@@ -263,8 +263,7 @@ export default function HocPhanPage() {
       <div className="w-full">
         <div className="flex">
           <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
-          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId}/>
-          <Button onClick={handleGoClick}>Go</Button>
+          <Button onClick={handleGoClick}>Tìm kiếm</Button>
         </div>
         <DataTable
           entity="Học phần"
@@ -279,6 +278,7 @@ export default function HocPhanPage() {
           parentEntity="Ngành"
           comboBoxItems={nganhItems}
           addItemsToParent={addHocPhansToNganh}
+          name = "Tên Học Phần"
         />
       </div>
     </Layout>
