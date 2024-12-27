@@ -39,6 +39,7 @@ export function GradeTable({
   const { toast } = useToast();
   const doAcceptAllowed = role === "Admin"|| role === "PhongDaoTao"
   console.log("doAcceptAllowed", doAcceptAllowed);
+  console.log("isConfirmed", isConfirmed);
   React.useEffect(() => {
     setTableData(data)
 

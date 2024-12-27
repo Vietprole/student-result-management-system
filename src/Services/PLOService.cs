@@ -111,6 +111,8 @@ namespace Student_Result_Management_System.Services
             foreach (var hocPhanId in hocPhanIds)
             {
                 var hocPhan = await _context.HocPhans.FindAsync(hocPhanId) ?? throw new BusinessLogicException($"HocPhan with id {hocPhanId} not found");
+                if (hocPhan.LaCotLoi == false)
+                    throw new BusinessLogicException($"HocPhan với id: {hocPhanId} không phải là cốt lõi");
                 pLO.HocPhans.Add(hocPhan);
             }
 

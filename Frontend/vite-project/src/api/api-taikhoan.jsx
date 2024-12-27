@@ -88,3 +88,26 @@ export const deleteTaiKhoan = async (id) => {
   }
 }
 
+export const resetPassword = async (id) => {
+  try {
+    const response = await axios.patch(`${API_TAIKHOAN}/${id}/resetPassword`, {}, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
+  }
+}
+
+export const changePassword = async (data) => {
+  try {
+    const response = await axios.patch(`${API_TAIKHOAN}/password`, data, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+    throw new Error(error.response?.data || "Lỗi bất định");
+  }
+}

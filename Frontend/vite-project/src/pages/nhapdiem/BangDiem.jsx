@@ -5,7 +5,7 @@ import { GradeTable } from "@/components/GradeTable";
 import { getSinhViens } from "@/api/api-sinhvien";
 import { useParams } from "react-router-dom";
 import { getBaiKiemTrasByLopHocPhanId } from "@/api/api-baikiemtra";
-import { getAllKetQuas } from "@/api/api-ketqua";
+import { getKetQuas } from "@/api/api-ketqua";
 import { getCauHoisByBaiKiemTraId } from "@/api/api-cauhoi";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -27,7 +27,7 @@ export default function GradesPage() {
       // getGradeComponents(),
       getBaiKiemTrasByLopHocPhanId(lopHocPhanId),
       // getGrades(),
-      getAllKetQuas(),
+      getKetQuas(null, null, lopHocPhanId),
     ]);
     setComponents(components);
 
@@ -47,7 +47,8 @@ export default function GradesPage() {
     );
     setQuestions(questions);
 
-    const isConfirmed = allGrades.every(grade => grade.daXacNhan);
+    const isConfirmed = allGrades.length > 0 && allGrades.every(grade => grade.daXacNhan);
+    console.log("allGrades", allGrades);
     setIsConfirmed(isConfirmed);
 
     // Transform data into the required format
@@ -130,7 +131,7 @@ export default function GradesPage() {
       <div className="flex items-center space-x-2">
         <Label htmlFor="diem-mode">Điểm tạm</Label>
         <Switch id="diem-mode"
-          onCheckedChange={(check) => {setIsDiemTam(!check)}}
+          onCheckedChange={(check) => {setIsDiemTam(!check);}}
         />
         <Label htmlFor="diem-mode">Điểm chính thức</Label>
       </div>

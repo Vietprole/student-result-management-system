@@ -1,4 +1,5 @@
 using System;
+using Student_Result_Management_System.Services;
 
 namespace Student_Result_Management_System.Models;
 
@@ -10,4 +11,5 @@ public class Nganh
     public int KhoaId { get; set; }
     public Khoa Khoa { get; set; } = null!;
     public List<HocPhan> HocPhans { get; set; } = [];
+    public List<PLO> PLOs { get; set; } = [];
 }

@@ -33,7 +33,7 @@ export default function BangDiemGiangVienPage() {
       // getGradeComponents(),
       getBaiKiemTraById(baiKiemTraId),
       // getGrades(),
-      getKetQuas(baiKiemTraId, null),
+      getKetQuas(baiKiemTraId, null, null),
     ]);
     // Map khoa items to be used in ComboBox
     const components = [component];

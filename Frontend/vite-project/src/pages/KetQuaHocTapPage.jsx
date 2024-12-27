@@ -82,7 +82,7 @@ export default function KetQuaHocTapPage() {
         }
       }
 
-      const ketQuas = await getKetQuas(null, sinhVienId);
+      const ketQuas = await getKetQuas(null, sinhVienId, null);
       setData({
         lopHocPhans,
         baiKiemTras: allBaiKiemTras,
@@ -199,8 +199,8 @@ export default function KetQuaHocTapPage() {
                                     </div>
                                     <div className="flex items-center gap-2 text-sm">
                                       <span className="text-blue-600 min-w-[2rem] text-center">
-                                        {isDiemTam && (ketQua?.diemTam || "-")}
-                                        {!isDiemTam && (ketQua?.diemChinhThuc || "-")}
+                                        {isDiemTam && (ketQua?.diemTam === 0 ? 0 : ketQua?.diemTam || "-")}
+                                        {!isDiemTam && (ketQua?.diemChinhThuc === 0 ? 0 : ketQua?.diemChinhThuc || "-")}
                                         /{cauHoi.thangDiem}
                                       </span>
                                       <span className="text-gray-600">

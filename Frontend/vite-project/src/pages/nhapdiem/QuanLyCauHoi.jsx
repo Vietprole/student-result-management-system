@@ -1,7 +1,7 @@
 import DataTable from "@/components/DataTable";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getAllBaiKiemTras, getBaiKiemTrasByLopHocPhanId } from "@/api/api-baiKiemTra";
+import { getBaiKiemTrasByLopHocPhanId } from "@/api/api-baiKiemTra";
 import {
   getCauHoisByBaiKiemTraId,
   // getAllCauHois,

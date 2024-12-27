@@ -30,6 +30,8 @@ import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { getRole } from "@/utils/storage";
+import { resetPassword } from "@/api/api-taikhoan";
+import { useToast } from "@/hooks/use-toast";
 
 export default function QuanLyTaiKhoanPage() {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ export default function QuanLyTaiKhoanPage() {
   const [chucVuId, setchucVuId] = useState(chucVuIdParam);
   const [comboBoxChucVuId, setComboBoxChucVuId] = useState(chucVuIdParam);
   const role = getRole();
+  const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
     const dataChucVu = await getAllChucVus();
@@ -62,6 +65,24 @@ export default function QuanLyTaiKhoanPage() {
     }
     navigate(`/quanlytaikhoan?chucVuId=${comboBoxChucVuId}`);
   };
+
+  const handleReset = async (id) => {
+    try {
+      await resetPassword(id);
+    } catch (error) {
+      toast({
+        title: "Có lỗi xảy ra",
+        description: error.message,
+        variant: "destructive",
+      })
+      return;
+    }
+    toast({
+      title: "Thành công",
+      description: "Đặt lại mật khẩu thành công",
+      variant: "success",
+    })
+  }
 
   const createTaiKhoanColumns = (handleEdit, handleDelete) => [
     {

@@ -84,8 +84,8 @@ export default function NhapDiemPage() {
   }, [giangVienId, role]);
 
   const handleRoute = () => {
-    setLopHocPhanId(comboBoxLopHocPhanId);
-    console.log("comboBoxLopHocPhanId", comboBoxLopHocPhanId);
+    // setLopHocPhanId(comboBoxLopHocPhanId);
+    // console.log("comboBoxLopHocPhanId", comboBoxLopHocPhanId);
     console.log(`/nhapdiem/${lopHocPhanId}/${itemId}`)
     if (lopHocPhanId && itemId) {
       navigate(`/nhapdiem/${lopHocPhanId}/${itemId}`);

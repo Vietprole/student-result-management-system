@@ -39,7 +39,7 @@ namespace Student_Result_Management_System.Services
             return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
         }
 
-        public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId)
+        public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId, bool? laCotLoi)
         {
             IQueryable<HocPhan> query = _context.HocPhans.Include(hp => hp.Khoa) // Include the Khoa navigation property
                 .Include(hp => hp.Nganhs); // Include the Nganhs navigation property
@@ -52,6 +52,11 @@ namespace Student_Result_Management_System.Services
             if (nganhId.HasValue)
             {
                 query = query.Where(hp => hp.Nganhs.Any(n => n.Id == nganhId.Value));
+            }
+
+            if (laCotLoi.HasValue)
+            {
+                query = query.Where(hp => hp.LaCotLoi == laCotLoi.Value);
             }
 
             var hocPhans = await query.ToListAsync();

@@ -35,11 +35,12 @@ namespace Student_Result_Management_System.Services
             return ketQuas.Select(ketQua => ketQua.ToKetQuaDTO()).ToList();
         }
 
-        public async Task<List<KetQuaDTO>> GetFilteredKetQuasAsync(int? baiKiemTraId, int? sinhVienId)
+        public async Task<List<KetQuaDTO>> GetFilteredKetQuasAsync(int? baiKiemTraId, int? sinhVienId, int? lopHocPhanId)
         {
             IQueryable<KetQua> query = _context.KetQuas
                 .Include(kq => kq.CauHoi)
                     .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
                 .Include(kq => kq.SinhVien);
 
             if (baiKiemTraId.HasValue)
@@ -50,6 +51,11 @@ namespace Student_Result_Management_System.Services
             if (sinhVienId.HasValue)
             {
                 query = query.Where(kq => kq.SinhVienId == sinhVienId.Value);
+            }
+
+            if (lopHocPhanId.HasValue)
+            {
+                query = query.Where(kq => kq.CauHoi.BaiKiemTra.LopHocPhanId == lopHocPhanId.Value);
             }
 
             var ketQuas = await query.ToListAsync();
@@ -158,7 +164,7 @@ namespace Student_Result_Management_System.Services
             return existingKetQua.ToKetQuaDTO();
         }
 
-        public async Task<decimal> CalculateDiemCLO(int sinhVienId, int cLOId)
+        public async Task<decimal> CalculateDiemCLO(int sinhVienId, int cLOId, bool useDiemTam = false)
         {
             var clo = await _context.CLOs
                 .Include(c => c.CauHois)
@@ -174,8 +180,7 @@ namespace Student_Result_Management_System.Services
                 .ToListAsync();
 
             decimal totalScore = 0;
-            // Check if any DiemChinhThuc is null
-            var useTemporaryScores = ketQuas.Any(kq => kq.DiemChinhThuc == null);
+            bool useTemporaryScores = useDiemTam;
 
             foreach (var ketQua in ketQuas)
             {
@@ -187,20 +192,20 @@ namespace Student_Result_Management_System.Services
 
                 var score = (diem / thangDiem) * trongSoCauHoi * trongSoBaiKiemTra;
                 totalScore += score;
-                _logger.LogInformation(
-                    "CauHoi {CauHoiId}: Diem={Diem}, ThangDiem={ThangDiem}, TrongSoCH={TrongSoCH}, TrongSoBKT={TrongSoBKT}, Score={Score}",
-                    cauHoi.Id,
-                    diem,
-                    thangDiem,
-                    trongSoCauHoi,
-                    trongSoBaiKiemTra,
-                    score
-                );
+                // _logger.LogInformation(
+                //     "CauHoi {CauHoiId}: Diem={Diem}, ThangDiem={ThangDiem}, TrongSoCH={TrongSoCH}, TrongSoBKT={TrongSoBKT}, Score={Score}",
+                //     cauHoi.Id,
+                //     diem,
+                //     thangDiem,
+                //     trongSoCauHoi,
+                //     trongSoBaiKiemTra,
+                //     score
+                // );
             }
-            _logger.LogInformation("Final Score for SinhVien {SinhVienId}, CLO {CLOId}: {Score}",
-                sinhVienId,
-                cLOId,
-                totalScore);
+            // _logger.LogInformation("Final Score for SinhVien {SinhVienId}, CLO {CLOId}: {Score}",
+            //     sinhVienId,
+            //     cLOId,
+            //     totalScore);
 
             return decimal.Round(totalScore, 2, MidpointRounding.AwayFromZero);
         }
@@ -210,11 +215,11 @@ namespace Student_Result_Management_System.Services
             var clo = await _context.CLOs
             .Include(c => c.CauHois)
                 .ThenInclude(ch => ch.BaiKiemTra)
-            .FirstOrDefaultAsync(c => c.Id == cLOId);
-
-            if (clo == null)
+            .FirstOrDefaultAsync(c => c.Id == cLOId) ?? throw new BusinessLogicException("Không tìm thấy CLO");
+            
+            if (clo.CauHois.Count == 0)
             {
-                throw new BusinessLogicException("Không tìm thấy CLO");
+                throw new BusinessLogicException("CLO chưa có câu hỏi nào");
             }
 
             if (clo.CauHois.Any(c => c.BaiKiemTra.TrongSo == null))
@@ -230,23 +235,36 @@ namespace Student_Result_Management_System.Services
             return decimal.Round(maxScore, 2, MidpointRounding.AwayFromZero);
         }
 
-        public async Task<decimal> CalculateDiemPk(int lopHocPhanId, int sinhVienId, int ploId)
+        public async Task<decimal> CalculateDiemPk(int lopHocPhanId, int sinhVienId, int ploId, bool useDiemTam = false)
         {
             // Get LopHocPhan and related entities
+            // var lopHocPhan = await _context.LopHocPhans
+            //     .Include(l => l.HocPhan)
+            //         .ThenInclude(h => h.PLOs.Where(p => p.Id == ploId)) // Filter PLO by Id
+            //             .ThenInclude(p => p.CLOs)
+            //                 .ThenInclude(c => c.CauHois)
+            //                     .ThenInclude(ch => ch.BaiKiemTra)
+            //     .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
+
             var lopHocPhan = await _context.LopHocPhans
                 .Include(l => l.HocPhan)
                     .ThenInclude(h => h.PLOs.Where(p => p.Id == ploId)) // Filter PLO by Id
-                        .ThenInclude(p => p.CLOs)
-                            .ThenInclude(c => c.CauHois)
-                                .ThenInclude(ch => ch.BaiKiemTra)
-                .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new BusinessLogicException("LopHocPhan not found");
-            var plo = lopHocPhan.HocPhan.PLOs.FirstOrDefault() ?? throw new BusinessLogicException("PLO not found");
+                    .ThenInclude(p => p.CLOs.Where(c => c.LopHocPhanId == lopHocPhanId))
+                .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
+            
+            if (!lopHocPhan.HocPhan.LaCotLoi)
+            {
+                throw new BusinessLogicException("Chỉ được tính điểm Pk cho học phần cốt lõi");
+            }
+            var plo = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId) ?? throw new NotFoundException("Không tìm thấy PLO");
+            var cloItem = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId)?.CLOs.FirstOrDefault(c => c.LopHocPhanId == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy CLO");
 
+            var filteredClos = plo.CLOs.Where(c => c.LopHocPhanId == lopHocPhanId).ToList();
             decimal totalDiemCLO = 0;
             decimal totalMaxDiemCLO = 0;
 
             // For each CLO related to PLO
-            foreach (var clo in plo.CLOs)
+            foreach (var clo in filteredClos)
             {
                 // Calculate diem-clo
                 //    decimal diemClo = 0;
@@ -261,7 +279,7 @@ namespace Student_Result_Management_System.Services
                 //        diemClo += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
                 //    }
                 //    totalDiemCLO += diemClo;
-                totalDiemCLO += await CalculateDiemCLO(sinhVienId, clo.Id);
+                totalDiemCLO += await CalculateDiemCLO(sinhVienId, clo.Id, useDiemTam);
 
                 // Calculate diem-clo-max
                 // decimal maxDiemClo = 0;
@@ -277,18 +295,27 @@ namespace Student_Result_Management_System.Services
             return decimal.Round(finalRatio, 2, MidpointRounding.AwayFromZero);
         }
 
-        public async Task<decimal> CalculateDiemPLO(int sinhVienId, int ploId)
+        public async Task<decimal> CalculateDiemPLO(int sinhVienId, int ploId, bool useDiemTam = false)
         {
             decimal finalRatio = 0;
             // First verify if PLO exists
-            var plo = await _context.PLOs
-                .Include(p => p.HocPhans.Where(h => h.SoTinChi > 0))
-                    .ThenInclude(h => h.LopHocPhans)
-                        .ThenInclude(l => l.SinhViens.Where(sv => sv.Id == sinhVienId))
-                .Include(p => p.CLOs)
-                    .ThenInclude(c => c.CauHois)
-                        .ThenInclude(ch => ch.BaiKiemTra)
-                .FirstOrDefaultAsync(p => p.Id == ploId) ?? throw new BusinessLogicException("Không tìm thấy PLO");
+            // var plo = await _context.PLOs
+            //     .Include(p => p.HocPhans.Where(h => h.SoTinChi > 0))
+            //         .ThenInclude(h => h.LopHocPhans)
+            //             .ThenInclude(l => l.SinhViens.Where(sv => sv.Id == sinhVienId))
+            //     .Include(p => p.CLOs)
+            //         .ThenInclude(c => c.CauHois)
+            //             .ThenInclude(ch => ch.BaiKiemTra)
+            //     .FirstOrDefaultAsync(p => p.Id == ploId) ?? throw new BusinessLogicException("Không tìm thấy PLO");
+            var sinhVien = await _context.SinhViens
+                    .AsSplitQuery()
+                    .Include(sv => sv.Nganh)
+                        .ThenInclude(n => n.PLOs.Where(pl => pl.Id == ploId))
+                        .ThenInclude(pl => pl.HocPhans.Where(h => h.SoTinChi > 0))
+                            .ThenInclude(h => h.LopHocPhans)
+                    .FirstOrDefaultAsync(sv => sv.Id == sinhVienId) ?? throw new NotFoundException("Không tìm thấy sinh viên");
+
+            var plo = sinhVien.Nganh.PLOs.FirstOrDefault(p => p.Id == ploId) ?? throw new NotFoundException("Không tìm thấy PLO");
 
             decimal totalPkMulSoTinChi = 0;
             decimal totalSoTinChi = 0;
@@ -299,34 +326,56 @@ namespace Student_Result_Management_System.Services
                 decimal totalMaxDiemCLO = 0;
 
                 // For each CLO related to PLO
-                foreach (var clo in plo.CLOs)
+                // foreach (var clo in plo.CLOs)
+                // {
+                //     // Calculate diem-clo
+                //     // decimal diemClo = 0;
+                //     // var ketQuas = await _context.KetQuas
+                //     //     .Where(kq => kq.SinhVienId == sinhVienId &&
+                //     //                 clo.CauHois.Select(ch => ch.Id).Contains(kq.CauHoiId))
+                //     //     .ToListAsync();
+
+                //     // foreach (var ketQua in ketQuas)
+                //     // {
+                //     //     var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
+                //     //     diemClo += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
+                //     // }
+                //     var diemClo = await CalculateDiemCLO(sinhVienId, clo.Id, useDiemTam);
+                //     totalDiemCLO += diemClo;
+
+                //     // Calculate diem-clo-max
+                //     decimal maxDiemClo = 0;
+                //     // foreach (var cauHoi in clo.CauHois)
+                //     // {
+                //     //     maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
+                //     // }
+                //     maxDiemClo = await CalculateDiemCLOMax(clo.Id);
+                //     totalMaxDiemCLO += maxDiemClo;
+                // }
+                // _logger.LogInformation("TotalDiemCLO: {TotalDiemCLO}, TotalMaxDiemCLO: {TotalMaxDiemCLO}, hocPhan.SoTinChi: {hocPhan.SoTinChi}", totalDiemCLO, totalMaxDiemCLO, hocPhan.SoTinChi);
+                // totalPkMulSoTinChi = 10m * totalDiemCLO / totalMaxDiemCLO * hocPhan.SoTinChi;
+                // totalSoTinChi += hocPhan.SoTinChi;
+
+                decimal maxDiemPk = 0;
+                foreach (var lopHocPhan in hocPhan.LopHocPhans)
                 {
-                    // Calculate diem-clo
-                    // decimal diemClo = 0;
-                    // var ketQuas = await _context.KetQuas
-                    //     .Where(kq => kq.SinhVienId == sinhVienId &&
-                    //                 clo.CauHois.Select(ch => ch.Id).Contains(kq.CauHoiId))
-                    //     .ToListAsync();
-
-                    // foreach (var ketQua in ketQuas)
-                    // {
-                    //     var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
-                    //     diemClo += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
-                    // }
-                    var diemClo = await CalculateDiemCLO(sinhVienId, clo.Id);
-                    totalDiemCLO += diemClo;
-
-                    // Calculate diem-clo-max
-                    decimal maxDiemClo = 0;
-                    // foreach (var cauHoi in clo.CauHois)
-                    // {
-                    //     maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
-                    // }
-                    maxDiemClo = await CalculateDiemCLOMax(clo.Id);
-                    totalMaxDiemCLO += maxDiemClo;
+                    decimal diemPk = 0;
+                    try {
+                        diemPk = await CalculateDiemPk(lopHocPhan.Id, sinhVienId, ploId, useDiemTam);   
+                    }
+                    catch (Exception){
+                        diemPk = 0;
+                    }
+                    maxDiemPk = Math.Max(maxDiemPk, diemPk);
+                    _logger.LogInformation("MaxDiemPk: {MaxDiemPk}", maxDiemPk);    
                 }
-                totalPkMulSoTinChi = 10m * totalDiemCLO / totalMaxDiemCLO * hocPhan.SoTinChi;
-                totalSoTinChi += hocPhan.SoTinChi;
+
+                _logger.LogInformation("hocPhan.SoTinChi: {hocPhan.SoTinChi}", hocPhan.SoTinChi);
+                totalPkMulSoTinChi += maxDiemPk * hocPhan.SoTinChi;
+                if (maxDiemPk != 0){
+                    totalSoTinChi += hocPhan.SoTinChi;
+                }
+                _logger.LogInformation("TotalPkMulSoTinChi: {TotalPkMulSoTinChi}, TotalSoTinChi: {TotalSoTinChi}", totalPkMulSoTinChi, totalSoTinChi);
             }
             if (totalSoTinChi == 0)
             {

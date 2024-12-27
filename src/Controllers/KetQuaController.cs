@@ -24,9 +24,9 @@ namespace ketQua_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
-        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId, [FromQuery] int? sinhVienId) // async go with Task<> to make function asynchronous
+        public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId, [FromQuery] int? sinhVienId, [FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
-            var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId, sinhVienId);
+            var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId, sinhVienId, lopHocPhanId);
             return Ok(ketQuaDTOs);
         }
 
@@ -115,11 +115,11 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-clo")]
-        public async Task<IActionResult> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int cLOId)
+        public async Task<IActionResult> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int cLOId, [FromQuery] bool useDiemTam = false)
         {
             try
             {
-                var diemCLO = await _ketQuaService.CalculateDiemCLO(SinhVienId, cLOId);
+                var diemCLO = await _ketQuaService.CalculateDiemCLO(SinhVienId, cLOId, useDiemTam);
                 return Ok(diemCLO);
             }
             catch (BusinessLogicException ex)
@@ -150,26 +150,26 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-pk")]
-        public async Task<IActionResult> CalculateDiemPk([FromQuery] int lopHocPhanId, [FromQuery] int sinhVienId, [FromQuery] int ploId)
+        public async Task<IActionResult> CalculateDiemPk([FromQuery] int lopHocPhanId, [FromQuery] int sinhVienId, [FromQuery] int ploId, [FromQuery] bool useDiemTam = false)
         {
             try {
-                var diemPk = await _ketQuaService.CalculateDiemPk(lopHocPhanId, sinhVienId, ploId);
+                var diemPk = await _ketQuaService.CalculateDiemPk(lopHocPhanId, sinhVienId, ploId, useDiemTam);
                 return Ok(diemPk);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (BusinessLogicException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occurred");
-            }
         }
         [HttpGet("calculate-diem-plo")]
-        public async Task<IActionResult> CalculateDiemPLO([FromQuery] int sinhVienId, [FromQuery] int ploId)
+        public async Task<IActionResult> CalculateDiemPLO([FromQuery] int sinhVienId, [FromQuery] int ploId, [FromQuery] bool useDiemTam = false)
         {
             try {
-                var diemPLO = await _ketQuaService.CalculateDiemPLO(sinhVienId, ploId);
+                var diemPLO = await _ketQuaService.CalculateDiemPLO(sinhVienId, ploId, useDiemTam);
                 return Ok(diemPLO);
             }
             catch (BusinessLogicException ex)
