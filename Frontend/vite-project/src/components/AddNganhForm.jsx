@@ -94,7 +94,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
           Id
         </Button>
       ),
-      cell: ({ row }) => <div className="px-2 py-1">{row.getValue("id")}</div>,
+      cell: ({ row }) => <div className="px-1 py-1">{row.getValue("id")}</div>,
     },
     {
       accessorKey: "maHocPhan",
@@ -104,7 +104,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-5 py-1">{row.getValue("maHocPhan")}</div>
+        <div className="px-1 py-1">{row.getValue("maHocPhan")}</div>
       ),
     },
     {
@@ -114,7 +114,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
           Tên Học Phần
         </Button>
       ),
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
+      cell: ({ row }) => <div className="px-1 py-1">{row.getValue("ten")}</div>,
     },
     {
       accessorKey: "soTinChi",
@@ -123,7 +123,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
           Số Tín Chỉ
         </Button>
       ),
-      cell: ({ row }) => <div className="px-6 py-2">{row.getValue("soTinChi")}</div>,
+      cell: ({ row }) => <div className="px-1 py-1">{row.getValue("soTinChi")}</div>,
     },
   ];
 
@@ -210,16 +210,17 @@ function EditNganhModal({ setOpenModal,nganhId}) {
   };
   
   const handleSave = async () => {
-    try {
-      const updatedData = { ...nganh };
-      const updatedNganh = await updateNganh(nganhId, updatedData);
-      if (updatedNganh) {
-        console.log('Update successful:', updatedNganh);
-        setOpenModal(false); // Close the modal after saving
-      }
-    } catch (error) {
-      console.error('Error updating nganh:', error);
-    }
+    // try {
+    //   const updatedData = { ...nganh };
+    //   const updatedNganh = await updateNganh(nganhId, updatedData);
+    //   if (updatedNganh) {
+    //     console.log('Update successful:', updatedNganh);
+    //     setOpenModal(false); // Close the modal after saving
+    //   }
+    // } catch (error) {
+    //   console.error('Error updating nganh:', error);
+    // }
+    setOpenModal(false);
   };
   
   return (
@@ -252,6 +253,7 @@ function EditNganhModal({ setOpenModal,nganhId}) {
               placeholder="Nhập tên ngành"
               value={nganh?.ten || ""}
               onChange={(e) => setNganh({ ...nganh, ten: e.target.value })}
+              readOnly
             />
             </div>
           </div>
@@ -322,7 +324,14 @@ function EditNganhModal({ setOpenModal,nganhId}) {
                                         data-state={row.getIsSelected() && "selected"}
                                       >
                                         {row.getVisibleCells().map((cell) => (
-                                          <TableCell key={cell.id}>
+                                          <TableCell key={cell.id}
+                                            style={{
+                                              fontSize: "11px", // Smaller font size
+                                              padding: "3px 1px", // Reduce padding
+                                              textAlign: "center", // Center align text
+                                              
+                                            }}
+                                          >
                                             {flexRender(
                                               cell.column.columnDef.cell,
                                               cell.getContext()
@@ -334,10 +343,16 @@ function EditNganhModal({ setOpenModal,nganhId}) {
                                   ) : (
                                     <TableRow>
                                       <TableCell
-                                        colSpan={createHocPhanColumns.length}
-                                        className="h-10 text-center"
+                                        colSpan={5}
+                                        style={{
+
+                                          fontSize: "15px", // Smaller font size
+                                          padding: "3px 1px", // Reduce padding
+                                          textAlign: "center", // Center align text
+      
+                                        }}
                                       >
-                                        Không có học phần!
+                                        Không tìm thấy học phần!
                                       </TableCell>
                                     </TableRow>
                                   )}
@@ -399,7 +414,13 @@ function EditNganhModal({ setOpenModal,nganhId}) {
                                         data-state={row.getIsSelected() && "selected"}
                                       >
                                         {row.getVisibleCells().map((cell) => (
-                                          <TableCell key={cell.id}>
+                                          <TableCell key={cell.id}
+                                              style={{
+                                                fontSize: "11px", // Smaller font size
+                                                padding: "3px 1px", // Reduce padding
+                                                textAlign: "center", // Center align text
+                                              }}
+                                          >
                                             {flexRender(
                                               cell.column.columnDef.cell,
                                               cell.getContext()
@@ -411,10 +432,16 @@ function EditNganhModal({ setOpenModal,nganhId}) {
                                   ) : (
                                     <TableRow>
                                       <TableCell
-                                        colSpan={createHocPhanColumns.length}
-                                        className="h-15 text-center"
+                                        colSpan={5}
+                                        style={{
+
+                                          fontSize: "15px", // Smaller font size
+                                          padding: "3px 1px", // Reduce padding
+                                          textAlign: "center", // Center align text
+      
+                                        }}
                                       >
-                                        Không có học phần!
+                                        Không tìm thấy học phần!
                                       </TableCell>
                                     </TableRow>
                                   )}

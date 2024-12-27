@@ -131,12 +131,20 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<List<SinhVien>> GetSinhViensInLopHocPhanAsync(int lopHocPhanId)
+        public async Task<List<SinhVienDTO>> GetSinhViensInLopHocPhanAsync(int lopHocPhanId)
         {
-            var lopHocPhan = await _context.LopHocPhans.Include(c => c.SinhViens).ThenInclude(x => x.TaiKhoan).FirstOrDefaultAsync(s => s.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+            var lopHocPhan = await _context.LopHocPhans
+                .Include(c => c.SinhViens)
+                    .ThenInclude(sv => sv.TaiKhoan)
+                .Include(c => c.SinhViens)
+                    .ThenInclude(sv => sv.Khoa) 
+                .FirstOrDefaultAsync(s => s.Id == lopHocPhanId)
+                ?? throw new NotFoundException("Không tìm thấy Lớp học phần");
+
             var sinhViens = lopHocPhan.SinhViens.ToList();
-            return sinhViens;
+            return sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList();
         }
+
 
         public async Task<List<SinhVien>> AddSinhViensToLopHocPhanAsync(int lopHocPhanId, int[] sinhVienIds)
         {

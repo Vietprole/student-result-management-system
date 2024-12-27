@@ -15,7 +15,7 @@ export default function TestPage()
       >
         Open
       </button>
-      {modalOpen && <EditSinhVienLopHocPhan setOpenModal={setModalOpen} lophocphanId={1}/>}
+      {modalOpen && <EditSinhVienLopHocPhan setOpenModal={setModalOpen} lophocphanId={2}/>}
     </div>
   );
 }

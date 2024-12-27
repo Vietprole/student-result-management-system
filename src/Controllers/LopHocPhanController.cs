@@ -101,7 +101,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
             try
             {
                 var sinhViens = await _lopHocPhanService.GetSinhViensInLopHocPhanAsync(id);
-                return Ok(sinhViens.Select(sv => sv.ToSinhVienDTO()).ToList());
+                return Ok(sinhViens);
             }
             catch (BusinessLogicException ex)
             {

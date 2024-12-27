@@ -24,9 +24,12 @@ import {
 import { LopHocPhanForm } from "@/components/LopHocPhanForm";
 import Layout from "@/pages/Layout";
 import { useCallback, useEffect, useState } from "react";
+import EditSinhVienLopHocPhan from "@/components/EditSinhVienLopHocPhanForm";
 // import { format, parseISO } from 'date-fns';
 
 export default function LopHocPhanPage() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedNganhId, setSelectedNganhId] = useState(null);
 
     // const navigate = useNavigate();
     // const [searchParams] = useSearchParams();
@@ -220,6 +223,14 @@ export default function LopHocPhanPage() {
               {/* <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 Quản lý Sinh Viên
               </DropdownMenuItem> */}
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  setSelectedNganhId(item.id);
+                  setModalOpen(true);
+                }}
+              >
+                Xem Danh Sách Sinh Viên
+              </DropdownMenuItem>
               
             </DropdownMenuContent>
           </DropdownMenu>
@@ -240,6 +251,7 @@ export default function LopHocPhanPage() {
           columnToBeFiltered={"ten"}
           ItemForm={LopHocPhanForm}
         />
+        {modalOpen && <EditSinhVienLopHocPhan setOpenModal={setModalOpen} lophocphanId={selectedNganhId} />}
       </Layout>
     </div>
   );

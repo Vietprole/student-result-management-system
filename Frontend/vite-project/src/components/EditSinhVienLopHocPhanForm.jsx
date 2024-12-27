@@ -22,9 +22,9 @@ import {
 import { getLopHocPhanById } from "@/api/api-lophocphan";
 import { getSinhViensByLopHocPhanId } from "@/api/api-lophocphan";
 import { getSinhViensNotInLopHocPhanId } from "@/api/api-lophocphan";
-// import { addHocPhansToNganh } from "@/api/api-nganh";
-// import { getNganhById,updateNganh} from "@/api/api-nganh";
-// import { removeHocPhanFromNganh } from "@/api/api-nganh";
+import { addSinhViensToLopHocPhan } from "@/api/api-lophocphan";
+import { removeSinhVienFromLopHocPhan } from "@/api/api-lophocphan";
+
 
 function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
   const [hovered, setHovered] = useState(false);
@@ -32,9 +32,6 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
   const [lopHocPhan, setLopHocPhan] = useState({});
   const [dsSinhVien, setDSSinhVien] = useState([]);
   const [dsSinhVienDaChon, setDSSinhVienDaChon] = useState([]);
-  // const [nganhData, setNganhData] = useState([]);
-  // const [nganh, setNganh] = useState({});
-  // const [hocPhanDaChon, setHocPhanDaChon] = useState([]);
   
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -60,9 +57,6 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
         setLopHocPhan(lopHocPhan || {});
         setDSSinhVien(Array.isArray(sinhVien) ? sinhVien : []);
         setDSSinhVienDaChon(Array.isArray(sinhVienDaChon) ? sinhVienDaChon : []);
-        // setNganh(nganhInfo || {});
-        // setNganhData(Array.isArray(nganhs) ? nganhs : []);
-        // setHocPhanDaChon(Array.isArray(hocPhan) ? hocPhan : []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -102,7 +96,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
           Mã sinh viên
         </Button>
       ),
-      cell: ({ row }) => <div className="px-2 py-1">{row.getValue("maSinhVien")}</div>,
+      cell: ({ row }) => <div className="1px 1px">{row.getValue("maSinhVien")}</div>,
     },
     {
       accessorKey: "ten",
@@ -112,7 +106,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="px-5 py-1">{row.getValue("ten")}</div>
+        <div className="px-1 py-1">{row.getValue("ten")}</div>
       ),
     },
     {
@@ -122,7 +116,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
           Tên Khoa
         </Button>
       ),
-      cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
+      cell: ({ row }) => <div className="px-1 py-1">{row.getValue("tenKhoa")}</div>,
     },
     {
       accessorKey: "namNhapHoc",
@@ -131,7 +125,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
           Năm Nhập Học
         </Button>
       ),
-      cell: ({ row }) => <div className="px-6 py-2">{row.getValue("namNhapHoc")}</div>,
+      cell: ({ row }) => <div className="px-1 py-1">{row.getValue("namNhapHoc")}</div>,
     },
   ];
 
@@ -173,62 +167,53 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  // const handleAddSelectedHocPhan = async () => {
-  //   try {
-  //     const selectedRows = Object.keys(rowSelection)
-  //       .filter((id) => rowSelection[id])
-  //       .map((id) => table.getRow(id).original);
-  //     const hocPhanIds = selectedRows.map((row) => row.id);
+  const handleAddSelectedSinhVien = async () => {
+    try {
+      const selectedRows = Object.keys(rowSelection)
+        .filter((id) => rowSelection[id])
+        .map((id) => table.getRow(id).original);
+      const hocPhanIds = selectedRows.map((row) => row.id);
   
-  //     if (hocPhanIds.length > 0) {
-  //       await addHocPhansToNganh(nganhId, hocPhanIds);
-  //       const [nganhs, hocPhan] = await Promise.all([
-  //         getAllHocPhanNotNganhId(nganhId),
-  //         getHocPhans(null, nganhId),
-  //       ]);
-  //       setNganhData(Array.isArray(nganhs) ? nganhs : []);
-  //       setHocPhanDaChon(Array.isArray(hocPhan) ? hocPhan : []);
-  //     }
-  //     setRowSelection({});
-  //   } catch (error) {
-  //     console.error("Error adding selected hoc phan:", error);
-  //   }
-  // };
+      if (hocPhanIds.length > 0) {
+        await addSinhViensToLopHocPhan(lophocphanId, hocPhanIds);
+        const [dsSinhViens, dsSinhVienDaChon] = await Promise.all([
+          getSinhViensNotInLopHocPhanId(lophocphanId),
+          getSinhViensByLopHocPhanId(lophocphanId),
+        ]);
+        setDSSinhVien(Array.isArray(dsSinhViens) ? dsSinhViens : []);
+        setDSSinhVienDaChon(Array.isArray(dsSinhVienDaChon) ? dsSinhVienDaChon : []);
+      }
+      setRowSelection({});
+    } catch (error) {
+      console.error("Error adding selected hoc phan:", error);
+    }
+  };
   
 
-  // const handleRemoveSelectedHocPhan = async () => {
-  //   try {
-  //     const selectedRows = Object.keys(rowSelectionDaChon)
-  //       .filter((id) => rowSelectionDaChon[id])
-  //       .map((id) => tableDaChon.getRow(id).original);
-  //     for (const row of selectedRows) {
-  //       await removeHocPhanFromNganh(nganhId, row.id);
-  //     }
-  //     const [nganhs, hocPhan] = await Promise.all([
-  //       getAllHocPhanNotNganhId(nganhId),
-  //       getHocPhans(null, nganhId),
-  //     ]);
+  const handleRemoveSelectedHocPhan = async () => {
+    try {
+      const selectedRows = Object.keys(rowSelectionDaChon)
+        .filter((id) => rowSelectionDaChon[id])
+        .map((id) => tableDaChon.getRow(id).original);
+      for (const row of selectedRows) {
+        await removeSinhVienFromLopHocPhan(lophocphanId, row.id);
+      }
+      const [dsSinhViens, dsSinhVienDaChon] = await Promise.all([
+        getSinhViensNotInLopHocPhanId(lophocphanId),
+        getSinhViensByLopHocPhanId(lophocphanId),
+      ]);
   
-  //     setNganhData(Array.isArray(nganhs) ? nganhs : []);
-  //     setHocPhanDaChon(Array.isArray(hocPhan) ? hocPhan : []);
-  //     setRowSelectionDaChon({});
-  //   } catch (error) {
-  //     console.error("Error removing selected hoc phan:", error);
-  //   }
-  // };
+      setDSSinhVien(Array.isArray(dsSinhViens) ? dsSinhViens : []);
+      setDSSinhVienDaChon(Array.isArray(dsSinhVienDaChon) ? dsSinhVienDaChon : []);
+      setRowSelectionDaChon({});
+    } catch (error) {
+      console.error("Error removing selected hoc phan:", error);
+    }
+  };
   
-  // const handleSave = async () => {
-  //   try {
-  //     const updatedData = { ...nganh };
-  //     const updatedNganh = await updateNganh(nganhId, updatedData);
-  //     if (updatedNganh) {
-  //       console.log('Update successful:', updatedNganh);
-  //       setOpenModal(false); // Close the modal after saving
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating nganh:', error);
-  //   }
-  // };
+  const handleSave = async () => {
+    setOpenModal(false);
+  };
   
   return (
     <div style={styles.modalBackground} onClick={handleBackgroundClick}>
@@ -309,9 +294,9 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
                                   }
                                   className="max-w-sm"
                                 />
-                                {/* <Button variant="outline" className="ml-2" onClick={handleRemoveSelectedHocPhan}>
-                                    Xoá học phần đã chọn 
-                                </Button> */}
+                                <Button variant="outline" className="ml-auto" onClick={handleRemoveSelectedHocPhan}>
+                                    Xoá sinh viên đã chọn 
+                                </Button>
                             </div>
                 <div style={styles.table}>
                 <div className="w-full">
@@ -344,7 +329,16 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
                                         data-state={row.getIsSelected() && "selected"}
                                       >
                                         {row.getVisibleCells().map((cell) => (
-                                          <TableCell key={cell.id}>
+                                          <TableCell key={cell.id}
+                                          style={{
+
+                                            fontSize: "11px", // Smaller font size
+                                            padding: "3px 1px", // Reduce padding
+                                            textAlign: "center", // Center align text
+        
+                                          }}
+                                          
+                                          >
                                             {flexRender(
                                               cell.column.columnDef.cell,
                                               cell.getContext()
@@ -356,10 +350,16 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
                                   ) : (
                                     <TableRow>
                                       <TableCell
-                                        colSpan={createHocPhanColumns.length}
-                                        className="h-10 text-center"
+                                        colSpan={5}
+                                        style={{
+
+                                          fontSize: "15px", // Smaller font size
+                                          padding: "3px 1px", // Reduce padding
+                                          textAlign: "center", // Center align text
+      
+                                        }}
                                       >
-                                        Không có sinh viên!
+                                        Không tìm thấy sinh viên!
                                       </TableCell>
                                     </TableRow>
                                   )}
@@ -385,9 +385,9 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
                               }
                               className="max-w-sm"
                             />
-                            {/* <Button variant="outline" className="ml-2"  onClick={handleAddSelectedHocPhan}>
-                                Thêm học phần đã chọn 
-                            </Button> */}
+                            <Button variant="outline" className="ml-auto" onClick={handleAddSelectedSinhVien}>
+                                Thêm sinh viên đã chọn 
+                            </Button>
                         </div>
                   <div style={styles.table}>
                       {/*  */}
@@ -421,7 +421,15 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
                                         data-state={row.getIsSelected() && "selected"}
                                       >
                                         {row.getVisibleCells().map((cell) => (
-                                          <TableCell key={cell.id}>
+                                          <TableCell key={cell.id}
+                                          
+                                          style={{
+                                            fontSize: "11px", // Smaller font size
+                                            padding: "3px 1px", // Reduce padding
+                                            textAlign: "center", // Center align text
+                                          }}
+                                          
+                                          >
                                             {flexRender(
                                               cell.column.columnDef.cell,
                                               cell.getContext()
@@ -433,10 +441,16 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
                                   ) : (
                                     <TableRow>
                                       <TableCell
-                                        colSpan={createHocPhanColumns.length}
-                                        className="h-15 text-center"
+                                        colSpan={5}
+                                        style={{
+
+                                          fontSize: "15px", // Smaller font size
+                                          padding: "3px 1px", // Reduce padding
+                                          textAlign: "center", // Center align text
+      
+                                        }}
                                       >
-                                        Không có sinh viên!
+                                        Không tìm thấy sinh viên!
                                       </TableCell>
                                     </TableRow>
                                   )}
@@ -458,7 +472,7 @@ function EditSinhVienLopHocPhan({ setOpenModal,lophocphanId}) {
             }}
             onMouseEnter={() => setHoveredSave(true)}
             onMouseLeave={() => setHoveredSave(false)}
-            // onClick={() => handleSave()} // Gọi hàm setOpenModal(false) khi nhấn nút
+            onClick={() => handleSave()} // Gọi hàm setOpenModal(false) khi nhấn nút
             // onClick={setOpenModal(false)}
           >
             OK
