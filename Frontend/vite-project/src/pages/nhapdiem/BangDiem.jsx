@@ -23,7 +23,7 @@ export default function GradesPage() {
     // Fetch all required data
     const [students, components, allGrades] = await Promise.all([
       // getStudents(),
-      getSinhViens(null, lopHocPhanId),
+      getSinhViens(null, null, lopHocPhanId),
       // getGradeComponents(),
       getBaiKiemTrasByLopHocPhanId(lopHocPhanId),
       // getGrades(),

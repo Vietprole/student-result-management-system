@@ -25,6 +25,7 @@ import { calculateDiemPk } from "@/api/api-ketqua"
 import { getSinhViens } from "@/api/api-sinhvien"
 import { useParams } from "react-router-dom"
 import { getPLOsByLopHocPhanId } from "@/api/api-plo"
+import { Switch } from "@/components/ui/switch"
 
 // const PLOs = [
 //   {
@@ -138,17 +139,18 @@ export default function DiemPk() {
   // const [isBase10, setIsBase10] = React.useState(false)
   const [diemDat, setDiemDat] = React.useState(5.0)
   const [inputValue, setInputValue] = React.useState(diemDat);
+  const [useDiemTam, setUseDiemTam] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
       const [sinhViens, PLOs] = await Promise.all([
-        getSinhViens(null, lopHocPhanId),
+        getSinhViens(null, null, lopHocPhanId),
         getPLOsByLopHocPhanId(lopHocPhanId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
         const ploScores = await Promise.all(PLOs.map(async (plo) => {
-          const score = await calculateDiemPk(lopHocPhanId, sv.id, plo.id)
+          const score = await calculateDiemPk(lopHocPhanId, sv.id, plo.id, useDiemTam);
           return { [`plo_${plo.id}`]: score }
         }))
         return { ...sv, ...Object.assign({}, ...ploScores) }
@@ -164,7 +166,7 @@ export default function DiemPk() {
       // setListDiemPLOMax(listDiemPkMax)
     }
     fetchData()
-  }, [lopHocPhanId])
+  }, [lopHocPhanId, useDiemTam])
 
   // const columns = createColumns(PLOs, listDiemPLOMax, isBase10, diemDat);
   const columns = createColumns(PLOs, diemDat);
@@ -209,6 +211,13 @@ export default function DiemPk() {
           onChange={(e) => setInputValue(parseFloat(e.target.value))}
         />
         <Button type="button" onClick={() => setDiemDat(inputValue)}>Go</Button>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Label htmlFor="diem-mode">Điểm tạm</Label>
+        <Switch id="diem-mode"
+          onCheckedChange={(check) => {setUseDiemTam(!check);}}
+        />
+        <Label htmlFor="diem-mode">Điểm chính thức</Label>
       </div>
       {/* <div className="flex items-center space-x-2">
         <Switch id="diem-mode"

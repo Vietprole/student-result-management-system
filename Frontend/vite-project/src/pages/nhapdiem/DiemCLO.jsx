@@ -24,7 +24,6 @@ import { calculateDiemCLO, calculateDiemCLOMax } from "@/api/api-ketqua"
 import { getSinhViens } from "@/api/api-sinhvien"
 import { useParams } from "react-router-dom"
 import { getCLOsByLopHocPhanId } from "@/api/api-clo"
-import { set } from "react-hook-form"
 
 // const CLOs = [
 //   {
@@ -135,17 +134,18 @@ export default function DiemCLO() {
   const [isBase10, setIsBase10] = React.useState(false)
   const [diemDat, setDiemDat] = React.useState(5.0)
   const [inputValue, setInputValue] = React.useState(diemDat);
+  const [useDiemTam, setUseDiemTam] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
       const [sinhViens, CLOs] = await Promise.all([
-        getSinhViens(null, lopHocPhanId),
+        getSinhViens(null, null, lopHocPhanId),
         getCLOsByLopHocPhanId(lopHocPhanId),
       ]);
       
       const newData = await Promise.all(sinhViens.map(async (sv) => {
         const cloScores = await Promise.all(CLOs.map(async (clo) => {
-          const score = await calculateDiemCLO(sv.id, clo.id)
+          const score = await calculateDiemCLO(sv.id, clo.id, useDiemTam)
           return { [`clo_${clo.id}`]: score }
         }))
         return { ...sv, ...Object.assign({}, ...cloScores) }
@@ -161,7 +161,7 @@ export default function DiemCLO() {
       setListDiemCLOMax(listDiemCLOMax)
     }
     fetchData()
-  }, [lopHocPhanId])
+  }, [lopHocPhanId, useDiemTam])
 
   const columns = createColumns(CLOs, listDiemCLOMax, isBase10, diemDat);
 
@@ -211,6 +211,13 @@ export default function DiemCLO() {
           onCheckedChange={(check) => {setIsBase10(check)}}
         />
         <Label htmlFor="diem-mode">Chuyển sang hệ 10</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Label htmlFor="diem-mode">Điểm tạm</Label>
+        <Switch id="diem-mode"
+          onCheckedChange={(check) => {setUseDiemTam(!check);}}
+        />
+        <Label htmlFor="diem-mode">Điểm chính thức</Label>
       </div>
       <div className="rounded-md border">
         <Table>

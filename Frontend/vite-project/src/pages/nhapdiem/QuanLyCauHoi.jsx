@@ -4,7 +4,7 @@ import { getBaiKiemTrasByLopHocPhanId } from "@/api/api-baiKiemTra";
 import {
   getCauHoisByBaiKiemTraId,
   // getAllCauHois,
-  deleteCauHoi,
+  // deleteCauHoi,
 } from "@/api/api-cauhoi";
 import {
   DropdownMenu,

@@ -17,9 +17,9 @@ export const getAllHocPhans = async () => {
   }
 };
 
-export const getHocPhans = async (khoaId, nganhId) => {
+export const getHocPhans = async (khoaId, nganhId, laCotLoi) => {
   try {
-    const paramsObj = { khoaId, nganhId };
+    const paramsObj = { khoaId, nganhId, laCotLoi};
     const url = createSearchURL(API_HOCPHAN, paramsObj);
     console.log("url: ", url);
 

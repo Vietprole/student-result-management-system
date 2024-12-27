@@ -17,9 +17,9 @@ export const getAllSinhViens = async () => {
   }
 };
 
-export const getSinhViens = async (khoaId, lopHocPhanId) => {
+export const getSinhViens = async (khoaId, nganhId, lopHocPhanId) => {
   try {
-    const paramsObj = { khoaId, lopHocPhanId };
+    const paramsObj = { khoaId, nganhId, lopHocPhanId };
     const url = createSearchURL(API_SINHVIEN, paramsObj);
     console.log("url: ", url);
 

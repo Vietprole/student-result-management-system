@@ -207,7 +207,7 @@ export default function SinhVienPage() {
     const mappedLopHocPhanItems = dataLopHocPhan.map(lhp => ({ label: lhp.ten, value: lhp.id }));
     setLopHocPhanItems(mappedLopHocPhanItems);
 
-    const data = await getSinhViens(khoaId, lopHocPhanId);
+    const data = await getSinhViens(khoaId, null, lopHocPhanId);
     setData(data);
   }, [khoaId, lopHocPhanId]);
 

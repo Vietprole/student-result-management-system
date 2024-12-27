@@ -55,7 +55,7 @@ export default function HocPhanPage() {
     const dataKhoa = await getAllKhoas();
     const mappedKhoaItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
     setKhoaItems(mappedKhoaItems);
-    const data = await getHocPhans(khoaId, nganhId);
+    const data = await getHocPhans(khoaId, nganhId, null);
     setData(data);
   }, [khoaId, nganhId]);
 
@@ -274,7 +274,6 @@ export default function HocPhanPage() {
           columnToBeFiltered={"ten"}
           ItemForm={HocPhanForm}
           hasCheckBox={true}
-          hasAddButton={true}
           parentEntity="Ngành"
           comboBoxItems={nganhItems}
           addItemsToParent={addHocPhansToNganh}

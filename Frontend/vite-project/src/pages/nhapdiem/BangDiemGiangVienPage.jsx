@@ -24,12 +24,18 @@ export default function BangDiemGiangVienPage() {
   const [baiKiemTraId, setBaiKiemTraId] = useState(baiKiemTraIdParam);
   const [comboBoxBaiKiemTraId, setComboBoxBaiKiemTraId] = useState(baiKiemTraIdParam);
   const [isConfirmed, setIsConfirmed] = useState(false);
+  console.log("lopHocPhanId", lopHocPhanId);
 
   const fetchData = useCallback(async () => {
+    const baiKiemTraData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
+    const mappedComboBoxItems = baiKiemTraData.map(baiKiemTra => ({ label: baiKiemTra.loai, value: baiKiemTra.id }));
+    setBaiKiemTraItems(mappedComboBoxItems);
+    console.log("mappedComboBoxItems", mappedComboBoxItems);
+    
     // Fetch all required data
     const [students, component, allGrades] = await Promise.all([
       // getStudents(),
-      getSinhViens(null, lopHocPhanId),
+      getSinhViens(null, null, lopHocPhanId),
       // getGradeComponents(),
       getBaiKiemTraById(baiKiemTraId),
       // getGrades(),
@@ -38,9 +44,6 @@ export default function BangDiemGiangVienPage() {
     // Map khoa items to be used in ComboBox
     const components = [component];
     setComponents(components);
-    const baiKiemTraData = await getBaiKiemTrasByLopHocPhanId(lopHocPhanId);
-    const mappedComboBoxItems = baiKiemTraData.map(baiKiemTra => ({ label: baiKiemTra.loai, value: baiKiemTra.id }));
-    setBaiKiemTraItems(mappedComboBoxItems);
 
     const isConfirmed = allGrades.every(grade => grade.daXacNhan);
     setIsConfirmed(isConfirmed);
