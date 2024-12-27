@@ -20,5 +20,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<SinhVien>> RemoveSinhVienFromLopHocPhanAsync(int lopHocPhanId, int sinhVienId);
         public Task<string> CheckCongThucDiem(List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs);
         public Task<LopHocPhanChiTietDTO?> GetChiTietLopHocPhanDTO(int lopHocPhanId);
+        public Task<List<SinhVienDTO>> GetSinhViensNotInLopHocPhanDTO(int lopHocPhanId);
     }
 }

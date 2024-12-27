@@ -134,3 +134,13 @@ export const getLopHocPhanChiTiet = async (lopHocPhanId) => {
     console.log("error message: ", error.message);
   }
 }
+export const getSinhViensNotInLopHocPhanId = async (lopHocPhanId) => {
+  try {
+    const response = await axios.get(`${API_LOPHOCPHAN}/${lopHocPhanId}/sinhviennotinlhp`, {
+      headers: { Authorization: getAccessToken() }
+    });
+    return response.data;
+  } catch (error) {
+    console.log("error message: ", error.message);
+  }
+};

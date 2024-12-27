@@ -198,5 +198,11 @@ namespace lopHocPhan_Result_Management_System.Controllers
             }
             return Ok(lopHocPhanChiTietDTO);
         }
+        [HttpGet("{id}/sinhviennotinlhp")]
+        public async Task<IActionResult> GetSinhViensNotInLopHocPhan([FromRoute] int id)
+        {
+            var sinhViens = await _lopHocPhanService.GetSinhViensNotInLopHocPhanDTO(id);
+            return Ok(sinhViens);
+        }
     }
 }

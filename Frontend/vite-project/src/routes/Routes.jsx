@@ -24,7 +24,7 @@ import DiemPk from "@/pages/lophocphan/DiemPk";
 import TongKetCLO from "@/pages/lophocphan/TongKetCLO";
 import BaoCaoCLO from "@/pages/lophocphan/BaoCaoCLO";
 import DangNhap from "@/pages/DangNhapPage/DangNhapPage";
-
+import TestPage from "@/pages/TestPage";
 const lophocphans = [
   {
     path: "/",
@@ -100,6 +100,10 @@ const lophocphans = [
   {
     path: "/caidat",
     element: <CaiDatPage />,
+  },
+  {
+    path: "/test",
+    element: <TestPage />,
   }
 ]
 const router = createBrowserRouter(lophocphans, {
