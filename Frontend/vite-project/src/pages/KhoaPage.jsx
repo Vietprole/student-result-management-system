@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   getAllKhoas,
   deleteKhoa,
+  
 } from "@/api/api-khoa";
 import {
   DropdownMenu,
@@ -25,15 +26,14 @@ import {
 import { KhoaForm } from "@/components/KhoaForm";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export default function KhoaPage() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const { toast } = useToast();
+
   useEffect(() => {
-    const fetchData = async () => {
-      const khoas = await getAllKhoas();
-      setData(khoas);
-    };
     fetchData();
   }, []);
 
@@ -45,47 +45,41 @@ export default function KhoaPage() {
   const createKhoaColumns = (handleEdit, handleDelete) => [
     {
       accessorKey: "id",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Id
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Id
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
     },
     {
       accessorKey: "maKhoa",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Mã Khoa
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Mã Khoa
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maKhoa")}</div>,
     },
     {
       accessorKey: "ten",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Tên
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tên
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
     },
     {
@@ -93,7 +87,7 @@ export default function KhoaPage() {
       enableHiding: false,
       cell: ({ row }) => {
         const item = row.original;
-  
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -139,7 +133,9 @@ export default function KhoaPage() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <DropdownMenuItem onSelect={() => navigate(`/nganh?khoaId=${item.id}`)}>
+              <DropdownMenuItem
+                onSelect={() => navigate(`/nganh?khoaId=${item.id}`)}
+              >
                 Xem Ngành
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -149,18 +145,66 @@ export default function KhoaPage() {
     },
   ];
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteKhoa(id);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Không tìm thấy Khoa")
+          ? "Không tìm thấy Khoa"
+          : "Khoa chứa các đối tượng con, không thể xóa",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEdit = async (khoa) => {
+    try {
+      await updateKhoa(khoa);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Mã khoa đã tồn tại")
+          ? "Mã khoa đã tồn tại"
+          : "Khoa chứa các đối tượng con, không thể thay đổi mã khoa",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCreate = async (newKhoa) => {
+    try {
+      await createKhoa(newKhoa);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Tên khoa đã tồn tại")
+          ? "Tên khoa đã tồn tại"
+          : "Mã khoa đã tồn tại",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full">
         <DataTable
           entity="Khoa"
-          createColumns={createKhoaColumns}
+          createColumns={(handleEdit, handleDelete) =>
+            createKhoaColumns(handleEdit, handleDelete)
+          }
           data={data}
           fetchData={fetchData}
-          deleteItem={deleteKhoa}
+          deleteItem={handleDelete}
           columnToBeFiltered={"ten"}
-          ItemForm={KhoaForm}
-          name={"tên khoa"}
+          ItemForm={(props) => (
+            <KhoaForm {...props} handleCreate={handleCreate} />
+          )}
         />
       </div>
     </Layout>

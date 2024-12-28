@@ -1,12 +1,18 @@
 import './App.css'
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { Outlet } from "react-router-dom"
+import AppSidebar from "./AppSidebar"
 
-function App() {
-
+export default function App() {
   return (
-    <>
-      <h1>Hello world</h1>
-    </>
+    <SidebarProvider defaultOpen={true} collapsible>
+      <div className="flex min-h-screen">
+        <AppSidebar />
+        <main className="flex-1">
+          {/* Your main content */}
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
   )
 }
-
-export default App

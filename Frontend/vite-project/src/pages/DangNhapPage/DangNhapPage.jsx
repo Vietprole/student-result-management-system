@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import '@/utils/storage'
 import { saveAccessToken } from '@/utils/storage';
+import { useToast } from "@/hooks/use-toast";
 
 // import { jwtDecode } from 'jwt-decode';
 
@@ -12,9 +13,13 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     // const [isShowPassword, setIsShowPassword] = useState(false);
     const navigate = useNavigate(); // Use the hook here
+    const { toast } = useToast();
     const handleLogin = async () => {
         if (!username || !password) {
-            toast('Vui lòng nhập đầy đủ thông tin');
+            toast({
+                variant: "destructive",
+                title: "Vui lòng nhập đầy đủ thông tin",
+            });
             return;
         }
         try {
@@ -31,11 +36,18 @@ const LoginPage = () => {
                 // navigate('/main'); // Use navigate here
                 navigate('/khoa'); // Use navigate here
               } else {
-                toast('Tên đăng nhập hoặc mật khẩu sai');
+                toast({
+                    variant: "destructive",
+                    title: "Tên đăng nhập hoặc mật khẩu sai",
+                });
               }
             } catch (error) {
               console.error("Login error: ", error);
-              toast('Có lỗi xảy ra, vui lòng thử lại!');
+              toast({
+                  variant: "destructive",
+                  title: "Có lỗi xảy ra",
+                  description: "Vui lòng thử lại!",
+              });
             }
     };
     const buttonStyles = {

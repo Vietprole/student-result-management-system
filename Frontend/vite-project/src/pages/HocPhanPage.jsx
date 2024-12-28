@@ -262,8 +262,9 @@ export default function HocPhanPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
-          <Button onClick={handleGoClick}>Tìm kiếm</Button>
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId} placeholder="Chọn Khoa"/>
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId} placeholder="Chọn Ngành"/>
+          <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable
           entity="Học phần"

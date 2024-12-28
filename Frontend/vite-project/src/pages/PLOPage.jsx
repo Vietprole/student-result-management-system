@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import {
   getPLOs,
   deletePLO,
+  addPLO,
+  updatePLO,
 } from "@/api/api-plo";
 import { getAllNganhs } from "@/api/api-nganh";
 import {
@@ -28,6 +30,7 @@ import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const createPLOColumns = (handleEdit, handleDelete) => [
   {
@@ -161,6 +164,7 @@ export default function PLOPage() {
   const [nganhItems, setNganhItems] = useState([]);
   const [nganhId, setNganhId] = useState(nganhIdParam);
   const [comboBoxNganhId, setComboBoxNganhId] = useState(nganhIdParam);
+  const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
     const dataNganh = await getAllNganhs();
@@ -183,11 +187,47 @@ export default function PLOPage() {
     navigate(`/plo?nganhId=${comboBoxNganhId}`);
   };
 
+  const handleAdd = async (newItem) => {
+    try {
+      const createdPLO = await addPLO(newItem);
+      toast({
+        title: "Tạo PLO thành công",
+        description: "PLO mới đã được tạo.",
+      });
+      setData([...data, createdPLO]);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Có lỗi xảy ra",
+        description: error.message || "Không thể tạo PLO.",
+      });
+    }
+  };
+
+  const handleEdit = async (editedItem) => {
+    try {
+      const updatedPLO = await updatePLO(editedItem.id, editedItem);
+      toast({
+        title: "Cập nhật PLO thành công",
+        description: "PLO đã được cập nhật.",
+      });
+      setData(
+        data.map((item) => (item.id === updatedPLO.id ? updatedPLO : item))
+      );
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Có lỗi xảy ra",
+        description: error.message || "Không thể cập nhật PLO.",
+      });
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={comboBoxNganhId}/>
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={comboBoxNganhId} placeholder="Chọn Ngành"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable

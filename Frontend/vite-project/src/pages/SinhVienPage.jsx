@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 import {
   getSinhViens,
   deleteSinhVien,
+  addSinhVien,
+  updateSinhVien
 } from "@/api/api-sinhvien";
+import { toast } from "react-toastify";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -225,12 +228,42 @@ export default function SinhVienPage() {
     navigate(url);
   };
 
+  const handleAddSinhVien = async (newSinhVien) => {
+    try {
+      await addSinhVien(newSinhVien);
+      toast.success("Thêm sinh viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Thêm sinh viên thất bại!");
+    }
+  };
+
+  const handleUpdateSinhVien = async (updatedSinhVien) => {
+    try {
+      await updateSinhVien(updatedSinhVien);
+      toast.success("Cập nhật sinh viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Cập nhật sinh viên thất bại!");
+    }
+  };
+
+  const handleDeleteSinhVien = async (id) => {
+    try {
+      await deleteSinhVien(id);
+      toast.success("Xóa sinh viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Xóa sinh viên thất bại!");
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
-          <ComboBox items={lopHocPhanItems} setItemId={setComboBoxLopHocPhanId} initialItemId={lopHocPhanId}/>
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId} placeholder="Chọn Khoa"/>
+          <ComboBox items={lopHocPhanItems} setItemId={setComboBoxLopHocPhanId} initialItemId={lopHocPhanId} placeholder="Chọn lớp học phần"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable
@@ -238,9 +271,11 @@ export default function SinhVienPage() {
           createColumns={createSinhVienColumns}
           data={data}
           fetchData={fetchData}
-          deleteItem={deleteSinhVien}
+          deleteItem={handleDeleteSinhVien}
           columnToBeFiltered={"ten"}
           ItemForm={SinhVienForm}
+          handleAdd={handleAddSinhVien}
+          handleUpdate={handleUpdateSinhVien}
         />
       </div>
     </Layout>

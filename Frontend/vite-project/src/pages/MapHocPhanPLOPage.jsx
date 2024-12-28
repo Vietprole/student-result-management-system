@@ -76,7 +76,7 @@ export default function MapHocPhanPLOPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId}/>
+          <ComboBox items={nganhItems} setItemId={setComboBoxNganhId} initialItemId={nganhId} placeholder="Chọn Ngành"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         {toggledData && hocPhans?.length > 0 && pLOs?.length > 0 && (

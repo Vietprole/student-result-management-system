@@ -4,7 +4,6 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   getGiangViens,
-  // updateGiangVien,
   deleteGiangVien,
 } from "@/api/api-giangvien";
 import {
@@ -31,6 +30,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getAllLopHocPhans } from "@/api/api-lophocphan";
 import { createSearchURL } from "@/utils/string";
+import { toast } from "react-toastify";
 
 const createGiangVienColumns = (handleEdit, handleDelete) => [
   {
@@ -63,21 +63,6 @@ const createGiangVienColumns = (handleEdit, handleDelete) => [
     },
     cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
   },
-  // {
-  //   accessorKey: "khoaId",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Khoa Id
-  //         <ArrowUpDown />
-  //       </Button>
-  //     );
-  //   },
-  //   cell: ({ row }) => <div className="px-4 py-2">{row.getValue("khoaId")}</div>,
-  // },
   {
     accessorKey: "tenKhoa",
     header: ({ column }) => {
@@ -197,12 +182,52 @@ export default function GiangVienPage() {
     navigate(url);
   };
 
+  const handleAddGiangVien = async (newGiangVien) => {
+    try {
+      await addGiangVien(newGiangVien);
+      toast.success("Thêm giảng viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Thêm giảng viên thất bại!");
+    }
+  };
+
+  const handleUpdateGiangVien = async (updatedGiangVien) => {
+    try {
+      await updateGiangVien(updatedGiangVien);
+      toast.success("Cập nhật giảng viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Cập nhật giảng viên thất bại!");
+    }
+  };
+
+  const handleDeleteGiangVien = async (id) => {
+    try {
+      await deleteGiangVien(id);
+      toast.success("Xóa giảng viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Xóa giảng viên thất bại!");
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full">
-        <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={khoaId}/>
-          <ComboBox items={lopHocPhanItems} setItemId={setComboBoxLopHocPhanId} initialItemId={lopHocPhanId}/>
+        <div className="flex space-x-4">
+          <ComboBox 
+            items={khoaItems} 
+            setItemId={setComboBoxKhoaId} 
+            initialItemId={khoaId} 
+            placeholder="Chọn Khoa" 
+          />
+          <ComboBox 
+            items={lopHocPhanItems} 
+            setItemId={setComboBoxLopHocPhanId} 
+            initialItemId={lopHocPhanId} 
+            placeholder="Chọn Lớp Học Phần" 
+          />
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable
@@ -210,7 +235,7 @@ export default function GiangVienPage() {
           createColumns={createGiangVienColumns}
           data={data}
           fetchData={fetchData}
-          deleteItem={deleteGiangVien}
+          deleteItem={handleDeleteGiangVien}
           columnToBeFiltered={"ten"}
           ItemForm={GiangVienForm}
         />

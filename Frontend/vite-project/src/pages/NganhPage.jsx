@@ -6,6 +6,7 @@ import { getAllKhoas } from "@/api/api-khoa";
 import {
   getNganhs,
   deleteNganh,
+  updateNganh,
 } from "@/api/api-nganh";
 import {
   DropdownMenu,
@@ -29,6 +30,8 @@ import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import EditNganhModal from "@/components/AddNganhForm";
+import { useToast } from "@/hooks/use-toast";
+
 export default function NganhPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedNganhId, setSelectedNganhId] = useState(null);
@@ -39,12 +42,16 @@ export default function NganhPage() {
   const [khoaItems, setKhoaItems] = useState([]);
   const [khoaId, setKhoaId] = useState(khoaIdParam);
   const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
+  const { toast } = useToast();
+
   const fetchData = useCallback(async () => {
     const dataKhoa = await getAllKhoas();
     const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
     setKhoaItems(mappedComboBoxItems);
-    const data = await getNganhs(khoaId);
-    setData(data);
+    if (khoaId) {
+      const data = await getNganhs(khoaId);
+      setData(data);
+    }
   }, [khoaId]);
   useEffect(() => {
     fetchData();
@@ -57,6 +64,33 @@ export default function NganhPage() {
     }
     navigate(`/nganh?khoaId=${comboBoxKhoaId}`);
   };
+
+  const handleEdit = async (nganh) => {
+    try {
+      await updateNganh(nganh);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Không tìm thấy Ngành") ? "Không tìm thấy Ngành" : "Mã ngành đã tồn tại",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteNganh(id);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Không tìm thấy Ngành") ? "Không tìm thấy Ngành" : "Ngành chứa các đối tượng con, không thể xóa",
+        variant: "destructive",
+      });
+    }
+  };
+
   const createNganhColumns = (handleEdit, handleDelete) => [
     {
       accessorKey: "id",
@@ -186,19 +220,20 @@ export default function NganhPage() {
     <Layout>
       <div className="w-full">
         <div className="flex">
-          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId}/>
+          <ComboBox items={khoaItems} setItemId={setComboBoxKhoaId} initialItemId={comboBoxKhoaId} placeholder="Chọn Khoa"/>
           <Button onClick={handleGoClick}>Go</Button>
         </div>
         <DataTable
-          entity="Ngành"
-          createColumns={createNganhColumns}
+          entity="Nganh"
+          createColumns={() => createNganhColumns(handleEdit, handleDelete)}
           data={data}
           setData={setData}
           fetchData={fetchData}
-          deleteItem={deleteNganh}
+          deleteItem={handleDelete}
           columnToBeFiltered={"ten"}
-          ItemForm={NganhForm}
-          name={"tên ngành"}
+          ItemForm={(props) => (
+            <NganhForm {...props} handleEdit={handleEdit} />
+          )}
         />
         {modalOpen && <EditNganhModal setOpenModal={setModalOpen} nganhId={selectedNganhId} />}
       </div>
