@@ -30,6 +30,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getAllLopHocPhans } from "@/api/api-lophocphan";
 import { createSearchURL } from "@/utils/string";
+import { toast } from "react-toastify";
 
 const createGiangVienColumns = (handleEdit, handleDelete) => [
   {
@@ -181,6 +182,36 @@ export default function GiangVienPage() {
     navigate(url);
   };
 
+  const handleAddGiangVien = async (newGiangVien) => {
+    try {
+      await addGiangVien(newGiangVien);
+      toast.success("Thêm giảng viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Thêm giảng viên thất bại!");
+    }
+  };
+
+  const handleUpdateGiangVien = async (updatedGiangVien) => {
+    try {
+      await updateGiangVien(updatedGiangVien);
+      toast.success("Cập nhật giảng viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Cập nhật giảng viên thất bại!");
+    }
+  };
+
+  const handleDeleteGiangVien = async (id) => {
+    try {
+      await deleteGiangVien(id);
+      toast.success("Xóa giảng viên thành công!");
+      fetchData();
+    } catch (error) {
+      toast.error("Xóa giảng viên thất bại!");
+    }
+  };
+
   return (
     <Layout>
       <div className="w-full">
@@ -204,7 +235,7 @@ export default function GiangVienPage() {
           createColumns={createGiangVienColumns}
           data={data}
           fetchData={fetchData}
-          deleteItem={deleteGiangVien}
+          deleteItem={handleDeleteGiangVien}
           columnToBeFiltered={"ten"}
           ItemForm={GiangVienForm}
         />

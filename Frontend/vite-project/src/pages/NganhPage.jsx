@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { getAllKhoas } from "@/api/api-khoa";
 import {
   getNganhs,
-  // getAllNganhs,
   deleteNganh,
+  updateNganh,
 } from "@/api/api-nganh";
 import {
   DropdownMenu,
@@ -29,6 +29,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export default function NganhPage() {
   const navigate = useNavigate();
@@ -38,14 +39,16 @@ export default function NganhPage() {
   const [khoaItems, setKhoaItems] = useState([]);
   const [khoaId, setKhoaId] = useState(khoaIdParam);
   const [comboBoxKhoaId, setComboBoxKhoaId] = useState(khoaIdParam);
+  const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
     const dataKhoa = await getAllKhoas();
-    // Map khoa items to be used in ComboBox
     const mappedComboBoxItems = dataKhoa.map(khoa => ({ label: khoa.ten, value: khoa.id }));
     setKhoaItems(mappedComboBoxItems);
-    const data = await getNganhs(khoaId);
-    setData(data);
+    if (khoaId) {
+      const data = await getNganhs(khoaId);
+      setData(data);
+    }
   }, [khoaId]);
 
   useEffect(() => {
@@ -61,65 +64,83 @@ export default function NganhPage() {
     navigate(`/nganh?khoaId=${comboBoxKhoaId}`);
   };
 
+  const handleEdit = async (nganh) => {
+    try {
+      await updateNganh(nganh);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Không tìm thấy Ngành") ? "Không tìm thấy Ngành" : "Mã ngành đã tồn tại",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteNganh(id);
+      fetchData();
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: error.message.includes("Không tìm thấy Ngành") ? "Không tìm thấy Ngành" : "Ngành chứa các đối tượng con, không thể xóa",
+        variant: "destructive",
+      });
+    }
+  };
+
   const createNganhColumns = (handleEdit, handleDelete) => [
     {
       accessorKey: "id",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Id
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Id
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("id")}</div>,
     },
     {
       accessorKey: "maNganh",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Mã Ngành
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Mã Ngành
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("maNganh")}</div>,
     },
     {
       accessorKey: "ten",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Tên
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tên
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("ten")}</div>,
     },
     {
       accessorKey: "tenKhoa",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Khoa
-            <ArrowUpDown />
-          </Button>
-        );
-      },
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Khoa
+          <ArrowUpDown />
+        </Button>
+      ),
       cell: ({ row }) => <div className="px-4 py-2">{row.getValue("tenKhoa")}</div>,
     },
     {
@@ -200,13 +221,15 @@ export default function NganhPage() {
         </div>
         <DataTable
           entity="Nganh"
-          createColumns={createNganhColumns}
+          createColumns={() => createNganhColumns(handleEdit, handleDelete)}
           data={data}
           setData={setData}
           fetchData={fetchData}
-          deleteItem={deleteNganh}
+          deleteItem={handleDelete}
           columnToBeFiltered={"ten"}
-          ItemForm={NganhForm}
+          ItemForm={(props) => (
+            <NganhForm {...props} handleEdit={handleEdit} />
+          )}
         />
       </div>
     </Layout>

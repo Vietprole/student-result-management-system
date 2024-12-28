@@ -267,6 +267,9 @@ const phongDaoTaoItem = [
 export function AppSidebar() {
   // const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
   let items = [];
+  const location = useLocation();
+  const [openItem, setOpenItem] = useState(null); // Trạng thái để mở menu cha
+  const [activeSubItem, setActiveSubItem] = useState(location.pathname); // Lưu trữ URL đang hoạt động
 
   // switch (role) {
   //   case 'TruongKhoa':
@@ -290,6 +293,26 @@ export function AppSidebar() {
   // }
   items = adminItem;
 
+  useEffect(() => {
+    const currentItem = adminItem.find((item) =>
+      item.subItems?.some((subItem) => subItem.url === location.pathname)
+    );
+    if (currentItem) {
+      setOpenItem(currentItem.title);
+    } else {
+      setOpenItem(null);
+    }
+    setActiveSubItem(location.pathname);
+  }, [location.pathname]);
+
+  const toggleItem = (title, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Toggle trạng thái menu cha
+    setOpenItem(openItem === title ? null : title);
+  };
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -304,7 +327,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {adminItem.map((item) => (
                 <Collapsible key={item.title} open={openItem === item.title} className="group/collapsible">
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
@@ -313,7 +336,7 @@ export function AppSidebar() {
                           href={item.url}
                           onClick={(e) => item.subItems && toggleItem(item.title, e)}
                           className={`flex items-center p-2 rounded-lg ${
-                            window.location.pathname === item.url
+                            location.pathname === item.url
                               ? "bg-blue-100 text-blue-600"
                               : "hover:bg-gray-100"
                           }`}
@@ -339,8 +362,12 @@ export function AppSidebar() {
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton
                                 href={subItem.url}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveSubItem(subItem.url); // Cập nhật URL hoạt động
+                                }}
                                 className={`flex items-center p-2 rounded-lg ${
-                                  location.pathname === subItem.url
+                                  activeSubItem === subItem.url
                                     ? "bg-blue-100 text-blue-600"
                                     : "hover:bg-gray-100"
                                 }`}

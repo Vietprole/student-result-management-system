@@ -31,6 +31,7 @@ import { ComboBox } from "@/components/ComboBox";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { getRole, getGiangVienId } from "@/utils/storage";
+import { useToast } from "@/hooks/use-toast";
 
 export default function DiemDinhChinhPage() {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ export default function DiemDinhChinhPage() {
     useState(lophocphanIdParam);
   const role = getRole();
   const giangVienId = getGiangVienId();
+  const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
     let dataLopHocPhan = await getLopHocPhans(null, null, null, null);
@@ -73,7 +75,16 @@ export default function DiemDinhChinhPage() {
   };
 
   const handleAccept = async (id) => {
-    await acceptDiemDinhChinh(id);
+    try {
+      await acceptDiemDinhChinh(id);
+    } catch (error) {
+      console.error("Error accepting records:", error);
+      toast({
+        title: "Lỗi xác nhận điểm",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
     fetchData();
   }
   
