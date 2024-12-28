@@ -57,6 +57,9 @@ const formSchema = z.object({
 }).refine(data => data.newPassword === data.confirmPassword, () => ({
   path: ['confirmPassword'],
   message: 'Mật khẩu xác nhận không khớp',
+})).refine(data => data.newPassword !== data.oldPassword, () => ({
+  path: ['newPassword'],
+  message: 'Mật khẩu mới không được trùng với mật khẩu cũ',
 }));
 
 export default function HoSoCaNhanPage() {
