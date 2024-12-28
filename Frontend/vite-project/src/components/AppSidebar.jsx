@@ -60,11 +60,11 @@ const truongKhoaItem = [
 ]
 
 const giangVienItem = [
-  {
-    title: "Lớp học phần",
-    url: "/lophocphan",
-    icon: LopHocPhanIcon,
-  },
+  // {
+  //   title: "Lớp học phần",
+  //   url: "/lophocphan",
+  //   icon: LopHocPhanIcon,
+  // },
   {
     title: "Sinh viên",
     url: "/sinhvien",
@@ -150,16 +150,16 @@ const adminItem = [
     title: "Học phần",
     url: "/hocphan",
     icon: HocPhanIcon,
-    subItems: [
-      {
-        title: "Thêm Học Phần vào Ngành",
-        url: "/hocphan/them",
-      },
-      {
-        title: "Xem Học Phần",
-        url: "/hocphan/",
-      },
-    ],
+    // subItems: [
+    //   {
+    //     title: "Thêm Học Phần vào Ngành",
+    //     url: "/hocphan/them",
+    //   },
+    //   {
+    //     title: "Xem Học Phần",
+    //     url: "/hocphan/",
+    //   },
+    // ],
   },
   {
     title: "PLO",
@@ -185,16 +185,16 @@ const adminItem = [
     title: "Lớp học phần",
     url: "/lophocphan",
     icon: LopHocPhanIcon,
-    subItems: [
-      {
-        title: "Quản lý sinh viên",
-        url: "/hocphan/them",
-      },
-      {
-        title: "Xem lớp học phần ",
-        url:  "/lophocphan",
-      },
-    ],
+    // subItems: [
+    //   {
+    //     title: "Quản lý sinh viên",
+    //     url: "/hocphan/them",
+    //   },
+    //   {
+    //     title: "Xem lớp học phần ",
+    //     url:  "/lophocphan",
+    //   },
+    // ],
   },
   {
     title: "Công thức điểm",
@@ -332,36 +332,36 @@ const phongDaoTaoItem = [
 ]
 
 export function AppSidebar() {
-  // const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
+  const role = getRole(); // Hàm getRole() cần được định nghĩa để lấy vai trò người dùng
   let items = [];
   const location = useLocation();
   const [openItem, setOpenItem] = useState(null); // Trạng thái để mở menu cha
   const [activeSubItem, setActiveSubItem] = useState(location.pathname); // Lưu trữ URL đang hoạt động
 
-  // switch (role) {
-  //   case 'TruongKhoa':
-  //     items = truongKhoaItem;
-  //     break;
-  //   case 'GiangVien':
-  //     items = giangvienitem;
-  //     break;
-  //   case 'SinhVien':
-  //     items = sinhVienItem;
-  //     break;
-  //   case 'Admin':
-  //     items = adminItem;
-  //     break;
-  //   case 'PhongDaoTao':
-  //     items = phongDaoTaoItem;
-  //     break;
-  //   default:
-  //     console.warn('Vai trò không hợp lệ hoặc chưa được xác định.');
-  //     break;
-  // }
-  items = adminItem;
+  switch (role) {
+    case 'TruongKhoa':
+      items = truongKhoaItem;
+      break;
+    case 'GiangVien':
+      items = giangVienItem;
+      break;
+    case 'SinhVien':
+      items = sinhVienItem;
+      break;
+    case 'Admin':
+      items = adminItem;
+      break;
+    case 'PhongDaoTao':
+      items = phongDaoTaoItem;
+      break;
+    default:
+      console.warn('Vai trò không hợp lệ hoặc chưa được xác định.');
+      break;
+  }
+  // items = adminItem;
 
   useEffect(() => {
-    const currentItem = adminItem.find((item) =>
+    const currentItem = items.find((item) =>
       item.subItems?.some((subItem) => subItem.url === location.pathname)
     );
     if (currentItem) {
@@ -370,7 +370,7 @@ export function AppSidebar() {
       setOpenItem(null);
     }
     setActiveSubItem(location.pathname);
-  }, [location.pathname]);
+  }, [location.pathname, items]);
 
   const toggleItem = (title, e) => {
     e.preventDefault();
@@ -394,7 +394,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminItem.map((item) => (
+              {items.map((item) => (
                 <Collapsible key={item.title} open={openItem === item.title} className="group/collapsible">
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
