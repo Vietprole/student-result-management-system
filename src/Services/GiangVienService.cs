@@ -66,7 +66,7 @@ namespace Student_Result_Management_System.Services
            {
                Username = Magiangvien,
                Password = "Gv@"+Magiangvien,
-               TenChucVu = "GiangVien",
+               ChucVuId = 2,
                HovaTen = createGiangVienDTO.Ten
            };
            TaiKhoanDTO? taiKhoanId = await _taiKhoanService.CreateTaiKhoanSinhVien(createTaiKhoanDTO);

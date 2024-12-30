@@ -65,7 +65,7 @@ namespace Student_Result_Management_System.Services
             TaiKhoan taiKhoan = username.ToTaiKhoanFromCreateTaiKhoanDTO();
             taiKhoan.Password = _passwordHashService.HashPassword(username.Password);
             
-            var chucVu = await _chucVuService.GetIdChucVuByTen(username.TenChucVu);
+            var chucVu = await _chucVuService.GetChucVuById(username.ChucVuId);
             if (chucVu == null)
             {
                 return null;
@@ -162,7 +162,7 @@ namespace Student_Result_Management_System.Services
                 return null;
             }
             taiKhoan.Password = _passwordHashService.HashPassword(taikhoanSinhVien.Password);
-            var chucVu = await _chucVuService.GetIdChucVuByTen(taikhoanSinhVien.TenChucVu);
+            var chucVu = await _chucVuService.GetChucVuById(taikhoanSinhVien.ChucVuId);
             if (chucVu == null)
             {
                 return null;

@@ -13,9 +13,9 @@ namespace Student_Result_Management_System.Services
         {
             _context = context;
         }
-        public async Task<ChucVu?> GetIdChucVuByTen(string tenChucVu)
+        public async Task<ChucVu?> GetChucVuById(int chucVuId)
         {
-            ChucVu? chucVu = await _context.ChucVus.FirstOrDefaultAsync(x => x.TenChucVu == tenChucVu);
+            ChucVu? chucVu = await _context.ChucVus.FirstOrDefaultAsync(x => x.Id == chucVuId);
             if (chucVu == null)
             {
                 return null;
