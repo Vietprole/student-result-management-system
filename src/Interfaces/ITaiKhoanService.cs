@@ -16,7 +16,7 @@ namespace Student_Result_Management_System.Interfaces
         public TaiKhoanDTO? UpdateTaiKhoan(int id, UpdateTaiKhoanDTO updateTaiKhoanDTO);
         public string CheckUsername(string username);
         public string CheckPassword(string password);
-        public Task<NewTaiKhoanDTO?> Login(TaiKhoanLoginDTO taiKhoanLoginDTO);
+        public NewTaiKhoanDTO? Login(TaiKhoanLoginDTO taiKhoanLoginDTO);
         public bool DeleteTaiKhoan(int id);
         public bool ChangePassword(int id, ChangePasswordDTO changePasswordDTO);
         public bool ResetPassword(int id);

@@ -123,9 +123,14 @@ namespace Student_Result_Management_System.Services
             return "Password hợp lệ";
         }
 
-        public async Task<NewTaiKhoanDTO?> Login(TaiKhoanLoginDTO taiKhoanLoginDTO)
+        public NewTaiKhoanDTO? Login(TaiKhoanLoginDTO taiKhoanLoginDTO)
         {
-            var taiKhoan = _context.TaiKhoans.Include(c=>c.ChucVu).FirstOrDefault(x => x.Username == taiKhoanLoginDTO.TenDangNhap);
+            var taiKhoans = _context.TaiKhoans
+                .Include(c => c.ChucVu)
+                .Where(x => x.Username == taiKhoanLoginDTO.TenDangNhap)
+                .ToList();
+
+            var taiKhoan = taiKhoans.FirstOrDefault();
             if (taiKhoan == null)
             {
                 return null;

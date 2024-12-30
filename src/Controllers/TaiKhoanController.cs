@@ -74,7 +74,7 @@ namespace Student_Result_Management_System.Controllers
             {
                 return BadRequest(checkPassword);
             }
-            var result = await _taiKhoanService.Login(taiKhoanLoginDTO);
+            var result = _taiKhoanService.Login(taiKhoanLoginDTO);
             if (result == null)
             {
                 return BadRequest("Username or password is incorrect");
