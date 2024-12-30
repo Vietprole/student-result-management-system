@@ -178,7 +178,11 @@ namespace Student_Result_Management_System.Services
                 }
             }
 
-            await _context.SaveChangesAsync();
+            try {
+                await _context.SaveChangesAsync();
+            } catch (Exception) {
+                throw new BusinessLogicException("Không thể xóa câu hỏi vì đã có đối tượng con liên quan.");
+            }
             return baiKiemTra.CauHois.Select(c => c.ToCauHoiDTO()).ToList();
         }
     }

@@ -13,7 +13,7 @@ namespace Student_Result_Management_System.DTOs.TaiKhoan
         [Required]
         public string Password { get; set; } = string.Empty;
         [Required]
-        public string TenChucVu { get; set; } = string.Empty;
+        public int ChucVuId { get; set; }
         [Required]
         public string HovaTen { get; set; } = string.Empty;
         public int? KhoaId { get; set; }

@@ -5,7 +5,7 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface IChucVuService
     {
-        public Task<ChucVu?> GetIdChucVuByTen(string tenChucVu);
+        public Task<ChucVu?> GetChucVuById(int chucVuId);
         public Task<List<ChucVu>> GetListChucVu();
     }
 }

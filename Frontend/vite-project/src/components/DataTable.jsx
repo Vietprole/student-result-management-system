@@ -53,6 +53,7 @@ export default function DataTable({
   comboBoxItems,
   addItemsToParent,
   hasCreateButton = true,
+  role,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
