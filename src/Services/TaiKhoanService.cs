@@ -83,7 +83,7 @@ namespace Student_Result_Management_System.Services
             await _context.TaiKhoans.AddAsync(taiKhoan);
             await _context.SaveChangesAsync();
             await _khoaService.UpdateTruongKhoa(username.KhoaId??0, taiKhoan);
-            string token = await _tokenService.CreateToken(taiKhoan);
+            string token = _tokenService.CreateToken(taiKhoan);
             return new NewTaiKhoanDTO
             {
                 Username = taiKhoan.Username,
@@ -134,7 +134,7 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            string token = await _tokenService.CreateToken(taiKhoan);
+            string token = _tokenService.CreateToken(taiKhoan);
             return new NewTaiKhoanDTO
             {
                 Username = taiKhoan.Username,

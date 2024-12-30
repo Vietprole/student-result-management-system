@@ -31,10 +31,10 @@ namespace Student_Result_Management_System.Services
             _context = context;
 
         }
-        public async Task<string> CreateToken(TaiKhoan user)
+        public string CreateToken(TaiKhoan user)
         {
-            var giangVienId = await _context.GiangViens.Where(gv => gv.TaiKhoanId == user.Id).Select(gv => gv.Id).FirstOrDefaultAsync();
-            var sinhVienId = await _context.SinhViens.Where(sv => sv.TaiKhoanId == user.Id).Select(sv => sv.Id).FirstOrDefaultAsync();
+            var giangVienId = _context.GiangViens.Where(gv => gv.TaiKhoanId == user.Id).Select(gv => gv.Id).FirstOrDefault();
+            var sinhVienId = _context.SinhViens.Where(sv => sv.TaiKhoanId == user.Id).Select(sv => sv.Id).FirstOrDefault();
              var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
@@ -56,8 +56,7 @@ namespace Student_Result_Management_System.Services
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = await Task.Run(() => tokenHandler.CreateToken(tokenDescriptor));
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
         }
