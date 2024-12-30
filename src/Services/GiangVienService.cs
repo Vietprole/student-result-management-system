@@ -48,7 +48,7 @@ namespace Student_Result_Management_System.Services
             GiangVien giangVien = new GiangVien
             {
                 TaiKhoanId = taiKhoanId.Id,
-                TaiKhoan = await _taiKhoanService.GetTaiKhoanById(taiKhoanId.Id),
+                TaiKhoan = _taiKhoanService.GetTaiKhoanById(taiKhoanId.Id),
                 KhoaId = createGiangVienDTO.KhoaId,
                 MaGiangVien = taiKhoanId.Username
                 
@@ -69,7 +69,7 @@ namespace Student_Result_Management_System.Services
                ChucVuId = 2,
                HovaTen = createGiangVienDTO.Ten
            };
-           TaiKhoanDTO? taiKhoanId = await _taiKhoanService.CreateTaiKhoanSinhVien(createTaiKhoanDTO);
+           TaiKhoanDTO? taiKhoanId = _taiKhoanService.CreateTaiKhoanSinhVien(createTaiKhoanDTO);
            return taiKhoanId;
         }
 

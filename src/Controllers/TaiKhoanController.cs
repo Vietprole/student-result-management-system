@@ -24,14 +24,14 @@ namespace Student_Result_Management_System.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int? chucVuId)
         {
-            var result = await _taiKhoanService.GetFilteredTaiKhoans(chucVuId);
+            var result = _taiKhoanService.GetFilteredTaiKhoans(chucVuId);
             return Ok(result);
         }
 
         [HttpPost("createTaiKhoan")]
         public async Task<IActionResult> CreateTaiKhoan([FromBody] CreateTaiKhoanDTO createTaiKhoanDTO)
         {
-            string checkUsername = await _taiKhoanService.CheckUsername(createTaiKhoanDTO.Username);
+            string checkUsername = _taiKhoanService.CheckUsername(createTaiKhoanDTO.Username);
             if (checkUsername != "Username hợp lệ")
             {
                 return BadRequest(checkUsername);
@@ -53,7 +53,7 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTaiKhoanDTO updateTaiKhoanDTO)
         {
             try {
-                var result = await _taiKhoanService.UpdateTaiKhoan(id, updateTaiKhoanDTO);
+                var result = _taiKhoanService.UpdateTaiKhoan(id, updateTaiKhoanDTO);
                 return Ok(result);
             }
             catch (BusinessLogicException ex)
@@ -85,7 +85,7 @@ namespace Student_Result_Management_System.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaiKhoan([FromRoute]int id)
         {
-            var result = await _taiKhoanService.DeleteTaiKhoan(id);
+            var result = _taiKhoanService.DeleteTaiKhoan(id);
             if (!result)
             {
                 return BadRequest("Delete failed");
@@ -100,7 +100,7 @@ namespace Student_Result_Management_System.Controllers
             try {
                 var userId = User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
                 var userIdInt = int.Parse(userId?? throw new NotFoundException("Không tìm thấy tài khoản này"));
-                var result = await _taiKhoanService.ChangePassword(userIdInt, changePasswordDTO);
+                var result = _taiKhoanService.ChangePassword(userIdInt, changePasswordDTO);
                 return Ok("Đổi mật khẩu thành công");
             } catch(BusinessLogicException ex){
                 return BadRequest(ex.Message);
@@ -115,10 +115,10 @@ namespace Student_Result_Management_System.Controllers
         {
             try {
                 if (User.IsInRole("PhongDaoTao")){
-                    await _taiKhoanService.ResetPasswordForSinhVienGiangVien(id);
+                    _taiKhoanService.ResetPasswordForSinhVienGiangVien(id);
                     return Ok("Đặt lại mật khẩu thành công");
                 }
-                await _taiKhoanService.ResetPassword(id);
+                _taiKhoanService.ResetPassword(id);
                 return Ok("Đặt lại mật khẩu thành công");
             } catch(BusinessLogicException ex){
                 return BadRequest(ex.Message);

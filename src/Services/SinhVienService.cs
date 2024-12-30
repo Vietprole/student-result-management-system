@@ -51,7 +51,7 @@ namespace Student_Result_Management_System.Services
 			SinhVien sinhVien = new SinhVien
 			{
 				TaiKhoanId = taiKhoan.Id,
-				TaiKhoan = await _taiKhoanService.GetTaiKhoanById(taiKhoan.Id),
+				TaiKhoan = _taiKhoanService.GetTaiKhoanById(taiKhoan.Id),
 				KhoaId = createSinhVienDTO.KhoaId,
 				NganhId = createSinhVienDTO.NganhId,
 				NamNhapHoc = createSinhVienDTO.NamNhapHoc,
@@ -85,7 +85,7 @@ namespace Student_Result_Management_System.Services
 				ChucVuId = 3,
 				HovaTen = taikhoanSinhVien.Ten
 			};
-			TaiKhoanDTO? taiKhoanId = await _taiKhoanService.CreateTaiKhoanSinhVien(createTaiKhoanDTO);
+			TaiKhoanDTO? taiKhoanId = _taiKhoanService.CreateTaiKhoanSinhVien(createTaiKhoanDTO);
 			return taiKhoanId;
 		}
 
@@ -98,7 +98,7 @@ namespace Student_Result_Management_System.Services
 			}
 			if (exits.TaiKhoan != null)
 			{
-				var taikhoan = await _taiKhoanService.DeleteTaiKhoan(exits.TaiKhoan.Id);
+				var taikhoan = _taiKhoanService.DeleteTaiKhoan(exits.TaiKhoan.Id);
 			}
 			_context.SinhViens.Remove(exits);
 			await _context.SaveChangesAsync();
