@@ -309,11 +309,11 @@ const phongDaoTaoItem = [
     url: "/xetchuandaura",
     icon: XetChuanDauRaIcon,
   },
-  {
-    title: "Quản lý tài khoản",
-    url: "/quanlytaikhoan",
-    icon: HoSoCaNhanIcon,
-  },
+  // {
+  //   title: "Quản lý tài khoản",
+  //   url: "/quanlytaikhoan",
+  //   icon: HoSoCaNhanIcon,
+  // },
   {
     title: "Hồ sơ cá nhân",
     url: "/hosocanhan",

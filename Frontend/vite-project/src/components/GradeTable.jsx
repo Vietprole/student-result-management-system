@@ -161,9 +161,18 @@ export function GradeTable({
       try {
         console.log("modifiedRecords[i]", modifiedRecords[i]);
         await upsertKetQua(modifiedRecords[i]);
+        toast({
+          title: "Đã cập nhật điểm",
+          variant: "success",
+        });
         fetchData();
       } catch (error) {
         console.error(`Error updating record for sinhVienId ${modifiedRecords[i].sinhVienId}:`, error);
+        toast({
+          title: "Lỗi lưu điểm",
+          description: error.message,
+          variant: "destructive",
+        });
       }
     }
   }
@@ -174,16 +183,21 @@ export function GradeTable({
       try {
         console.log("modifiedDiemDinhChinhRecords[i]", modifiedDiemDinhChinhRecords[i]);
         await upsertDiemDinhChinh(modifiedDiemDinhChinhRecords[i]);
+        toast({
+          title: "Đã cập nhật điểm đính chính",
+          description: "Xem điểm đính chính đã tạo ở mục Điểm Đính Chính",
+          variant: "success",
+        });
         fetchData();
       } catch (error) {
         console.error(`Error updating Diem Dinh Chinh record for ketQuaId ${modifiedDiemDinhChinhRecords[i].ketQuaId}:`, error);
+        toast({
+          title: "Lỗi lưu điểm đính chính",
+          description: error.message,
+          variant: "destructive",
+        });
       }
     }
-    toast({
-      title: "Đã cập nhật điểm đính chính",
-      description: "Xem điểm đính chính đã tạo ở mục Điểm Đính Chính",
-      variant: "success",
-    });
   }
   console.log("components, questions", components, questions);
 

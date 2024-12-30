@@ -165,9 +165,9 @@ export default function DataTable({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Add {entity}</DialogTitle>
+                <DialogTitle>Tạo {entity}</DialogTitle>
                 <DialogDescription>
-                  Add a new {entity} to the list.
+                  Tạo {entity} mới
                 </DialogDescription>
               </DialogHeader>
               <ItemForm
