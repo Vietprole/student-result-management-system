@@ -162,7 +162,7 @@ namespace Student_Result_Management_System.Services
                 return null;
             }
             taiKhoan.Password = _passwordHashService.HashPassword(taikhoanSinhVien.Password);
-            var chucVu = await _chucVuService.GetChucVuById(taikhoanSinhVien.ChucVuId);
+            var chucVu = _chucVuService.GetChucVuById(taikhoanSinhVien.ChucVuId);
             if (chucVu == null)
             {
                 return null;
