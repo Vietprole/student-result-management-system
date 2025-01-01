@@ -28,12 +28,12 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
             List<BaiKiemTraDTO> baiKiemTraDTOs;
             if (lopHocPhanId.HasValue)
             {
-                // return BadRequest("Lớp Học Phần Id phải lớn hơn 0");
                 baiKiemTraDTOs = await _baiKiemTraService.GetBaiKiemTrasByLopHocPhanIdAsync(lopHocPhanId.Value);
                 return Ok(baiKiemTraDTOs);
             }
@@ -43,6 +43,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var baiKiemTraDTO = await _baiKiemTraService.GetBaiKiemTraByIdAsync(id);
@@ -54,6 +55,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,PhongDaoTao")]
         public async Task<IActionResult> Create([FromBody] CreateBaiKiemTraDTO createBaiKiemTraDTO)
         {
             var checkDuplicate = await _baiKiemTraService.CheckDuplicateBaiKiemTraLoaiInLopHocPhan(createBaiKiemTraDTO.Loai, createBaiKiemTraDTO.LopHocPhanId);
@@ -66,6 +68,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBaiKiemTraDTO updateBaiKiemTraDTO)
         {
             var baiKiemTra = await _baiKiemTraService.GetBaiKiemTraByIdAsync(id);
@@ -83,12 +86,13 @@ namespace Student_Result_Management_System.Controllers
             var baiKiemTraDTO = await _baiKiemTraService.UpdateBaiKiemTraAsync(id, updateBaiKiemTraDTO);
             if (baiKiemTraDTO == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy bài kiểm tra");
             }
             return Ok(baiKiemTraDTO);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var baiKiemTraDTO = await _baiKiemTraService.DeleteBaiKiemTraAsync(id);
@@ -100,6 +104,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/listcauhoi")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> UpdateListCauHoi([FromRoute] int id, [FromBody] List<CreateCauHoiDTO> createCauHoiDTOs)
         {
             try

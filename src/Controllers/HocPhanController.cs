@@ -14,7 +14,6 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/hocphan")]
     [ApiController]
-    // [Authorize]
     public class HocPhanController : ControllerBase
     {
         private readonly IHocPhanService _hocPhanService;
@@ -26,6 +25,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId, [FromQuery] bool? laCotLoi)
         {
             List<HocPhanDTO> hocPhanDTOs;
@@ -41,15 +41,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var hocPhanDTO = await _hocPhanService.GetHocPhanByIdAsync(id);
             if (hocPhanDTO == null)
-                return NotFound();
+                return NotFound("Không tìm thấy học phần");
             return Ok(hocPhanDTO);
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Create([FromBody] CreateHocPhanDTO createHocPhanDTO)
         {
             var hocPhanDTO = await _hocPhanService.CreateHocPhanAsync(createHocPhanDTO);
@@ -57,29 +59,32 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateHocPhanDTO updateHocPhanDTO)
         {
             var hocPhanDTO = await _hocPhanService.UpdateHocPhanAsync(id, updateHocPhanDTO);
             if (hocPhanDTO == null)
-                return NotFound();
+                return NotFound("Không tìm thấy học phần");
             return Ok(hocPhanDTO);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _hocPhanService.DeleteHocPhanAsync(id);
             if (!result)
-                return NotFound();
+                return NotFound("Không tìm thấy học phần");
             return NoContent();
         }
 
         [HttpGet("{id}/plo")]
+        [Authorize]
         public async Task<IActionResult> GetPLOs([FromRoute] int id)
         {
             var hocPhan = await _hocPhanService.GetHocPhanByIdAsync(id);
             if (hocPhan == null)
-                return NotFound("HocPhan not found");
+                return NotFound("Không tìm thấy học phần");
 
             var pLODTOs = await _pLOService.GetPLOsByHocPhanIdAsync(id);
             return Ok(pLODTOs);
@@ -101,11 +106,12 @@ namespace Student_Result_Management_System.Controllers
         // }
 
         [HttpPut("{id}/plo")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdatePLOs([FromRoute] int id, [FromBody] int[] pLOIds)
         {
             var hocPhan = await _hocPhanService.GetHocPhanByIdAsync(id);
             if (hocPhan == null)
-                return NotFound("HocPhan not found");
+                return NotFound("Không tìm thấy học phần");
 
             try
             {
@@ -116,12 +122,9 @@ namespace Student_Result_Management_System.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occurred");
-            }
         }
         [HttpGet("notInNganh/{nganhId}")]
+        [Authorize]
         public async Task<IActionResult> GetAllHocPhanNotInNganhId([FromRoute] int nganhId)
         {
             var hocPhanDTOs = await _hocPhanService.GetAllHocPhanNotInNganhId(nganhId);

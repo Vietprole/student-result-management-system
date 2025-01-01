@@ -4,7 +4,7 @@ namespace StudentResultManagementSystem.Interfaces
 {
     public interface IDiemDinhChinhService
     {
-        public Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId);
+        public Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId, int? giangVienId);
         public Task<DiemDinhChinhDTO?> GetDiemDinhChinhByIdAsync(int id);
         public Task<DiemDinhChinhDTO> CreateDiemDinhChinhAsync(CreateDiemDinhChinhDTO createDiemDinhChinhDTO);
         public Task<DiemDinhChinhDTO?> UpdateDiemDinhChinhAsync(int id, UpdateDiemDinhChinhDTO updateDiemDinhChinhDTO);

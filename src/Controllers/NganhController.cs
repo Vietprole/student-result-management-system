@@ -13,7 +13,6 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/nganh")]
     [ApiController]
-    // [Authorize]
     public class NganhController : ControllerBase
     {
         private readonly INganhService _nganhService;
@@ -23,6 +22,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? khoaId)
         {
             var nganhs = khoaId.HasValue ? 
@@ -32,15 +32,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var nganh = await _nganhService.GetNganhByIdAsync(id);
             if (nganh == null)
-                return NotFound();
+                return NotFound("Không tìm thấy ngành");
             return Ok(nganh.ToNganhDTO());
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Create([FromBody] CreateNganhDTO createNganhDTO)
         {
             try
@@ -55,6 +57,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateNganhDTO updateNganhDTO)
         {
             try
@@ -73,6 +76,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
@@ -91,6 +95,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}/hocphan")]
+        [Authorize]
         public async Task<IActionResult> GetHocPhans([FromRoute] int id)
         {
             try {
@@ -106,6 +111,7 @@ namespace Student_Result_Management_System.Controllers
         }
         
         [HttpPost("{id}/hocphan")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> AddHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -124,6 +130,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/hocphan")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -142,6 +149,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}/hocphan/{hocPhanId}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> RemoveHocPhan([FromRoute] int id, [FromRoute] int hocPhanId)
         {
             try

@@ -19,22 +19,25 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId)
+        [Authorize]
+        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId, [FromQuery] int? giangVienId)
         {
-            var diemDinhChinhs = await _diemDinhChinhService.GetDiemDinhChinhsAsync(lopHocPhanId);
+            var diemDinhChinhs = await _diemDinhChinhService.GetDiemDinhChinhsAsync(lopHocPhanId, giangVienId);
             return Ok(diemDinhChinhs);
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var diemDinhChinh = await _diemDinhChinhService.GetDiemDinhChinhByIdAsync(id);
             if (diemDinhChinh == null)
-                return NotFound();
+                return NotFound("Không tìm thấy điểm đính chính");
             return Ok(diemDinhChinh);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Create([FromBody] CreateDiemDinhChinhDTO createDTO)
         {
             var result = await _diemDinhChinhService.CreateDiemDinhChinhAsync(createDTO);
@@ -42,15 +45,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateDiemDinhChinhDTO updateDTO)
         {
             var result = await _diemDinhChinhService.UpdateDiemDinhChinhAsync(id, updateDTO);
             if (result == null)
-                return NotFound();
+                return NotFound("Không tìm thấy điểm đính chính");
             return Ok(result);
         }
 
         [HttpPut("upsert")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Upsert([FromBody] UpdateDiemDinhChinhDTO updateDTO)
         {
             try
@@ -65,11 +70,12 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,GiangVien")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var isDeleted = await _diemDinhChinhService.DeleteDiemDinhChinhAsync(id);
             if (!isDeleted)
-                return NotFound();
+                return NotFound("Không tìm thấy điểm đính chính");
             return NoContent();
         }
 

@@ -22,6 +22,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll(
            [FromQuery] int? nganhId,
            [FromQuery] int? lopHocPhanId)
@@ -43,15 +44,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var plo = await _ploService.GetPLOByIdAsync(id);
             if (plo == null)
-                return NotFound();
+                return NotFound("Không tìm thấy PLO");
             return Ok(plo);
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Create([FromBody] CreatePLODTO createPLODTO)
         {
             var plo = await _ploService.CreatePLOAsync(createPLODTO);
@@ -59,40 +62,44 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePLODTO updatePLODTO)
         {
             var plo = await _ploService.UpdatePLOAsync(id, updatePLODTO);
             if (plo == null)
-                return NotFound();
+                return NotFound("Không tìm thấy PLO");
             return Ok(plo);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _ploService.DeletePLOAsync(id);
             if (!result)
-                return NotFound();
+                return NotFound("Không tìm thấy PLO");
             return NoContent();
         }
 
         [HttpGet("{id}/clo")]
+        [Authorize]
         public async Task<IActionResult> GetCLOs([FromRoute] int id)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
             if (pLO == null)
-                return NotFound("PLO not found");
+                return NotFound("Không tìm thấy PLO");
 
             var cLODTOs = await _cLOService.GetCLOsByPLOIdAsync(id);
             return Ok(cLODTOs);
         }
 
         [HttpGet("{id}/hocphan")]
+        [Authorize]
         public async Task<IActionResult> GetHocPhans([FromRoute] int id)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
             if (pLO == null)
-                return NotFound("PLO not found");
+                return NotFound("Không tìm thấy PLO");
 
             var hocPhanDTOs = await _hocPhanService.GetHocPhansByPLOIdAsync(id);
             return Ok(hocPhanDTOs);
@@ -109,11 +116,12 @@ namespace Student_Result_Management_System.Controllers
         // }
 
         [HttpPut("{id}/clo")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdateCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
             if (pLO == null)
-                return NotFound("PLO not found");
+                return NotFound("Không tìm thấy PLO");
 
             try {
                 var updatedCLOs = await _ploService.UpdateCLOsOfPLOAsync(id, cLOIds);
@@ -130,11 +138,12 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/hocphan")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
             if (pLO == null)
-                return NotFound("PLO not found");
+                return NotFound("Không tìm thấy PLO");
 
             try {
                 var updatedHocPhans = await _ploService.UpdateHocPhansOfPLOAsync(id, hocPhanIds);

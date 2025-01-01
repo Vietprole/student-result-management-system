@@ -22,6 +22,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles="Admin, PhongDaoTao")]
         public async Task<IActionResult> GetAll([FromQuery] int? chucVuId)
         {
             var result = await _taiKhoanService.GetFilteredTaiKhoans(chucVuId);
@@ -29,6 +30,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost("createTaiKhoan")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> CreateTaiKhoan([FromBody] CreateTaiKhoanDTO createTaiKhoanDTO)
         {
             string checkUsername = await _taiKhoanService.CheckUsername(createTaiKhoanDTO.Username);
@@ -44,12 +46,13 @@ namespace Student_Result_Management_System.Controllers
             var result = await _taiKhoanService.CreateTaiKhoan(createTaiKhoanDTO);
             if (result == null)
             {
-                return BadRequest("Username already exists");
+                return BadRequest("Username đã tồn tại");
             }
             return Ok(result);
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTaiKhoanDTO updateTaiKhoanDTO)
         {
             try {
@@ -77,12 +80,13 @@ namespace Student_Result_Management_System.Controllers
             var result = await _taiKhoanService.Login(taiKhoanLoginDTO);
             if (result == null)
             {
-                return BadRequest("Username or password is incorrect");
+                return BadRequest("Tên đăng nhập hoặc mật khẩu không đúng");
             }
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> DeleteTaiKhoan([FromRoute]int id)
         {
             var result = await _taiKhoanService.DeleteTaiKhoan(id);
@@ -93,8 +97,8 @@ namespace Student_Result_Management_System.Controllers
             return Ok("Delete successfully");
         }
 
-        [Authorize]
         [HttpPatch("password")]
+        [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
         {
             try {
@@ -109,7 +113,7 @@ namespace Student_Result_Management_System.Controllers
             }
         }
 
-        [Authorize(Roles="Admin, PhongDaoTao")]
+        [Authorize(Roles="Admin")]
         [HttpPatch("{id}/resetPassword")]
         public async Task<IActionResult> ResetPassword([FromRoute] int id)
         {

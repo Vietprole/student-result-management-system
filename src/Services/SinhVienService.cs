@@ -5,6 +5,7 @@ using Student_Result_Management_System.DTOs.TaiKhoan;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Models;
+using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
@@ -96,12 +97,16 @@ namespace Student_Result_Management_System.Services
 			{
 				return null;
 			}
+			_context.SinhViens.Remove(exits);
 			if (exits.TaiKhoan != null)
 			{
 				var taikhoan = await _taiKhoanService.DeleteTaiKhoan(exits.TaiKhoan.Id);
 			}
-			_context.SinhViens.Remove(exits);
-			await _context.SaveChangesAsync();
+			try {
+				await _context.SaveChangesAsync();
+			} catch(Exception) {
+				throw new BusinessLogicException("Không thể xóa sinh viên đã có đối tượng con liên quan");
+			}
 			return exits;
 		}
 

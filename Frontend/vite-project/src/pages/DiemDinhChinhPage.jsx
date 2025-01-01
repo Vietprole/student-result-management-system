@@ -43,7 +43,7 @@ export default function DiemDinhChinhPage() {
   const [comboBoxLopHocPhanId, setComboBoxLopHocPhanId] =
     useState(lophocphanIdParam);
   const role = getRole();
-  const giangVienId = getGiangVienId();
+  const giangVienId = getGiangVienId() === 0 ? null : getGiangVienId();
   const { toast } = useToast();
 
   const fetchData = useCallback(async () => {
@@ -57,9 +57,9 @@ export default function DiemDinhChinhPage() {
       value: lophocphan.id,
     }));
     setLopHocPhanItems(mappedComboBoxItems);
-    const data = await getDiemDinhChinhs(lophocphanId);
+    const data = await getDiemDinhChinhs(lophocphanId, giangVienId);
     setData(data);
-  }, [lophocphanId, giangVienId]);
+  }, [giangVienId, lophocphanId]);
 
   useEffect(() => {
     fetchData();
