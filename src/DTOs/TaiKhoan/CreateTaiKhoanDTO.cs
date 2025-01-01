@@ -15,7 +15,7 @@ namespace Student_Result_Management_System.DTOs.TaiKhoan
         [Required]
         public int ChucVuId { get; set; }
         [Required]
-        public string HovaTen { get; set; } = string.Empty;
+        public string Ten { get; set; } = string.Empty;
         public int? KhoaId { get; set; }
     }
 }

@@ -83,7 +83,7 @@ namespace Student_Result_Management_System.Services
 				Username = MaSinhVien,
 				Password = "Sv@" + MaSinhVien,
 				ChucVuId = 3,
-				HovaTen = taikhoanSinhVien.Ten
+				Ten = taikhoanSinhVien.Ten
 			};
 			TaiKhoanDTO? taiKhoanId = await _taiKhoanService.CreateTaiKhoanSinhVien(createTaiKhoanDTO);
 			return taiKhoanId;

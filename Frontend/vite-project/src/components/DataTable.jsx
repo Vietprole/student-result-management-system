@@ -234,7 +234,7 @@ export default function DataTable({
               {table.getFilteredRowModel().rows.length} row(s) selected.
             </div>
           )}
-          {/* <div className="space-x-2">
+          <div className="space-x-2">
             <Button
               variant="outline"
               size="sm"
@@ -251,7 +251,7 @@ export default function DataTable({
             >
               Next
             </Button>
-          </div> */}
+          </div>
         </div>
       </div>
     </>

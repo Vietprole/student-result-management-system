@@ -119,7 +119,7 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             var hocPhanList = await _context.HocPhans
                 .Include(hp => hp.Khoa)
-                .Where(hp => pLO.HocPhans.Any(hp2 => hp2.Id == hp.Id))
+                .Where(hp => hocPhanIds.Contains(hp.Id))
                 .Select(hp => hp.ToHocPhanDTO())
                 .ToListAsync();
             return hocPhanList;
