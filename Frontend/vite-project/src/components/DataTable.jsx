@@ -163,7 +163,7 @@ export default function DataTable({
                 </Button>
               )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="max-w-fit">
               <DialogHeader>
                 <DialogTitle>Tạo {entity}</DialogTitle>
                 <DialogDescription>

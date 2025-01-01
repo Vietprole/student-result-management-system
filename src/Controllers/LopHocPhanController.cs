@@ -50,13 +50,15 @@ namespace lopHocPhan_Result_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateLopHocPhanDTO createLopHocPhanDTO)
         {
-            var lopHocPhan = await _lopHocPhanService.CreateLopHocPhanAsync(createLopHocPhanDTO);
-            if (lopHocPhan == null)
-            {
-                return BadRequest("Không thể tạo lớp học phần mới.");
+            try {
+                var lopHocPhan = await _lopHocPhanService.CreateLopHocPhanAsync(createLopHocPhanDTO);
+                var lopHocPhanDTO = lopHocPhan?.ToLopHocPhanDTO();
+                return CreatedAtAction(nameof(GetById), new { id = lopHocPhan?.Id }, lopHocPhanDTO);
+            } catch (BusinessLogicException ex) {
+                return BadRequest(ex.Message);
+            } catch (NotFoundException ex){
+                return NotFound(ex.Message);
             }
-            var lopHocPhanDTO = lopHocPhan.ToLopHocPhanDTO();
-            return CreatedAtAction(nameof(GetById), new { id = lopHocPhan.Id }, lopHocPhanDTO);
         }
 
         [HttpPut("{id}")]

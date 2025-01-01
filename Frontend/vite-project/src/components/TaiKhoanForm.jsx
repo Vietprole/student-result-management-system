@@ -183,9 +183,9 @@ export function TaiKhoanForm({ taiKhoan, handleAdd, handleEdit, setIsDialogOpen 
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
-                    <CommandInput placeholder="Search item..." />
+                    <CommandInput placeholder="Tìm kiếm..." />
                     <CommandList>
-                      <CommandEmpty>No item found.</CommandEmpty>
+                      <CommandEmpty>Không tìm thấy.</CommandEmpty>
                       <CommandGroup>
                         {comboBoxItems.map((item) => (
                           <CommandItem
