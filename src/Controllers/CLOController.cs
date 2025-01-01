@@ -13,7 +13,6 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/clo")]
     [ApiController]
-    // [Authorize]
     public class CLOController : ControllerBase
     {
         private readonly ICLOService _cloService;
@@ -23,6 +22,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId)
         {
             if (lopHocPhanId.HasValue)
@@ -35,15 +35,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var cLODTO = await _cloService.GetCLOByIdAsync(id);
             if (cLODTO == null)
-                return NotFound("CLO not found");
+                return NotFound("Không tìm thấy CLO");
             return Ok(cLODTO);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Create([FromBody] CreateCLODTO createCLODTO)
         {
             var cLODTO = await _cloService.CreateCLOAsync(createCLODTO);
@@ -51,22 +53,23 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCLODTO updateCLODTO)
         {
             var cLODTO = await _cloService.UpdateCLOAsync(id, updateCLODTO);
             if (cLODTO == null)
-                return NotFound("CLO not found");
+                return NotFound("Không tìm thấy CLO");
             return Ok(cLODTO);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _cloService.DeleteCLOAsync(id);
             if (!result)
-                return NotFound("CLO not found");
+                return NotFound("Không tìm thấy CLO");
             return NoContent();
         }
-
     }
 }

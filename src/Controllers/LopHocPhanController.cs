@@ -29,6 +29,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? hocPhanId, [FromQuery] int? hocKyId, [FromQuery] int? giangVienId, [FromQuery] int? sinhVienId)
         {
             var lopHocPhans = await _lopHocPhanService.GetFilteredLopHocPhansAsync(hocPhanId, hocKyId, giangVienId, sinhVienId);
@@ -38,6 +39,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
 
         [HttpGet("{id}")]
         // Get single entry
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
             var lopHocPhan = await _lopHocPhanService.GetLopHocPhanByIdAsync(id);
@@ -48,18 +50,22 @@ namespace lopHocPhan_Result_Management_System.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Create([FromBody] CreateLopHocPhanDTO createLopHocPhanDTO)
         {
-            var lopHocPhan = await _lopHocPhanService.CreateLopHocPhanAsync(createLopHocPhanDTO);
-            if (lopHocPhan == null)
-            {
-                return BadRequest("Không thể tạo lớp học phần mới.");
+            try {
+                var lopHocPhan = await _lopHocPhanService.CreateLopHocPhanAsync(createLopHocPhanDTO);
+                var lopHocPhanDTO = lopHocPhan?.ToLopHocPhanDTO();
+                return CreatedAtAction(nameof(GetById), new { id = lopHocPhan?.Id }, lopHocPhanDTO);
+            } catch (BusinessLogicException ex) {
+                return BadRequest(ex.Message);
+            } catch (NotFoundException ex){
+                return NotFound(ex.Message);
             }
-            var lopHocPhanDTO = lopHocPhan.ToLopHocPhanDTO();
-            return CreatedAtAction(nameof(GetById), new { id = lopHocPhan.Id }, lopHocPhanDTO);
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateLopHocPhanDTO updateLopHocPhanDTO)
         {
             try
@@ -78,6 +84,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try
@@ -96,6 +103,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}/sinhvien")]
+        [Authorize]
         public async Task<IActionResult> GetSinhViens([FromRoute] int id)
         {
             try
@@ -114,6 +122,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         }
 
         [HttpPost("{id}/sinhvien")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> AddSinhViens([FromRoute] int id, [FromBody] int[] sinhVienIds)
         {
             try
@@ -132,6 +141,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/sinhvien")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdateSinhViens([FromRoute] int id, [FromBody] int[] sinhVienIds)
         {
             try
@@ -150,6 +160,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}/sinhvien/{sinhVienId}")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> RemoveSinhVien([FromRoute] int id, [FromRoute] int sinhVienId)
         {
             try
@@ -167,6 +178,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
             }
         }
         [HttpPut("{id}/congthucdiem")]
+        [Authorize(Roles="Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdateCongThucDiem([FromRoute] int id, [FromBody] List<CreateBaiKiemTraDTO> createBaiKiemTraDTOs)
         {
             if (!ModelState.IsValid)
@@ -189,6 +201,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
             return Ok(baiKiemTraDTOs);
         }
         [HttpGet("{lopHocPhanId}/chitiet")]
+        [Authorize]
         public async Task<IActionResult> GetChiTietLopHocPhan([FromRoute] int lopHocPhanId)
         {
             var lopHocPhanChiTietDTO = await _lopHocPhanService.GetChiTietLopHocPhanDTO(lopHocPhanId);
@@ -199,6 +212,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
             return Ok(lopHocPhanChiTietDTO);
         }
         [HttpGet("{id}/sinhviennotinlhp")]
+        [Authorize]
         public async Task<IActionResult> GetSinhViensNotInLopHocPhan([FromRoute] int id)
         {
             var sinhViens = await _lopHocPhanService.GetSinhViensNotInLopHocPhanDTO(id);

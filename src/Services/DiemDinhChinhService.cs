@@ -20,7 +20,7 @@ namespace Student_Result_Management_System.Services
             _logger = logger;
         }
 
-        public async Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId)
+        public async Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId, int? giangVienId)
         {
             var query = _context.DiemDinhChinhs
                 .Include(ddc => ddc.NguoiDuyet)
@@ -36,6 +36,11 @@ namespace Student_Result_Management_System.Services
             if (lopHocPhanId.HasValue)
             {
                 query = query.Where(ddc => ddc.CauHoi.BaiKiemTra.LopHocPhanId == lopHocPhanId);
+            }
+
+            if (giangVienId.HasValue)
+            {
+                query = query.Where(ddc => ddc.CauHoi.BaiKiemTra.LopHocPhan.GiangVienId == giangVienId);
             }
 
             var diemDinhChinhs = await query.ToListAsync();

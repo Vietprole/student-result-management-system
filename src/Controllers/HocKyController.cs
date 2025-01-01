@@ -12,7 +12,6 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/hocky")]
     [ApiController]
-    // [Authorize(Roles = "Admin")]
     public class HocKyController:ControllerBase
     {
         private readonly IHocKyService _hocKyService;
@@ -21,6 +20,7 @@ namespace Student_Result_Management_System.Controllers
             _hocKyService = hocKyService;
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var hocKyDTOs = await _hocKyService.GetAllHocKyDTO();
@@ -28,12 +28,13 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var hocKyDTO = await _hocKyService.GetHocKyDTO(id);
             if (hocKyDTO == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy học kỳ");
             }
             return Ok(hocKyDTO);
         }
@@ -48,6 +49,7 @@ namespace Student_Result_Management_System.Controllers
         //    return Ok();
         //}
         [HttpPost]
+        [Authorize(Roles = "Admin,PhongDaoTao")]
         public async Task<IActionResult> AddHocKy([FromBody] CreateHocKyDTO newHocKyDTO)
         {
             bool CheckTenHocKy = _hocKyService.CheckTenHocKy(newHocKyDTO.Ten);
@@ -68,52 +70,53 @@ namespace Student_Result_Management_System.Controllers
             return Ok(hocKyDTO);
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao")]
         public async Task<IActionResult> UpdateHocKy([FromRoute] int id, [FromBody] CreateHocKyDTO newHocKyDTO)
         {
             var hocKyDTO = await _hocKyService.UpdateHocKyDTO(id, newHocKyDTO);
             if (hocKyDTO == null)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy học kỳ");
             }
             return Ok(hocKyDTO);
         }
-        [HttpPut("{id}/hansuadiem")]
-        public async Task<IActionResult> UpdateHanSuaDiem([FromRoute] int id, [FromBody] DateOnly hanSuaDiem)
-        {
-            var hanSuaDiemAsDateTime = hanSuaDiem.ToDateTime(TimeOnly.MinValue);
+        // [HttpPut("{id}/hansuadiem")]
+        // public async Task<IActionResult> UpdateHanSuaDiem([FromRoute] int id, [FromBody] DateOnly hanSuaDiem)
+        // {
+        //     var hanSuaDiemAsDateTime = hanSuaDiem.ToDateTime(TimeOnly.MinValue);
 
-            var hocKyDTO = await _hocKyService.UpdateHanSuaDiem(id, hanSuaDiemAsDateTime);
-            if (!hocKyDTO)
-            {
-                return NotFound();
-            }
+        //     var hocKyDTO = await _hocKyService.UpdateHanSuaDiem(id, hanSuaDiemAsDateTime);
+        //     if (!hocKyDTO)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return Ok();
-        }
-        [HttpPut("{id}/hansuacongthucdiem")]
-        public async Task<IActionResult> UpdateHanSuaCongThucDiem([FromRoute] int id, [FromBody] DateOnly hanSuaCongThucDiem)
-        {
-            var hanSuaCongThucDiemAsDateTime = hanSuaCongThucDiem.ToDateTime(TimeOnly.MinValue);
+        //     return Ok();
+        // }
+        // [HttpPut("{id}/hansuacongthucdiem")]
+        // public async Task<IActionResult> UpdateHanSuaCongThucDiem([FromRoute] int id, [FromBody] DateOnly hanSuaCongThucDiem)
+        // {
+        //     var hanSuaCongThucDiemAsDateTime = hanSuaCongThucDiem.ToDateTime(TimeOnly.MinValue);
 
-            var hocKyDTO = await _hocKyService.UpdateHanSuaCongThucDiem(id, hanSuaCongThucDiemAsDateTime);
-            if (!hocKyDTO)
-            {
-                return NotFound();
-            }
+        //     var hocKyDTO = await _hocKyService.UpdateHanSuaCongThucDiem(id, hanSuaCongThucDiemAsDateTime);
+        //     if (!hocKyDTO)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return Ok();
-        }
+        //     return Ok();
+        // }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao")]
         public async Task<IActionResult> DeleteHocKy([FromRoute] int id)
         {
             var hocKyDTO = await _hocKyService.DeleteHocKyDTO(id);
             if (hocKyDTO == false)
             {
-                return NotFound();
+                return NotFound("Không tìm thấy học kỳ");
             }
             return Ok();
         }
-
     }
 }

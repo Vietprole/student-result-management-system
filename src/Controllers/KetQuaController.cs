@@ -24,6 +24,7 @@ namespace ketQua_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId, [FromQuery] int? sinhVienId, [FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
         {
             var ketQuaDTOs = await _ketQuaService.GetFilteredKetQuasAsync(baiKiemTraId, sinhVienId, lopHocPhanId);
@@ -32,16 +33,18 @@ namespace ketQua_Result_Management_System.Controllers
 
         [HttpGet("{id}")]
         // Get single entry
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
             var ketQuaDTO = await _ketQuaService.GetKetQuaByIdAsync(id);
             if (ketQuaDTO == null)
-                return NotFound();
+                return NotFound("Không tìm thấy kết quả");
 
             return Ok(ketQuaDTO);
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Create([FromBody] CreateKetQuaDTO createKetQuaDTO)
         {
             var ketQuaDTO = await _ketQuaService.CreateKetQuaAsync(createKetQuaDTO);
@@ -49,6 +52,7 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKetQuaDTO updateKetQuaDTO)
         {
             var updatedKetQuaDTO = await _ketQuaService.UpdateKetQuaAsync(id, updateKetQuaDTO);
@@ -56,6 +60,7 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpPut("upsert")]
+        [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Upsert([FromBody] UpdateKetQuaDTO ketQuaDTO)
         {
             try 
@@ -70,6 +75,7 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var isDeleted = await _ketQuaService.DeleteKetQuaAsync(id);
@@ -115,6 +121,7 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-clo")]
+        [Authorize]
         public async Task<IActionResult> CalculateDiemCLO([FromQuery] int SinhVienId, [FromQuery] int cLOId, [FromQuery] bool useDiemTam = false)
         {
             try
@@ -133,6 +140,7 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-clo-max")]
+        [Authorize]
         public async Task<IActionResult> CalculateDiemCLOMax([FromQuery] int cLOId)
         {
             try {
@@ -150,6 +158,7 @@ namespace ketQua_Result_Management_System.Controllers
         }
 
         [HttpGet("calculate-diem-pk")]
+        [Authorize]
         public async Task<IActionResult> CalculateDiemPk([FromQuery] int lopHocPhanId, [FromQuery] int sinhVienId, [FromQuery] int ploId, [FromQuery] bool useDiemTam = false)
         {
             try {
@@ -166,6 +175,7 @@ namespace ketQua_Result_Management_System.Controllers
             }
         }
         [HttpGet("calculate-diem-plo")]
+        [Authorize]
         public async Task<IActionResult> CalculateDiemPLO([FromQuery] int sinhVienId, [FromQuery] int ploId, [FromQuery] bool useDiemTam = false)
         {
             try {

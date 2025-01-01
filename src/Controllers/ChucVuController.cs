@@ -10,7 +10,6 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/chucvu")]
     [ApiController]
-    // [Authorize]
     public class ChucVuController : ControllerBase
     {
         private readonly IChucVuService _chucVuService;
@@ -19,6 +18,7 @@ namespace Student_Result_Management_System.Controllers
             _chucVuService = chucVuService;
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetListChucVu()
         {
             try

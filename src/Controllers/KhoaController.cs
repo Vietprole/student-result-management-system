@@ -13,7 +13,6 @@ namespace Student_Result_Management_System.Controllers
 {
     [Route("api/khoa")]
     [ApiController]
-    // [Authorize]
     public class KhoaController : ControllerBase
     {
         private readonly IKhoaService _khoaService;
@@ -25,6 +24,7 @@ namespace Student_Result_Management_System.Controllers
         // IActionResult return any value type
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
+        [Authorize]
         public async Task<IActionResult> GetAll() // async go with Task<> to make function asynchronous
         {
             var khoas = await _khoaService.GetAllKhoasAsync();
@@ -33,21 +33,23 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         // Get single entry
         public async Task<IActionResult> GetById([FromRoute] int id) // async go with Task<> to make function asynchronous
         {
             var khoa = await _khoaService.GetKhoaByIdAsync(id);
             if (khoa == null)
-                return NotFound();
+                return NotFound("Không tìm thấy khoa");
             var khoaDTO = khoa.ToKhoaDTO();
             return Ok(khoaDTO);
         }
 
         [HttpPost]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         {
             string check=await _khoaService.CheckCreateKhoa(createKhoaDTO);
-            if (check!="Khoa hợp lệ")
+            if (check!="Khoa không hợp lệ")
             {
                 return BadRequest(check);
             }
@@ -65,6 +67,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateKhoaDTO updateKhoaDTO)
         {
             try {
@@ -80,6 +83,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try {

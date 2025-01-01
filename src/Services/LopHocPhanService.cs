@@ -80,29 +80,14 @@ namespace Student_Result_Management_System.Services
         public async Task<LopHocPhan?> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO)
         {
             var lopHocPhan = lopHocPhanDTO.ToLopHocPhanFromCreateDTO();
-            var hocPhan = await _context.HocPhans.FindAsync(lopHocPhanDTO.HocPhanId);
-            if (hocPhan == null)
+            var hocPhan = await _context.HocPhans.FindAsync(lopHocPhanDTO.HocPhanId) ?? throw new NotFoundException("Không tìm thấy Học phần");
+            var hocKy = await _context.HocKies.FindAsync(lopHocPhanDTO.HocKyId) ?? throw new NotFoundException("Không tìm thấy Học kỳ");
+            var maLopHocPhan = hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + lopHocPhanDTO.Khoa + lopHocPhanDTO.Nhom;
+            if (await _context.LopHocPhans.AnyAsync(lhp => lhp.MaLopHocPhan == maLopHocPhan))
             {
-                return null;
+                throw new BusinessLogicException("Lớp học phần đã tồn tại");
             }
-            var hocKy = await _context.HocKies.FindAsync(lopHocPhanDTO.HocKyId);
-            if (hocKy == null)
-            {
-                return null;
-            }
-            int soluong = await _context.LopHocPhans.Where(x => x.HocPhanId == lopHocPhanDTO.HocPhanId).CountAsync() + 1;
-            while (true)
-            {
-                if (await _context.LopHocPhans.AnyAsync(lhp => lhp.MaLopHocPhan == hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3")))
-                {
-                    soluong++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            lopHocPhan.MaLopHocPhan = hocPhan.MaHocPhan + "." + hocKy.MaHocKy + "." + soluong.ToString("D3");
+            lopHocPhan.MaLopHocPhan = maLopHocPhan;
             await _context.LopHocPhans.AddAsync(lopHocPhan);
             await _context.SaveChangesAsync();
             return GetLopHocPhanByIdAsync(lopHocPhan.Id).Result;

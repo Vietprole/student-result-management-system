@@ -108,8 +108,8 @@ namespace Student_Result_Management_System.Services
                 // Create
                 var newKetQua = new KetQua
                 {
-                    SinhVienId = ketQuaDTO.SinhVienId ?? throw new BusinessLogicException("SinhVienId is required"),
-                    CauHoiId = ketQuaDTO.CauHoiId ?? throw new BusinessLogicException("CauHoiId is required"),
+                    SinhVienId = ketQuaDTO.SinhVienId ?? throw new BusinessLogicException("SinhVienId là bắt buộc"),
+                    CauHoiId = ketQuaDTO.CauHoiId ?? throw new BusinessLogicException("CauHoiId là bắt buộc"),
                     DiemTam = ketQuaDTO.DiemTam,
                     DiemChinhThuc = ketQuaDTO.DiemChinhThuc,
                     DaCongBo = false
@@ -152,6 +152,7 @@ namespace Student_Result_Management_System.Services
             }
             
             existingKetQua.DaXacNhan = true;
+            await _context.SaveChangesAsync();
             // Add date of confirmation to baiKiemTra
             var baiKiemTraId = existingKetQua.CauHoi.BaiKiemTraId;
             var relatedKetQuas = await _context.KetQuas
@@ -163,8 +164,8 @@ namespace Student_Result_Management_System.Services
             {
                 existingKetQua.CauHoi.BaiKiemTra.NgayXacNhan = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
             }
-            
             await _context.SaveChangesAsync();
+            
             return existingKetQua.ToKetQuaDTO();
         }
 

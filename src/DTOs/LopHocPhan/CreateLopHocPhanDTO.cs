@@ -12,8 +12,11 @@ public class CreateLopHocPhanDTO
     public int HocPhanId { get; set; }
     [Required]
     public int HocKyId { get; set; }
-    [Required]
-    public DateTime HanDeXuatCongThucDiem { get; set; }
+    public DateTime HanDeXuatCongThucDiem { get; set; } = DateTime.Now;
     [Required]
     public int GiangVienId { get; set; }
+    [Required]
+    public string Khoa { get; set; } = string.Empty;
+    [Required]
+    public string Nhom { get; set; } = string.Empty;
 }

@@ -27,6 +27,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] int? baiKiemTraId)
         {
             List<CauHoiDTO> cauHoiDTOs;
@@ -42,15 +43,17 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var cauHoiDTO = await _cauHoiService.GetCauHoiByIdAsync(id);
             if (cauHoiDTO == null)
-                return NotFound();
+                return NotFound("Không tìm thấy câu hỏi");
             return Ok(cauHoiDTO);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Create([FromBody] CreateCauHoiDTO createCauHoiDTO)
         {
             var cauHoiDTO = await _cauHoiService.CreateCauHoiAsync(createCauHoiDTO);
@@ -58,24 +61,27 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCauHoiDTO updateCauHoiDTO)
         {
             var cauHoiDTO = await _cauHoiService.UpdateCauHoiAsync(id, updateCauHoiDTO);
             if (cauHoiDTO == null)
-                return NotFound();
+                return NotFound("Không tìm thấy câu hỏi");
             return Ok(cauHoiDTO);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _cauHoiService.DeleteCauHoiAsync(id);
             if (!result)
-                return NotFound();
+                return NotFound("Không tìm thấy câu hỏi");
             return NoContent();
         }
 
         [HttpGet("{id}/clo")]
+        [Authorize]
         public async Task<IActionResult> GetCLOs([FromRoute] int id)
         {
             var cauHoi = await _cauHoiService.GetCauHoiByIdAsync(id);
@@ -102,6 +108,7 @@ namespace Student_Result_Management_System.Controllers
         // }
 
         [HttpPut("{id}/clo")]
+        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> UpdateCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
         {
             var cauHoi = await _cauHoiService.GetCauHoiByIdAsync(id);
