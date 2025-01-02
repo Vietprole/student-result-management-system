@@ -29,8 +29,14 @@ namespace Student_Result_Management_System.Controllers
 		// public async Task<IActionResult> Get()
 		// ActionResult return specific value type, the type will displayed in Schemas section
 		[Authorize]
-		public async Task<IActionResult> GetAllByRole() // async go with Task<> to make function asynchronous
+		public async Task<IActionResult> GetAll([FromQuery] int? khoaId) // async go with Task<> to make function asynchronous
 		{
+			if (khoaId.HasValue)
+			{
+				var giangViensByKhoa = await _giangVienService.GetAllByKhoaId(khoaId.Value);
+				var giangVienByKhoaDTOs = giangViensByKhoa.Select(sv => sv.ToGiangVienDTO()).ToList();
+				return Ok(giangVienByKhoaDTOs);
+			}
 			var giangViens = await _giangVienService.GetAllGiangVien();
 			var giangVienDTOs = giangViens.Select(sv => sv.ToGiangVienDTO()).ToList();
 			return Ok(giangVienDTOs);
