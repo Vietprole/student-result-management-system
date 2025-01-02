@@ -48,10 +48,10 @@ namespace Student_Result_Management_System.Controllers
         [Authorize(Roles="Admin")]
         public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         {
-            string check=await _khoaService.CheckCreateKhoa(createKhoaDTO);
-            if (check!="Khoa hợp lệ")
-            {
-                return BadRequest(check);
+            try {
+                await _khoaService.CheckCreateKhoa(createKhoaDTO);
+            } catch (BusinessLogicException ex){
+                return BadRequest(ex.Message);
             }
             var khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO.ToKhoaFromCreateDTO());
             if (khoa == null)
