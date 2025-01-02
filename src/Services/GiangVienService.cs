@@ -102,7 +102,7 @@ namespace Student_Result_Management_System.Services
 
 		public async Task<List<GiangVien>> GetAllByKhoaId(int khoaId)
 		{
-			List<GiangVien> giangViens = await _context.GiangViens.Include(x => x.TaiKhoan).Where(c => c.KhoaId == khoaId).ToListAsync();
+			List<GiangVien> giangViens = await _context.GiangViens.Include(x => x.TaiKhoan).Include(gv => gv.Khoa).Where(c => c.KhoaId == khoaId).ToListAsync();
 			return giangViens;
 		}
 
