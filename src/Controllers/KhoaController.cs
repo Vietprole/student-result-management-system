@@ -49,7 +49,7 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         {
             string check=await _khoaService.CheckCreateKhoa(createKhoaDTO);
-            if (check!="Khoa không hợp lệ")
+            if (check!="Khoa hợp lệ")
             {
                 return BadRequest(check);
             }
