@@ -116,7 +116,7 @@ namespace Student_Result_Management_System.Controllers
         // }
 
         [HttpPut("{id}/clo")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> UpdateCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
