@@ -5,9 +5,9 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface IKhoaService
     {
-        public Task<bool> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO);
+        public Task<(bool isDuplicate, string? reason)> HasDuplicateKhoa(CreateKhoaDTO createKhoaDTO);
         public Task<List<Khoa>> GetAllKhoasAsync();
-        public Task<Khoa> CreateKhoaAsync(Khoa khoa);
+        public Task<Khoa> CreateKhoaAsync(CreateKhoaDTO createKhoaDTO);
         // public Task<int> CheckKhoa(string tenKhoa);
         public Task<string?> GetMaKhoa(int id);
         public Task<Khoa?> GetKhoaByIdAsync(int id);

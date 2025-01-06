@@ -30,7 +30,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost("createTaiKhoan")]
-        [Authorize(Roles="Admin")]
+        // [Authorize(Roles="Admin")]
         public async Task<IActionResult> CreateTaiKhoan([FromBody] CreateTaiKhoanDTO createTaiKhoanDTO)
         {
             string checkUsername = await _taiKhoanService.CheckUsername(createTaiKhoanDTO.Username);

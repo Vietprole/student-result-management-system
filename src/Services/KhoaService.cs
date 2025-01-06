@@ -35,12 +35,15 @@ namespace Student_Result_Management_System.Services
             return khoa?.Nganhs.Count != 0 || khoa?.GiangViens.Count != 0;
         }
         
-        public async Task<Khoa> CreateKhoaAsync(Khoa khoa)
+        public async Task<Khoa> CreateKhoaAsync(CreateKhoaDTO createKhoaDTO)
         {
-            if (await IsMaKhoaExisted(khoa.MaKhoa))
+            var khoa = createKhoaDTO.ToKhoaFromCreateDTO();
+            var (isDuplicate, reason) = await HasDuplicateKhoa(khoa);
+            if (isDuplicate)
             {
-                throw new BusinessLogicException("Mã khoa đã tồn tại");
+                throw new BusinessLogicException(reason ?? "Khoa đã tồn tại");
             }
+            var khoa = createKhoaDTO.ToKhoaFromCreateDTO();
             await _context.Khoas.AddAsync(khoa);
             await _context.SaveChangesAsync();
             return khoa;
@@ -53,6 +56,7 @@ namespace Student_Result_Management_System.Services
         }
         public async Task<Khoa?> GetKhoaByIdAsync(int id)
         {
+            
             var khoa = await _context.Khoas.FindAsync(id);
             return khoa;
         }
@@ -112,19 +116,19 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<bool> CheckCreateKhoa(CreateKhoaDTO createKhoaDTO)
+        public async Task<(bool isDuplicate, string? reason)> HasDuplicateKhoa(Khoa khoa)
         {
             var exitsTen = await _context.Khoas.FirstOrDefaultAsync(k => k.Ten == createKhoaDTO.Ten);
             var exitsMaKhoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == createKhoaDTO.MaKhoa);
             if (exitsTen != null)
             {
-                throw new BusinessLogicException("Tên khoa đã tồn tại");
+                return (true, "Tên khoa đã tồn tại");
             }
             if (exitsMaKhoa != null)
             {
-                throw new BusinessLogicException("Mã khoa đã tồn tại");
+                return (true, "Mã khoa đã tồn tại");
             }
-            return true;
+            return (false, null);
         }
     }
 }

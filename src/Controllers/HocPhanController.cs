@@ -55,7 +55,7 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> Create([FromBody] CreateHocPhanDTO createHocPhanDTO)
         {
             var hocPhanDTO = await _hocPhanService.CreateHocPhanAsync(createHocPhanDTO);
-            return CreatedAtAction(nameof(GetById), new { id = hocPhanDTO.Id }, hocPhanDTO);
+            return CreatedAtAction(nameof(GetById), new { id = hocPhanDTO?.Id }, hocPhanDTO);
         }
 
         [HttpPut("{id}")]
