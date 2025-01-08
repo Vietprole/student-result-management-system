@@ -98,7 +98,7 @@ type IconName = 'school-outline' | 'briefcase-outline' | 'folder-open-outline' |
 
 const gridItems: { icon: IconName, label: string }[] = [
   { icon: 'school-outline', label: 'Giảng viên' },
-  { icon: 'briefcase-outline', label: 'Chương trình  đào tạo' },
+  { icon: 'briefcase-outline', label: 'Chương trình đào tạo' },
   { icon: 'folder-open-outline', label: 'Học phần' },
   { icon: 'library-outline', label: 'Lớp học phần' },
   { icon: 'document-text-outline', label: 'Kết quả học tập' },
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    marginTop: 10,
+    marginTop: 10
   },
   card: {
-    width: '40%',
+    width: '39%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 15,
