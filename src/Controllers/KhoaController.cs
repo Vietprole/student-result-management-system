@@ -48,7 +48,7 @@ namespace Student_Result_Management_System.Controllers
         [Authorize(Roles="Admin")]
         public async Task<IActionResult> Create([FromBody] CreateKhoaDTO createKhoaDTO)
         {
-            var khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO.ToKhoaFromCreateDTO());
+            var khoa = await _khoaService.CreateKhoaAsync(createKhoaDTO);
             if (khoa == null)
             {
                 return BadRequest("Không thể tạo khoa mới.");

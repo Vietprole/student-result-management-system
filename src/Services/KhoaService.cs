@@ -43,7 +43,6 @@ namespace Student_Result_Management_System.Services
             {
                 throw new BusinessLogicException(reason ?? "Khoa đã tồn tại");
             }
-            var khoa = createKhoaDTO.ToKhoaFromCreateDTO();
             await _context.Khoas.AddAsync(khoa);
             await _context.SaveChangesAsync();
             return khoa;
@@ -118,8 +117,8 @@ namespace Student_Result_Management_System.Services
 
         public async Task<(bool isDuplicate, string? reason)> HasDuplicateKhoa(Khoa khoa)
         {
-            var exitsTen = await _context.Khoas.FirstOrDefaultAsync(k => k.Ten == createKhoaDTO.Ten);
-            var exitsMaKhoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == createKhoaDTO.MaKhoa);
+            var exitsTen = await _context.Khoas.FirstOrDefaultAsync(k => k.Ten == khoa.Ten);
+            var exitsMaKhoa = await _context.Khoas.FirstOrDefaultAsync(k => k.MaKhoa == khoa.MaKhoa);
             if (exitsTen != null)
             {
                 return (true, "Tên khoa đã tồn tại");
