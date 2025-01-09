@@ -27,11 +27,16 @@ namespace Student_Result_Management_System.Data
         public DbSet<SinhVien> SinhViens { get; set; } = default!;
         public DbSet<TaiKhoan> TaiKhoans { get; set; } = default!;
         public DbSet<ChucVu> ChucVus { get; set; } = default!;
-        // public DbSet<Ctdt> Ctdts { get; set; } = default!;
+        public DbSet<Ctdt> Ctdts { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Nganh>()
+                .HasMany(e => e.HocPhans)
+                .WithMany(e => e.Nganhs)
+                .UsingEntity<Ctdt>();
 
             // Get all entity types
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())

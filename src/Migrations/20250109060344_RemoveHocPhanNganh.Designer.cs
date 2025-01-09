@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -11,9 +12,11 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250109060344_RemoveHocPhanNganh")]
+    partial class RemoveHocPhanNganh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,32 +227,6 @@ namespace Student_Result_Management_System.Migrations
                             Id = 6,
                             TenChucVu = "TruongBoMon"
                         });
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.Ctdt", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("HocPhanId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("LaCotLoi")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("NganhId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HocPhanId");
-
-                    b.HasIndex("NganhId");
-
-                    b.ToTable("Ctdts");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.DiemDinhChinh", b =>
@@ -698,21 +675,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("BaiKiemTra");
                 });
 
-            modelBuilder.Entity("Student_Result_Management_System.Models.Ctdt", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.HocPhan", null)
-                        .WithMany("Ctdts")
-                        .HasForeignKey("HocPhanId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Student_Result_Management_System.Models.Nganh", null)
-                        .WithMany("Ctdts")
-                        .HasForeignKey("NganhId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Student_Result_Management_System.Models.DiemDinhChinh", b =>
                 {
                     b.HasOne("Student_Result_Management_System.Models.CauHoi", "CauHoi")
@@ -892,8 +854,6 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
                 {
-                    b.Navigation("Ctdts");
-
                     b.Navigation("LopHocPhans");
                 });
 
@@ -917,8 +877,6 @@ namespace Student_Result_Management_System.Migrations
 
             modelBuilder.Entity("Student_Result_Management_System.Models.Nganh", b =>
                 {
-                    b.Navigation("Ctdts");
-
                     b.Navigation("PLOs");
                 });
 #pragma warning restore 612, 618

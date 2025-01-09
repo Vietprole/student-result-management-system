@@ -10,7 +10,7 @@ public class Nganh
     public string Ten { get; set; } = string.Empty;
     public int KhoaId { get; set; }
     public Khoa Khoa { get; set; } = null!;
-    // public List<HocPhan> HocPhans { get; set; } = [];
+    public List<HocPhan> HocPhans { get; set; } = [];
     public List<PLO> PLOs { get; set; } = [];
-    // public List<Ctdt> Ctdts { get; set; } = [];
+    public List<Ctdt> Ctdts { get; set; } = [];
 }
