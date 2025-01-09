@@ -27,6 +27,7 @@ namespace Student_Result_Management_System.Data
         public DbSet<SinhVien> SinhViens { get; set; } = default!;
         public DbSet<TaiKhoan> TaiKhoans { get; set; } = default!;
         public DbSet<ChucVu> ChucVus { get; set; } = default!;
+        // public DbSet<Ctdt> Ctdts { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -109,12 +110,12 @@ namespace Student_Result_Management_System.Data
                     l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
                     r => r.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When SinhVien is deleted, delete join entries 
 
-            modelBuilder.Entity<Nganh>()
-                .HasMany(e => e.HocPhans)
-                .WithMany(e => e.Nganhs)
-                .UsingEntity(
-                    l => l.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When HocPhan is deleted, delete join entries
-                    r => r.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When Nganh is deleted, delete join entries 
+            // modelBuilder.Entity<Nganh>()
+            //     .HasMany(e => e.HocPhans)
+            //     .WithMany(e => e.Nganhs)
+            //     .UsingEntity(
+            //         l => l.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When HocPhan is deleted, delete join entries
+            //         r => r.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When Nganh is deleted, delete join entries 
 
             // modelBuilder.Entity<Khoa>()
             //     .HasMany(e => e.GiangViens)
@@ -137,6 +138,7 @@ namespace Student_Result_Management_System.Data
             //     .WithOne(e => e.Khoa)
             //     .HasForeignKey(e => e.KhoaId)
             //     .OnDelete(DeleteBehavior.Cascade);
+
             List<ChucVu> list_chuc_vu = new List<ChucVu>{
                 new ChucVu{Id = 1, TenChucVu = "Admin"},
                 new ChucVu{Id = 2, TenChucVu = "GiangVien"},

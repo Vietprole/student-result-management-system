@@ -8,7 +8,6 @@ public class HocPhanDTO
     public string MaHocPhan { get; set; } = string.Empty;
     public string Ten { get; set; } = string.Empty;
     public decimal SoTinChi { get; set; }
-    public bool LaCotLoi { get; set; }
     public int KhoaId { get; set; }
     public string TenKhoa { get; set; } = string.Empty;
 }

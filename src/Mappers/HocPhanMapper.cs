@@ -13,7 +13,6 @@ public static class HocPhanMapper
             Id = hocPhan.Id,
             Ten = hocPhan.Ten,
             SoTinChi = hocPhan.SoTinChi,
-            LaCotLoi = hocPhan.LaCotLoi,
             KhoaId = hocPhan.KhoaId,
             MaHocPhan = hocPhan.MaHocPhan,
             TenKhoa = hocPhan.Khoa.Ten,
@@ -26,7 +25,6 @@ public static class HocPhanMapper
         {
             Ten = createHocPhanDTO.Ten,
             SoTinChi = createHocPhanDTO.SoTinChi,
-            LaCotLoi = createHocPhanDTO.LaCotLoi,
             KhoaId = createHocPhanDTO.KhoaId,
         };
     }
@@ -35,7 +33,6 @@ public static class HocPhanMapper
     {
         hocPhan.Ten = updateHocPhanDTO.Ten ?? hocPhan.Ten;
         hocPhan.SoTinChi = updateHocPhanDTO.SoTinChi ?? hocPhan.SoTinChi;
-        hocPhan.LaCotLoi = updateHocPhanDTO.LaCotLoi ?? hocPhan.LaCotLoi;
 
         return hocPhan;
     }

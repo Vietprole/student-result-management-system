@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -11,9 +12,11 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250109024146_RemoveLaCotLoiHocPhan")]
+    partial class RemoveLaCotLoiHocPhan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("CauHoisId");
 
-                    b.ToTable("CLOCauHoi", (string)null);
+                    b.ToTable("CLOCauHoi");
                 });
 
             modelBuilder.Entity("CLOPLO", b =>
@@ -49,7 +52,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("PLOsId");
 
-                    b.ToTable("CLOPLO", (string)null);
+                    b.ToTable("CLOPLO");
                 });
 
             modelBuilder.Entity("HocPhanNganh", b =>
@@ -64,7 +67,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("NganhsId");
 
-                    b.ToTable("HocPhanNganh", (string)null);
+                    b.ToTable("HocPhanNganh");
                 });
 
             modelBuilder.Entity("HocPhanPLO", b =>
@@ -79,7 +82,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("PLOsId");
 
-                    b.ToTable("HocPhanPLO", (string)null);
+                    b.ToTable("HocPhanPLO");
                 });
 
             modelBuilder.Entity("LopHocPhanSinhVien", b =>
@@ -94,7 +97,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("SinhViensId");
 
-                    b.ToTable("LopHocPhanSinhVien", (string)null);
+                    b.ToTable("LopHocPhanSinhVien");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.BaiKiemTra", b =>
@@ -134,7 +137,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("LopHocPhanId");
 
-                    b.ToTable("BaiKiemTras", (string)null);
+                    b.ToTable("BaiKiemTras");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.CLO", b =>
@@ -160,7 +163,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("LopHocPhanId");
 
-                    b.ToTable("CLOs", (string)null);
+                    b.ToTable("CLOs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.CauHoi", b =>
@@ -188,7 +191,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("BaiKiemTraId");
 
-                    b.ToTable("CauHois", (string)null);
+                    b.ToTable("CauHois");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.ChucVu", b =>
@@ -206,7 +209,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChucVus", (string)null);
+                    b.ToTable("ChucVus");
 
                     b.HasData(
                         new
@@ -278,7 +281,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("SinhVienId");
 
-                    b.ToTable("DiemDinhChinhs", (string)null);
+                    b.ToTable("DiemDinhChinhs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.GiangVien", b =>
@@ -307,7 +310,7 @@ namespace Student_Result_Management_System.Migrations
                         .IsUnique()
                         .HasFilter("[TaiKhoanId] IS NOT NULL");
 
-                    b.ToTable("GiangViens", (string)null);
+                    b.ToTable("GiangViens");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocKy", b =>
@@ -331,7 +334,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HocKies", (string)null);
+                    b.ToTable("HocKies");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.HocPhan", b =>
@@ -360,7 +363,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("KhoaId");
 
-                    b.ToTable("HocPhans", (string)null);
+                    b.ToTable("HocPhans");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.KetQua", b =>
@@ -395,7 +398,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("SinhVienId");
 
-                    b.ToTable("KetQuas", (string)null);
+                    b.ToTable("KetQuas");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.Khoa", b =>
@@ -421,7 +424,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("TruongKhoaId");
 
-                    b.ToTable("Khoas", (string)null);
+                    b.ToTable("Khoas");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.LopHocPhan", b =>
@@ -469,7 +472,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("HocPhanId");
 
-                    b.ToTable("LopHocPhans", (string)null);
+                    b.ToTable("LopHocPhans");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.Nganh", b =>
@@ -495,7 +498,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("KhoaId");
 
-                    b.ToTable("Nganhs", (string)null);
+                    b.ToTable("Nganhs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.PLO", b =>
@@ -521,7 +524,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("NganhId");
 
-                    b.ToTable("PLOs", (string)null);
+                    b.ToTable("PLOs");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.SinhVien", b =>
@@ -558,7 +561,7 @@ namespace Student_Result_Management_System.Migrations
                         .IsUnique()
                         .HasFilter("[TaiKhoanId] IS NOT NULL");
 
-                    b.ToTable("SinhViens", (string)null);
+                    b.ToTable("SinhViens");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.TaiKhoan", b =>
@@ -591,7 +594,7 @@ namespace Student_Result_Management_System.Migrations
 
                     b.HasIndex("ChucVuId");
 
-                    b.ToTable("TaiKhoans", (string)null);
+                    b.ToTable("TaiKhoans");
                 });
 
             modelBuilder.Entity("CLOCauHoi", b =>

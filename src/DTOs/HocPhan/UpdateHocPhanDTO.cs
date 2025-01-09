@@ -10,5 +10,4 @@ public class UpdateHocPhanDTO
     [Column(TypeName = "decimal(3, 1)")]
     [Range(0.0, double.MaxValue, ErrorMessage = "Số tín chỉ phải lớn hơn hoặc bằng 0")]
     public decimal? SoTinChi { get; set; }
-    public bool? LaCotLoi { get; set; }
 }

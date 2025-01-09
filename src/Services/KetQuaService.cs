@@ -273,10 +273,10 @@ namespace Student_Result_Management_System.Services
                     .ThenInclude(p => p.CLOs.Where(c => c.LopHocPhanId == lopHocPhanId))
                 .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
             
-            if (!lopHocPhan.HocPhan.LaCotLoi)
-            {
-                throw new BusinessLogicException("Chỉ được tính điểm Pk cho học phần cốt lõi");
-            }
+            // if (!lopHocPhan.HocPhan.LaCotLoi)
+            // {
+            //     throw new BusinessLogicException("Chỉ được tính điểm Pk cho học phần cốt lõi");
+            // }
             var plo = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId) ?? throw new NotFoundException("Không tìm thấy PLO");
             var cloItem = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId)?.CLOs.FirstOrDefault(c => c.LopHocPhanId == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy CLO");
 

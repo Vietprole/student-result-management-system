@@ -13,7 +13,5 @@ public class CreateHocPhanDTO
     [Range(0.0, double.MaxValue, ErrorMessage = "Số tín chỉ phải lớn hơn hoặc bằng 0")]
     public decimal SoTinChi { get; set; }
     [Required]
-    public bool LaCotLoi { get; set; }
-    [Required]
     public int KhoaId { get; set; }
 }
