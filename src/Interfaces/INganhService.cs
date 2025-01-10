@@ -12,10 +12,10 @@ namespace Student_Result_Management_System.Interfaces
         public Task<Nganh> CreateNganhAsync(Nganh nganh);
         public Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO);
         public Task<bool> DeleteNganhAsync(int id);
-        public Task<List<HocPhan>> AddHocPhansToNganhAsync(int nganhId, int[] hocPhanIds);
-        public Task<List<HocPhan>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds);
+        public Task<List<HocPhanDTO>> AddHocPhansToNganhAsync(int nganhId, int[] hocPhanIds);
+        public Task<List<HocPhanDTO>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds);
         public Task<bool> RemoveHocPhanFromNganhAsync(int nganhId, int hocPhanId);
-        public Task<List<HocPhan>> GetHocPhansInNganhAsync(int nganhId);
-        public Task<List<HocPhan>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs);
+        public Task<List<HocPhanDTO>> GetHocPhansInNganhAsync(int nganhId);
+        public Task<List<HocPhanDTO>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs);
     }
 }

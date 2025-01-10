@@ -101,7 +101,7 @@ namespace Student_Result_Management_System.Controllers
         {
             try {
                 var hocPhans = await _nganhService.GetHocPhansInNganhAsync(id);
-                return Ok(hocPhans.Select(hp => hp.ToHocPhanDTO()));
+                return Ok(hocPhans);
             }
             catch (BusinessLogicException ex){
                 return BadRequest(ex.Message);
@@ -137,7 +137,7 @@ namespace Student_Result_Management_System.Controllers
             try
             {
                 var hocPhans = await _nganhService.UpdateHocPhansOfNganhAsync(id, hocPhanIds);
-                return Ok(hocPhans.Select(hp => hp.ToHocPhanDTO()));
+                return Ok(hocPhans);
             }
             catch (BusinessLogicException ex)
             {
@@ -176,7 +176,7 @@ namespace Student_Result_Management_System.Controllers
             try
             {
                 var result = await _nganhService.UpdateHocPhanCotLoi(id, updateCotLoiDTOs);
-                return Ok(result.Select(hp => hp.ToHocPhanDTO()));
+                return Ok(result);
             }
             catch (BusinessLogicException ex)
             {

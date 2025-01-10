@@ -94,7 +94,7 @@ namespace Student_Result_Management_System.Services
             }
         }
 
-        public async Task<List<HocPhan>> AddHocPhansToNganhAsync(int nganhId, int[] hocPhanIds)
+        public async Task<List<HocPhanDTO>> AddHocPhansToNganhAsync(int nganhId, int[] hocPhanIds)
         {
             var nganh = await _context.Nganhs
                 .Include(n => n.HocPhans)
@@ -114,11 +114,11 @@ namespace Student_Result_Management_System.Services
             }
 
             await _context.SaveChangesAsync();
-            return nganh.HocPhans.ToList();
+            return await GetHocPhansInNganhAsync(nganhId);
         }
 
 
-        public async Task<List<HocPhan>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds)
+        public async Task<List<HocPhanDTO>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds)
         {
             var nganh = await _context.Nganhs
                 .Include(n => n.HocPhans)
@@ -132,7 +132,7 @@ namespace Student_Result_Management_System.Services
             }
 
             await _context.SaveChangesAsync();
-            return nganh.HocPhans.ToList();
+            return await GetHocPhansInNganhAsync(nganhId);
         }
 
         public async Task<bool> RemoveHocPhanFromNganhAsync(int nganhId, int hocPhanId)
@@ -151,17 +151,28 @@ namespace Student_Result_Management_System.Services
             return true;
         }
 
-        public async Task<List<HocPhan>> GetHocPhansInNganhAsync(int nganhId)
+        public async Task<List<HocPhanDTO>> GetHocPhansInNganhAsync(int nganhId)
         {
             var nganh = await _context.Nganhs
                 .Include(n => n.Khoa)
                 .Include(n => n.HocPhans)
                     .ThenInclude(hp => hp.Khoa)
+                .Include(n => n.Ctdts)
                 .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
-            return nganh.HocPhans.ToList();
+            
+            return nganh.HocPhans.Select(hp => new HocPhanDTO
+                {
+                    Id = hp.Id,
+                    MaHocPhan = hp.MaHocPhan,
+                    Ten = hp.Ten,
+                    SoTinChi = hp.SoTinChi,
+                    KhoaId = hp.KhoaId,
+                    TenKhoa = hp.Khoa.Ten,
+                    LaCotLoi = nganh.Ctdts.FirstOrDefault(c => c.HocPhanId == hp.Id)?.LaCotLoi
+                }).ToList();
         }
 
-        public async Task<List<HocPhan>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs){
+        public async Task<List<HocPhanDTO>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs){
             var nganh = await _context.Nganhs
                 .Include(n => n.Ctdts)
                 .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
