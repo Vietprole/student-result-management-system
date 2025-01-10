@@ -1,3 +1,4 @@
+using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.Nganh;
 using Student_Result_Management_System.Models;
 
@@ -15,5 +16,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<HocPhan>> UpdateHocPhansOfNganhAsync(int nganhId, int[] hocPhanIds);
         public Task<bool> RemoveHocPhanFromNganhAsync(int nganhId, int hocPhanId);
         public Task<List<HocPhan>> GetHocPhansInNganhAsync(int nganhId);
+        public Task<List<HocPhan>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs);
     }
 }

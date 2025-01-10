@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.Nganh;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
@@ -158,6 +159,24 @@ namespace Student_Result_Management_System.Controllers
                 if (!result)
                     return NotFound();
                 return NoContent();
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPatch("{id}/hocphan/cotloi")]
+        public async Task<IActionResult> UpdateHocPhanCotLoi([FromRoute] int id, [FromBody] List<UpdateCotLoiDTO> updateCotLoiDTOs)
+        {
+            try
+            {
+                var result = await _nganhService.UpdateHocPhanCotLoi(id, updateCotLoiDTOs);
+                return Ok(result.Select(hp => hp.ToHocPhanDTO()));
             }
             catch (BusinessLogicException ex)
             {

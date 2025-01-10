@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
+using Student_Result_Management_System.DTOs.HocPhan;
 using Student_Result_Management_System.DTOs.Nganh;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Mappers;
@@ -153,9 +154,26 @@ namespace Student_Result_Management_System.Services
         public async Task<List<HocPhan>> GetHocPhansInNganhAsync(int nganhId)
         {
             var nganh = await _context.Nganhs
+                .Include(n => n.Khoa)
                 .Include(n => n.HocPhans)
+                    .ThenInclude(hp => hp.Khoa)
                 .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
             return nganh.HocPhans.ToList();
+        }
+
+        public async Task<List<HocPhan>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs){
+            var nganh = await _context.Nganhs
+                .Include(n => n.Ctdts)
+                .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
+
+            foreach (var updateCotLoiDTO in updateCotLoiDTOs)
+            {
+                var ctdt = nganh.Ctdts.SingleOrDefault(c => c.HocPhanId == updateCotLoiDTO.HocPhanId) ?? throw new NotFoundException($"Không tìm thấy Học phần với id: {updateCotLoiDTO.HocPhanId} trong Ngành");
+                ctdt.LaCotLoi = updateCotLoiDTO.LaCotLoi;
+            }
+
+            await _context.SaveChangesAsync();
+            return await GetHocPhansInNganhAsync(nganhId);
         }
     }
 }
