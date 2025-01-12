@@ -1,0 +1,6 @@
+generateApis: true
+generateModels: true
+outputDirectory: ./src/api-client
+supportsES6: true
+npmName: api-client
+typescriptThreePlus: true
