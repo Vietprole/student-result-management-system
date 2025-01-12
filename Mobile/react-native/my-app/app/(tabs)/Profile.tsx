@@ -70,7 +70,7 @@ const Profile = () => {
           style={styles.signOutButton}
           onPress={() => signOut()}
         >
-          <Text style={styles.signOutText}>Sign Out</Text>
+          <Text style={styles.signOutText}>Đăng xuất</Text>
         </TouchableOpacity>
 
         {/* Footer Section */}
