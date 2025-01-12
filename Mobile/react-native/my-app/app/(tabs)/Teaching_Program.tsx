@@ -137,29 +137,29 @@ const Teaching_Program = () => {
           <Ionicons name="notifications-outline" size={24} color="white" />
         </View>
 
-        {/* Tables Container */}
-        <ScrollView style={styles.tablesContainer}>
-          {/* Table 1 Content */}
-          <ScrollView horizontal style={styles.tableWrapper}>
+        {/* Table Content */}
+        <ScrollView>
+          <Text style={styles.tableTitle}>Thông tin chương trình đào tạo</Text>
+          <ScrollView horizontal>
             <View style={styles.table}>
               {renderTable1Header()}
               <FlatList
                 data={tableData1}
                 renderItem={renderRow1}
-                keyExtractor={(item, index) => `table1-${index}`}
+                keyExtractor={(item, index) => index.toString()}
                 scrollEnabled={false}
               />
             </View>
           </ScrollView>
 
-          {/* Table 2 Content */}
-          <ScrollView horizontal style={styles.tableWrapper}>
+          <Text style={styles.tableTitle}>Danh sách học phần</Text>
+          <ScrollView horizontal>
             <View style={styles.table}>
               {renderTable2Header()}
               <FlatList
                 data={tableData2}
                 renderItem={renderRow2}
-                keyExtractor={(item, index) => `table2-${index}`}
+                keyExtractor={(item, index) => index.toString()}
                 scrollEnabled={false}
               />
             </View>
@@ -190,63 +190,9 @@ const footerItems: { icon: 'home' | 'person', label: string }[] = [
 ];
 
 const styles = StyleSheet.create({
-  table: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  tablesContainer: {
-    flex: 1,
-    padding: 10,
-  },
-  tableWrapper: {
-    marginBottom: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  cellTT: {
-    padding: 10,
-    textAlign: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#ccc',
-    justifyContent: 'center',
-  },
-  cell: {
-    padding: 10,
-    textAlign: 'left',
-    borderRightWidth: 1,
-    borderRightColor: '#ccc',
-    justifyContent: 'center',
-  },
-  headerRow: {
-    backgroundColor: '#f1f1f1',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
-  },
-  headerCell: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    backgroundColor: '#f1f1f1',
-    textAlign: 'center',
-  },
-  evenRow: {
-    backgroundColor: '#f9f9f9',
-  },
-  oddRow: {
-    backgroundColor: '#ffffff',
-  },
-  link: {
-    color: 'blue',
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-  },
   safeArea: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#0000cc',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
@@ -274,6 +220,96 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  dropdownContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 10,
+  },
+  dropdown: {
+    flex: 1,
+    borderColor: '#0000cc',
+    borderRadius: 8,
+    height: 50,
+    paddingHorizontal: 12,
+  },
+  dropdownList: {
+    borderColor: '#0000cc',
+    marginTop: 5,
+    maxHeight: 150,
+  },
+  selectButton: {
+    backgroundColor: '#0000cc',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 43,
+  },
+  selectButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  tableTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 8,
+    color: '#0000cc',
+  },
+  table: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginHorizontal: 16,
+    borderRadius: 8,
+    overflow: 'hidden',
+    margin: 16,
+    backgroundColor: 'white',
+    marginTop: 8,
+  },
+  row: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  cellTT: {
+    padding: 10,
+    textAlign: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cell: {
+    padding: 10,
+    textAlign: 'left',
+    borderRightWidth: 1,
+    borderRightColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerRow: {
+    backgroundColor: '#f1f1f1',
+    borderBottomWidth: 2,
+    borderBottomColor: '#ccc',
+  },
+  headerCell: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    backgroundColor: '#f1f1f1',
+    textAlign: 'center',
+    paddingVertical: 15,
+  },
+  evenRow: {
+    backgroundColor: '#f9f9f9',
+  },
+  oddRow: {
+    backgroundColor: '#ffffff',
   },
   footer: {
     flexDirection: 'row',

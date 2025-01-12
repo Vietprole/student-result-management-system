@@ -3,6 +3,7 @@ import { Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { apiClient } from '../api/apiClient';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {
@@ -38,13 +39,6 @@ const Result = () => {
     { key: '2', value: 'Học kỳ 2 - Năm 2023-2024' },
     { key: '3', value: 'Học kỳ 1 - Năm 2023-2024' },
   ];
-  const handleSelect = () => {
-    if (selected) {
-      console.log("Selected semester:", selected);
-    } else {
-      Alert.alert("Thông báo", "Vui lòng chọn học kỳ");
-    }
-  };
   const columnWidths: ColumnWidths = {
     TT: 40,
     MonHoc: 160,
@@ -79,6 +73,10 @@ const Result = () => {
         tongKet: row.TongKet
       }
     });
+  };
+
+  const handleSelect = () => {
+    console.log("Selected semester:", selected);
   };
 
   const renderHeader = () => (
@@ -132,7 +130,7 @@ const Result = () => {
           <Ionicons name="notifications-outline" size={24} color="white" />
         </View>
 
-        {/* Add Dropdown Section */}
+        {/* Modified Dropdown Section - removed the select button */}
         <View style={styles.dropdownContainer}>
           <SelectList
             setSelected={setSelected}
@@ -304,17 +302,15 @@ const styles = StyleSheet.create({
   },
   selectButton: {
     backgroundColor: '#0000cc',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    padding: 10,
     borderRadius: 8,
-    justifyContent: 'center',
     alignItems: 'center',
-    height: 43,
+    justifyContent: 'center',
   },
   selectButtonText: {
     color: 'white',
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

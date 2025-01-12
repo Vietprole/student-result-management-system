@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, Platform, StatusBar, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { apiClient } from '../api/apiClient';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {
@@ -23,17 +24,36 @@ type ColumnWidths = {
   [key: string]: number;
 };
 
-const Result = () => {
+const ThongKePLO = () => {
+  const [tableData, setTableData] = useState<TableRow[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const tableHeaders = ['TT', 'Tên', 'Mô tả', 'Ngành'];
-  const tableData: TableRow[] = [
-    { TT: '1', Name: 'PLO 1', Description: 'Kỹ năng ngoại ngữ', Department: 'CNTT K2021'},
-    { TT: '2', Name: 'PLO 2', Description: 'Kỹ năng làm việc nhóm', Department: 'CNTT K2021 Nhật'},
-    { TT: '3', Name: 'PLO 3', Description: 'Kỹ năng chuyên ngành', Department: 'CNTT K2021'},
-    { TT: '4', Name: 'PLO 4', Description: 'Kỹ năng ngoại ngữ', Department: 'CNTT K2021'},
-    { TT: '5', Name: 'PLO 5', Description: 'Kỹ năng ngoại ngữ 1', Department: 'CNTT K2021'},
-    { TT: '6', Name: 'PLO 6', Description: 'Kỹ năng làm việc nhóm', Department: 'CNTT K2021'},
 
-  ];
+  useEffect(() => {
+    fetchPLOData();
+  }, []);
+
+  const fetchPLOData = async () => {
+    setIsLoading(true);
+    try {
+      // Using mock data since we don't have a specific PLO API endpoint
+      const mockData = [
+        { TT: '1', Name: 'PLO 1', Description: 'Kỹ năng ngoại ngữ', Department: 'CNTT K2021' },
+        { TT: '2', Name: 'PLO 2', Description: 'Kỹ năng làm việc nhóm', Department: 'CNTT K2021 Nhật' },
+        { TT: '3', Name: 'PLO 3', Description: 'Kỹ năng chuyên ngành', Department: 'CNTT K2021' },
+        { TT: '4', Name: 'PLO 4', Description: 'Kỹ năng ngoại ngữ', Department: 'CNTT K2021' },
+        { TT: '5', Name: 'PLO 5', Description: 'Kỹ năng ngoại ngữ 1', Department: 'CNTT K2021' },
+        { TT: '6', Name: 'PLO 6', Description: 'Kỹ năng làm việc nhóm', Department: 'CNTT K2021' },
+      ];
+      setTableData(mockData);
+    } catch (error) {
+      console.error('Failed to fetch PLO data:', error);
+      Alert.alert('Error', 'Failed to fetch PLO data. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const columnWidths: ColumnWidths = {
     TT: 40,
     Name: 160,
@@ -89,7 +109,7 @@ const Result = () => {
           </View>
           <Text style={styles.logoText}>THỐNG KÊ PLO</Text>
           <Ionicons name="notifications-outline" size={24} color="white" />
-        </View>        
+        </View>
 
         {/* Table Content */}
         <ScrollView horizontal>
@@ -156,7 +176,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
     backgroundColor: '#f1f1f1',
-    textAlign:'center'
+    textAlign: 'center'
   },
   evenRow: {
     backgroundColor: '#f9f9f9',
@@ -218,4 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Result;
+export default ThongKePLO;
