@@ -12,14 +12,37 @@ import {
 import { Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { apiClient } from '../api/apiClient';
 
-function App() {
+function Login() {
   const [username, setUsername] = useState('102210098');
   const [password, setPassword] = useState('102210098');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    router.replace('/(tabs)/Home');
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert('Error', 'Please enter both username and password');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await apiClient.login({ username, password });
+      if (response.success) {
+        router.replace('/(tabs)/Home');
+      } else {
+        Alert.alert('Error', response.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Unable to connect. Please check your internet connection.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,15 +95,21 @@ function App() {
         </TouchableOpacity>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Đăng nhập</Text>
+        <TouchableOpacity
+          style={[styles.button, isLoading && styles.buttonDisabled]}
+          onPress={handleLogin}
+          disabled={isLoading}
+        >
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-export default App;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
@@ -167,5 +196,8 @@ const styles = StyleSheet.create({
     height: 100,
     alignSelf: 'center',
     marginBottom: 10,
+  },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
   },
 });

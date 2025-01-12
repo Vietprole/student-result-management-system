@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, Platform, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 const Profile = () => {
+  const [studentInfo, setStudentInfo] = useState({
+    studentId: '102210098',
+    className: '21TCLC_DT1',
+    faculty: 'Công nghệ thông tin',
+    academicYear: '2021-2026'
+  });
+
   const signOut = () => {
     router.replace('/(auth)/Login');
   };
