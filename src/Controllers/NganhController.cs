@@ -48,6 +48,9 @@ namespace Student_Result_Management_System.Controllers
         {
             try
             {
+                bool checkNganhExits = await _nganhService.CheckNganhExits(createNganhDTO.Ten, createNganhDTO.KhoaId);
+                if (checkNganhExits)
+                    return Conflict("Ngành đã tồn tại trong Khoa này");
                 var nganh = await _nganhService.CreateNganhAsync(createNganhDTO.ToNganhFromCreateDTO());
                 return CreatedAtAction(nameof(GetById), new { id = nganh.Id }, nganh.ToNganhDTO());
             }

@@ -186,5 +186,13 @@ namespace Student_Result_Management_System.Services
             await _context.SaveChangesAsync();
             return await GetHocPhansInNganhAsync(nganhId);
         }
+
+        public async Task<bool> CheckNganhExits(string tenNganh, int khoaId)
+        {
+            var nganhs = await _context.Nganhs
+                .Where(n => n.KhoaId == khoaId)
+                .ToListAsync();
+            return nganhs.Any(n => n.Ten == tenNganh);
+        }
     }
 }
