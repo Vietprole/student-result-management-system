@@ -3,6 +3,7 @@ import { Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { apiClient } from '../api/apiClient';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {

@@ -107,7 +107,7 @@ const Result = () => {
               style={styles.headerLogo}
             />
           </View>
-          <Text style={styles.logoText}>LỚP HỌC PHẦN</Text>
+          <Text style={styles.logoText}>THỜI KHOÁ BIỂUx</Text>
           <Ionicons name="notifications-outline" size={24} color="white" />
         </View>
 

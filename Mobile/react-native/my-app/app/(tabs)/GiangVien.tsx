@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, Platform, StatusBar, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -24,57 +24,28 @@ type ColumnWidths = {
   [key: string]: number;
 };
 
-const GiangVien = () => {
+const Result = () => {
   const [selected, setSelected] = React.useState("");
-  const [tableData, setTableData] = useState<TableRow[]>([
+  const tableHeaders = ['TT', 'Giảng viên', 'Khoa', 'Học phần'];
+  const tableData: TableRow[] = [
     { TT: '1', GV: 'Đặng Thiên Bình', Khoa: 'CNTT', HocPhan: 'PBL6' },
     { TT: '2', GV: 'Võ Thị Liên', Khoa: 'CNTT', HocPhan: 'Công nghệ phần mềm' },
     { TT: '3', GV: 'Võ Đức Hoàng', Khoa: 'CNTT', HocPhan: 'Kiểm thử phần mềm' },
     { TT: '4', GV: 'Đặng Hoài Phương', Khoa: 'CNTT', HocPhan: 'Kiến trúc hướng dịch vụ' },
-    { TT: '5', GV: 'Lê Thị Mỹ Hạnh', Khoa: 'CNTT', HocPhan: 'Lập trình hướng đối tượng' },
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
-  const tableHeaders = ['TT', 'Giảng viên', 'Khoa', 'Học phần'];
+    { TT: '5', GV: 'Lê Thị Mỹ Hạnh', Khoa: 'CNTT', HocPhan: "Lập trình hướng đối tượng" },
+  ];
   const semesters = [
     { key: '1', value: 'Học kỳ 1 - Năm 2024-2025' },
     { key: '2', value: 'Học kỳ 2 - Năm 2023-2024' },
     { key: '3', value: 'Học kỳ 1 - Năm 2023-2024' },
   ];
-
-  useEffect(() => {
-    if (selected) {
-      fetchLecturers();
-    }
-  }, [selected]);
-
-  const fetchLecturers = async () => {
-    setIsLoading(true);
-    try {
-      // Using mock data since we don't have a specific lecturer API endpoint
-      const mockData = [
-        { TT: '1', GV: 'Đặng Thiên Bình', Khoa: 'CNTT', HocPhan: 'PBL6' },
-        { TT: '2', GV: 'Võ Thị Liên', Khoa: 'CNTT', HocPhan: 'Công nghệ phần mềm' },
-        { TT: '3', GV: 'Võ Đức Hoàng', Khoa: 'CNTT', HocPhan: 'Kiểm thử phần mềm' },
-        { TT: '4', GV: 'Đặng Hoài Phương', Khoa: 'CNTT', HocPhan: 'Kiến trúc hướng dịch vụ' },
-        { TT: '5', GV: 'Lê Thị Mỹ Hạnh', Khoa: 'CNTT', HocPhan: 'Lập trình hướng đối tượng' },
-      ];
-      setTableData(mockData);
-    } catch (error) {
-      console.error('Failed to fetch lecturers:', error);
-      Alert.alert('Error', 'Failed to fetch lecturers. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleSelect = () => {
     if (selected) {
-      fetchLecturers();
+      console.log("Selected semester:", selected);
     } else {
       Alert.alert("Thông báo", "Vui lòng chọn học kỳ");
     }
   };
-
   const columnWidths: ColumnWidths = {
     TT: 40,
     GV: 160,
@@ -109,9 +80,9 @@ const GiangVien = () => {
   const renderRow = ({ item, index }: { item: TableRow; index: number }) => (
     <View style={[styles.row, index % 2 === 0 ? styles.evenRow : styles.oddRow]}>
       <Text style={[styles.cellTT, { width: columnWidths.TT }]}>{item.TT}</Text>
-      <Text style={[styles.cell, { width: columnWidths.GV }]}>{item.GV}</Text>
-      <Text style={[styles.cell, { width: columnWidths.Khoa }]}>{item.Khoa}</Text>
-      <Text style={[styles.cell, { width: columnWidths.HocPhan }]}>{item.HocPhan}</Text>
+      <Text style={[styles.cell, { width: columnWidths.GV}]}>{item.GV}</Text>
+      <Text style={[styles.cell, { width: columnWidths.Khoa}]}>{item.Khoa}</Text>
+      <Text style={[styles.cell, { width: columnWidths.HocPhan}]}>{item.HocPhan}</Text>
     </View>
   );
 
@@ -318,4 +289,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GiangVien;
+export default Result;

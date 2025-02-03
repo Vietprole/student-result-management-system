@@ -36,7 +36,6 @@ const ThongKePLO = () => {
   const fetchPLOData = async () => {
     setIsLoading(true);
     try {
-      // Using mock data since we don't have a specific PLO API endpoint
       const mockData = [
         { TT: '1', Name: 'PLO 1', Description: 'Kỹ năng ngoại ngữ', Department: 'CNTT K2021' },
         { TT: '2', Name: 'PLO 2', Description: 'Kỹ năng làm việc nhóm', Department: 'CNTT K2021 Nhật' },
