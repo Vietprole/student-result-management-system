@@ -37,17 +37,31 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,GiangVien")]
         public async Task<IActionResult> Create([FromBody] CreateDiemDinhChinhDTO createDTO)
         {
+            if (User.IsInRole("GiangVien"))
+            {
+                var giangVienId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "giangVienId")?.Value ?? "0");
+                var isAllowed = _diemDinhChinhService.AllowThisGiangVienToEdit(giangVienId, createDTO.SinhVienId, createDTO.CauHoiId);
+                if (!isAllowed)
+                    return BadRequest("Giảng viên không dạy lớp này");
+            }
             var result = await _diemDinhChinhService.CreateDiemDinhChinhAsync(createDTO);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,GiangVien")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateDiemDinhChinhDTO updateDTO)
         {
+            if (User.IsInRole("GiangVien"))
+            {
+                var giangVienId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "giangVienId")?.Value ?? "0");
+                var isAllowed = _diemDinhChinhService.AllowThisGiangVienToEdit(giangVienId, updateDTO.SinhVienId, updateDTO.CauHoiId);
+                if (!isAllowed)
+                    return BadRequest("Giảng viên không dạy lớp này");
+            }
             var result = await _diemDinhChinhService.UpdateDiemDinhChinhAsync(id, updateDTO);
             if (result == null)
                 return NotFound("Không tìm thấy điểm đính chính");
@@ -55,11 +69,18 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("upsert")]
-        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,GiangVien")]
         public async Task<IActionResult> Upsert([FromBody] UpdateDiemDinhChinhDTO updateDTO)
         {
             try
-            {
+            {   
+                if (User.IsInRole("GiangVien"))
+                {
+                    var giangVienId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "giangVienId")?.Value ?? "0");
+                    var isAllowed = _diemDinhChinhService.AllowThisGiangVienToEdit(giangVienId, updateDTO.SinhVienId, updateDTO.CauHoiId);
+                    if (!isAllowed)
+                        return BadRequest("Giảng viên không dạy lớp này");
+                }
                 var result = await _diemDinhChinhService.UpsertDiemDinhChinhAsync(updateDTO);
                 return Ok(result);
             }
@@ -73,6 +94,13 @@ namespace Student_Result_Management_System.Controllers
         [Authorize(Roles = "Admin,GiangVien")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (User.IsInRole("GiangVien"))
+            {
+                var giangVienId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "giangVienId")?.Value ?? "0");
+                var isAllowed = _diemDinhChinhService.AllowThisGiangVienToDelete(giangVienId, id);
+                if (!isAllowed)
+                    return BadRequest("Giảng viên không dạy lớp này");
+            }
             var isDeleted = await _diemDinhChinhService.DeleteDiemDinhChinhAsync(id);
             if (!isDeleted)
                 return NotFound("Không tìm thấy điểm đính chính");
@@ -84,13 +112,18 @@ namespace Student_Result_Management_System.Controllers
         public async Task<IActionResult> Accept([FromRoute] int id)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
-            var userIdInt = int.Parse(userId?? "0");
-            try {
+            var userIdInt = int.Parse(userId ?? "0");
+            try
+            {
                 var result = await _diemDinhChinhService.AcceptDiemDinhChinhAsync(id, userIdInt);
                 return Ok(result);
-            } catch (BusinessLogicException ex) {
+            }
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
-            } catch (NotFoundException ex) {
+            }
+            catch (NotFoundException ex)
+            {
                 return NotFound(ex.Message);
             }
         }

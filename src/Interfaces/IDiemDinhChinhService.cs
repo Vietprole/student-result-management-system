@@ -4,6 +4,8 @@ namespace StudentResultManagementSystem.Interfaces
 {
     public interface IDiemDinhChinhService
     {
+        public bool AllowThisGiangVienToEdit(int giangVienId, int sinhVienId, int cauHoiId);
+        public bool AllowThisGiangVienToDelete(int giangVienId, int diemDinhChinhId);
         public Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId, int? giangVienId);
         public Task<DiemDinhChinhDTO?> GetDiemDinhChinhByIdAsync(int id);
         public Task<DiemDinhChinhDTO> CreateDiemDinhChinhAsync(CreateDiemDinhChinhDTO createDiemDinhChinhDTO);

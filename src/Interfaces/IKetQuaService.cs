@@ -19,5 +19,8 @@ namespace Student_Result_Management_System.Interfaces
         public Task<decimal> CalculateDiemCLOMax(int cLOId);
         public Task<decimal> CalculateDiemPk(int lopHocPhanId, int sinhVienId, int ploId, bool useDiemTam);
         public Task<decimal> CalculateDiemPLO(int sinhVienId, int ploId, bool useDiemTam);
+        public bool AllowThisGiangVienToEdit(int giangVienId, int sinhVienId, int cauHoiId);
+        public bool AllowThisGiangVienToConfirm(int giangVienId, int sinhVienId, int cauHoiId);
+        public bool AllowAccept(AcceptKetQuaDTO acceptKetQuaDTO);
     }
 }

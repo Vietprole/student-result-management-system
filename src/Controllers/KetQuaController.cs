@@ -63,14 +63,25 @@ namespace ketQua_Result_Management_System.Controllers
         [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
         public async Task<IActionResult> Upsert([FromBody] UpdateKetQuaDTO ketQuaDTO)
         {
-            try 
+            try
             {
+                if (User.IsInRole("GiangVien"))
+                {
+                    var giangVienId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "giangVienId")?.Value ?? "0");
+                    var isAllowed = _ketQuaService.AllowThisGiangVienToEdit(giangVienId, ketQuaDTO.SinhVienId, ketQuaDTO.CauHoiId);
+                    if (!isAllowed)
+                        return BadRequest("Giảng viên không dạy lớp này");
+                }
                 var result = await _ketQuaService.UpsertKetQuaAsync(ketQuaDTO);
                 return Ok(result);
             }
             catch (BusinessLogicException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
 
@@ -89,6 +100,13 @@ namespace ketQua_Result_Management_System.Controllers
         public async Task<IActionResult> Confirm([FromBody] ConfirmKetQuaDTO confirmKetQuaDTO)
         {
             try {
+                if (User.IsInRole("GiangVien"))
+                {
+                    var giangVienId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "giangVienId")?.Value ?? "0");
+                    var isAllowed = _ketQuaService.AllowThisGiangVienToConfirm(giangVienId, confirmKetQuaDTO.SinhVienId, confirmKetQuaDTO.CauHoiId);
+                    if (!isAllowed)
+                        return BadRequest("Giảng viên không dạy lớp này");
+                }
                 var ketQuaDTO = await _ketQuaService.ConfirmKetQuaAsync(confirmKetQuaDTO);
                 return Ok(ketQuaDTO);
             }
@@ -107,6 +125,9 @@ namespace ketQua_Result_Management_System.Controllers
         public async Task<IActionResult> Accept([FromBody] AcceptKetQuaDTO acceptKetQuaDTO)
         {
             try {
+                var isAllowed = _ketQuaService.AllowAccept(acceptKetQuaDTO);
+                if (!isAllowed)
+                    return BadRequest("Không thể duyệt kết quả này");
                 var ketQuaDTO = await _ketQuaService.AcceptKetQuaAsync(acceptKetQuaDTO);
                 return Ok(ketQuaDTO);
             }

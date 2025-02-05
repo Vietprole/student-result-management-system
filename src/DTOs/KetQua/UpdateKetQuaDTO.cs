@@ -12,6 +12,8 @@ public class UpdateKetQuaDTO
     public decimal? DiemChinhThuc { get; set; }
     public bool? DaCongBo { get; set; }
     public bool? DaXacNhan { get; set; }
-    public int? SinhVienId { get; set; }
-    public int? CauHoiId { get; set; }
+    [Required(ErrorMessage = "Sinh viên không được để trống")]
+    public int SinhVienId { get; set; }
+    [Required(ErrorMessage = "Câu hỏi không được để trống")]
+    public int CauHoiId { get; set; }
 }

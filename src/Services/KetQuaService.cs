@@ -23,6 +23,63 @@ namespace Student_Result_Management_System.Services
             _cauHoiService = cauHoiService;
             _logger = logger;
         }
+
+        public bool AllowThisGiangVienToEdit(int giangVienId, int sinhVienId, int cauHoiId){
+            var cauHoi = _context.CauHois
+                .Include(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                .FirstOrDefault(ch => ch.Id == cauHoiId);
+
+            if (cauHoi == null)
+            {
+                throw new NotFoundException("Không tìm thấy câu hỏi");
+            }
+
+            if (cauHoi.BaiKiemTra.NgayMoNhapDiem > DateTime.UtcNow) {
+                throw new BusinessLogicException("Chưa đến thời gian nhập điểm");
+            }
+
+            if (cauHoi.BaiKiemTra.HanNhapDiem < DateTime.UtcNow){
+                throw new BusinessLogicException("Đã hết thời gian nhập điểm");
+            }
+
+            return cauHoi.BaiKiemTra.LopHocPhan.GiangVienId == giangVienId;
+        }
+
+        public bool AllowThisGiangVienToConfirm(int giangVienId, int sinhVienId, int cauHoiId){
+            var cauHoi = _context.CauHois
+                .Include(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                .FirstOrDefault(ch => ch.Id == cauHoiId);
+
+            if (cauHoi == null)
+            {
+                throw new NotFoundException("Không tìm thấy câu hỏi");
+            }
+
+            return cauHoi.BaiKiemTra.LopHocPhan.GiangVienId == giangVienId;
+        }
+
+        public bool AllowAccept(AcceptKetQuaDTO acceptKetQuaDTO){
+            var existingKetQua = _context.KetQuas
+                .Include(kq => kq.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                .FirstOrDefault(k =>
+                k.SinhVienId == acceptKetQuaDTO.SinhVienId &&
+                k.CauHoiId == acceptKetQuaDTO.CauHoiId) ?? throw new NotFoundException(
+                    $"Không tìm thấy kết quả với SinhVienId={acceptKetQuaDTO.SinhVienId} và CauHoiId={acceptKetQuaDTO.CauHoiId}");
+
+            if (existingKetQua.DaXacNhan == false){
+                throw new BusinessLogicException("Giảng viên chưa xác nhận điểm");
+            }
+
+            if (existingKetQua.CauHoi.BaiKiemTra.HanDinhChinh > DateTime.UtcNow) {
+                throw new BusinessLogicException("Chưa hết hạn đính chính");
+            }
+
+            return true;
+        }
+
         public async Task<KetQuaDTO> CreateKetQuaAsync(CreateKetQuaDTO createKetQuaDTO)
         {
             var ketQua = createKetQuaDTO.ToKetQuaFromCreateDTO();
@@ -94,6 +151,24 @@ namespace Student_Result_Management_System.Services
 
         public async Task<KetQuaDTO> UpsertKetQuaAsync(UpdateKetQuaDTO ketQuaDTO)
         {
+            var sinhVien = await _context.SinhViens
+                .Include(sv => sv.LopHocPhans)
+                .FirstOrDefaultAsync(sv => sv.Id == ketQuaDTO.SinhVienId) 
+                ?? throw new BusinessLogicException("Không tìm thấy sinh viên");
+
+            var cauHoi = await _context.CauHois
+                .Include(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                .FirstOrDefaultAsync(ch => ch.Id == ketQuaDTO.CauHoiId)
+                ?? throw new BusinessLogicException("Không tìm thấy câu hỏi");
+
+            var lopHocPhanId = cauHoi.BaiKiemTra.LopHocPhanId;
+
+            if (!sinhVien.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId))
+            {
+                throw new BusinessLogicException("Sinh viên không thuộc lớp học phần này");
+            }
+
             var existingKetQua = await _context.KetQuas.FirstOrDefaultAsync(k =>
                 k.SinhVienId == ketQuaDTO.SinhVienId &&
                 k.CauHoiId == ketQuaDTO.CauHoiId);
@@ -108,8 +183,8 @@ namespace Student_Result_Management_System.Services
                 // Create
                 var newKetQua = new KetQua
                 {
-                    SinhVienId = ketQuaDTO.SinhVienId ?? throw new BusinessLogicException("SinhVienId là bắt buộc"),
-                    CauHoiId = ketQuaDTO.CauHoiId ?? throw new BusinessLogicException("CauHoiId là bắt buộc"),
+                    SinhVienId = ketQuaDTO.SinhVienId,
+                    CauHoiId = ketQuaDTO.CauHoiId,
                     DiemTam = ketQuaDTO.DiemTam,
                     DiemChinhThuc = ketQuaDTO.DiemChinhThuc,
                     DaCongBo = false

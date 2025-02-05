@@ -20,6 +20,73 @@ namespace Student_Result_Management_System.Services
             _logger = logger;
         }
 
+        public bool AllowThisGiangVienToEdit(int giangVienId, int sinhVienId, int cauHoiId)
+        {
+            var diemDinhChinh = _context.DiemDinhChinhs
+                .Include(ddc => ddc.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                    .ThenInclude(lhp => lhp.GiangVien)
+                .FirstOrDefault(ddc => ddc.SinhVienId == sinhVienId && ddc.CauHoiId == cauHoiId);
+
+            var ketQua = _context.KetQuas
+                .FirstOrDefault(k => k.SinhVienId == sinhVienId && k.CauHoiId == cauHoiId);
+            
+            if (ketQua == null)
+            {
+                throw new BusinessLogicException("Không tìm thấy điểm tạm");
+            }
+
+            if (ketQua.DaXacNhan == false)
+            {
+                throw new BusinessLogicException("Điểm chưa được xác nhận");
+            }
+
+            if (diemDinhChinh == null)
+            {
+                throw new NotFoundException("Không tìm thấy Điểm Đính Chính");
+            }
+
+            if (diemDinhChinh.DuocDuyet)
+            {
+                throw new BusinessLogicException("Điểm Đính Chính đã được duyệt");
+            }
+
+            if (diemDinhChinh.CauHoi.BaiKiemTra.HanDinhChinh < DateTime.UtcNow)
+            {
+                throw new BusinessLogicException("Hết hạn đính chính điểm");
+            }
+
+            return diemDinhChinh.CauHoi.BaiKiemTra.LopHocPhan.GiangVienId == giangVienId;
+        }
+
+        public bool AllowThisGiangVienToDelete(int giangVienId, int diemDinhChinhId)
+        {
+            var diemDinhChinh = _context.DiemDinhChinhs
+                .Include(ddc => ddc.CauHoi)
+                    .ThenInclude(ch => ch.BaiKiemTra)
+                    .ThenInclude(bkt => bkt.LopHocPhan)
+                    .ThenInclude(lhp => lhp.GiangVien)
+                .FirstOrDefault(ddc => ddc.Id == diemDinhChinhId);
+
+            if (diemDinhChinh == null)
+            {
+                throw new NotFoundException("Không tìm thấy Điểm Đính Chính");
+            }
+
+            if (diemDinhChinh.DuocDuyet)
+            {
+                throw new BusinessLogicException("Điểm Đính Chính đã được duyệt");
+            }
+
+            if (diemDinhChinh.CauHoi.BaiKiemTra.HanDinhChinh < DateTime.UtcNow)
+            {
+                throw new BusinessLogicException("Hết hạn đính chính điểm");
+            }
+
+            return diemDinhChinh.CauHoi.BaiKiemTra.LopHocPhan.GiangVienId == giangVienId;
+        }
+
         public async Task<List<DiemDinhChinhDTO>> GetDiemDinhChinhsAsync(int? lopHocPhanId, int? giangVienId)
         {
             var query = _context.DiemDinhChinhs
@@ -119,8 +186,8 @@ namespace Student_Result_Management_System.Services
             {
                 var newDiemDinhChinh = new DiemDinhChinh
                 {
-                    SinhVienId = updateDTO.SinhVienId ?? throw new Exception("SinhVienId is required"),
-                    CauHoiId = updateDTO.CauHoiId ?? throw new Exception("CauHoiId is required"),
+                    SinhVienId = updateDTO.SinhVienId,
+                    CauHoiId = updateDTO.CauHoiId,
                     DiemMoi = updateDTO.DiemMoi ?? 0,
                     ThoiDiemMo = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc),
                     DuocDuyet = false
