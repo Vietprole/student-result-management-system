@@ -1,0 +1,40 @@
+services:
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      MSSQL_SA_PASSWORD: "Viet@123456"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 8081:1433
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  server:
+    image: vietprole/student-result-management-system:latest
+    # networks:
+    #   - reverse_proxy_net
+    ports:
+      - 8080:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - sqlserver
+      
+  frontend:
+    image: vietprole/srms-frontend:latest
+    container_name: srms-frontend
+    # networks:
+    #   - reverse_proxy_net
+    environment:
+      - PORT=5173
+    ports:
+      - 5173:5173
+
+volumes:
+  sql_data:
+    name: sql_data
+
+# networks:
+#   reverse_proxy_net:
+#     external: true
