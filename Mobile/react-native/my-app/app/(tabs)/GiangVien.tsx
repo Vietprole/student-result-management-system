@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, Platform, StatusBar, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { apiClient } from '../api/apiClient';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {
@@ -39,13 +40,6 @@ const Result = () => {
     { key: '2', value: 'Học kỳ 2 - Năm 2023-2024' },
     { key: '3', value: 'Học kỳ 1 - Năm 2023-2024' },
   ];
-  const handleSelect = () => {
-    if (selected) {
-      console.log("Selected semester:", selected);
-    } else {
-      Alert.alert("Thông báo", "Vui lòng chọn học kỳ");
-    }
-  };
   const columnWidths: ColumnWidths = {
     TT: 40,
     GV: 160,
@@ -80,9 +74,9 @@ const Result = () => {
   const renderRow = ({ item, index }: { item: TableRow; index: number }) => (
     <View style={[styles.row, index % 2 === 0 ? styles.evenRow : styles.oddRow]}>
       <Text style={[styles.cellTT, { width: columnWidths.TT }]}>{item.TT}</Text>
-      <Text style={[styles.cell, { width: columnWidths.GV}]}>{item.GV}</Text>
-      <Text style={[styles.cell, { width: columnWidths.Khoa}]}>{item.Khoa}</Text>
-      <Text style={[styles.cell, { width: columnWidths.HocPhan}]}>{item.HocPhan}</Text>
+      <Text style={[styles.cell, { width: columnWidths.GV }]}>{item.GV}</Text>
+      <Text style={[styles.cell, { width: columnWidths.Khoa }]}>{item.Khoa}</Text>
+      <Text style={[styles.cell, { width: columnWidths.HocPhan }]}>{item.HocPhan}</Text>
     </View>
   );
 
@@ -91,18 +85,9 @@ const Result = () => {
       <StatusBar barStyle="light-content" backgroundColor="#0000cc" />
       <View style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
-              style={styles.headerLogo}
-            />
-          </View>
-          <Text style={styles.logoText}>GIẢNG VIÊN</Text>
-          <Ionicons name="notifications-outline" size={24} color="white" />
-        </View>
+        <Header title="GIẢNG VIÊN" />
 
-        {/* Add Dropdown Section */}
+        {/* Dropdown Section */}
         <View style={styles.dropdownContainer}>
           <SelectList
             setSelected={setSelected}
@@ -115,7 +100,13 @@ const Result = () => {
           />
           <TouchableOpacity
             style={styles.selectButton}
-            onPress={handleSelect}
+            onPress={() => {
+              if (selected) {
+                console.log("Selected semester:", selected);
+              } else {
+                Alert.alert("Thông báo", "Vui lòng chọn học kỳ");
+              }
+            }}
           >
             <Text style={styles.selectButtonText}>Chọn</Text>
           </TouchableOpacity>
@@ -134,18 +125,7 @@ const Result = () => {
         </ScrollView>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          {footerItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.footerItem}
-              onPress={() => handleFooterPress(item.icon)}
-            >
-              <Ionicons name={item.icon} size={24} color="#0000cc" />
-              <Text style={styles.footerText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <Footer />
       </View>
     </SafeAreaView>
   );
@@ -210,49 +190,10 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#0000cc',
-    padding: 15,
-    height: 70,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  logoText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  footerItem: {
-    alignItems: 'center',
-  },
-  footerText: {
-    marginTop: 5,
-    fontSize: 12,
-    color: '#0000cc',
   },
   dropdownContainer: {
     flexDirection: 'row',

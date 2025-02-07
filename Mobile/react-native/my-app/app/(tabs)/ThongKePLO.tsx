@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { apiClient } from '../api/apiClient';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {
@@ -99,16 +101,7 @@ const ThongKePLO = () => {
       <StatusBar barStyle="light-content" backgroundColor="#0000cc" />
       <View style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
-              style={styles.headerLogo}
-            />
-          </View>
-          <Text style={styles.logoText}>THỐNG KÊ PLO</Text>
-          <Ionicons name="notifications-outline" size={24} color="white" />
-        </View>
+        <Header title="THỐNG KÊ PLO" />
 
         {/* Table Content */}
         <ScrollView horizontal>
@@ -123,18 +116,7 @@ const ThongKePLO = () => {
         </ScrollView>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          {footerItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.footerItem}
-              onPress={() => handleFooterPress(item.icon)}
-            >
-              <Ionicons name={item.icon} size={24} color="#0000cc" />
-              <Text style={styles.footerText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <Footer />
       </View>
     </SafeAreaView>
   );

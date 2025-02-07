@@ -22,7 +22,7 @@ const Dashboard = () => {
         router.push('/(tabs)/HocPhan');
         break;
       case 'library-outline':
-        router.push('/(tabs)/LopHocPhan');
+        router.push('/(tabs)/ThoiKhoaBieu');
         break;
       case 'document-text-outline':
         router.push('/(tabs)/Result');
@@ -58,7 +58,7 @@ const Dashboard = () => {
           <View>
             <Text>
               <Text style={styles.name}>Hà Ngọc Hưng</Text>
-              <Text style={styles.id}> | 102210098</Text>
+              <Text style={styles.details}> | 102210098</Text>
             </Text>
             <Text style={styles.details}>Khoa CNTT</Text>
           </View>
@@ -158,13 +158,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  id: {
+  details: {
     fontSize: 16,
     fontWeight: 'normal',
-  },
-  details: {
-    fontSize: 14,
-    color: '#555',
   },
   grid: {
     flex: 1,

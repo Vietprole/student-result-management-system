@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { apiClient } from '../api/apiClient';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {
@@ -100,16 +102,7 @@ const Result = () => {
       <StatusBar barStyle="light-content" backgroundColor="#0000cc" />
       <View style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
-              style={styles.headerLogo}
-            />
-          </View>
-          <Text style={styles.logoText}>THỜI KHOÁ BIỂUx</Text>
-          <Ionicons name="notifications-outline" size={24} color="white" />
-        </View>
+        <Header title="THỜI KHÓA BIỂU" />
 
         {/* Add Dropdown Section */}
         <View style={styles.dropdownContainer}>
@@ -143,18 +136,7 @@ const Result = () => {
         </ScrollView>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          {footerItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.footerItem}
-              onPress={() => handleFooterPress(item.icon)}
-            >
-              <Ionicons name={item.icon} size={24} color="#0000cc" />
-              <Text style={styles.footerText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <Footer />
       </View>
     </SafeAreaView>
   );
@@ -227,44 +209,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#0000cc',
-    padding: 15,
-    height: 70,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  logoText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  footerItem: {
-    alignItems: 'center',
-  },
-  footerText: {
-    marginTop: 5,
-    fontSize: 12,
-    color: '#0000cc',
   },
   dropdownContainer: {
     flexDirection: 'row',

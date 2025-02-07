@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView, Platform, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 const Profile = () => {
   const [studentInfo, setStudentInfo] = useState({
@@ -25,16 +27,8 @@ const Profile = () => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#0000cc" />
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
-              style={styles.headerLogo}
-            />
-          </View>
-          <Text style={styles.logoText}>HỒ SƠ</Text>
-          <Ionicons name="notifications-outline" size={24} color="white" />
-        </View>
+        {/* Header */}
+        <Header title="HỒ SƠ" />
 
         {/* Profile Section */}
         <View style={styles.profileSection}>
@@ -73,28 +67,12 @@ const Profile = () => {
           <Text style={styles.signOutText}>Đăng xuất</Text>
         </TouchableOpacity>
 
-        {/* Footer Section */}
-        <View style={styles.footer}>
-          {footerItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.footerItem}
-              onPress={() => handleFooterPress(item.icon)}
-            >
-              <Ionicons name={item.icon} size={24} color="#0000cc" />
-              <Text style={styles.footerText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* Footer */}
+        <Footer />
       </View>
     </SafeAreaView>
   );
 };
-
-const footerItems: { icon: 'home' | 'person', label: string }[] = [
-  { icon: 'home', label: 'Trang chủ' },
-  { icon: 'person', label: 'Hồ sơ' },
-];
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -180,26 +158,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  footerItem: {
-    alignItems: 'center',
-  },
-  footerText: {
-    marginTop: 5,
-    fontSize: 12,
-    color: '#0000cc',
   },
 });
 

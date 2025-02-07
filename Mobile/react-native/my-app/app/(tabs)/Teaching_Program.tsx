@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { apiClient } from '../api/apiClient';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 const handleFooterPress = (route: string) => {
   if (route === 'home') {
@@ -127,16 +129,7 @@ const Teaching_Program = () => {
       <StatusBar barStyle="light-content" backgroundColor="#0000cc" />
       <View style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <Image
-              source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
-              style={styles.headerLogo}
-            />
-          </View>
-          <Text style={styles.logoText}>CHƯƠNG TRÌNH ĐÀO TẠO</Text>
-          <Ionicons name="notifications-outline" size={24} color="white" />
-        </View>
+        <Header title="CHƯƠNG TRÌNH ĐÀO TẠO" />
 
         {/* Table Content */}
         <ScrollView>
@@ -168,18 +161,7 @@ const Teaching_Program = () => {
         </ScrollView>
 
         {/* Footer */}
-        <View style={styles.footer}>
-          {footerItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.footerItem}
-              onPress={() => handleFooterPress(item.icon)}
-            >
-              <Ionicons name={item.icon} size={24} color="#0000cc" />
-              <Text style={styles.footerText}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <Footer />
       </View>
     </SafeAreaView>
   );
@@ -193,34 +175,22 @@ const footerItems: { icon: 'home' | 'person', label: string }[] = [
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0000cc',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: '#000',
   },
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#0000cc',
-    padding: 15,
-    height: 70,
+  headerRow: {
+    backgroundColor: '#f1f1f1',
+    borderBottomWidth: 2,
+    borderBottomColor: '#ccc',
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  logoText: {
-    color: 'white',
-    fontSize: 20,
+  headerCell: {
     fontWeight: 'bold',
+    fontSize: 14,
+    backgroundColor: '#f1f1f1',
+    textAlign: 'center',
   },
   dropdownContainer: {
     flexDirection: 'row',
@@ -294,39 +264,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  headerRow: {
-    backgroundColor: '#f1f1f1',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
-  },
-  headerCell: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    backgroundColor: '#f1f1f1',
-    textAlign: 'center',
-    paddingVertical: 15,
-  },
   evenRow: {
     backgroundColor: '#f9f9f9',
   },
   oddRow: {
     backgroundColor: '#ffffff',
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  footerItem: {
-    alignItems: 'center',
-  },
-  footerText: {
-    marginTop: 5,
-    fontSize: 12,
-    color: '#0000cc',
+  link: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+    textAlign: 'center',
   },
 });
 
