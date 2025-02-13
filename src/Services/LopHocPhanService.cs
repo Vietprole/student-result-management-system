@@ -29,7 +29,7 @@ namespace Student_Result_Management_System.Services
                 .Include(lhp => lhp.HocPhan)
                 .Include(lhp => lhp.HocKy)
                 .Include(lhp => lhp.GiangVien)
-                .ThenInclude(gv => gv.TaiKhoan)
+                .ThenInclude(gv => gv!.TaiKhoan)
                 .ToListAsync();
             return lopHocPhans;
         }
@@ -40,7 +40,7 @@ namespace Student_Result_Management_System.Services
                 .Include(lhp => lhp.HocPhan)
                 .Include(lhp => lhp.HocKy)
                 .Include(lhp => lhp.GiangVien)
-                    .ThenInclude(gv => gv.TaiKhoan)
+                    .ThenInclude(gv => gv!.TaiKhoan)
                 .Include(lhp => lhp.SinhViens);
 
             if (hocPhanId.HasValue)
@@ -140,6 +140,18 @@ namespace Student_Result_Management_System.Services
 
             foreach (var sinhVienId in sinhVienIds)
             {
+                bool isEnrolledInSameHocPhan = await _context.LopHocPhans
+                    .Where(
+                        lhp => (lhp.Id != lopHocPhanId) && 
+                        (lhp.HocPhanId == lopHocPhan.HocPhanId) && 
+                        (lhp.HocKyId == lopHocPhan.HocKyId)
+                    ).AnyAsync(lhp => lhp.SinhViens.Any(sv => sv.Id == sinhVienId));
+
+                if (isEnrolledInSameHocPhan)
+                {
+                    throw new BusinessLogicException($"Sinh viên với id {sinhVienId} đã được đăng ký cho học phần này trong học kỳ hiện tại");
+                }
+
                 var sinhVien = await _context.SinhViens.FindAsync(sinhVienId);
                 if (sinhVien == null) continue;
                 if (!lopHocPhan.SinhViens.Contains(sinhVien))
