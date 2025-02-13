@@ -26,6 +26,12 @@ dotnet ef database update
 dotnet watch run
 ```
 
+## Test
+```cmd
+cd .\tests\StudentResultManagementSystem.Tests\
+dotnet test
+```
+
 ## Note (Not required)
 1. Change Default connection string to appsettings.json:
 ```json
