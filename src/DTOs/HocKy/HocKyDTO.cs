@@ -9,7 +9,7 @@ namespace Student_Result_Management_System.DTOs.HocKy
     {
         public int Id { get; set; }
         public string Ten { get; set; } = string.Empty;
-        public int NamHoc { get; set; }
+        public string NamHoc { get; set; } = string.Empty;
         public string MaHocKy { get; set; } = string.Empty;
         public string TenHienThi { get; set; } = string.Empty;
     }

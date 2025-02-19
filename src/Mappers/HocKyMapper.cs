@@ -16,7 +16,7 @@ namespace Student_Result_Management_System.Mappers
             {
                 Id = hocKy.Id,
                 Ten = hocKy.Ten,
-                NamHoc = hocKy.NamHoc,
+                NamHoc = hocKy.NamHoc+ "-" + (hocKy.NamHoc+1).ToString(),
                 MaHocKy = hocKy.MaHocKy,
                 TenHienThi = $"{hocKy.Ten} - {hocKy.NamHoc}"
             };
@@ -38,17 +38,6 @@ namespace Student_Result_Management_System.Mappers
             existingHocKy.MaHocKy = updateHocKyDTO.MaHocKy ?? existingHocKy.MaHocKy;
 
             return existingHocKy;
-        }
-        
-        public static HocKy toHocKyFromDTO(this HocKyDTO viewHocKyDTO)
-        {
-            return new HocKy
-            {
-                Id = viewHocKyDTO.Id,
-                Ten = viewHocKyDTO.Ten,
-                NamHoc = viewHocKyDTO.NamHoc
-                //HanSuaCongThucDiem = viewHocKyDTO.HanSuaCongThucDiem
-            };
         }
 
         public static HocKy toHocKyFromNewDTO(this CreateHocKyDTO newHocKyDTO)
