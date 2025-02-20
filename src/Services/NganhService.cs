@@ -159,18 +159,19 @@ namespace Student_Result_Management_System.Services
                     .ThenInclude(hp => hp.Khoa)
                 .Include(n => n.Ctdts)
                 .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");
-            
+
             return nganh.HocPhans.Select(hp => new HocPhanDTO
-                {
-                    Id = hp.Id,
-                    MaHocPhan = hp.MaHocPhan,
-                    Ten = hp.Ten,
-                    SoTinChi = hp.SoTinChi,
-                    KhoaId = hp.KhoaId,
-                    TenKhoa = hp.Khoa.Ten,
-                    LaCotLoi = nganh.Ctdts.FirstOrDefault(c => c.HocPhanId == hp.Id)?.LaCotLoi
-                }).ToList();
+            {
+                Id = hp.Id,
+                MaHocPhan = hp.MaHocPhan,
+                Ten = hp.Ten,
+                SoTinChi = hp.SoTinChi,
+                KhoaId = hp.KhoaId,
+                TenKhoa = hp.Khoa.Ten,
+                LaCotLoi = nganh.Ctdts.Any(c => c.HocPhanId == hp.Id && c.LaCotLoi) // Nếu có ít nhất một cái là true, trả về true
+            }).ToList();
         }
+
 
         public async Task<List<HocPhanDTO>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs){
             var nganh = await _context.Nganhs

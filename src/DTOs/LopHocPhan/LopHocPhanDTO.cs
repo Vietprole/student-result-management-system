@@ -16,4 +16,5 @@ public class LopHocPhanDTO
     public DateTime HanDeXuatCongThucDiem { get; set; }
     public int GiangVienId { get; set; }
     public string TenGiangVien { get; set; } = string.Empty;
+    public string NamHoc { get; set; } = string.Empty;
 }
