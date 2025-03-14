@@ -28,6 +28,7 @@ namespace Student_Result_Management_System.Data
         public DbSet<TaiKhoan> TaiKhoans { get; set; } = default!;
         public DbSet<ChucVu> ChucVus { get; set; } = default!;
         public DbSet<Ctdt> Ctdts { get; set; } = default!;
+        public DbSet<UserActivityLog> UserActivityLogs { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

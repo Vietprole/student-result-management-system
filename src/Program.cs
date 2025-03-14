@@ -81,6 +81,7 @@ builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
 builder.Services.AddScoped<IPLOService, PLOService>();
 builder.Services.AddScoped<IDiemDinhChinhService, DiemDinhChinhService>();
 
+builder.Services.AddScoped<IUserActivityLogService, UserActivityLogService>();
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = 
