@@ -6,8 +6,9 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface INganhService
     {
-        public Task<List<Nganh>> GetAllNganhsAsync();
-        public Task<List<Nganh>> GetNganhsByKhoaIdAsync(int khoaId);
+        // public Task<List<Nganh>> GetAllNganhsAsync();
+        // public Task<List<Nganh>> GetNganhsByKhoaIdAsync(int khoaId);
+        public Task<List<Nganh>> GetFilteredNganhsAsync(int? khoaId, int? pageNumber, int? pageSize);
         public Task<Nganh?> GetNganhByIdAsync(int id);
         public Task<Nganh> CreateNganhAsync(Nganh nganh);
         public Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO);

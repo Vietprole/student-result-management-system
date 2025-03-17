@@ -15,26 +15,11 @@ using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
-    public class LopHocPhanService : ILopHocPhanService
+    public class LopHocPhanService(ApplicationDBContext context) : ILopHocPhanService
     {
-        private readonly ApplicationDBContext _context;
-        public LopHocPhanService(ApplicationDBContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDBContext _context = context;
 
-        public async Task<List<LopHocPhan>> GetAllLopHocPhansAsync()
-        {
-            var lopHocPhans = await _context.LopHocPhans
-                .Include(lhp => lhp.HocPhan)
-                .Include(lhp => lhp.HocKy)
-                .Include(lhp => lhp.GiangVien)
-                .ThenInclude(gv => gv.TaiKhoan)
-                .ToListAsync();
-            return lopHocPhans;
-        }
-
-        public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId, int? sinhVienId)
+        public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId, int? sinhVienId, int? pageNumber, int? pageSize)
         {
             IQueryable<LopHocPhan> query = _context.LopHocPhans
                 .Include(lhp => lhp.HocPhan)
@@ -62,6 +47,8 @@ namespace Student_Result_Management_System.Services
             {
                 query = query.Where(lhp => lhp.SinhViens.Any(sv => sv.Id == sinhVienId.Value));
             }
+            
+            query = query.ApplyPagination(pageNumber, pageSize);
 
             return await query.ToListAsync();
         }

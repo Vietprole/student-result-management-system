@@ -110,19 +110,7 @@ namespace Student_Result_Management_System.Services
 			return exits;
 		}
 
-		public async Task<List<SinhVien>> GetAll(int[] id)
-		{
-			List<SinhVien> sinhViens = await _context.SinhViens.Include(c => c.TaiKhoan).Where(x => id.Contains(x.Id)).ToListAsync();
-			return sinhViens;
-		}
-
-		public async Task<List<SinhVien>> GetAllSinhViens()
-		{
-			List<SinhVien> sinhViens = await _context.SinhViens.Include(c => c.TaiKhoan).Include(sv => sv.Khoa).Include(sv => sv.Nganh).ToListAsync();
-			return sinhViens;
-		}
-
-		public async Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? nganhId, int? lopHocPhanId)
+		public async Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? nganhId, int? lopHocPhanId, int? pageNumber, int? pageSize)
 		{
 			IQueryable<SinhVien> query = _context.SinhViens
 					.Include(sv => sv.Khoa)
@@ -145,6 +133,7 @@ namespace Student_Result_Management_System.Services
 				query = query.Where(sv => sv.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId.Value));
 			}
 
+			query = query.ApplyPagination(pageNumber, pageSize);
 			var sinhViens = await query.ToListAsync();
 
 			return sinhViens;
