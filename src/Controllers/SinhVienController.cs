@@ -14,28 +14,20 @@ namespace Student_Result_Management_System.Controllers
 {
 	[Route("api/sinhvien")]
 	[ApiController]
-	public class SinhVienController : ControllerBase
+	public class SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienService) : ControllerBase
 	{
-		private readonly ApplicationDBContext _context;
-		private readonly ISinhVienService _sinhVienService;
-		public SinhVienController(ApplicationDBContext context, ISinhVienService sinhVienService)
-		{
-			_context = context;
-			_sinhVienService = sinhVienService;
-		}
-		[HttpGet]
+		private readonly ApplicationDBContext _context = context;
+		private readonly ISinhVienService _sinhVienService = sinhVienService;
+
+        [HttpGet]
 		// IActionResult return any value type
 		// public async Task<IActionResult> Get()
 		// ActionResult return specific value type, the type will displayed in Schemas section
 		[Authorize]
-		public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId, [FromQuery] int? lopHocPhanId) // async go with Task<> to make function asynchronous
+		public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId, [FromQuery] int? lopHocPhanId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize) // async go with Task<> to make function asynchronous
 		{
-			List<SinhVien> sinhViens = await _sinhVienService.GetFilteredSinhViensAsync(khoaId, nganhId, lopHocPhanId);
-			List<SinhVienDTO> result = new List<SinhVienDTO>();
-			foreach (SinhVien sv in sinhViens)
-			{
-				result.Add(sv.ToSinhVienDTO());
-			}
+			var sinhViens = await _sinhVienService.GetFilteredSinhViensAsync(khoaId, nganhId, lopHocPhanId, pageNumber, pageSize);
+			var result = sinhViens.Select(sv => sv.ToSinhVienDTO());
 			return Ok(result);
 		}
 

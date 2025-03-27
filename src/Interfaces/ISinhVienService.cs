@@ -10,9 +10,7 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface ISinhVienService
     {
-        public Task<List<SinhVien>> GetAll(int[] id);
-        public Task<List<SinhVien>> GetAllSinhViens();
-        public Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? nganhId, int? lopHocPhanId);
+        public Task<List<SinhVien>> GetFilteredSinhViensAsync(int? khoaId, int? nganhId, int? lopHocPhanId, int? pageNumber, int? pageSize);
         public Task<SinhVienDTO?> CreateSinhVien(CreateSinhVienDTO sinhVienDTO);
         public Task<TaiKhoanDTO?> CreateTaiKhoanSinhVien(CreateSinhVienDTO taikhoanSinhVien);
         public Task<SinhVien?> CheckSinhVien(CreateSinhVienDTO sinhVienDTO);

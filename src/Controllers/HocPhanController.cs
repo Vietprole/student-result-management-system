@@ -26,18 +26,10 @@ namespace Student_Result_Management_System.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId)
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nganhId,[FromQuery] int? PageNumber, [FromQuery] int? PageSize)
         {
-            List<HocPhanDTO> hocPhanDTOs;
-            if (khoaId.HasValue || nganhId.HasValue)
-            {
-                hocPhanDTOs = await _hocPhanService.GetFilteredHocPhansAsync(khoaId, nganhId);
-            }
-            else
-            {
-                hocPhanDTOs = await _hocPhanService.GetAllHocPhansAsync();
-            }
-            return Ok(hocPhanDTOs);
+            var hocPhans = await _hocPhanService.GetFilteredHocPhansAsync(khoaId, nganhId, null, PageNumber, PageSize);
+            return Ok(hocPhans.Select(hp => hp.ToHocPhanDTO()));
         }
 
         [HttpGet("{id}")]
