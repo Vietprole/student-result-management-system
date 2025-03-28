@@ -18,7 +18,7 @@ public class CLOService : ICLOService
     public async Task<List<CLODTO>> GetAllCLOsAsync()
     {
         var clos = await _context.CLOs.ToListAsync();
-        return clos.Select(clo => clo.ToCLODTO()).ToList();
+        return [.. clos.Select(clo => clo.ToCLODTO())];
     }
 
     public async Task<List<CLODTO>> GetCLOsByLopHocPhanIdAsync(int lopHocPhanId)
@@ -37,7 +37,7 @@ public class CLOService : ICLOService
             .Where(clo => clo.CauHois.Any(ch => ch.Id == cauHoiId))
             .ToListAsync();
             
-        return clos.Select(clo => clo.ToCLODTO()).ToList();
+        return [.. clos.Select(clo => clo.ToCLODTO())];
     }
 
     public async Task<List<CLODTO>> GetCLOsByPLOIdAsync(int ploId)
@@ -46,7 +46,7 @@ public class CLOService : ICLOService
             .Include(c => c.PLOs)
             .Where(clo => clo.PLOs.Any(plo => plo.Id == ploId))
             .ToListAsync();
-        return clos.Select(clo => clo.ToCLODTO()).ToList();
+        return [.. clos.Select(clo => clo.ToCLODTO())];
     }
 
     public async Task<CLODTO?> GetCLOByIdAsync(int id)
