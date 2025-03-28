@@ -13,7 +13,7 @@ public static class CLOMapper
             Id = clo.Id,
             Ten = clo.Ten,
             MoTa = clo.MoTa,
-            LopHocPhanId = clo.LopHocPhanId,
+            HocPhanId = clo.HocPhanId,
         };
     }
 
@@ -23,7 +23,7 @@ public static class CLOMapper
         {
             Ten = createCLODTO.Ten,
             MoTa = createCLODTO.MoTa,
-            LopHocPhanId = createCLODTO.LopHocPhanId,
+            HocPhanId = createCLODTO.HocPhanId,
         };
     }
 
@@ -31,7 +31,7 @@ public static class CLOMapper
     {
         existingCLO.Ten = updateCLODTO.Ten ?? existingCLO.Ten;
         existingCLO.MoTa = updateCLODTO.MoTa ?? existingCLO.MoTa;
-        existingCLO.LopHocPhanId = updateCLODTO.LopHocPhanId ?? existingCLO.LopHocPhanId;
+        existingCLO.HocPhanId = updateCLODTO.HocPhanId ?? existingCLO.HocPhanId;
         
         return existingCLO;
     }

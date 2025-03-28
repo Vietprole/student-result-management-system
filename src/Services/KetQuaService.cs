@@ -258,19 +258,10 @@ namespace Student_Result_Management_System.Services
 
         public async Task<decimal> CalculateDiemPk(int lopHocPhanId, int sinhVienId, int ploId, bool useDiemTam = false)
         {
-            // Get LopHocPhan and related entities
-            // var lopHocPhan = await _context.LopHocPhans
-            //     .Include(l => l.HocPhan)
-            //         .ThenInclude(h => h.PLOs.Where(p => p.Id == ploId)) // Filter PLO by Id
-            //             .ThenInclude(p => p.CLOs)
-            //                 .ThenInclude(c => c.CauHois)
-            //                     .ThenInclude(ch => ch.BaiKiemTra)
-            //     .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
-
             var lopHocPhan = await _context.LopHocPhans
                 .Include(l => l.HocPhan)
                     .ThenInclude(h => h.PLOs.Where(p => p.Id == ploId)) // Filter PLO by Id
-                    .ThenInclude(p => p.CLOs.Where(c => c.LopHocPhanId == lopHocPhanId))
+                .Include(l => l.CLOs)
                 .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
             
             // if (!lopHocPhan.HocPhan.LaCotLoi)
@@ -278,37 +269,17 @@ namespace Student_Result_Management_System.Services
             //     throw new BusinessLogicException("Chỉ được tính điểm Pk cho học phần cốt lõi");
             // }
             var plo = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId) ?? throw new NotFoundException("Không tìm thấy PLO");
-            var cloItem = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId)?.CLOs.FirstOrDefault(c => c.LopHocPhanId == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy CLO");
+            //var cloItem = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId)?.CLOs.FirstOrDefault(c => c.LopHocPhanId == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy CLO");
+            var cloItem = lopHocPhan.CLOs.FirstOrDefault(c => c.PLOs.Any(p => p.Id == ploId)) ?? throw new NotFoundException("Không tìm thấy CLO");
 
-            var filteredClos = plo.CLOs.Where(c => c.LopHocPhanId == lopHocPhanId).ToList();
+            var filteredCLOs = lopHocPhan.CLOs.Where(c => c.PLOs.Any(p => p.Id == ploId));
             decimal totalDiemCLO = 0;
             decimal totalMaxDiemCLO = 0;
 
             // For each CLO related to PLO
-            foreach (var clo in filteredClos)
+            foreach (var clo in filteredCLOs)
             {
-                // Calculate diem-clo
-                //    decimal diemClo = 0;
-                //    var ketQuas = await _context.KetQuas
-                //        .Where(kq => kq.SinhVienId == sinhVienId && 
-                //                    clo.CauHois.Select(ch => ch.Id).Contains(kq.CauHoiId))
-                //        .ToListAsync();
-
-                //    foreach (var ketQua in ketQuas)
-                //    {
-                //        var cauHoi = clo.CauHois.First(ch => ch.Id == ketQua.CauHoiId);
-                //        diemClo += ketQua.Diem * cauHoi.BaiKiemTra.TrongSo;
-                //    }
-                //    totalDiemCLO += diemClo;
                 totalDiemCLO += await CalculateDiemCLO(sinhVienId, clo.Id, useDiemTam);
-
-                // Calculate diem-clo-max
-                // decimal maxDiemClo = 0;
-                // foreach (var cauHoi in clo.CauHois)
-                // {
-                //     maxDiemClo += 10m * cauHoi.TrongSo * cauHoi.BaiKiemTra.TrongSo ?? 0;
-                // }
-                // totalMaxDiemCLO += maxDiemClo;
                 totalMaxDiemCLO += await CalculateDiemCLOMax(clo.Id);
             }
 

@@ -23,8 +23,11 @@ public class CLOService : ICLOService
 
     public async Task<List<CLODTO>> GetCLOsByLopHocPhanIdAsync(int lopHocPhanId)
     {
-        var clos = await _context.CLOs.Where(clo => clo.LopHocPhanId == lopHocPhanId).ToListAsync();
-        return clos.Select(clo => clo.ToCLODTO()).ToList();
+        var clos = await _context.CLOs
+            .Include(c => c.LopHocPhans)
+            .Where(clo => clo.LopHocPhans.Any(lhp => lhp.Id == lopHocPhanId))
+            .ToListAsync();
+        return [.. clos.Select(clo => clo.ToCLODTO())];
     }
 
     public async Task<List<CLODTO>> GetCLOsByCauHoiIdAsync(int cauHoiId)
