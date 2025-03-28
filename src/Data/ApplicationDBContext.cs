@@ -115,34 +115,16 @@ namespace Student_Result_Management_System.Data
                     l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
                     r => r.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When SinhVien is deleted, delete join entries 
 
-            // modelBuilder.Entity<Nganh>()
-            //     .HasMany(e => e.HocPhans)
-            //     .WithMany(e => e.Nganhs)
-            //     .UsingEntity(
-            //         l => l.HasOne(typeof(HocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When HocPhan is deleted, delete join entries
-            //         r => r.HasOne(typeof(Nganh)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When Nganh is deleted, delete join entries 
-
-            // modelBuilder.Entity<Khoa>()
-            //     .HasMany(e => e.GiangViens)
-            //     .WithOne(e => e.Khoa)
-            //     .HasForeignKey(e => e.KhoaId)
-            //     .OnDelete(DeleteBehavior.SetNull); // Set KhoaId in GiangVien to null when Khoa is deleted
+            modelBuilder.Entity<CLO>()
+                .HasMany(e => e.LopHocPhans)
+                .WithMany(e => e.CLOs)
+                .UsingEntity(
+                    l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
+                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When CLO is deleted, delete join entries 
 
             modelBuilder.Entity<Khoa>()
                 .Property(k => k.Id)
                 .ValueGeneratedOnAdd();  // Cấu hình cho Id sử dụng identity.
-
-            // modelBuilder.Entity<Khoa>()
-            //     .HasMany(e => e.Nganhs)
-            //     .WithOne(e => e.Khoa)
-            //     .HasForeignKey(e => e.KhoaId)
-            //     .OnDelete(DeleteBehavior.Cascade);
-
-            // modelBuilder.Entity<Khoa>()
-            //     .HasMany(e => e.HocPhans)
-            //     .WithOne(e => e.Khoa)
-            //     .HasForeignKey(e => e.KhoaId)
-            //     .OnDelete(DeleteBehavior.Cascade);
 
             List<ChucVu> list_chuc_vu = new List<ChucVu>{
                 new ChucVu{Id = 1, TenChucVu = "Admin"},
