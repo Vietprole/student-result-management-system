@@ -140,7 +140,7 @@ namespace Student_Result_Management_System.Services
                 k.SinhVienId == confirmKetQuaDTO.SinhVienId &&
                 k.CauHoiId == confirmKetQuaDTO.CauHoiId) ?? throw new NotFoundException(
                     $"Không tìm thấy kết quả với SinhVienId={confirmKetQuaDTO.SinhVienId} và CauHoiId={confirmKetQuaDTO.CauHoiId}");
-            
+
             if (existingKetQua.DiemTam == null)
             {
                 throw new BusinessLogicException("Chưa nhập điểm");
@@ -150,7 +150,7 @@ namespace Student_Result_Management_System.Services
             {
                 throw new BusinessLogicException("Điểm này đã được xác nhận");
             }
-            
+
             existingKetQua.DaXacNhan = true;
             await _context.SaveChangesAsync();
             // Add date of confirmation to baiKiemTra
@@ -165,7 +165,7 @@ namespace Student_Result_Management_System.Services
                 existingKetQua.CauHoi.BaiKiemTra.NgayXacNhan = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
             }
             await _context.SaveChangesAsync();
-            
+
             return existingKetQua.ToKetQuaDTO();
         }
 
@@ -237,7 +237,7 @@ namespace Student_Result_Management_System.Services
             .Include(c => c.CauHois)
                 .ThenInclude(ch => ch.BaiKiemTra)
             .FirstOrDefaultAsync(c => c.Id == cLOId) ?? throw new BusinessLogicException("Không tìm thấy CLO");
-            
+
             if (clo.CauHois.Count == 0)
             {
                 throw new BusinessLogicException("CLO chưa có câu hỏi nào");
@@ -261,18 +261,26 @@ namespace Student_Result_Management_System.Services
             var lopHocPhan = await _context.LopHocPhans
                 .Include(l => l.HocPhan)
                     .ThenInclude(h => h.PLOs.Where(p => p.Id == ploId)) // Filter PLO by Id
-                .Include(l => l.CLOs)
                 .FirstOrDefaultAsync(l => l.Id == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy lớp học phần");
-            
+
             // if (!lopHocPhan.HocPhan.LaCotLoi)
             // {
             //     throw new BusinessLogicException("Chỉ được tính điểm Pk cho học phần cốt lõi");
             // }
             var plo = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId) ?? throw new NotFoundException("Không tìm thấy PLO");
             //var cloItem = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId)?.CLOs.FirstOrDefault(c => c.LopHocPhanId == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy CLO");
-            var cloItem = lopHocPhan.CLOs.FirstOrDefault(c => c.PLOs.Any(p => p.Id == ploId)) ?? throw new NotFoundException("Không tìm thấy CLO");
+            var clos = await _context.CLOs
+                .Where(clo =>
+                    clo.HocKyId == lopHocPhan.HocKyId &&
+                    clo.HocPhanId == lopHocPhan.HocPhanId)
+                .ToListAsync();
 
-            var filteredCLOs = lopHocPhan.CLOs.Where(c => c.PLOs.Any(p => p.Id == ploId));
+            if (clos.Count == 0)
+            {
+                throw new NotFoundException("Không tìm thấy CLO");
+            }
+
+            var filteredCLOs = clos.Where(c => c.PLOs.Any(p => p.Id == ploId));
             decimal totalDiemCLO = 0;
             decimal totalMaxDiemCLO = 0;
 
@@ -352,19 +360,22 @@ namespace Student_Result_Management_System.Services
                 foreach (var lopHocPhan in hocPhan.LopHocPhans)
                 {
                     decimal diemPk = 0;
-                    try {
-                        diemPk = await CalculateDiemPk(lopHocPhan.Id, sinhVienId, ploId, useDiemTam);   
+                    try
+                    {
+                        diemPk = await CalculateDiemPk(lopHocPhan.Id, sinhVienId, ploId, useDiemTam);
                     }
-                    catch (Exception){
+                    catch (Exception)
+                    {
                         diemPk = 0;
                     }
                     maxDiemPk = Math.Max(maxDiemPk, diemPk);
-                    _logger.LogInformation("MaxDiemPk: {MaxDiemPk}", maxDiemPk);    
+                    _logger.LogInformation("MaxDiemPk: {MaxDiemPk}", maxDiemPk);
                 }
 
                 _logger.LogInformation("hocPhan.SoTinChi: {hocPhan.SoTinChi}", hocPhan.SoTinChi);
                 totalPkMulSoTinChi += maxDiemPk * hocPhan.SoTinChi;
-                if (maxDiemPk != 0){
+                if (maxDiemPk != 0)
+                {
                     totalSoTinChi += hocPhan.SoTinChi;
                 }
                 _logger.LogInformation("TotalPkMulSoTinChi: {TotalPkMulSoTinChi}, TotalSoTinChi: {TotalSoTinChi}", totalPkMulSoTinChi, totalSoTinChi);

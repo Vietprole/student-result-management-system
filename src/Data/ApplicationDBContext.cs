@@ -115,13 +115,6 @@ namespace Student_Result_Management_System.Data
                     l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
                     r => r.HasOne(typeof(SinhVien)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When SinhVien is deleted, delete join entries 
 
-            modelBuilder.Entity<CLO>()
-                .HasMany(e => e.LopHocPhans)
-                .WithMany(e => e.CLOs)
-                .UsingEntity(
-                    l => l.HasOne(typeof(LopHocPhan)).WithMany().OnDelete(DeleteBehavior.Cascade),   // When LopHocPhan is deleted, delete join entries
-                    r => r.HasOne(typeof(CLO)).WithMany().OnDelete(DeleteBehavior.Cascade)); // When CLO is deleted, delete join entries 
-
             modelBuilder.Entity<Khoa>()
                 .Property(k => k.Id)
                 .ValueGeneratedOnAdd();  // Cấu hình cho Id sử dụng identity.

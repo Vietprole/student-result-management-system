@@ -37,21 +37,6 @@ namespace Student_Result_Management_System.Migrations
                     b.ToTable("CLOCauHoi");
                 });
 
-            modelBuilder.Entity("CLOLopHocPhan", b =>
-                {
-                    b.Property<int>("CLOsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LopHocPhansId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CLOsId", "LopHocPhansId");
-
-                    b.HasIndex("LopHocPhansId");
-
-                    b.ToTable("CLOLopHocPhan");
-                });
-
             modelBuilder.Entity("CLOPLO", b =>
                 {
                     b.Property<int>("CLOsId")
@@ -636,21 +621,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasOne("Student_Result_Management_System.Models.CauHoi", null)
                         .WithMany()
                         .HasForeignKey("CauHoisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CLOLopHocPhan", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.CLO", null)
-                        .WithMany()
-                        .HasForeignKey("CLOsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Student_Result_Management_System.Models.LopHocPhan", null)
-                        .WithMany()
-                        .HasForeignKey("LopHocPhansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -12,7 +12,7 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250328080104_MapCLOToHocPhan")]
+    [Migration("20250331050045_MapCLOToHocPhan")]
     partial class MapCLOToHocPhan
     {
         /// <inheritdoc />
@@ -38,21 +38,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasIndex("CauHoisId");
 
                     b.ToTable("CLOCauHoi");
-                });
-
-            modelBuilder.Entity("CLOLopHocPhan", b =>
-                {
-                    b.Property<int>("CLOsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LopHocPhansId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CLOsId", "LopHocPhansId");
-
-                    b.HasIndex("LopHocPhansId");
-
-                    b.ToTable("CLOLopHocPhan");
                 });
 
             modelBuilder.Entity("CLOPLO", b =>
@@ -639,21 +624,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasOne("Student_Result_Management_System.Models.CauHoi", null)
                         .WithMany()
                         .HasForeignKey("CauHoisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CLOLopHocPhan", b =>
-                {
-                    b.HasOne("Student_Result_Management_System.Models.CLO", null)
-                        .WithMany()
-                        .HasForeignKey("CLOsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Student_Result_Management_System.Models.LopHocPhan", null)
-                        .WithMany()
-                        .HasForeignKey("LopHocPhansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

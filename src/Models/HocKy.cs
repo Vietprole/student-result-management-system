@@ -6,7 +6,7 @@ namespace Student_Result_Management_System.Models
         public string Ten { get; set; } = string.Empty;
         public int NamHoc { get; set; }
         public string MaHocKy { get; set; } = string.Empty;
-        public List<LopHocPhan> lopHocPhans = [];
+        public List<LopHocPhan> LopHocPhans = [];
         public List<CLO> CLOs = [];
     }
 }
