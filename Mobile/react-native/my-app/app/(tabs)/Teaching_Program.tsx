@@ -40,7 +40,7 @@ const Teaching_Program = () => {
   const tableHeaders = ['Mã - Tên ngành', 'Mã - Tên chương trình đào tạo', 'Số học kỳ', 'Tổng số tín chỉ yêu cầu', 'Số tín chỉ bắt buộc', 'Số tín chỉ tự chọn'];
   const table2Headers = ['TT', 'HK', 'Tên học phần', 'Mã học phần', 'Số TC'];
   const tableData1: Table1Row[] = [
-    { Ma_TenNganh: '7480201-	', Ma_TenCTDT: '1024014- Công nghệ Thông tin K2021CLC Đặc thù_CNPM', SoHK: '8', TongSoTC: '130', SoTCBatBuoc: '122', SoTCTuChon: '8' },
+    { Ma_TenNganh: '7480201', Ma_TenCTDT: '1024014- Công nghệ Thông tin K2021CLC Đặc thù_CNPM', SoHK: '8', TongSoTC: '130', SoTCBatBuoc: '122', SoTCTuChon: '8' },
   ];
 
   const tableData2: Table2Row[] = [

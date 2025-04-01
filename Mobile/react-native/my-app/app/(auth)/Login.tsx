@@ -26,9 +26,9 @@ function App() {
     <View style={styles.container}>
       <View style={styles.loginBox}>
 
-        {/* source={require('../../assets/images/logo-DUT.png')} */}
+        {/* source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }} */}
         <Image
-          source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
+          source={require('../../assets/images/logo-DUT.png')}
           style={styles.logo}
         />
         <Text style={styles.header}>Welcome to DUT SRMS</Text>

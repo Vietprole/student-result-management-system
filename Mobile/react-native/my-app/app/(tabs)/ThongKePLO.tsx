@@ -104,6 +104,7 @@ const ThongKePLO = () => {
         <Header title="THỐNG KÊ PLO" />
 
         {/* Table Content */}
+        <Text style={styles.tableTitle}>Danh sách PLO</Text>
         <ScrollView horizontal>
           <View style={styles.table}>
             {renderHeader()}
@@ -122,12 +123,16 @@ const ThongKePLO = () => {
   );
 };
 
-const footerItems: { icon: 'home' | 'person', label: string }[] = [
-  { icon: 'home', label: 'Trang chủ' },
-  { icon: 'person', label: 'Hồ sơ' },
-];
 
 const styles = StyleSheet.create({
+  tableTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 8,
+    color: '#0000cc',
+  },
   table: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -135,6 +140,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     margin: 16,
+    backgroundColor: 'white',
+    marginTop: 8,
   },
   row: {
     flexDirection: 'row',
@@ -173,49 +180,10 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#0000cc',
-    padding: 15,
-    height: 70,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  logoText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  footerItem: {
-    alignItems: 'center',
-  },
-  footerText: {
-    marginTop: 5,
-    fontSize: 12,
-    color: '#0000cc',
   },
 });
 

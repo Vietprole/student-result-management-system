@@ -39,20 +39,20 @@ const Dashboard = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            {/* source={require('../../assets/images/logo-DUT.png')} */}
+            {/* source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' */}
             <Image
-              source={{ uri: 'https://i.imghippo.com/files/mUo4100yA.webp' }}
+              source={require('../../assets/images/logo-DUT.png')}
               style={styles.headerLogo}
             />
           </View>
-          <Text style={styles.logoText}>DUT SRMS</Text>
+          <Text style={styles.logoText}>TRANG CHỦ</Text>
           <Ionicons name="notifications-outline" size={24} color="white" />
         </View>
 
-        {/* source={require('../../assets/images/profile.png')} */}
+        {/* source={{ uri: 'https://i.imghippo.com/files/Da5684EM.jpg' */}
         <View style={styles.profileSection}>
           <Image
-            source={{ uri: 'https://i.imghippo.com/files/Da5684EM.jpg' }}
+            source={require('../../assets/images/profile.png')}
             style={styles.avatar}
           />
           <View>
@@ -100,7 +100,7 @@ const gridItems: { icon: IconName, label: string }[] = [
   { icon: 'school-outline', label: 'Giảng viên' },
   { icon: 'briefcase-outline', label: 'Chương trình đào tạo' },
   { icon: 'folder-open-outline', label: 'Học phần' },
-  { icon: 'library-outline', label: 'Lớp học phần' },
+  { icon: 'library-outline', label: 'Thời khoá biểu' },
   { icon: 'document-text-outline', label: 'Kết quả học tập' },
   { icon: 'list-outline', label: 'Thống kê PLO' },
 ];
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,

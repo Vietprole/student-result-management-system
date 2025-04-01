@@ -33,7 +33,7 @@ const Profile = () => {
         {/* Profile Section */}
         <View style={styles.profileSection}>
           <Image
-            source={{ uri: 'https://i.imghippo.com/files/Da5684EM.jpg' }}
+            source={require('../../assets/images/profile.png')}
             style={styles.avatar}
           />
           <Text style={styles.name}>Hà Ngọc Hưng</Text>
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#000',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,
