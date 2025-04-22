@@ -91,7 +91,7 @@ public class CLOService : ICLOService
         var clo = createCLODTO.ToCLOFromCreateDTO();
         await _context.CLOs.AddAsync(clo);
         await _context.SaveChangesAsync();
-        return clo.ToCLODTO();
+        return await GetCLOByIdAsync(clo.Id) ?? throw new NotFoundException("Lỗi khi tạo CLO");
     }
 
     public async Task<CLODTO?> UpdateCLOAsync(int id, UpdateCLODTO updateCLODTO)
