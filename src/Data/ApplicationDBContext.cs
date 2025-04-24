@@ -1,17 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 
 namespace Student_Result_Management_System.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext(DbContextOptions<ApplicationDBContext> options, IUserContext userContext) : DbContext(options)
     {
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
-        {
+        private readonly IUserContext _userContext = userContext;
 
-        }
-        
         public DbSet<BaiKiemTra> BaiKiemTras { get; set; } = default!;
         public DbSet<CauHoi> CauHois { get; set; } = default!;
         public DbSet<CLO> CLOs { get; set; } = default!;
@@ -28,6 +28,7 @@ namespace Student_Result_Management_System.Data
         public DbSet<TaiKhoan> TaiKhoans { get; set; } = default!;
         public DbSet<ChucVu> ChucVus { get; set; } = default!;
         public DbSet<Ctdt> Ctdts { get; set; } = default!;
+        public DbSet<UserActivityLog> UserActivityLogs { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,13 +52,13 @@ namespace Student_Result_Management_System.Data
 
             modelBuilder.Entity<SinhVien>()
                 .HasOne(e => e.TaiKhoan)
-                 .WithOne()         
+                 .WithOne()
                 .HasForeignKey<SinhVien>(s => s.TaiKhoanId) // FK
-                .OnDelete(DeleteBehavior.SetNull); 
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<GiangVien>()
                 .HasOne(e => e.TaiKhoan)
-                .WithOne()          
+                .WithOne()
                 .HasForeignKey<GiangVien>(s => s.TaiKhoanId) // FK
                 .OnDelete(DeleteBehavior.SetNull);
 
@@ -128,6 +129,132 @@ namespace Student_Result_Management_System.Data
                 new ChucVu{Id = 6, TenChucVu = "TruongBoMon"},
             };
             modelBuilder.Entity<ChucVu>().HasData(list_chuc_vu);
+        }
+
+        public override int SaveChanges()
+        {
+            var userActivityLogs = OnBeforeSaveChanges();
+            var result = base.SaveChanges();
+            OnAfterSaveChanges(userActivityLogs);
+            return result;
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var userActivityLogs = OnBeforeSaveChanges();
+            var result = await base.SaveChangesAsync(cancellationToken);
+            await OnAfterSaveChangesAsync(userActivityLogs, cancellationToken);
+            return result;
+        }
+
+        private List<UserActivityLog> OnBeforeSaveChanges()
+        {
+            ChangeTracker.DetectChanges();
+            var userActivityLogs = new List<UserActivityLog>();
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                // Skip UserActivityLog entities and unchanged/detached entities
+                if (entry.Entity is UserActivityLog || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                    continue;
+
+                var entityBefore = new Dictionary<string, object>();
+                var entityAfter = new Dictionary<string, object>();
+
+                foreach (var property in entry.Properties)
+                {
+                    var propertyName = property.Metadata.Name;
+                    // Skip navigation properties
+                    // if (property.Metadata.IsForeignKey() || property.Metadata.IsIndexerProperty())
+                    //     continue;
+                    // Handle different states
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
+                            break;
+
+                        case EntityState.Deleted:
+                            entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
+                            break;
+
+                        case EntityState.Modified:
+                            if (property.IsModified)
+                            {
+                                entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
+                                entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
+                            }
+                            break;
+                    }
+                }
+                var userActivityLog = new UserActivityLog
+                {
+                    UserId = _userContext.UserId,
+                    UserName = _userContext.UserName,
+                    UserRole = _userContext.UserRole,
+                    Action = entry.Metadata.GetTableName() + "." + entry.State.ToString(),
+                    EntityBefore = JsonSerializer.Serialize(entityBefore),
+                    EntityAfter = JsonSerializer.Serialize(entityAfter),
+                    Timestamp = DateTime.UtcNow,
+                    IpAddress = _userContext.UserIpAddress
+                };
+                userActivityLogs.Add(userActivityLog);
+            }
+            return userActivityLogs;
+        }
+
+        private void OnAfterSaveChanges(List<UserActivityLog> userActivityLogs)
+        {
+            if (userActivityLogs == null || userActivityLogs.Count == 0)
+                return;
+
+            try
+            {
+                // Add the logs to the context
+                UserActivityLogs.AddRange(userActivityLogs);
+
+                // Call SaveChanges without triggering this again
+                using var transaction = Database.BeginTransaction();
+                SaveChangesWithoutAuditing();
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                // Log the error but don't crash the application
+                Console.Error.WriteLine($"Error saving audit logs: {ex.Message}");
+            }
+        }
+
+        public async Task OnAfterSaveChangesAsync(List<UserActivityLog> userActivityLogs, CancellationToken cancellationToken = default)
+        {
+            if (userActivityLogs == null || userActivityLogs.Count == 0)
+                return;
+
+            try
+            {
+                // Add the logs to the context
+                await UserActivityLogs.AddRangeAsync(userActivityLogs, cancellationToken);
+
+                // Call SaveChangesAsync without triggering this again
+                using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+                await SaveChangesWithoutAuditingAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                // Log the error but don't crash the application
+                Console.Error.WriteLine($"Error saving audit logs: {ex.Message}");
+            }
+        }
+
+        // Methods to avoid recursive auditing when saving audit logs
+        private int SaveChangesWithoutAuditing()
+        {
+            return base.SaveChanges();
+        }
+
+        private Task<int> SaveChangesWithoutAuditingAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
