@@ -22,10 +22,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContext, UserContext>();
-
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -64,6 +60,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+
 builder.Services.AddScoped<ICLOService, CLOService>();
 
 builder.Services.AddScoped<IChucVuService, ChucVuService>();
@@ -83,6 +80,7 @@ builder.Services.AddScoped<IKetQuaService, KetQuaService>();
 builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
 builder.Services.AddScoped<IPLOService, PLOService>();
 builder.Services.AddScoped<IDiemDinhChinhService, DiemDinhChinhService>();
+
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = 

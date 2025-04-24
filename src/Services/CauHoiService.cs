@@ -12,9 +12,13 @@ using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
-    public class CauHoiService(ApplicationDBContext context) : ICauHoiService
+    public class CauHoiService : ICauHoiService
     {
-        private readonly ApplicationDBContext _context = context;
+        private readonly ApplicationDBContext _context;
+        public CauHoiService(ApplicationDBContext context)
+        {
+            _context = context;
+        }
 
         public async Task<List<CauHoiDTO>> GetAllCauHoisAsync()
         {
