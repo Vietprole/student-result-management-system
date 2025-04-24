@@ -24,9 +24,9 @@ namespace Student_Result_Management_System.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? PageNumber, [FromQuery] int? PageSize)
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nguoiQuanLyId, [FromQuery] int? PageNumber, [FromQuery] int? PageSize)
         {
-            var nganhs = await _nganhService.GetFilteredNganhsAsync(khoaId, PageNumber, PageSize);
+            var nganhs = await _nganhService.GetFilteredNganhsAsync(khoaId, nguoiQuanLyId, PageNumber, PageSize);
             return Ok(nganhs.Select(n => n.ToNganhDTO()));
         }
 

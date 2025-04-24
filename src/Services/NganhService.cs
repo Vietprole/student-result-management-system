@@ -38,13 +38,16 @@ namespace Student_Result_Management_System.Services
             return maNganh;
         }
 
-        public async Task<List<Nganh>> GetFilteredNganhsAsync(int? khoaId, int? pageNumber, int? pageSize)
+        public async Task<List<Nganh>> GetFilteredNganhsAsync(int? khoaId, int? nguoiQuanLyId,int? pageNumber, int? pageSize)
         {
-            var query = _context.Nganhs.Include(n => n.Khoa).AsQueryable();
+            var query = _context.Nganhs.Include(n => n.Khoa).Include(n => n.TaiKhoan).AsQueryable();
 
             // Apply filtering
             if (khoaId.HasValue)
                 query = query.Where(n => n.KhoaId == khoaId.Value);
+
+            if (nguoiQuanLyId.HasValue)
+                query = query.Where(n => n.TaiKhoanId == nguoiQuanLyId.Value);
 
             // Apply pagination using the utility function
             query = query.ApplyPagination(pageNumber, pageSize);
@@ -56,6 +59,7 @@ namespace Student_Result_Management_System.Services
         {
             return await _context.Nganhs
                 .Include(n => n.Khoa)
+                .Include(n => n.TaiKhoan)
                 .FirstOrDefaultAsync(n => n.Id == id);
         }
         public async Task<Nganh> CreateNganhAsync(Nganh nganh)

@@ -10,4 +10,5 @@ public class CreateNganhDTO
     [Required]
     public int KhoaId { get; set; }
     public int[]? HocPhanId { get; set; }
+    public int? NguoiQuanLyId { get; set; } = null;
 }
