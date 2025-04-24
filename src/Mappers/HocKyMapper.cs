@@ -18,7 +18,7 @@ namespace Student_Result_Management_System.Mappers
                 Ten = hocKy.Ten,
                 NamHoc = hocKy.NamHoc+ "-" + (hocKy.NamHoc+1).ToString(),
                 MaHocKy = hocKy.MaHocKy,
-                TenHienThi = $"{hocKy.Ten} - {hocKy.NamHoc}"
+                TenHienThi = $"{hocKy.Ten} - ({hocKy.NamHoc} - {hocKy.NamHoc+1})"
             };
         }
 

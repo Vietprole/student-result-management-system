@@ -89,10 +89,13 @@ public class CLOService : ICLOService
     public async Task<CLODTO> CreateCLOAsync(CreateCLODTO createCLODTO)
     {
         var clo = createCLODTO.ToCLOFromCreateDTO();
+
         await _context.CLOs.AddAsync(clo);
         await _context.SaveChangesAsync();
-        return clo.ToCLODTO();
+        var cloDTO = await GetCLOByIdAsync(clo.Id);
+        return cloDTO!;
     }
+
 
     public async Task<CLODTO?> UpdateCLOAsync(int id, UpdateCLODTO updateCLODTO)
     {

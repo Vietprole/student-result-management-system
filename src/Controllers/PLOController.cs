@@ -94,9 +94,9 @@ namespace Student_Result_Management_System.Controllers
             return Ok(cLODTOs);
         }
 
-        [HttpGet("{id}/hocphan")]
-        [Authorize]
-        public async Task<IActionResult> GetHocPhans([FromRoute] int id)
+            [HttpGet("{id}/hocphan")]
+            [Authorize]
+            public async Task<IActionResult> GetHocPhans([FromRoute] int id)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
             if (pLO == null)
