@@ -62,6 +62,12 @@ namespace Student_Result_Management_System.Data
                 .HasForeignKey<GiangVien>(s => s.TaiKhoanId) // FK
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Nganh>()
+                .HasOne(n => n.TaiKhoan)
+                .WithMany(t => t.Nganhs)
+                .HasForeignKey(n => n.TaiKhoanId) // FK
+                .OnDelete(DeleteBehavior.SetNull);
+
             // modelBuilder.Entity<GiangVien>()
             //     .HasMany(e => e.LopHocPhans)
             //     .WithOne(e => e.GiangVien)
