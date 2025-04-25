@@ -113,7 +113,7 @@ namespace Student_Result_Management_System.Controllers
         }
         
         [HttpPost("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> AddHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -132,7 +132,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -151,7 +151,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}/hocphan/{hocPhanId}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> RemoveHocPhan([FromRoute] int id, [FromRoute] int hocPhanId)
         {
             try
