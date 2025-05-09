@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.HocPhan;
@@ -13,49 +9,27 @@ using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Services
 {
-    public class HocPhanService : IHocPhanService
+    public class HocPhanService(ApplicationDBContext context) : IHocPhanService
     {
-        private readonly ApplicationDBContext _context;
-        public HocPhanService(ApplicationDBContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDBContext _context = context;
 
-        public async Task<List<HocPhanDTO>> GetAllHocPhansAsync()
+        public async Task<List<HocPhan>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId, int? pLOId, int? pageNumber, int? pageSize)
         {
-            var hocPhans = await _context.HocPhans.Include(hp => hp.Khoa).ToListAsync();
-            return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
-        }
-
-        public async Task<List<HocPhanDTO>> GetHocPhansByKhoaIdAsync(int khoaId)
-        {
-            var hocPhans = await _context.HocPhans.Include(hp => hp.Khoa).Where(hocPhan => hocPhan.KhoaId == khoaId).ToListAsync();
-            return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
-        }
-
-        public async Task<List<HocPhanDTO>> GetHocPhansByPLOIdAsync(int pLOId)
-        {
-            var hocPhans = await _context.HocPhans.Include(hp => hp.Khoa).Include(hp => hp.PLOs).Where(hocPhan => hocPhan.PLOs.Any(plo => plo.Id == pLOId)).ToListAsync();
-            return hocPhans.Select(hocPhan => hocPhan.ToHocPhanDTO()).ToList();
-        }
-
-        public async Task<List<HocPhanDTO>> GetFilteredHocPhansAsync(int? khoaId, int? nganhId)
-        {
-            IQueryable<HocPhan> query = _context.HocPhans.Include(hp => hp.Khoa) // Include the Khoa navigation property
-                .Include(hp => hp.Nganhs); // Include the Nganhs navigation property
+            var query = _context.HocPhans.Include(hp => hp.Khoa).AsQueryable();
 
             if (khoaId.HasValue)
-            {
                 query = query.Where(hp => hp.KhoaId == khoaId.Value);
-            }
 
             if (nganhId.HasValue)
-            {
                 query = query.Where(hp => hp.Nganhs.Any(n => n.Id == nganhId.Value));
-            }
 
-            var hocPhans = await query.ToListAsync();
-            return hocPhans.Select(hp => hp.ToHocPhanDTO()).ToList();
+            if (pLOId.HasValue)
+                query = query.Include(hp => hp.PLOs).Where(hocPhan => hocPhan.PLOs.Any(plo => plo.Id == pLOId));
+
+            // Apply pagination
+            query = query.ApplyPagination(pageNumber, pageSize);
+
+            return await query.ToListAsync();
         }
 
         public async Task<HocPhanDTO?> GetHocPhanByIdAsync(int id)
@@ -67,7 +41,7 @@ namespace Student_Result_Management_System.Services
             }
             return hocPhan.ToHocPhanDTO();
         }
-        
+
         public async Task<HocPhanDTO?> CreateHocPhanAsync(CreateHocPhanDTO createHocPhanDTO)
         {
             var hocPhan = createHocPhanDTO.ToHocPhanFromCreateDTO();
@@ -76,10 +50,10 @@ namespace Student_Result_Management_System.Services
             {
                 return null;
             }
-            int soluong = await _context.HocPhans.CountAsync()+1;
-            while(true)
+            int soluong = await _context.HocPhans.CountAsync() + 1;
+            while (true)
             {
-                if(await _context.HocPhans.AnyAsync(hp => hp.MaHocPhan == khoa.MaKhoa + soluong.ToString("D4")))
+                if (await _context.HocPhans.AnyAsync(hp => hp.MaHocPhan == khoa.MaKhoa + soluong.ToString("D4")))
                 {
                     soluong++;
                 }

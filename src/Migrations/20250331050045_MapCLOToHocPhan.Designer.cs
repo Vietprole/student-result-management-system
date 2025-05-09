@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Result_Management_System.Data;
 
@@ -11,9 +12,11 @@ using Student_Result_Management_System.Data;
 namespace Student_Result_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250331050045_MapCLOToHocPhan")]
+    partial class MapCLOToHocPhan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,7 +230,7 @@ namespace Student_Result_Management_System.Migrations
                         new
                         {
                             Id = 6,
-                            TenChucVu = "NguoiPhuTrachCTĐT"
+                            TenChucVu = "TruongBoMon"
                         });
                 });
 
@@ -503,9 +506,6 @@ namespace Student_Result_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TaiKhoanId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Ten")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -513,8 +513,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("KhoaId");
-
-                    b.HasIndex("TaiKhoanId");
 
                     b.ToTable("Nganhs");
                 });
@@ -613,47 +611,6 @@ namespace Student_Result_Management_System.Migrations
                     b.HasIndex("ChucVuId");
 
                     b.ToTable("TaiKhoans");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.UserActivityLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EntityAfter")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EntityBefore")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IpAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(45)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserRole")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserActivityLogs");
                 });
 
             modelBuilder.Entity("CLOCauHoi", b =>
@@ -889,14 +846,7 @@ namespace Student_Result_Management_System.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Student_Result_Management_System.Models.TaiKhoan", "TaiKhoan")
-                        .WithMany("Nganhs")
-                        .HasForeignKey("TaiKhoanId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.Navigation("Khoa");
-
-                    b.Navigation("TaiKhoan");
                 });
 
             modelBuilder.Entity("Student_Result_Management_System.Models.PLO", b =>
@@ -986,11 +936,6 @@ namespace Student_Result_Management_System.Migrations
                     b.Navigation("Ctdts");
 
                     b.Navigation("PLOs");
-                });
-
-            modelBuilder.Entity("Student_Result_Management_System.Models.TaiKhoan", b =>
-                {
-                    b.Navigation("Nganhs");
                 });
 #pragma warning restore 612, 618
         }

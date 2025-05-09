@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Student_Result_Management_System.Data;
 using Student_Result_Management_System.DTOs.HocPhan;
@@ -41,23 +37,29 @@ namespace Student_Result_Management_System.Services
 
             return maNganh;
         }
-        public async Task<List<Nganh>> GetAllNganhsAsync()
-        {
-            return await _context.Nganhs.Include(n => n.Khoa).ToListAsync();
-        }
 
-        public async Task<List<Nganh>> GetNganhsByKhoaIdAsync(int khoaId)
+        public async Task<List<Nganh>> GetFilteredNganhsAsync(int? khoaId, int? nguoiQuanLyId,int? pageNumber, int? pageSize)
         {
-            return await _context.Nganhs
-                .Include(n => n.Khoa)
-                .Where(n => n.KhoaId == khoaId)
-                .ToListAsync();
+            var query = _context.Nganhs.Include(n => n.Khoa).Include(n => n.TaiKhoan).AsQueryable();
+
+            // Apply filtering
+            if (khoaId.HasValue)
+                query = query.Where(n => n.KhoaId == khoaId.Value);
+
+            if (nguoiQuanLyId.HasValue)
+                query = query.Where(n => n.TaiKhoanId == nguoiQuanLyId.Value);
+
+            // Apply pagination using the utility function
+            query = query.ApplyPagination(pageNumber, pageSize);
+
+            return await query.ToListAsync();
         }
 
         public async Task<Nganh?> GetNganhByIdAsync(int id)
         {
             return await _context.Nganhs
                 .Include(n => n.Khoa)
+                .Include(n => n.TaiKhoan)
                 .FirstOrDefaultAsync(n => n.Id == id);
         }
         public async Task<Nganh> CreateNganhAsync(Nganh nganh)
@@ -70,7 +72,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<Nganh?> UpdateNganhAsync(int id, UpdateNganhDTO updateNganhDTO)
         {
-            var nganh = await _context.Nganhs.FindAsync(id) ?? 
+            var nganh = await _context.Nganhs.FindAsync(id) ??
                 throw new NotFoundException("Không tìm thấy Ngành");
 
             nganh = updateNganhDTO.ToNganhFromUpdateDTO(nganh);
@@ -80,7 +82,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<bool> DeleteNganhAsync(int id)
         {
-            var nganh = await _context.Nganhs.FindAsync(id) ?? 
+            var nganh = await _context.Nganhs.FindAsync(id) ??
                 throw new NotFoundException("Không tìm thấy Ngành");
             try
             {
@@ -173,7 +175,8 @@ namespace Student_Result_Management_System.Services
         }
 
 
-        public async Task<List<HocPhanDTO>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs){
+        public async Task<List<HocPhanDTO>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs)
+        {
             var nganh = await _context.Nganhs
                 .Include(n => n.Ctdts)
                 .FirstOrDefaultAsync(n => n.Id == nganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {nganhId}");

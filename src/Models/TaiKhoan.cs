@@ -15,5 +15,6 @@ namespace Student_Result_Management_System.Models
         public string Ten {  get; set; } = string.Empty;
         public int ChucVuId { get; set; }
         public ChucVu ChucVu { get; set; } = new ChucVu();
+        public List<Nganh> Nganhs { get; set; } = [];
     }
 }

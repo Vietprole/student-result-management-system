@@ -8,8 +8,8 @@ namespace Student_Result_Management_System.Interfaces
 {
     public interface ILopHocPhanService
     {
-        public Task<List<LopHocPhan>> GetAllLopHocPhansAsync();
-        public Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId, int? sinhVienId);
+        // public Task<List<LopHocPhan>> GetAllLopHocPhansAsync();
+        public Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId, int? sinhVienId, int? pageNumber, int? pageSize);
         public Task<LopHocPhan?> GetLopHocPhanByIdAsync(int id);
         public Task<LopHocPhan?> CreateLopHocPhanAsync(CreateLopHocPhanDTO lopHocPhanDTO);
         public Task<LopHocPhan?> UpdateLopHocPhanAsync(int id,UpdateLopHocPhanDTO lopHocPhanDTO);

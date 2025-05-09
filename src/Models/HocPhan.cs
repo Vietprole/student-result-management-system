@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Student_Result_Management_System.Models;
@@ -14,6 +13,7 @@ public class HocPhan
     public Khoa Khoa { get; set; } = null!;
     public List<Nganh> Nganhs { get; set; } = [];
     public List<LopHocPhan> LopHocPhans { get; set; } = [];
+    public List<CLO> CLOs { get; set; } = [];
     public List<PLO> PLOs { get; set; } = [];
     public List<Ctdt> Ctdts { get; set; } = [];
 }

@@ -10,5 +10,7 @@ public class CreateCLODTO
     [Required(ErrorMessage = "Mô tả không được để trống")]
     public string MoTa { get; set; } = string.Empty;
     [Required]
-    public int LopHocPhanId { get; set; }
+    public int HocPhanId { get; set; }
+    [Required]
+    public int HocKyId { get; set; }
 }

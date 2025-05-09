@@ -92,7 +92,7 @@ namespace Student_Result_Management_System.Services
             pLO.CLOs.Clear();
             foreach (var cLOId in cLOIds)
             {
-                var clo = await _context.CLOs.FindAsync(cLOId) ?? throw new BusinessLogicException($"CLO with id {cLOId} not found");
+                var clo = await _context.CLOs.Include(c => c.HocPhan).Include(c => c.HocKy).FirstOrDefaultAsync(c => c.Id == cLOId) ?? throw new BusinessLogicException($"CLO with id {cLOId} not found");
                 pLO.CLOs.Add(clo);
             }
 

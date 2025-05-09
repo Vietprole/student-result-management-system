@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Student_Result_Management_System.DTOs.PLO;
 using Student_Result_Management_System.Interfaces;
+using Student_Result_Management_System.Mappers;
 using Student_Result_Management_System.Utils;
 
 namespace Student_Result_Management_System.Controllers
@@ -93,16 +94,16 @@ namespace Student_Result_Management_System.Controllers
             return Ok(cLODTOs);
         }
 
-        [HttpGet("{id}/hocphan")]
-        [Authorize]
-        public async Task<IActionResult> GetHocPhans([FromRoute] int id)
+            [HttpGet("{id}/hocphan")]
+            [Authorize]
+            public async Task<IActionResult> GetHocPhans([FromRoute] int id)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
             if (pLO == null)
                 return NotFound("Không tìm thấy PLO");
 
-            var hocPhanDTOs = await _hocPhanService.GetHocPhansByPLOIdAsync(id);
-            return Ok(hocPhanDTOs);
+            var hocPhans = await _hocPhanService.GetFilteredHocPhansAsync(null, null, id, null, null);
+            return Ok(hocPhans.Select(hp => hp.ToHocPhanDTO()));
         }
 
         // [HttpPost("{id}/add-clos")]

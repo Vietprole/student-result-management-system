@@ -15,6 +15,8 @@ public static class NganhMapper
             MaNganh = nganh.MaNganh,
             KhoaId = nganh.KhoaId,
             TenKhoa = nganh.Khoa?.Ten ?? string.Empty,
+            NguoiQuanLyId = nganh.TaiKhoanId,
+            TenNguoiQuanLy = nganh.TaiKhoan?.Ten ?? string.Empty,
         };
     }
 
@@ -24,12 +26,14 @@ public static class NganhMapper
         {
             Ten = createNganhDTO.Ten,
             KhoaId = createNganhDTO.KhoaId,
+            TaiKhoanId = createNganhDTO.NguoiQuanLyId,
         };
     }
 
     public static Nganh ToNganhFromUpdateDTO(this UpdateNganhDTO updateNganhDTO, Nganh existingNganh)
     {
         existingNganh.Ten = updateNganhDTO.Ten ?? existingNganh.Ten;
+        existingNganh.TaiKhoanId = updateNganhDTO.NguoiQuanLyId ?? existingNganh.TaiKhoanId;
         return existingNganh;
     }
 }

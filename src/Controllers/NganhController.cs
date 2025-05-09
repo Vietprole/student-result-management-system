@@ -24,11 +24,9 @@ namespace Student_Result_Management_System.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromQuery] int? khoaId)
+        public async Task<IActionResult> GetAll([FromQuery] int? khoaId, [FromQuery] int? nguoiQuanLyId, [FromQuery] int? PageNumber, [FromQuery] int? PageSize)
         {
-            var nganhs = khoaId.HasValue ? 
-                await _nganhService.GetNganhsByKhoaIdAsync(khoaId.Value) :
-                await _nganhService.GetAllNganhsAsync();
+            var nganhs = await _nganhService.GetFilteredNganhsAsync(khoaId, nguoiQuanLyId, PageNumber, PageSize);
             return Ok(nganhs.Select(n => n.ToNganhDTO()));
         }
 
@@ -115,7 +113,7 @@ namespace Student_Result_Management_System.Controllers
         }
         
         [HttpPost("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> AddHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -134,7 +132,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -153,7 +151,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}/hocphan/{hocPhanId}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> RemoveHocPhan([FromRoute] int id, [FromRoute] int hocPhanId)
         {
             try

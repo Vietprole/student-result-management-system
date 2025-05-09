@@ -23,15 +23,10 @@ namespace Student_Result_Management_System.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll([FromQuery] int? lopHocPhanId)
+        public async Task<IActionResult> GetAll([FromQuery] int? hocPhanId, [FromQuery] int? hocKyId)
         {
-            if (lopHocPhanId.HasValue)
-            {
-                var cLODTOs1 = await _cloService.GetCLOsByLopHocPhanIdAsync(lopHocPhanId.Value);
-                return Ok(cLODTOs1);
-            }
-            var cLODTOs = await _cloService.GetAllCLOsAsync();
-            return Ok(cLODTOs);
+            var cLOs = await _cloService.GetFilteredCLOsAsync(hocPhanId, hocKyId);
+            return Ok(cLOs.Select(c => c.ToCLODTO()));
         }
 
         [HttpGet("{id}")]
