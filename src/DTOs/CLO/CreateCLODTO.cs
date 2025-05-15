@@ -11,6 +11,5 @@ public class CreateCLODTO
     public string MoTa { get; set; } = string.Empty;
     [Required]
     public int HocPhanId { get; set; }
-    [Required]
-    public int HocKyId { get; set; }
+    public int? HocKyId { get; set; }
 }

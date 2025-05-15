@@ -271,7 +271,7 @@ namespace Student_Result_Management_System.Services
             //var cloItem = lopHocPhan.HocPhan.PLOs.FirstOrDefault(p => p.Id == ploId)?.CLOs.FirstOrDefault(c => c.LopHocPhanId == lopHocPhanId) ?? throw new NotFoundException("Không tìm thấy CLO");
             var clos = await _context.CLOs
                 .Where(clo =>
-                    clo.HocKyId == lopHocPhan.HocKyId &&
+                    // clo.HocKyId == lopHocPhan.HocKyId &&
                     clo.HocPhanId == lopHocPhan.HocPhanId)
                 .ToListAsync();
 
