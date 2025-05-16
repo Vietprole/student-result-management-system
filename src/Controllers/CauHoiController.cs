@@ -124,10 +124,6 @@ namespace Student_Result_Management_System.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "An unexpected error occurred");
-            }
         }
 
         // [HttpDelete("{id}/clo/{cLOId}")]
