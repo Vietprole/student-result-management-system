@@ -108,7 +108,12 @@ namespace Student_Result_Management_System.Services
             }
 
             await _context.SaveChangesAsync();
-            var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
+            // var cloList = cauHoi.CLOs.Select(c => c.ToCLODTO()).ToList();
+            var cloList = await _context.CLOs
+                .Include(c => c.HocPhan)
+                .Where(c => cLOIds.Contains(c.Id))
+                .Select(c => c.ToCLODTO())
+                .ToListAsync();
             return cloList;
         }
 

@@ -84,15 +84,16 @@ builder.Services.AddScoped<ILopHocPhanService, LopHocPhanService>();
 builder.Services.AddScoped<IPLOService, PLOService>();
 builder.Services.AddScoped<IDiemDinhChinhService, DiemDinhChinhService>();
 
-builder.Services.AddAuthentication(options => {
-    options.DefaultAuthenticateScheme = 
-    options.DefaultChallengeScheme = 
-    options.DefaultForbidScheme = 
-    options.DefaultScheme = 
-    options.DefaultSignInScheme = 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+    options.DefaultChallengeScheme =
+    options.DefaultForbidScheme =
+    options.DefaultScheme =
+    options.DefaultSignInScheme =
     options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
-{   
+{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -105,6 +106,8 @@ builder.Services.AddAuthentication(options => {
     };
 }
 );
+// Add this to your service configuration
+builder.Services.AddResponseCaching();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -134,6 +137,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+// Add this to your middleware pipeline (before authorization middleware)
+app.UseResponseCaching();
 
 app.UseAuthentication();
 app.UseAuthorization();

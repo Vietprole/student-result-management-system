@@ -26,6 +26,7 @@ namespace lopHocPhan_Result_Management_System.Controllers
         // public async Task<IActionResult> Get()
         // ActionResult return specific value type, the type will displayed in Schemas section
         [Authorize]
+        [ResponseCache(Duration = 60, VaryByQueryKeys = new[] { "hocPhanId", "hocKyId", "giangVienId", "sinhVienId", "pageNumber", "pageSize" })]
         public async Task<IActionResult> GetAll([FromQuery] int? hocPhanId, [FromQuery] int? hocKyId, [FromQuery] int? giangVienId, [FromQuery] int? sinhVienId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             var lopHocPhans = await _lopHocPhanService.GetFilteredLopHocPhansAsync(hocPhanId, hocKyId, giangVienId, sinhVienId, pageNumber, pageSize);

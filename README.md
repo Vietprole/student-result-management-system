@@ -81,3 +81,15 @@ docker exec -it sqlserver "bash"
 ## Error Message Standard
 - "Không tìm thấy câu hỏi với id: {id}"
 - "An unexpected error occured"
+
+## Restore remote SQLServer 2019 Docker Linux
+1. Upload .bak file to /root/srms
+2. Copy .bak file to var/opt/mssql/data
+```bash
+docker cp /root/srms/Student-Results-Db.bak sqlserver:/var/opt/mssql/data
+```
+3. Open ssms
+4. Click Restore database
+5. Click File
+6. Restore Database as: /var/opt/mssql/data/Student-Results-Db.mdf
+7. Restore Database as: /var/opt/mssql/data/Student-Results-Db_log.ldf

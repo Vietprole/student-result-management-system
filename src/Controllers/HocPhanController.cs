@@ -43,7 +43,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Create([FromBody] CreateHocPhanDTO createHocPhanDTO)
         {
             var hocPhanDTO = await _hocPhanService.CreateHocPhanAsync(createHocPhanDTO);
@@ -51,7 +51,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateHocPhanDTO updateHocPhanDTO)
         {
             var hocPhanDTO = await _hocPhanService.UpdateHocPhanAsync(id, updateHocPhanDTO);
@@ -61,7 +61,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _hocPhanService.DeleteHocPhanAsync(id);
@@ -98,7 +98,7 @@ namespace Student_Result_Management_System.Controllers
         // }
 
         [HttpPut("{id}/plo")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> UpdatePLOs([FromRoute] int id, [FromBody] int[] pLOIds)
         {
             var hocPhan = await _hocPhanService.GetHocPhanByIdAsync(id);

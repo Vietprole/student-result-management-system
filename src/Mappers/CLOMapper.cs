@@ -15,8 +15,8 @@ public static class CLOMapper
             MoTa = clo.MoTa,
             HocPhanId = clo.HocPhanId,
             TenHocPhan = clo.HocPhan.Ten,
-            HocKyId = clo.HocKyId,
-            TenHocKy = $"{clo.HocKy.Ten} - {clo.HocKy.NamHoc}",
+            HocKyId = clo.HocKyId ?? 0,
+            TenHocKy = clo.HocKy != null ? $"{clo.HocKy.Ten} - {clo.HocKy.NamHoc}" : string.Empty,
         };
     }
 

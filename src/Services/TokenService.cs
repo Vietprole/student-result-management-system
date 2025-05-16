@@ -30,6 +30,9 @@ namespace Student_Result_Management_System.Services
         {
             var giangVienId = await _context.GiangViens.Where(gv => gv.TaiKhoanId == user.Id).Select(gv => gv.Id).FirstOrDefaultAsync();
             var sinhVienId = await _context.SinhViens.Where(sv => sv.TaiKhoanId == user.Id).Select(sv => sv.Id).FirstOrDefaultAsync();
+            var nguoiQuanLyCTDTId = await _context.TaiKhoans.Where(tk => tk.Id == user.Id)
+                .Select(tk => tk.Id)
+                .FirstOrDefaultAsync();
              var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
@@ -37,7 +40,8 @@ namespace Student_Result_Management_System.Services
                 new Claim("fullname",user.Ten),
                 new Claim(ClaimTypes.Role,user.ChucVu.TenChucVu),
                 new Claim("giangVienId", giangVienId.ToString() ?? ""),
-                new Claim("sinhVienId", sinhVienId.ToString() ?? "")
+                new Claim("sinhVienId", sinhVienId.ToString() ?? ""),
+                new Claim("nguoiQuanLyCTDTId", nguoiQuanLyCTDTId.ToString() ?? "")
             };
             var creds = new SigningCredentials(_key,SecurityAlgorithms.HmacSha512Signature);
 
