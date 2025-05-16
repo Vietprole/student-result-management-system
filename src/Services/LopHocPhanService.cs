@@ -21,7 +21,7 @@ namespace Student_Result_Management_System.Services
 
         public async Task<List<LopHocPhan>> GetFilteredLopHocPhansAsync(int? hocPhanId, int? hocKyId, int? giangVienId, int? sinhVienId, int? pageNumber, int? pageSize)
         {
-            IQueryable<LopHocPhan> query = _context.LopHocPhans
+            IQueryable<LopHocPhan> query = _context.LopHocPhans.AsNoTracking()
                 .Include(lhp => lhp.HocPhan)
                 .Include(lhp => lhp.HocKy)
                 .Include(lhp => lhp.GiangVien)
