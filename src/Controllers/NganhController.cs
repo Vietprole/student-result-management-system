@@ -41,7 +41,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Create([FromBody] CreateNganhDTO createNganhDTO)
         {
             try
@@ -59,7 +59,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateNganhDTO updateNganhDTO)
         {
             try
@@ -78,7 +78,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try

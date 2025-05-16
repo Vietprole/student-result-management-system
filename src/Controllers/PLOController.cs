@@ -55,7 +55,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Create([FromBody] CreatePLODTO createPLODTO)
         {
             var plo = await _ploService.CreatePLOAsync(createPLODTO);
@@ -63,7 +63,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePLODTO updatePLODTO)
         {
             var plo = await _ploService.UpdatePLOAsync(id, updatePLODTO);
@@ -73,7 +73,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _ploService.DeletePLOAsync(id);
@@ -117,7 +117,7 @@ namespace Student_Result_Management_System.Controllers
         // }
 
         [HttpPut("{id}/clo")]
-        [Authorize(Roles="Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> UpdateCLOs([FromRoute] int id, [FromBody] int[] cLOIds)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);
@@ -139,7 +139,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             var pLO = await _ploService.GetPLOByIdAsync(id);

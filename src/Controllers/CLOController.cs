@@ -40,7 +40,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Create([FromBody] CreateCLODTO createCLODTO)
         {
             var cLODTO = await _cloService.CreateCLOAsync(createCLODTO);
@@ -48,7 +48,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCLODTO updateCLODTO)
         {
             var cLODTO = await _cloService.UpdateCLOAsync(id, updateCLODTO);
@@ -58,7 +58,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin,PhongDaoTao,GiangVien")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _cloService.DeleteCLOAsync(id);
