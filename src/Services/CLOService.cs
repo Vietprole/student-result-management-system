@@ -104,9 +104,16 @@ public class CLOService : ICLOService
         {
             return null;
         }
-        clo = updateCLODTO.ToCLOFromUpdateDTO(clo);
-        await _context.SaveChangesAsync();
-        return clo.ToCLODTO();
+         clo = updateCLODTO.ToCLOFromUpdateDTO(clo);
+    await _context.SaveChangesAsync();
+
+   
+    clo = await _context.CLOs
+        .Include(c => c.HocPhan)
+        .Include(c => c.HocKy)
+        .FirstOrDefaultAsync(c => c.Id == id);
+
+    return clo.ToCLODTO();
     }
 
     public async Task<bool> DeleteCLOAsync(int id)
