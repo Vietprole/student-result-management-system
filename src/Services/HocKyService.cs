@@ -21,13 +21,13 @@ namespace Student_Result_Management_System.Services
         {
 
             string MaHocKi = String.Empty;
-            if(newHocKyDTO.Ten.ToString()=="Kỳ 1")
+            if(newHocKyDTO.Ten.ToString()== "Học kỳ 1")
             {
                 MaHocKi = "10";
-            }else if(newHocKyDTO.Ten.ToString()=="Kỳ 2")
+            }else if(newHocKyDTO.Ten.ToString()== "Học kỳ 2")
             {
                 MaHocKi = "20";
-            }else if(newHocKyDTO.Ten.ToString()=="Kỳ hè")
+            }else if(newHocKyDTO.Ten.ToString()== "Học kỳ hè")
             {
                 MaHocKi = "21";
             }
@@ -56,7 +56,7 @@ namespace Student_Result_Management_System.Services
                 return false;   
             }
             // Kiểm tra chuỗi có bằng đúng một trong các cụm từ yêu cầu
-            return tenHocKy == "Kỳ 1" || tenHocKy == "Kỳ 2" || tenHocKy == "Kỳ hè";
+            return tenHocKy == "Học kỳ 1" || tenHocKy == "Học kỳ 2" || tenHocKy == "Học kỳ hè";
         }
 
 

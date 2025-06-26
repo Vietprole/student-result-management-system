@@ -124,6 +124,7 @@ namespace Student_Result_Management_System.Services
 			}
 
 			if (nganhId.HasValue)
+
 			{
 				query = query.Where(sv => sv.NganhId == nganhId.Value);
 			}
