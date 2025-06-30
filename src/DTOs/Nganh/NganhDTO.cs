@@ -7,6 +7,7 @@ public class NganhDTO
     public int Id { get; set; }
     public string MaNganh { get; set; } = string.Empty;
     public string Ten { get; set; } = string.Empty;
+    public int NamHoc { get; set; }
     public int KhoaId { get; set; }
     public string TenKhoa { get; set; } = string.Empty;
     public int? NguoiQuanLyId { get; set; } = null;

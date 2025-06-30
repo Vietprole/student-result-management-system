@@ -7,6 +7,8 @@ public class CreateNganhDTO
 {
     [Required(ErrorMessage = "Tên ngành không được để trống")]
     public string Ten { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Năm học không được để trống")]
+    public int NamHoc { get; set; }
     [Required]
     public int KhoaId { get; set; }
     public int[]? HocPhanId { get; set; }

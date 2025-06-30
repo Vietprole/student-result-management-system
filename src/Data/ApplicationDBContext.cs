@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
@@ -140,83 +141,65 @@ namespace Student_Result_Management_System.Data
 
         public override int SaveChanges()
         {
-            var userActivityLogs = OnBeforeSaveChanges();
+            // Track entities and their states before saving
+            var changedEntities = GetChangedEntities();
+            
+            // Perform the actual save
             var result = base.SaveChanges();
-            OnAfterSaveChanges(userActivityLogs);
+            
+            // Create and save audit logs after changes are committed
+            CreateAndSaveAuditLogs(changedEntities);
+            
             return result;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var userActivityLogs = OnBeforeSaveChanges();
+            // Track entities and their states before saving
+            var changedEntities = GetChangedEntities();
+            
+            // Perform the actual save
             var result = await base.SaveChangesAsync(cancellationToken);
-            await OnAfterSaveChangesAsync(userActivityLogs, cancellationToken);
+            
+            // Create and save audit logs after changes are committed
+            await CreateAndSaveAuditLogsAsync(changedEntities, cancellationToken);
+            
             return result;
         }
 
-        private List<UserActivityLog> OnBeforeSaveChanges()
+        // Track entity changes before saving
+        private Dictionary<EntityEntry, EntityState> GetChangedEntities()
         {
             ChangeTracker.DetectChanges();
-            var userActivityLogs = new List<UserActivityLog>();
+            
+            var changedEntities = new Dictionary<EntityEntry, EntityState>();
             
             foreach (var entry in ChangeTracker.Entries())
             {
                 // Skip UserActivityLog entities and unchanged/detached entities
                 if (entry.Entity is UserActivityLog || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
                     continue;
-
-                var entityBefore = new Dictionary<string, object>();
-                var entityAfter = new Dictionary<string, object>();
-
-                foreach (var property in entry.Properties)
-                {
-                    var propertyName = property.Metadata.Name;
-                    // Skip navigation properties
-                    // if (property.Metadata.IsForeignKey() || property.Metadata.IsIndexerProperty())
-                    //     continue;
-                    // Handle different states
-                    switch (entry.State)
-                    {
-                        case EntityState.Added:
-                            entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
-                            break;
-
-                        case EntityState.Deleted:
-                            entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
-                            break;
-
-                        case EntityState.Modified:
-                            entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
-                            entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
-                            break;
-                    }
-                }
-                var userActivityLog = new UserActivityLog
-                {
-                    UserId = _userContext.UserId,
-                    UserName = _userContext.UserName,
-                    UserRole = _userContext.UserRole,
-                    Action = entry.Metadata.GetTableName() + "." + entry.State.ToString(),
-                    EntityBefore = JsonConvert.SerializeObject(entityBefore),
-                    EntityAfter = JsonConvert.SerializeObject(entityAfter),
-                    Timestamp = DateTime.UtcNow,
-                    IpAddress = _userContext.UserIpAddress
-                };
-                userActivityLogs.Add(userActivityLog);
+                
+                // Store the original state
+                changedEntities[entry] = entry.State;
             }
-            return userActivityLogs;
+            
+            return changedEntities;
         }
 
-        private void OnAfterSaveChanges(List<UserActivityLog> userActivityLogs)
+        // Create and save audit logs synchronously
+        private void CreateAndSaveAuditLogs(Dictionary<EntityEntry, EntityState> changedEntities)
         {
-            if (userActivityLogs == null || userActivityLogs.Count == 0)
+            if (changedEntities.Count == 0)
                 return;
-
+            
             try
             {
+                var userActivityLogs = CreateUserActivityLogs(changedEntities);
+                
                 // Add the logs to the context
                 UserActivityLogs.AddRange(userActivityLogs);
-
+                
                 // Call SaveChanges without triggering this again
                 using var transaction = Database.BeginTransaction();
                 SaveChangesWithoutAuditing();
@@ -229,16 +212,19 @@ namespace Student_Result_Management_System.Data
             }
         }
 
-        public async Task OnAfterSaveChangesAsync(List<UserActivityLog> userActivityLogs, CancellationToken cancellationToken = default)
+        // Create and save audit logs asynchronously
+        private async Task CreateAndSaveAuditLogsAsync(Dictionary<EntityEntry, EntityState> changedEntities, CancellationToken cancellationToken = default)
         {
-            if (userActivityLogs == null || userActivityLogs.Count == 0)
+            if (changedEntities.Count == 0)
                 return;
-
+            
             try
             {
+                var userActivityLogs = CreateUserActivityLogs(changedEntities);
+                
                 // Add the logs to the context
                 await UserActivityLogs.AddRangeAsync(userActivityLogs, cancellationToken);
-
+                
                 // Call SaveChangesAsync without triggering this again
                 using var transaction = await Database.BeginTransactionAsync(cancellationToken);
                 await SaveChangesWithoutAuditingAsync(cancellationToken);
@@ -249,6 +235,68 @@ namespace Student_Result_Management_System.Data
                 // Log the error but don't crash the application
                 Console.Error.WriteLine($"Error saving audit logs: {ex.Message}");
             }
+        }
+
+        // Create user activity logs from changed entities
+        private List<UserActivityLog> CreateUserActivityLogs(Dictionary<EntityEntry, EntityState> changedEntities)
+        {
+            var userActivityLogs = new List<UserActivityLog>();
+            
+            // Define JSON serialization settings
+            var jsonSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
+            
+            foreach (var entityEntry in changedEntities)
+            {
+                var entry = entityEntry.Key;
+                var state = entityEntry.Value;
+                
+                var entityBefore = new Dictionary<string, object>();
+                var entityAfter = new Dictionary<string, object>();
+                
+                // Process properties based on the state that was tracked before saving
+                foreach (var property in entry.Properties)
+                {
+                    var propertyName = property.Metadata.Name;
+                    
+                    switch (state)
+                    {
+                        case EntityState.Added:
+                            // For added entities, we now have real ID values after the save
+                            entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
+                            break;
+                        
+                        case EntityState.Deleted:
+                            entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
+                            break;
+                        
+                        case EntityState.Modified:
+                            entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
+                            entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
+                            break;
+                    }
+                }
+                
+                // Create the audit log entry
+                var userActivityLog = new UserActivityLog
+                {
+                    UserId = _userContext.UserId,
+                    UserName = _userContext.UserName,
+                    UserRole = _userContext.UserRole,
+                    Action = entry.Metadata.GetTableName() + "." + state.ToString(),
+                    EntityBefore = JsonConvert.SerializeObject(entityBefore, jsonSettings),
+                    EntityAfter = JsonConvert.SerializeObject(entityAfter, jsonSettings),
+                    Timestamp = DateTime.UtcNow,
+                    IpAddress = _userContext.UserIpAddress
+                };
+                
+                userActivityLogs.Add(userActivityLog);
+            }
+            
+            return userActivityLogs;
         }
 
         // Methods to avoid recursive auditing when saving audit logs

@@ -8,6 +8,7 @@ public class Nganh
     public int Id { get; set; }
     public string MaNganh { get; set; } = string.Empty;
     public string Ten { get; set; } = string.Empty;
+    public int NamHoc { get; set; }
     public int KhoaId { get; set; }
     public Khoa Khoa { get; set; } = null!;
     public int? TaiKhoanId { get; set; }
