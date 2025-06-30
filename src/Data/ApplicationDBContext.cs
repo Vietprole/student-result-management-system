@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
 using Student_Result_Management_System.Interfaces;
 using Student_Result_Management_System.Models;
 
@@ -157,6 +158,7 @@ namespace Student_Result_Management_System.Data
         {
             ChangeTracker.DetectChanges();
             var userActivityLogs = new List<UserActivityLog>();
+            
             foreach (var entry in ChangeTracker.Entries())
             {
                 // Skip UserActivityLog entities and unchanged/detached entities
@@ -184,11 +186,8 @@ namespace Student_Result_Management_System.Data
                             break;
 
                         case EntityState.Modified:
-                            if (property.IsModified)
-                            {
-                                entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
-                                entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
-                            }
+                            entityBefore[propertyName] = property.OriginalValue ?? DBNull.Value;
+                            entityAfter[propertyName] = property.CurrentValue ?? DBNull.Value;
                             break;
                     }
                 }
@@ -198,8 +197,8 @@ namespace Student_Result_Management_System.Data
                     UserName = _userContext.UserName,
                     UserRole = _userContext.UserRole,
                     Action = entry.Metadata.GetTableName() + "." + entry.State.ToString(),
-                    EntityBefore = JsonSerializer.Serialize(entityBefore),
-                    EntityAfter = JsonSerializer.Serialize(entityAfter),
+                    EntityBefore = JsonConvert.SerializeObject(entityBefore),
+                    EntityAfter = JsonConvert.SerializeObject(entityAfter),
                     Timestamp = DateTime.UtcNow,
                     IpAddress = _userContext.UserIpAddress
                 };
