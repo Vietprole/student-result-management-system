@@ -38,7 +38,7 @@ namespace Student_Result_Management_System.Services
             return maNganh;
         }
 
-        public async Task<List<Nganh>> GetFilteredNganhsAsync(int? khoaId, int? nguoiQuanLyId,int? pageNumber, int? pageSize)
+        public async Task<List<Nganh>> GetFilteredNganhsAsync(int? khoaId, int? nguoiQuanLyId, int? pageNumber, int? pageSize)
         {
             var query = _context.Nganhs.Include(n => n.Khoa).Include(n => n.TaiKhoan).AsQueryable();
 
@@ -197,6 +197,171 @@ namespace Student_Result_Management_System.Services
                 .Where(n => n.KhoaId == khoaId)
                 .ToListAsync();
             return nganhs.Any(n => n.Ten == tenNganh);
+        }
+
+        public async Task CopyNganhStructureAsync(int targetNganhId, int sourceNganhId)
+        {
+            if (targetNganhId == sourceNganhId)
+                throw new BusinessLogicException("Không thể kế thừa Ngành vào chính nó");
+
+            var targetnganh = await _context.Nganhs
+                .FirstOrDefaultAsync(n => n.Id == targetNganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành với id: {targetNganhId}");
+
+            var sourceNganh = await _context.Nganhs
+                .FirstOrDefaultAsync(n => n.Id == sourceNganhId) ?? throw new NotFoundException($"Không tìm thấy Ngành nguồn với id: {sourceNganhId}");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await CopyHocPhansAsync(targetNganhId, sourceNganhId);
+                await CopyPLOsAsync(targetNganhId, sourceNganhId);
+                await CopyHocPhanPLOMappingAsync(targetNganhId, sourceNganhId);
+                await CopyPLOCLOMappingAsync(targetNganhId, sourceNganhId);
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw new BusinessLogicException("Lỗi khi sao chép cấu trúc Ngành");
+            }
+        }
+
+        private async Task CopyHocPhansAsync(int targetNganhId, int sourceNganhId)
+        {
+            // Get current Ctdts for target Nganh
+            var targetCtdts = await _context.Ctdts
+                .Where(c => c.NganhId == targetNganhId)
+                .ToListAsync();
+
+            // Get source Ctdts
+            var sourceCtdts = await _context.Ctdts
+                .Where(c => c.NganhId == sourceNganhId)
+                .ToListAsync();
+
+            // Remove existing Ctdts from target
+            _context.Ctdts.RemoveRange(targetCtdts);
+
+            // Add new Ctdts based on source
+            var newCtdts = sourceCtdts.Select(c => new Ctdt
+            {
+                NganhId = targetNganhId,
+                HocPhanId = c.HocPhanId,
+                LaCotLoi = c.LaCotLoi
+            }).ToList();
+
+            await _context.Ctdts.AddRangeAsync(newCtdts);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task CopyPLOsAsync(int targetNganhId, int sourceNganhId)
+        {
+            // Get current PLOs for target Nganh
+            var targetPLOs = await _context.PLOs
+                .Where(p => p.NganhId == targetNganhId)
+                .ToListAsync();
+
+            // Get source PLOs
+            var sourcePLOs = await _context.PLOs
+                .Where(p => p.NganhId == sourceNganhId)
+                .ToListAsync();
+
+            // Remove existing PLOs from target
+            _context.PLOs.RemoveRange(targetPLOs);
+
+            // Add new PLOs based on source
+            var newPLOs = sourcePLOs.Select(p => new PLO
+            {
+                MoTa = p.MoTa,
+                Ten = p.Ten,
+                NganhId = targetNganhId,
+            }).ToList();
+
+            await _context.PLOs.AddRangeAsync(newPLOs);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task CopyHocPhanPLOMappingAsync(int targetNganhId, int sourceNganhId)
+        {
+            var sourcePLOs = await _context.PLOs
+                .Include(p => p.HocPhans)
+                .Where(p => p.NganhId == sourceNganhId)
+                .ToListAsync();
+
+            var targetPLOs = await _context.PLOs
+                .Include(p => p.HocPhans)
+                .Where(p => p.NganhId == targetNganhId)
+                .ToListAsync();
+
+            foreach (var targetPLO in targetPLOs)
+            {
+                // Clear existing HocPhans in target PLO
+                targetPLO.HocPhans.Clear();
+                // Find the corresponding source PLO (match by name or other criteria)
+                var sourcePLO = sourcePLOs.FirstOrDefault(p => p.Ten == targetPLO.Ten);
+
+                if (sourcePLO == null)
+                    continue;
+
+                // Get all HocPhans from source PLO
+                var hocPhanIdsFromSource = sourcePLO.HocPhans.Select(h => h.Id).ToList();
+
+                // Get these actual HocPhan entities (avoid creating new ones)
+                var hocPhansToAdd = await _context.HocPhans
+                    .Where(h => hocPhanIdsFromSource.Contains(h.Id))
+                    .ToListAsync();
+
+                // Add each HocPhan to the target PLO's collection
+                foreach (var hocPhan in hocPhansToAdd)
+                {
+                    // This will create entries in the HocPhanPLO join table
+                    targetPLO.HocPhans.Add(hocPhan);
+                }
+            }
+
+            // Save changes to persist the mapping
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task CopyPLOCLOMappingAsync(int targetNganhId, int sourceNganhId)
+        {
+            var sourcePLOs = await _context.PLOs
+                .Include(p => p.CLOs)
+                .Where(p => p.NganhId == sourceNganhId)
+                .ToListAsync();
+
+            var targetPLOs = await _context.PLOs
+                .Include(p => p.CLOs)
+                .Where(p => p.NganhId == targetNganhId)
+                .ToListAsync();
+
+            foreach (var targetPLO in targetPLOs)
+            {
+                // Clear existing CLOs in target PLO
+                targetPLO.CLOs.Clear();
+                // Find the corresponding source PLO (match by name or other criteria)
+                var sourcePLO = sourcePLOs.FirstOrDefault(p => p.Ten == targetPLO.Ten);
+
+                if (sourcePLO == null)
+                    continue;
+
+                // Get all CLOs from source PLO
+                var cloIdsFromSource = sourcePLO.CLOs.Select(c => c.Id).ToList();
+
+                // Get these actual CLO entities (avoid creating new ones)
+                var closToAdd = await _context.CLOs
+                    .Where(c => cloIdsFromSource.Contains(c.Id))
+                    .ToListAsync();
+
+                // Add each CLO to the target PLO's collection
+                foreach (var clo in closToAdd)
+                {
+                    // This will create entries in the CLO PLO join table
+                    targetPLO.CLOs.Add(clo);
+                }
+            }
+
+            // Save changes to persist the mapping
+            await _context.SaveChangesAsync();
         }
     }
 }

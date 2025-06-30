@@ -100,20 +100,23 @@ namespace Student_Result_Management_System.Controllers
         [Authorize]
         public async Task<IActionResult> GetHocPhans([FromRoute] int id)
         {
-            try {
+            try
+            {
                 var hocPhans = await _nganhService.GetHocPhansInNganhAsync(id);
                 return Ok(hocPhans);
             }
-            catch (BusinessLogicException ex){
+            catch (BusinessLogicException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (NotFoundException ex){
+            catch (NotFoundException ex)
+            {
                 return NotFound(ex.Message);
             }
         }
-        
+
         [HttpPost("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> AddHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -132,7 +135,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpPut("{id}/hocphan")]
-        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> UpdateHocPhans([FromRoute] int id, [FromBody] int[] hocPhanIds)
         {
             try
@@ -151,7 +154,7 @@ namespace Student_Result_Management_System.Controllers
         }
 
         [HttpDelete("{id}/hocphan/{hocPhanId}")]
-        [Authorize(Roles="Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
         public async Task<IActionResult> RemoveHocPhan([FromRoute] int id, [FromRoute] int hocPhanId)
         {
             try
@@ -178,6 +181,25 @@ namespace Student_Result_Management_System.Controllers
             {
                 var result = await _nganhService.UpdateHocPhanCotLoi(id, updateCotLoiDTOs);
                 return Ok(result);
+            }
+            catch (BusinessLogicException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("{id}/copy-structure")]
+        [Authorize(Roles = "Admin,PhongDaoTao,NguoiPhuTrachCTĐT")]
+        public async Task<IActionResult> CopyNganhStructure([FromRoute] int id, [FromBody] int sourceNganhId)
+        {
+            try
+            {
+                await _nganhService.CopyNganhStructureAsync(id, sourceNganhId);
+                return Ok();
             }
             catch (BusinessLogicException ex)
             {

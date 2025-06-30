@@ -19,5 +19,6 @@ namespace Student_Result_Management_System.Interfaces
         public Task<List<HocPhanDTO>> GetHocPhansInNganhAsync(int nganhId);
         public Task<List<HocPhanDTO>> UpdateHocPhanCotLoi(int nganhId, List<UpdateCotLoiDTO> updateCotLoiDTOs);
         public Task<bool> CheckNganhExits(string tenNganh, int khoaId);
+        public Task CopyNganhStructureAsync(int targetNganhId, int sourceNganhId);
     }
 }
